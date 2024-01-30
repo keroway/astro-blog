@@ -1,0 +1,21 @@
+﻿---
+title: "【読書】Expert Angular"
+description: ""
+pubDate: 2018-04-24
+category: "読書"
+heroImage: '/blog-store.png'
+---
+
+[Packt Publishing](https://www.packtpub.com) にて購入(電子書籍)
+|||
+|-|-|
+|タイトル|Expert Angular|
+|著者|Mathieu Nayrolles, Rajesh Gunasundaram, Sridhar Rao|
+|URL|https://www.packtpub.com/web-development/expert-angular|
+![enter image description here](https://lh3.googleusercontent.com/FNsrDgzIO9hqPMjCWxoKmjqwlFy-PWiODZqWpPvy03mlsp4v2cS4W-e_90MuNYKOZRHOmphw7-HD3g)
+
+見ての通り英語の本ですが、単語も文章も難しいものではなく、比較的読み易いものだと思います。
+Web系、特にフロントエンドにはあまり携わっていないので、内容の良否は判断しかね流のですが、提示されているサンプルコード一つ一つは短く、ほぼ全行に対して解説が付いているますので、なぜそのような記述となっているのかが理解しやすくなっています。
+テストにそれなりのページを割いていたり、Angularにおけるデザインパターンの説明もあり、なかなか実用的な内容だと思われます。
+
+順次Web回りの学習を進めて、今後それを活かした何かを提示できるようにしたいと思います。

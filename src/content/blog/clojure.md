@@ -1,0 +1,33 @@
+﻿---
+title: "Clojure"
+description: ""
+pubDate: 2018-02-23
+category: "Clojure"
+heroImage: 'https://lh3.googleusercontent.com/TlIx3YhXCDKsleKBpJktsUsFbsJf65KSjkeigBC-C9KizOxdfDBAS3uCIor4TmZ4RgAKmpT64Zn0pw'
+---
+![enter image description here](https://lh3.googleusercontent.com/MDVKK_c2VzTXRaQ8vY_A9wIt-bB_etYut-9TjjwcHHrlU4hpKEtwRjNWWKREvJDOK9mVekoILXhVqA "clojure.org")
+
+> Clojure (発音は/'klouʒər/[2], クロージャー)はプログラミング言語であり、LISP系の言語の方言の一つである。関数型プログラミングのプログラミングスタイルでのインタラクティブな開発を支援し、マルチスレッドプログラムの開発を容易化する汎用言語である。Clojure言語のプログラムはJava仮想マシンとMicrosoft .NET 共通言語ランタイムで動作する。
+[Wikipedia - Clojure](https://ja.wikipedia.org/wiki/Clojure)より引用
+
+正直ほとんど触ったことがないのですが、むかーしemacsを愛用していたので、一応LISP系に馴染みがないこともない・・・といったところから今回のネタに選定しました。
+
+早速本家サイトの`Get Started!`に進むと、よくあるインストールガイドの先に以下の表記が。
+
+![enter image description here](https://lh3.googleusercontent.com/u5dIMPZKGl9Bz-kwkRumisKb7DiTZkirmWzTSqME4fsab3C_vfd44JhaW0ZOoRdEOyXza40P52u1Lw "Get Started")
+
+[repl.it](https://repl.it/)でHello Worldを実行してみます。
+
+![enter image description here](https://lh3.googleusercontent.com/wZiM7e8dpuYFirsjAyJ3d-ckdos90tIAF_QgfleAM3F4GHAcFuFpf_yBriVloJM3sIE7bV7NCi_39w "repl.it")
+
+examplesを選択すると例文がでるので
+
+![enter image description here](https://lh3.googleusercontent.com/TlIx3YhXCDKsleKBpJktsUsFbsJf65KSjkeigBC-C9KizOxdfDBAS3uCIor4TmZ4RgAKmpT64Zn0pw "examples")
+
+例にならって入力、実行します。
+
+![enter image description here](https://lh3.googleusercontent.com/EdASJ1Iye4YABuPKu4ULMaOqHCBnvX4X5oKfxo_VtHKEt4uQ6qyWdb-ceCOIK6BLV0rz9VRlofJ6iQ "hello world")
+
+出力できたところで、今回は終わり。
+
+

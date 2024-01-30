@@ -1,0 +1,41 @@
+﻿---
+title: "Go"
+description: ""
+pubDate: 2018-01-31
+category: "Go"
+heroImage: '/GEsYkI0.png'
+---
+
+以前、業務でほんのちょっとだけgoに触れたことを思い出し、ネタにしようと思ったのですが
+本家のサイトにあるものがとてもよくできているので、改めて書くことがないです。
+- A Tour of Go
+https://go-tour-jp.appspot.com/welcome/1
+
+![Hello World](https://i.imgur.com/KJtousd.png)
+*サンプルの閲覧、編集、実行が可能*
+
+---
+[本家](https://golang.org)のトップにあるフィボナッチ数列のサンプルを解説（予定）
+![enter image description here](/GEsYkI0.png)
+
+```go
+package main
+
+import "fmt"
+
+// fib returns a function that returns
+// successive Fibonacci numbers.
+func fib() func() int {
+	a, b := 0, 1
+	return func() int {
+		a, b = b, a+b
+		return a
+	}
+}
+
+func main() {
+	f := fib()
+	// Function calls are evaluated left-to-right.
+	fmt.Println(f(), f(), f(), f(), f())
+}
+```

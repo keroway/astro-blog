@@ -1,0 +1,63 @@
+﻿---
+title: "BeautifulSoup4(1)"
+description: ""
+pubDate: 2018-04-18
+category: "Solr"
+heroImage: 'https://lh3.googleusercontent.com/zAxzWgVDRLD-Oz7WjvlrdkFyyOVib-p8JZbD7dzZ3nIFIeLqze2HPurdBFii4sjuxphc44YdqzTbWA'
+---
+
+[以前](https://ykwakuto.blogspot.jp/2018/04/getting-started-with-python-web-scraping.html)サンプルそのままだったPythonでのWeb Scrapingの応用編です。
+
+といっても、今回は参照先を変えただけで、やる事はほとんど変わっていません。
+
+- 今回のターゲットはこちら
+https://www.kinokuniya.co.jp/f/dsd-101001037025-01-
+![enter image description here](https://lh3.googleusercontent.com/JIwVaA7TJHYQ3x9gpiwSOMTjzjBGe2f7czXoZ9smduA9NiIvClHob8EGAUuUwI6E2CAL02xzUv3Rzw)
+紀伊國屋書店のサイトで、プログラミング書籍を新着順に表示させています。ここから、書籍のリスト（タイトル、著者、価格）を抽出してみます。
+
+前回同様、ipythonで入力していきます。
+```python
+In [1]: import requests
+In [2]: url='https://www.kinokuniya.co.jp/f/dsd-101001037025-01-'
+In [3]: req=requests.get(url)
+In [4]: req.text[:200]
+Out[4]: '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">\r\n<html xmlns:fb="http://ogp.me/ns/fb#" xml:lang="ja" lang="ja">\r\n<head><link rel="canonical" href'
+In [7]: from bs4 import BeautifulSoup
+In [8]: soup=BeautifulSoup(req.text, 'lxml')
+In [11]: lists=soup.find('div', {'class': 'list_area_wrap'}).findAll('div', {'class': 'list_area'})
+In [14]: for l in lists:
+...: book=dict()
+...: book['name']=l.find('h3').find('a').text.strip()
+...: book['author']=l.find('p', {'class': 'clearfix'}).text.strip()
+...: book['price']=l.find('span', {'class': 'sale_price'}).text.strip()
+...: print(book)
+...:
+
+```
+
+以下が出力結果です(2018/4/18現在)
+```json
+{'name': 'Ｃ言語による標準アルゴリズム事典\u3000改新 ＳｏｆｔｗａｒｅＴｅｃｈｎｏｌｏｇ\u3000１３', 'author': '奥村晴彦\u3000著', 'price': '¥2,700'}
+{'name': '実践Ｇｏｏｇｌｅ\u3000Ｄｒｉｖｅ\u3000ＡＰＩ', 'author': '川口直也', 'price': '¥4,320'}
+{'name': '現場ですぐに使える！Ｒ言語逆引き大全３５０の極意 - Ｗｉｎｄｏｗｓ／Ｍａｃ\u3000ＯＳ\u3000１０対応', 'author': '金城 俊哉【著】', 'price': '¥3,456'}
+{'name': 'Ｃｏｇｎｉｔｉｖｅ\u3000Ｓｅｒｖｉｃｅｓ入門 - マイクロソフト人工知能ＡＰＩの使い方', 'author': '福内 かおり/小松 祐城/大森 彩子【著】/日本マイクロソフト【監修】', 'price': '¥3,456'}
+{'name': 'ＩＴエンジニアのためのスタートアップ戦略', 'author': '克元 亮【著】', 'price': '¥1,976'}
+{'name': '現場ですぐに使える！Ｖｉｓｕａｌ\u3000Ｃ＃\u3000２０１７逆引き大全５５５の極意 - Ｖｉｓｕａｌ\u3000Ｓｔｕｄｉｏ\u3000Ｐｒｏｆｅｓｓｉｏｎａ', 'author': '増田 智明/国本 温子【著】', 'price': '¥2,916'}
+{'name': 'Ｐｙｔｈｏｎによる数理最適化入門 実践Ｐｙｔｈｏｎライブラリー', 'author': '久保 幹雄【監修】/並木 誠【著】', 'price': '¥3,456'}
+{'name': '現場ですぐに使える！Ｐｙｔｈｏｎプログラミング逆引き大全３１３の極意 - Ｗｉｎｄｏｗｓ／Ｍａｃ\u3000ＯＳ\u3000１０対応', 'author': '金城 俊哉【著】', 'price': '¥2,808'}
+{'name': 'Ｓｗｉｆｔ４プログラミング入門 - ｉＯＳ１１＋Ｘｃｏｄｅ９対応', 'author': '飛岡 辰哉【著】', 'price': '¥3,564'}
+{'name': '基礎からわかる時系列分析 - Ｒで実践するカルマンフィルタ・ＭＣＭＣ・粒子フィル Ｄａｔａ\u3000Ｓｃｉｅｎｃｅ\u3000Ｌｉｂｒａｒｙ', 'author': '萩原 淳一郎/瓜生 真也/牧山 幸史【著】/石田 基広【監修】', 'price': '¥4,298'}
+{'name': '図解入門よくわかる最新ＰＭＢＯＫ第６版の基本 - プロジェクトマネジメントの最新トレンドを理解 Ｈｏｗ－ｎｕａｌ\u3000Ｖｉｓｕａｌ\u3000Ｇｕｉｄｅ\u3000Ｂｏｏｋ', 'author': '鈴木 安而【著】', 'price': '¥2,592'}
+{'name': 'ＡＲＫｉｔとＵｎｉｔｙではじめるＡＲアプリ開発', 'author': '薬師寺 国安【著】', 'price': '¥3,024'}
+{'name': '新わかりやすいＪａｖａオブジェクト指向徹底解説', 'author': '川場 隆【著】', 'price': '¥3,218'}
+{'name': '現場ですぐに使える！Ｃ／Ｃ＋＋逆引き大全５６０の極意 - Ｗｉｎｄｏｗｓ／Ｌｉｎｕｘ／ＵＮＩＸ対応', 'author': '増田 智明【著】', 'price': '¥3,564'}
+{'name': 'Ｐｙｔｈｏｎで学ぶ実践画像・音声処理入門', 'author': '伊藤 克亘/花泉 弘/小泉 悠馬【共著】', 'price': '¥2,700'}
+{'name': 'いちばんやさしい機械学習プロジェクトの教本 - 人気講師が教える仕事にＡＩを導入する方法', 'author': '韮原 祐介【著】', 'price': '¥1,944'}
+{'name': '仮想環境とプログラミングスキルで実現「ひとり情シス」虎の巻 - 実話で学ぶＩＴエンジニアの理想の仕事術', 'author': '成瀬 雅光【著】', 'price': '¥2,376'}
+{'name': 'Ａｎｇｕｌａｒ\u3000Ｗｅｂアプリ開発スタートブック', 'author': '大澤文孝', 'price': '¥2,970'}
+{'name': 'できるパソコンで楽しむマインクラフトプログラミング入門 - Ｍｉｃｒｏｓｏｆｔ\u3000ＭａｋｅＣｏｄｅ\u3000ｆｏｒ\u3000Ｍｉ', 'author': '広野忠敏/できるシリーズ編集部', 'price': '¥2,484'}
+{'name': 'Ｐｙｔｈｏｎスタートブック - いちばんやさしいパイソンの本／バージョン３に完全対 （増補改訂版）', 'author': '辻 真吾【著】', 'price': '¥2,700'}
+```
+
+次回は、これを見やすく表示する表示させてみようと思います。
+
