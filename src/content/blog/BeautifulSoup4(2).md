@@ -1,0 +1,95 @@
+﻿---
+title: "BeautifulSoup4(2) (GAE)"
+description: ""
+pubDate: 2018-04-20
+category: "BeautifulSoup"
+heroImage: 'https://lh3.googleusercontent.com/qRSDidUbAvAo7Wz6FA44pXPAiWucp_enuNje3XU0HJAUAYiiGH85FjgS-GuHiOE8ix-FlGOnW1BTAQ'
+---
+
+[この間](https://ykwakuto.blogspot.jp/2018/04/beautifulsoup41.html)作成したスクリプトを、Google App Engineで実行してみた、というお話。
+
+## GAEの準備
+[こちら](https://cloud.google.com/appengine/docs/flexible/python/quickstart?hl=ja)のQuickStartにしたがってHello worldが表示されるところまで進めます。
+(Cloud Shellを使用)
+
+## ソースコード編集
+オンラインエディタでソースコード(main.py)と依存関係(requirements.txt)に追記。
+
+![enter image description here](https://lh3.googleusercontent.com/qRSDidUbAvAo7Wz6FA44pXPAiWucp_enuNje3XU0HJAUAYiiGH85FjgS-GuHiOE8ix-FlGOnW1BTAQ)
+
+オンラインエディタはこのような感じ
+
+![enter image description here](https://lh3.googleusercontent.com/Ys-OQor6Fz3rhrYZn5dtjjFUdh7T8lhZICIbBzlGxF7hncajzNCV_8b0sgny_NGGckQBaFL0yYe4yw)
+
+requirements.txtに、requests, lxml, bs4を追加
+
+追加のimport と、/books/へのアクセス時処理を追記
+```python
+# Copyright 2015 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# [START app]
+import logging
+import requests
+import json
+
+from flask import Flask
+from bs4 import BeautifulSoup
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    """Return a friendly HTTP greeting."""
+    return 'Hello World!'
+
+@app.route('/books/')
+def books():
+    url='https://www.kinokuniya.co.jp/f/dsd-101001037025-01-'
+    req=requests.get(url)
+    req.text[:200]
+    soup=BeautifulSoup(req.text, 'lxml')
+    lists=soup.find('div', {'class': 'list_area_wrap'}).findAll('div', {'class': 'list_area'})
+    books=[]
+    for l in lists:
+        book=dict()
+        book['name']=l.find('h3').find('a').text.strip()
+        book['author']=l.find('p', {'class': 'clearfix'}).text.strip()
+        book['price']=l.find('span', {'class': 'sale_price'}).text.strip()
+        books.append(book)
+    return json.dumps(books)
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error occurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
+
+
+if __name__ == '__main__':
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Google App Engine. See entrypoint in app.yaml.
+    app.run(host='127.0.0.1', port=8080, debug=True)
+# [END app]
+```
+見栄えは悪いですが、取り急ぎjson形式で出力するようにしています。
+
+![enter image description here](https://lh3.googleusercontent.com/RUm4rB4IM2ZfEeVhaAiw2l4t45h-B1iFCw4qBsUclkLp0IztESsGW5J1wITo0vZjSYkf0r4wRFDLoA)
+
+ブラウザで見るとこのような感じ
+
+今後どう進めていくかについては検討中。
+cron+メール送信(など)にするか、フロントエンドを実装するか・・・

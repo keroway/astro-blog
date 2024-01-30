@@ -1,0 +1,37 @@
+﻿---
+title: "Google Cloud Source Repositories"
+description: ""
+pubDate: 2018-03-07
+category: "Solr"
+heroImage: 'https://lh3.googleusercontent.com/BkiWZ-u83Ix7QJ-0-wwOvNr8SCudQSmqlqYQUm5JIixKXMTBj-Ur2-Od4Eni-Yr91IWK5BhTEagyrA'
+---
+
+![enter image description here](https://lh3.googleusercontent.com/BkiWZ-u83Ix7QJ-0-wwOvNr8SCudQSmqlqYQUm5JIixKXMTBj-Ur2-Od4Eni-Yr91IWK5BhTEagyrA)
+個人的な話ですが…
+長らくgithubのDeveloper プランを使ってきましたが、プライベートリポジトリのために月7ドルはやはり高く、無料の範囲でそこそこ使えそうなGoogle の[Cloud Source Repositories](https://cloud.google.com/source-repositories/)に、プライベートリポジトリの移行をすることにしました。
+
+- 料金
+![enter image description here](https://lh3.googleusercontent.com/mJ5zsOOBFb3JTqeoUu6hkKrS7aLpV0yMCe1HtcZnd0Bzaa3dsehCPYmXwH1EMATk0H11oZjemGyNDA)
+詳しくは、[Cloud Source Repositories の料金](https://cloud.google.com/source-repositories/pricing?hl=ja)をご覧ください。
+料金体系はAWSとほぼ同じなのですが、最初の一年のサービス内容的に、AWSの方はもっとちゃんと動かすものを決めてからにしようかと思いまして。
+
+理由はともかく、移行を進めます。
+
+GitHubから移行したいプロジェクトをローカルにクローンします。
+今回は（初めて）[GitHub Desktop](https://desktop.github.com)を使用してみました。
+![enter image description here](https://lh3.googleusercontent.com/44YxSSfVaT4IosDPmiIdojAZrX3BHnZtU_5e3yViYVp4FUHPoK6DoKK2L50ezqGv-5arhKMlbXxtxw)
+GitHubにログインしておけば、右側の`Clone a Repository`でクローン対象のプロジェクトとクローン先を選んで終わりです。
+
+Googleのリポジトリへの取り込みを行います。
+参考にさせていただいたブログ(https://blog.apar.jp/web/7494/)の通り、アカウントやリポジトリを作成します。
+今回はローカルのリポジトリをpushするので、push対象のディレクトリに`cd`して、以下のコマンドを実行します。
+![enter image description here](https://lh3.googleusercontent.com/1xU8iu66res6adEs96ZLaQe4KCGlmjUhBgsJPzMpAe3HSZ1B5_FSAVimvx0PClix0n78QEq7m6ab7w)
+
+複数リポジトリが対象であれば、リモート側のリポジトリを作成して、pushを繰り返します。
+![enter image description here](https://lh3.googleusercontent.com/DpNYp5v_w_GiSSSjn71kKx-RE1qF55DIx7YpJGakvN_uF1rpV8b0YBII7M1zH_bBPDgQCsr-yuCwtw)
+追加できました。
+
+最後にGitHubのFreeプランへのダウングレードを実施。
+しばらく探しましたが、Settings->Billingの一番下にありました。
+
+どこもサービス内容や料金体系がよく変わるので、ここの条件が悪くなったり、もっと良い条件のところがあれば、また移行を考えます。
