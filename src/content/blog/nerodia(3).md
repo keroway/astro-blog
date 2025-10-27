@@ -3,7 +3,7 @@ title: "nerodia(3)"
 description: ""
 pubDate: 2018-03-27
 category: "nerodia"
-heroImage: ''
+heroImage: '/blog-placeholder-100.png'
 ---
 [前回](https://ykwakuto.blogspot.jp/2018/03/nerodia2.html)データの取得（データの有無チェック）を行いましたが、そもそもやりたかったのは自動投稿なのでした。
 その後実施はできましたが、そのままコードを出すわけにもいかないので、残課題含めそこまでの要点をまとめます。
