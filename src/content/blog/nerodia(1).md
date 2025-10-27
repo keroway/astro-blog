@@ -3,7 +3,7 @@ title: "nerodia(1)"
 description: ""
 pubDate: 2018-03-22
 category: "nerodia"
-heroImage: ''
+heroImage: '/blog-placeholder-100.png'
 ---
 ## 環境構築編
 

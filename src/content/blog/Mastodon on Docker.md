@@ -3,7 +3,7 @@ title: "Mastodon on Docker"
 description: ""
 pubDate: 2018-02-06
 category: "Mastodon"
-heroImage: ''
+heroImage: '/blog-placeholder-100.png'
 ---
 本日時点の結論から
 
