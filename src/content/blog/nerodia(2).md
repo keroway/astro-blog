@@ -1,0 +1,90 @@
+---
+title: "nerodia(2)"
+description: ""
+pubDate: 2018-03-22
+category: "nerodia"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhmZ_jkiAQ29gUhBRSx8sPylP7Yz4juHFKVzph4lD35hUHMHL2f481yWUJFg5XHyjXVy2i0w85jraKo6dWtH5QmMqTxijFpS4wYX7bUdzdIGz3ww8m5-y-4xvDEs4NXfIe-fqa1OPo49F4/'
+---
+[前回](https://ykwakuto.blogspot.jp/2018/03/nerodia1.html)の続き。
+
+題材として社内用日報サイトを用いています。
+（本物からは一部改変しています）
+
+設定したユーザーの当日分の日報が作成済みかを調べる、というものです。
+
+```python
+from nerodia.browser import Browser
+import datetime
+import toml
+
+# 設定ファイルを読み込みます
+# TOML
+# https://github.com/toml-lang/toml
+# TOML pythonライブラリ
+# https://github.com/uiri/toml
+toml_data = toml.load('settings.toml')  
+
+# ブラウザ定義
+browser = Browser(browser=toml_data['browser'])  
+
+# トップページに移動
+# ログイン画面になる想定
+browser.goto(toml_data['system']['index_page'])  
+
+# ログイン情報をセット
+mail_input = browser.text_field(id='email')
+mail_input.value = toml_data['user']['mail']
+passwd_input = browser.text_field(id='password')
+passwd_input.value = toml_data['user']['passwd']
+
+# ログインボタン押下
+# 有効になるのを待ってからクリックとしているが、あまり意味はないかも
+btn = browser.button(id='xxxlogin')
+btn.wait_until(timeout=20, interval=0.5, method=lambda  e: e.enabled)
+btn.click()
+
+# 個人の日報リストページへ移動
+user_url =  '{}{}'.format(toml_data['system']['user_page'], toml_data['user']['id'])
+browser.goto(user_url)
+
+# 当日の日報検索用文字列
+today = datetime.date.today()
+datestr='{:02d}月{:02d}日 の日報'.format(today.month, today.day)
+
+# 一番上が最新のはずですが、念のため表示してるもの全部ループ
+found =  False
+divs = browser.divs('class', 'hogehoge')
+for d in divs:
+  if datestr in d.text:
+    found = True
+    break
+
+# 今の所は結果出力のみ
+if found:
+  print('今日の日報記載済み')
+else:
+  print(datestr +  'は未記載です！')
+
+# 閉じておきます
+browser.close()
+```
+
+設定ファイルにはTOMLを用いています。
+作成のイメージだけ記載しておきます。
+```ini
+browser='chrome'
+
+[user]
+id=9999
+mail='user@example.net'
+passwd='password'
+
+[system]
+index_page='https://example.net/'
+user_page='https://example.net/xxx.php?uid='
+```
+
+余談ですが、VisualStudioCodeで作成/デバッグ(今回はただ実行するだけですが)しました。
+![enter image description here](https://lh3.googleusercontent.com/4dgxG6tipmGRHJWHqmlf-s9Vxwnt7VX-_LHe8JODYfaVB_USbg3bVjxJ1U0EVc8XSI9kwF6fKhxYoA "VisualStudioCodeで作成とデバッグ")
+
+> Written with [StackEdit](https://stackedit.io/).

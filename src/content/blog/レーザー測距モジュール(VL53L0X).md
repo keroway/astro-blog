@@ -1,0 +1,39 @@
+---
+title: "レーザー測距モジュール(VL53L0X)"
+description: ""
+pubDate: 2018-04-07
+category: "Arduino"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtLf-JHqFjEc46BqVFYnG-pU9SXUZ03PfTVwIZC5zNlpuD5Htcq3p36brw8876njDyUlGMyZo32eq5e9DSrQf1Jr_TPDEtQykukxim035oPIA6idYSYqVBg2cBjlpHfpcHPGXNmYxmEcE/'
+---
+![enter image description here](https://lh3.googleusercontent.com/d0hWWPv4R_h3LaVqpbc6krZDXH8SveQ569uRHXytIa9_kngbUNcdJmNQC4W82RxJ_p7Es4vTIbaFmA)
+だいぶ前に秋月で買ったまま放置していたもの（の一部）
+今回は、レーザー測距モジュール（左側）を使用してみました。
+
+- 秋月の商品ページ
+http://akizukidenshi.com/catalog/g/gM-12590/
+- VL53L0Xの製品仕様など
+http://www.st.com/ja/embedded-software/stsw-img005.html
+
+とりあえず配線。(Arduino UNO互換機を使用)
+![enter image description here](https://lh3.googleusercontent.com/wy78g0FvdlWO_kYxrWlBeRM2eCk5Q6WYNuJNXSM_vJk-xLUVBUtmD4m_2OlGDybPYMxQUdnKCEa8Rg)
+![enter image description here](https://lh3.googleusercontent.com/FoIqPs1op9Bi6ivnz7sPif7BY-JlvXatfsO8NRg_Q_mZwYYzgOql6CUS22DUeRnF5AkkQR74djXwEg)
+
+![enter image description here](https://lh3.googleusercontent.com/3wYUrytmkc6RmemqwB2k__ycw0whpt7JwA7Lc_lXUOl8mzfWJCIOthLl6vBKhCdn4b2FBkPyB7PdVQ)
+
+ソフトの方はVSCodeにPlatformIOの拡張を入れたものを使用しました。
+さらにVL53L0X用のライブラリを追加しています。
+![enter image description here](https://lh3.googleusercontent.com/WzbcvHdR8vIDE4v5zxMYxCtJJHoHPqx1U2veczpvn5sISXCAi_MqwfeR6EYwEzAdycYHShtuYUCRDQ)
+![enter image description here](https://lh3.googleusercontent.com/6zSDhn7SGo8-tJdQ3vPTBDMW0fjFuMqc5clPWAvTPVFHZWITzIwN6nO7aoNMvYclYh5G4ub09kfbiw)
+サンプルコードもそのまま利用
+
+「タスク」-「ビルドタスクの実行」
+「タスク」-「タスクの実行」-「PlatformIO: Upload and Monitor」
+と実行。
+
+さっぱりわからないと思いますが、センサーに手を近づけたり離したりした時のデバッグプリントの様子です（動画）
+[
+![](https://img.youtube.com/vi/S9DZRoHKFVg/0.jpg)](https://youtu.be/S9DZRoHKFVg)
+
+今回は以上です。
+
+> Written with [StackEdit](https://stackedit.io/).

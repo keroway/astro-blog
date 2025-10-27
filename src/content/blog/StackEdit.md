@@ -1,0 +1,78 @@
+---
+title: "StackEdit"
+description: ""
+pubDate: 2018-02-16
+category: "StackEdit"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxxRx4iDfnaDuFx9RJnB1Lpwq73jV_owgON3AZkwxi18KFRhhONSTAQP87xObLewDUBfSHclcjrHEmE0uxAdwJpDqgS0ZvvzjM1KbnJBavQbjDaQ1cJmM99uvSBs1SbdFIz1rRPfM55Gk/'
+---
+なんか表示が壊れてるので、設定変えてチャレンジ。（2018/02/16）
+
+[casseur](https://app.classeur.io/)というオンラインMarkdownエディタを使ってましたが、サービス終了のためこちらに移行するよう促されたので、早速移行しました。
+
+という内容の投稿テスト
+
+## 表示テスト
+
+- 数式
+$\displaystyle\int x^adx=\dfrac{x^{a+1}}{a+1}+C\:\:(a\neq -1)$
+
+- rust
+```rust
+fn main() {
+  println!("Hello world!");
+}
+```
+- go
+```go
+package main
+
+import "fmt"
+
+func main() {
+  fmt.println("Hello, World!")
+}
+```
+- kotlin
+```kotlin
+fun main(args: Array<String>) {
+  println("Hello, World!")
+}
+```
+
+画面（一部）
+![enter image description here](https://lh3.googleusercontent.com/toj8Ocx6VNV3x87Kf3a1tk5Cx64bi9yYVHJCsbLjpTdG7dP2a39vzvQ6QNsBQuF0BpntRcL_oScq3A)
+
+----
+
+H~2~O
+2^10^
+
+Item     | Value
+-------- | -----
+Computer | $1600
+Phone    | $12
+Pipe     | $1
+
+
+Some text with a footnote.[^1]
+
+[^1]: The footnote.
+
+
+| Column 1 | Column 2      |
+|:--------:| -------------:|
+| centered | right-aligned |
+
+
+Markdown converts text to HTML.
+
+*[HTML]: HyperText Markup Language
+
+The Gamma function satisfying $\Gamma(n) = (n-1)!\quad\forall
+n\in\mathbb N$ is via the Euler integral
+
+$$
+\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
+$$
+
+> Written with [StackEdit](https://stackedit.io/).

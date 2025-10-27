@@ -1,0 +1,66 @@
+---
+title: "rust on Codeanywhere"
+description: ""
+pubDate: 2018-02-05
+category: "Rust"
+heroImage: 'https://i.imgur.com/OFLxPAG.png'
+---
+rustでサンプルを書いてみようと思ったところに、ちょうど[codeanywhere](https://codeanywhere.com)のiosアプリ更新の通知があったので、それの使い心地の確認を兼ねて・・・（結果的にそちらがメインになっています）
+
+- ワークスペース作成
+![enter image description here](https://i.imgur.com/OFLxPAG.png)
+![enter image description here](https://i.imgur.com/1lMFPzh.png)
+![enter image description here](https://i.imgur.com/yuIhHqD.png)
+
+- コンテナ作成
+![enter image description here](https://i.imgur.com/AvES6hU.png)
+![enter image description here](https://i.imgur.com/R1xQjW2.png)
+![enter image description here](https://i.imgur.com/J8qoynE.png)
+![enter image description here](https://i.imgur.com/cdfGxq6.png)
+
+- rustのインストール
+![enter image description here](https://i.imgur.com/xHouKcU.png)
+![enter image description here](https://i.imgur.com/sq7N1Xo.png)
+![enter image description here](https://i.imgur.com/ovmXfee.png)
+![enter image description here](https://i.imgur.com/TMIEIkl.png)
+コピペします
+![enter image description here](https://i.imgur.com/f0NlOnk.png)
+![enter image description here](https://i.imgur.com/4Fi8j05.png)
+デフォルトでいきます(そのままEnter)
+![enter image description here](https://i.imgur.com/zTRLRp8.png)
+指定の通り、PATHにcargoのパスを追加します
+![enter image description here](https://i.imgur.com/3g3CJRq.png)
+
+- 準備
+とりあえずapt-get update / upgrade
+![enter image description here](https://i.imgur.com/9A7e0z9.png)
+この辺の質問もデフォルト回答
+![enter image description here](https://i.imgur.com/lJRHMst.png)
+今、PATHに追加するために、envファイルを読み込む
+![enter image description here](https://i.imgur.com/KGdphGh.png)
+
+- hello world!
+[この辺り](http://rust-lang-ja.github.io/the-rust-programming-language-ja/1.6/book/getting-started.html#新たなcargoプロジェクトを作る簡単な方法)を参考に
+![enter image description here](https://i.imgur.com/I3t8WyQ.png)
+![enter image description here](https://i.imgur.com/s03VtG1.png)
+編集画面から見てみる。（emptyのままなら下に引っ張って更新）
+![enter image description here](https://i.imgur.com/EqRSawd.png)
+![enter image description here](https://i.imgur.com/YhnZeY4.png)
+![enter image description here](https://i.imgur.com/DYsI7px.png)
+![enter image description here](https://i.imgur.com/vxQ2e0E.png)
+
+- ビルド&実行
+ビルドを実行するとエラーが・・・
+![enter image description here](https://i.imgur.com/thFk416.png)
+![enter image description here](https://i.imgur.com/oCsW5sC.png)
+ccがないとおっしゃるので、gccをインストールする
+![enter image description here](https://i.imgur.com/mEhSvB5.png)
+![enter image description here](https://i.imgur.com/RYWhw8s.png)
+再度ビルド実行
+![enter image description here](https://i.imgur.com/g6rsW7Z.png)
+今度は成功。最後に実行(run)
+![enter image description here](https://i.imgur.com/foPbM4b.png)
+無事、実行完了！
+
+
+コードは書いてないですが、今回はここまで
