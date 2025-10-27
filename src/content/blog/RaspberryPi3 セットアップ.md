@@ -1,0 +1,44 @@
+---
+title: "RaspberryPi3 セットアップ"
+description: ""
+pubDate: 2018-03-06
+category: "RaspberryPi"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQ0i1KYnkKGs1O0oxJ57oPG8dy2OdNVIWB0T8kWgHWHk9qIuI5TIK4vhjGbWIP6IQ200JtqdfOS5qWhTKcrWdpQZv_eYI6yRbweMIrhlUr7JKXhH9FH50Qbd04q8MPw-B2Dwf4tUFRr1w/'
+---
+RaspberryPi3BにWaveshare社の3.2inch Pri LCD(B)を付ける話
+![enter image description here](https://lh3.googleusercontent.com/bSbtA6Xm4vYBKk2TsoWeiAlcpCxuwh6zyfgejF-eCFod6HwrIZlioZROO1ExS7IO6sMnQnazlcWLJA)
+(前回買ったやつです)
+
+[こちら](https://ykwakuto.blogspot.jp/2018/03/raspberry-pievent.html)で入手した格安ディスプレイですが、付属のQuick Start(Method 1)に従って進めたものの、Raspbianを入れて起動し、ドライバをダウンロードして実行、再起動がかかった後立ち上がらず。
+
+今回はMethod2に従い、ドライバインストール済みのイメージを使用します。
+https://www.waveshare.com/wiki/3.2inch_RPi_LCD_(B)
+
+ダウンロードした7zipファイルを展開して、microSDに書き込み、電源を繋ぐとあっさり起動。
+接続したディスプレイから、wifiの設定などを実施。
+PCからSSHで接続できることを確認したところで、`apt-get update`, `apt-get upgrade`を実行すると・・・
+>E: The value '\stable' is invalid for APT::Default-Release as such a release is not available in the sources
+
+と、エラーが発生。
+
+https://raspberrypi.stackexchange.com/questions/68432/issue-installing-packages-on-raspberry-pi-3-the-value-stable-is-invalid-for/75080
+リンク先を参考に、以下の対応で`apt-get upgrade`の実施に成功。
+`/etc/apt/apt.conf.d/10defaultRelease`を編集
+`APT::Default-release \"stable";`を
+`APT::Default-release \"jessie";`に
+
+(upgradeにはかなり時間がかかりました。なお、dist-upgradeで新規41パッケージ。元になっているイメージが古いので仕方ないですね)
+
+また、LOCALE等を日本語設定にすると文字化けしたので、日本語フォントをインストール
+`apt-get install fonts-noto`
+
+リブートして確認。
+
+あれ？出ない。
+HDMIを繋ぐと、接続したディスプレイに出力したかったであろう画面がモニタに出力されていたので、出力先の設定がHDMIに戻ってしまった模様。
+
+sshからインストールスクリプトを参照し、何が変わったのかを確認していくと、どうやら`/dev/fb1`がなくなっているのが原因のようです。
+
+・・・・残念。また調べておきます。
+
+> Written with [StackEdit](https://stackedit.io/).

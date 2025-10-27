@@ -1,0 +1,21 @@
+---
+title: "Scratch 3.0"
+description: ""
+pubDate: 2018-03-28
+category: "Scratch"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhmWZlv0MNkOtBNuKhy1CzOjS08BwlBhAnFCejuqWXZ2NYreCMqJuJ2104Afo-T7aF0tQBQdRKzDFX6VpDnJACqrxfztHJWLaWd-MTmzB_cerM2UDDdcjm3TZNRfXE8zzOynK955CBwJww/'
+---
+https://llk.github.io/scratch-gui/
+![enter image description here](https://lh3.googleusercontent.com/tLiV1M4mbThSDFpkSb-Wo6__x_rjR_2IIRKIfdqSjtMfVKFJgjihXIXHPtG3saY63sFaj8YtY9nQkw)
+Scratchという名称、あるいは上記のような画面（キャラクター）を見たことがある人は多いと思います。
+Flashを使用した2.0と異なり、3.0はHTML5で作られているので、タブレット端末等Flashが入っていない環境でも使用できます。
+（iPhoneなどのスマホでも動きますが、サイズ的にちょっと厳しかったです）
+まだプレビュー版なので、正式リリースがいつ頃かという確認をしただけの記事です。
+
+![enter image description here](https://lh3.googleusercontent.com/LqVeHQif3p2Us0FCAArIgBJqesnDfe38KxJrV2MPTyWQCK12n24Tc4McikRbggdKps_F_PoC1nT06g)
+[FAQ](https://scratch.mit.edu/preview-faq)によると、Web版が今年(2018)8月。
+オフライン版は今年中といったところでしょうか。
+
+そのタイミングで日本語対応ができていれば、子供にも触らせられそうです。
+
+> Written with [StackEdit](https://stackedit.io/).
