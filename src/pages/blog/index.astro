@@ -12,75 +12,117 @@ const posts = (await getCollection('blog'))
 ---
 
 <!doctype html>
-<html lang="en">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 960px;
+				max-width: 1100px;
+				margin: 0 auto;
+				padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 4rem;
 			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
+			.hero-copy {
+				margin-bottom: clamp(2rem, 5vw, 3rem);
+				text-align: center;
+			}
+			.hero-copy h1 {
+				font-size: clamp(2.4rem, 5vw, 3.2rem);
+				margin-bottom: 0.75rem;
+			}
+			.hero-copy p {
+				margin: 0 auto;
+				max-width: 48ch;
+				color: rgb(var(--gray));
+			}
+			.posts-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: clamp(1.5rem, 3vw, 2.5rem);
+				list-style: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
+			.post-card {
+				background: #fff;
+				border-radius: 24px;
+				overflow: hidden;
+				box-shadow: 0 12px 32px rgba(var(--gray), 0.12);
+				transition: transform 0.18s ease, box-shadow 0.18s ease;
+				height: 100%;
 			}
-			ul li * {
+			.post-card__link {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
 				text-decoration: none;
-				transition: 0.2s ease;
+				color: inherit;
 			}
-			ul li:first-child {
+			.post-card__link:focus-visible {
+				outline: 3px solid rgba(35, 55, 255, 0.4);
+				outline-offset: 4px;
+			}
+			.post-card__media {
+				position: relative;
+				overflow: hidden;
+				aspect-ratio: 16 / 9;
+				background: linear-gradient(135deg, rgba(var(--gray-light), 0.8), rgba(var(--gray-light), 0.3));
+			}
+			.post-card__media img {
 				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
+				height: 100%;
+				object-fit: cover;
 				display: block;
 			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
+			.post-card__body {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				padding: clamp(1.25rem, 3vw, 1.75rem);
 			}
-			.date {
+			.post-card__date {
 				margin: 0;
+				font-size: 0.95rem;
 				color: rgb(var(--gray));
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
+			.post-card__title {
+				margin: 0;
+				font-size: clamp(1.3rem, 3vw, 1.6rem);
+				line-height: 1.2;
+				color: rgb(var(--black));
+			}
+			.post-card__description {
+				margin: 0;
+				color: rgba(var(--gray-dark), 0.8);
+				font-size: 1rem;
+				line-height: 1.6;
+			}
+			.post-card__category {
+				align-self: flex-start;
+				font-size: 0.85rem;
+				font-weight: 600;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: rgb(var(--accent));
+				background: rgba(35, 55, 255, 0.12);
+				border-radius: 999px;
+				padding: 0.35rem 0.75rem;
+			}
+			.post-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 16px 40px rgba(var(--gray), 0.18);
+			}
+			.post-card:hover .post-card__title,
+			.post-card:hover .post-card__date {
 				color: rgb(var(--accent));
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
+			@media (max-width: 640px) {
+				main {
+					padding-top: 2rem;
 				}
-				ul li {
-					width: 100%;
-					text-align: center;
+				.post-card {
+					border-radius: 20px;
 				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+				.post-card__body {
+					padding: 1.25rem;
 				}
 			}
 		</style>
@@ -88,20 +130,38 @@ const posts = (await getCollection('blog'))
 	<body>
 		<Header />
 		<main>
+			<section class="hero-copy">
+				<h1>Blog</h1>
+				<p>最新の記事から過去のアーカイブまで、興味のあるトピックを探してみてください。</p>
+			</section>
 			<section>
-				<ul>
+				<ul class="posts-grid">
 					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.slug}/`}>
-									<img width={720} height={360} src={post.data.heroImage} alt="" />
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
+						posts.map((post) => {
+							const description = post.data.description?.trim();
+							return (
+								<li class="post-card">
+									<a class="post-card__link" href={`/blog/${post.slug}/`}>
+										<figure class="post-card__media">
+											<img
+												src={post.data.heroImage}
+												alt={post.data.title}
+												loading="lazy"
+												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+											/>
+										</figure>
+										<div class="post-card__body">
+											{post.data.category && <span class="post-card__category">{post.data.category}</span>}
+											<p class="post-card__date">
+												<FormattedDate date={post.data.pubDate} />
+											</p>
+											<h3 class="post-card__title">{post.data.title}</h3>
+											{description && <p class="post-card__description">{description}</p>}
+										</div>
+									</a>
+								</li>
+							);
+						})
 					}
 				</ul>
 			</section>
