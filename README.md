@@ -1,71 +1,62 @@
-# Astro Starter Kit: Blog
+# keroway 技術メモ
 
-```sh
-npm create astro@latest -- --template blog
+このリポジトリは「Qiita や Zenn に投稿するまででもないちょっとした内容」をメモしていく個人ブログです。Astro のブログテンプレートをベースに、カード型のブログ一覧や日本語スラッグに対応した導線を追加しています。
+
+## 主な特徴
+
+- 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
+- 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示
+- Astro Content Collections による Markdown/MDX 記事管理と型チェック
+- RSS フィードとサイトマップを自動生成
+- すべてのスタイルはカスタマイズ可能な軽量 CSS で構成
+
+## 技術スタック
+
+- [Astro 5](https://astro.build/) + TypeScript
+- [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) による MDX サポート
+- pnpm 9（`package.json` の `packageManager` 参照）
+- デプロイ: [Vercel](https://vercel.com/)（プレビュー環境での動作を想定）
+
+## セットアップ
+
+```bash
+pnpm install
+pnpm run dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+- 開発サーバー: http://localhost:4321
+- 本番ビルド: `pnpm run build`
+- ビルドのローカル確認: `pnpm run preview`
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> `pnpm install` では同梱の `.npmrc` を利用しており、npm レジストリへのアクセス制限がある環境では `COREPACK_NPM_REGISTRY` を適宜設定してください。
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+## ディレクトリ構成と運用
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-├── public/
+```
+├── public/               # 静的アセット（画像・フォントなど）
 ├── src/
-│   ├── components/
+│   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント
 │   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
+│   │   ├── blog/         # Markdown/MDX の記事本体
+│   │   └── config.ts     # frontmatter スキーマ（title, description, pubDate, category など）
+│   ├── layouts/          # ページレイアウト
+│   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
+├── astro.config.mjs      # Astro 設定（MDX・sitemap を統合）
+├── pnpm-lock.yaml        # 依存関係ロック
 └── tsconfig.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+- 記事は `src/content/blog/` に配置し、frontmatter で `title`, `pubDate`, `description`, `category`（任意）, `heroImage` などを指定します。
+- 一覧ページはカード UI へ刷新済みで、frontmatter の `heroImage` と `category` を活用します。
+- 新しいコンテンツを追加した際は `pnpm run build` で型エラーを確認し、必要に応じて Vercel プレビューでクリック確認を行ってください。
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## デプロイについて
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+- Vercel のプレビュー／本番環境を想定した設定です。Astro の静的生成結果（`dist/`）を自動デプロイします。
+- 日本語スラッグを含む URL は `encodeURIComponent` 済みのパスを使用しているため、ミドルウェアの失敗なく動作します。
 
-Any static assets, like images, can be placed in the `public/` directory.
+## テンプレートについて
 
-## 🧞 Commands
+このサイトは [Astro Starter Kit: Blog](https://github.com/withastro/astro/tree/latest/examples/blog) をベースに構築しています。テンプレート元の README やドキュメントも参照しつつ、独自のスタイルと運用フローを追加しています。
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`            | Installs dependencies                            |
-| `pnpm run dev`            | Starts local dev server at `localhost:4321`      |
-| `pnpm run build`          | Build your production site to `./dist/`          |
-| `pnpm run preview`        | Preview your build locally, before deploying     |
-| `pnpm run astro ...`      | Run CLI commands like `astro add`, `astro check` |
-| `pnpm run astro -- --help` | Get help using the Astro CLI                     |
-
-> **Note**
-> If your environment restricts access to `registry.npmjs.org`, copy the provided `.npmrc` file or set `COREPACK_NPM_REGISTRY=https://registry.npmmirror.com` before running `pnpm install` so that dependencies and the pinned pnpm version can be downloaded successfully.
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+テーマのスタイリングは [Bear Blog](https://github.com/HermanMartinus/bearblog/) を参考にしています。

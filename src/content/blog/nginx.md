@@ -5,7 +5,7 @@ pubDate: 2018-02-07
 category: "nginx"
 heroImage: 'https://i.imgur.com/nLyRv4l.png'
 ---
-一応[前回](https://ykwakuto.blogspot.jp/2018/02/mastodon-on-docker.html)の続き
+一応[前回](/blog/mastodon-on-docker/)の続き
 
 とりあえず、プリコンパイルができてなくても最低限の動作はするんじゃないか、と試しにrunを実行すると動いたっぽい。
 
