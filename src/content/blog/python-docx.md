@@ -1,0 +1,67 @@
+---
+title: "python-docx"
+description: ""
+pubDate: 2018-01-30
+category: "python"
+heroImage: 'https://i.imgur.com/W3HQkDK.png'
+---
+[こちら](http://python-docx.readthedocs.io/en/latest/)のサンプルに基づいて実装してみました。
+
+画像とかデータソースとかは面倒なので適宜改変
+![enter image description here](https://i.imgur.com/W3HQkDK.png)
+
+作成したdocxを開いてみる
+![enter image description here](https://i.imgur.com/tKUhquh.png)
+
+改変後のソースは以下の通り
+
+```python
+from docx import Document
+from docx.shared import Inches
+
+document = Document()
+
+document.add_heading('Document Title', 0)
+
+p = document.add_paragraph('A plain paragraph having some ')
+p.add_run('bold').bold = True
+p.add_run(' and som ')
+p.add_run('italic.').italic = True
+
+document.add_heading('Heading, level 1', level=1)
+document.add_paragraph('Intense quote', style='IntenseQuote')
+
+document.add_paragraph('first item in unordered list', style='ListBullet')
+document.add_paragraph('first item in ordered list', style='ListNumber')
+
+#document.add_picture('xxx.png', width=Inches(1.25))
+
+table = document.add_table(rows=1, cols=3)
+hdr_cells = table.rows[0].cells
+hdr_cells[0].text = 'Qty'
+hdr_cells[1].text = 'Id'
+hdr_cells[2].text = 'Desc'
+for item in ['test','test2','test3'] :
+    row_cells = table.add_row().cells
+    row_cells[0].text = item
+    row_cells[1].text = item + 'hoge'
+    row_cells[2].text = item + 'fuga'
+
+document.add_page_break()
+
+document.save('test.docx')
+```
+----------
+以下余談
+
+ - Mac(High Sierra)環境にpython3をインストールしようとして詰まる
+```sh
+sudo mkdir -p /usr/local/Frameworks/Python.framework
+sudo chown /usr/local/* $(whoami) $(brew --prefix)
+brew link python3
+```
+  でインストールは解決
+    別モノのインストールですが[参考](https://qiita.com/_ag/items/1ea00c8575f8fe2d6c57)
+ - 同、pipのインストールで詰まる
+  [こちら](https://pip.readthedocs.io/en/stable/installing/) を見て、後回しにすることに
+  Linux環境にpython3を入れていたので、今回はそちらを利用した次第。
