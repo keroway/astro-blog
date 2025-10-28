@@ -1,0 +1,35 @@
+---
+title: "nerodia(3)"
+description: ""
+pubDate: 2018-03-27
+category: "nerodia"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhmZ_jkiAQ29gUhBRSx8sPylP7Yz4juHFKVzph4lD35hUHMHL2f481yWUJFg5XHyjXVy2i0w85jraKo6dWtH5QmMqTxijFpS4wYX7bUdzdIGz3ww8m5-y-4xvDEs4NXfIe-fqa1OPo49F4/'
+---
+[前回](https://ykwakuto.blogspot.jp/2018/03/nerodia2.html)データの取得（データの有無チェック）を行いましたが、そもそもやりたかったのは自動投稿なのでした。
+その後実施はできましたが、そのままコードを出すわけにもいかないので、残課題含めそこまでの要点をまとめます。
+
+
+1. textareaの編集がうまくいかない
+  valueがreadonlyだと言われる。
+  類似の問題を探してみても、どれも解決に至った形跡が見当たらない。コンテンツに依存?
+  →今後自分で作った際に検証予定
+2. 遷移したらとりあえず`Browser#wait()`
+  seleniumなどを使う人には当たり前かも知れませんが。前回の確認時には遷移(Browser#goto())後、すぐに遷移先向けの処理を実施したものが正しく動作していたものが、今回確認中に遷移前の画面に対して操作しているという現象が発生。
+3. id以外の要素指定は複数ヒットに注意(当たり前か)
+  しばらく気づかずハマる。
+  (UnknownObjectと出ていたものの意味に気づけなかった)
+  他の条件で絞ることもできそうにないので、とりあえず以下のような実装で回避。
+```python
+for btn in browser.buttons(class_name='input_complete'):
+  if btn.enabled and btn.visible:
+    btn.click()
+    break
+```
+
+・一通りやってみて
+nerodiaはまだ情報が少ないですが、watir(ruby)のpython向け移植なので、watirの情報を調べればだいたいそのまま使えます。
+[watirのドキュメント](http://www.rubydoc.info/gems/watir/)
+言語固有の仕様等による差異については、[こちら](http://nerodia.readthedocs.io/en/latest/watir.html)に記載があります。
+
+
+> Written with [StackEdit](https://stackedit.io/).

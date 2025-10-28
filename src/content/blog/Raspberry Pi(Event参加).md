@@ -1,0 +1,41 @@
+---
+title: "Raspberry Pi(Event参加)"
+description: ""
+pubDate: 2018-03-05
+category: "Raspberry Pi"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjsMfWVGN0eI-arbCLv-Xm9dgvLUmQ4Vjfrcqe_Mf9yV6Tgh2tDsttuuunOWdMMpd4gJqNJeKJWt4itkqRZHndmt2WXtUPNtt0lcXecjQV-JVfdcnZM6om-0sJdzms5KJNDcKaoGEBp2x0/'
+---
+予告通り行って来ました。
+
+3/3(土)に一度行って買い物等をしましたが、どんな所だったかを長男に話したら行きたがったので、翌3/4(日)長男と二人で行って来ました。
+
+## 3/3(土)
+![enter image description here](https://lh3.googleusercontent.com/BE0IuMKPrrR_0QEIexANMTF9CpI6yH2y4DKnowE8z1sUR8U7X79QO5fyfWtoU4ztwkfN0_j7bTwQ5Q)
+こちらでRaspberry Pi3 と処分品の1000円ディスプレイを購入
+
+![enter image description here](https://lh3.googleusercontent.com/CULU_Kj10hBCm5dOXD4-wy0uQCVg3Xm0IQrlgKG_qj6E42oTSI6BLcPOUanfAM5b0i5k5n3_YqNzSw)
+300円のアウトレット品(ケース)を購入
+
+![enter image description here](https://lh3.googleusercontent.com/bSbtA6Xm4vYBKk2TsoWeiAlcpCxuwh6zyfgejF-eCFod6HwrIZlioZROO1ExS7IO6sMnQnazlcWLJA)
+主な成果物まとめ
+
+## 3/4(日)
+
+写真はそれなりに撮ったのですが、子供メインだったのであまり載せるものがないです・・・
+
+とりあえず長居させていただいたのは
+![enter image description here](https://lh3.googleusercontent.com/jbrpo22JhnsCA_7g3XAZGoJ5rWIyMjGnLUeW5t1MtkcLMLe9_S1mhVTJG6PPTQD4W9PNoiGGuSsfQg)
+IchigoJam(https://ichigojam.net/)のブース
+写真はIchigonQuest(http://ichigonquest.shizentai.jp/index.html)
+
+![enter image description here](https://lh3.googleusercontent.com/4rIPGMVgb7ozk-YK8x3KvTQ-SbCjx2FGh0oTsgcAo4kMpGt63szAitDwYOBnzcStsIlyEioPE8qSVQ)
+ [Japanese Raspberry Pi Users Group](https://www.raspi.jp/)のブース
+
+・おまけ
+![enter image description here](https://lh3.googleusercontent.com/us3Nr_ip_xtFxdelwH-hTevmc-QcuV65te8qbyk01mCulhBoPVwqw2-MPNNYnIVzvipq28zE5EipFg)
+蒲田ということで、[你好](http://www.nihao.co.jp)でお昼を食べて帰りました。
+
+なお、購入したラズパイとディスプレイはセットアップ中です。
+（ディスプレイの接続にちょっと苦戦）
+
+> Written with [StackEdit](https://stackedit.io/).

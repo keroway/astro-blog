@@ -1,0 +1,29 @@
+---
+title: "RaspberryPi3 セットアップ(2)"
+description: ""
+pubDate: 2018-03-08
+category: "RaspberryPi"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4LcEVxN6MqvwDuxPIqlrZBNLP0sJ0Qokp_qeUMqmMW5fgre5LLBCBU0G6vzRw6kcEQxzlPTrEqgOfphdhx_NHqwK1fZYJSMSB3VWZej22SBMn1PxxSQceiAV4Ej4o8U3m3AzITP2o82g/'
+---
+[ちょっと前](https://ykwakuto.blogspot.jp/2018/03/raspberrypi3.html)に実施した「ラズパイにLCDをつけて、LCDメーカーのOSイメージで起動したら表示されたのに、`apt-get dist-upgrade`とかしたら表示されなくなった話」の後日談。
+
+色々調べていくつかあたりをつけていたのですが、とりあえずダメ元で最新のドライバ（と、各種設定ファイル）を入れてみようということで
+
+```bash
+curl -L http://www.waveshare.com/w/upload/0/00/LCD-show-170703.tar.gz -O
+tar xvfz LCD-show-170703.tar.gz 
+cd LCD-show/
+./LCD32-show
+```
+このように実行してみたところ、あっさり表示されたのでした。
+![enter image description here](https://lh3.googleusercontent.com/LlcJj5CX6OwStQU2WJ8qFW88O0Qr4GKhlKFPbKcSaPtonlvHRN3M8rj-nSFeeuA3iTOfonkQHr6w7w)
+フォントサイズを6ptにしてます。
+
+ちなみに、マイクラの出力はHDMIになるようです。
+![enter image description here](https://lh3.googleusercontent.com/QCnFZdCzqsCny-EZnea-vuNha2APFyTx42PMu0208-0QSVR9MSBO0vv_Iul6OzvnNR_zh968waSAAA)
+
+![enter image description here](https://lh3.googleusercontent.com/NA-zZDWZUdA9iw81A_8i4YPTYEtK5_cDRfwul_IkxlknjHu9TqUkz2P056HrS-LF04T0NcpgsR7MNA)
+
+使い道は追々考えます。
+
+> Written with [StackEdit](https://stackedit.io/).

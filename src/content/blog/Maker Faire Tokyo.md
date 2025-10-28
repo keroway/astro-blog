@@ -1,0 +1,27 @@
+---
+title: "Maker Faire Tokyo"
+description: ""
+pubDate: 2018-03-13
+category: "Maker Faire Tokyo"
+heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV26CcZ6rpGdYoB9pi7aXOJL3r4BMKxaQkm0aenV4QNwa6hgowJ1k6bOV4jdif9LOM7MmnRygIuNs2UUoAtfGaB9Ivd9dcx_i0lvdJeoC_d3E-4hfuBAM-u_4cLd0iGZEYe9x2sHhccQA/'
+---
+![enter image description here](https://lh3.googleusercontent.com/jY8gxGTDGa0v0RqJXkgFoxYUle00sPTFksLZtBG9U3TAMSHaHmuMUJld3ZnTh_ybvlrcjvLpp4opgg)
+少々気が早いですが、通知が来てたのでご紹介。
+http://makezine.jp/event/mft2018/
+
+去年子供と行ってきましたが、色々ありすぎて子供の体力/精神力が持たなかった印象。今年は（参加できたら）もうちょっとゆっくり回れると思います。
+
+
+写真を挙げるとキリがないのですが、他であまり掲載されてなさそうなものを中心に・・・・
+
+![enter image description here](https://lh3.googleusercontent.com/f-NPJOSY6p8xvdvsPxH2b2aJDSxa6yGMkXQbrHVF-SX4fKn-NGy1p_gX76E775ipVBQaibWPVlfiNA)
+
+![enter image description here](https://lh3.googleusercontent.com/SaNVMH4HQ7RhRzlJGciTaYaFc7ooinLeQc1-SH9LTHrc8PHMV1rXDJMUV83syYmQi-6CyAyqJ3Sk6Q)
+
+![enter image description here](https://lh3.googleusercontent.com/hUFGaU4X7u8EOYyi4YtX86-vcPFWN8nngpnYNYZKhx4m3xz4XiX7b0DGQcQHsgLVHWCzki12Fj9Cww)
+
+![enter image description here](https://lh3.googleusercontent.com/Ge4YLUolSvPPotJI_6VNlGN0_DhvnRFkVCJrBVhmKpfEMcGdPpfwK4hK4jUOU9MikJYIIUnY71jk3g)
+
+![enter image description here](https://lh3.googleusercontent.com/nkSAj-R2hArZSlHMdW-52UM2pyGPB5BT73SOtQ0j9pK4SMRJNwBHCUinNDHX1DJGH2PSadSOXYwmkw)
+
+> Written with [StackEdit](https://stackedit.io/).

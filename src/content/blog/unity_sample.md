@@ -1,0 +1,56 @@
+---
+title: "Unityサンプル"
+description: ""
+pubDate: 2018-01-23
+category: "unity"
+heroImage: 'https://i.imgur.com/VQ00Drn.png'
+---
+## コード以外の修正説明
+
+サンプル実装時点
+![enter image description here](https://i.imgur.com/VQ00Drn.png)
+
+初期位置を高くしてみたり
+![enter image description here](https://i.imgur.com/eX4WBtw.png)
+カメラ位置を合わせ
+![enter image description here](https://i.imgur.com/rhCjp4k.png)
+物理特性マテリアルを追加し
+![enter image description here](https://i.imgur.com/GAOGsik.png)
+反発係数をセット
+![enter image description here](https://i.imgur.com/20QDv5W.png)
+
+## コード修正内容
+
+スペースキーでのジャンプと、枠からはみ出て落ちた時にスタート位置から復活するよう変更
+余裕があったら説明を追加
+
+```c#
+ void FixedUpdate()
+ {
+     // 空中では操作不可
+     // 以下の理由により本当は違う方法（地面との接触など）で判定を行うべき
+     // 1.float同士の==比較は誤字で一致しないかも
+     // 2.衝突判定次第で座標が安定しないかも
+     // 3.外へ飛び出た際、Y座標が一致すれば空中ジャンプ可能
+     if(transform.position.y == 0.5f)
+     {
+         float moveHorizontal = Input.GetAxis("Horizontal");
+         float moveVertical = Input.GetAxis("Vertical");
+         float moveJump = 0.0f;
+
+         // ジャンプ
+         if(Input.GetKeyDown("space"))
+         {
+             moveJump = 30.0f;
+         }
+
+         Vector3 movement = new Vector3(moveHorizontal, moveJump, moveVertical);
+         rb.AddForce(movement * speed);
+     }
+     else if(transform.position.y < -10.0f)
+     {
+         rb.velocity = Vector3.zero;
+         transform.position = new Vector3(0.0f, 10.5f, 0.0f);
+     }
+ }
+```

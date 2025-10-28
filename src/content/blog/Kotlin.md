@@ -1,0 +1,18 @@
+---
+title: "Kotlin"
+description: ""
+pubDate: 2018-02-13
+category: "Kotlin"
+heroImage: 'https://i.imgur.com/nN0WkkO.png'
+---
+手抜きでHello World だけさらっとやるつもりが・・・
+
+以前の記事に出した[repl.it](https://repl.it/)では出力が表示されない
+![enter image description here](https://i.imgur.com/nN0WkkO.png)
+
+ローカル(IntelliJ)で確認すると問題なく表示される
+![enter image description here](https://i.imgur.com/tKDx4we.png)
+![enter image description here](https://i.imgur.com/OAVAGBo.png)
+
+メインクラスとか用意しないとダメなのだろうか。
+real.itのKotlinは(beta)とあるので、とりあえず気にしないことに。
