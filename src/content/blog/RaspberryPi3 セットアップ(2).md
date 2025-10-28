@@ -5,7 +5,7 @@ pubDate: 2018-03-08
 category: "RaspberryPi"
 heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4LcEVxN6MqvwDuxPIqlrZBNLP0sJ0Qokp_qeUMqmMW5fgre5LLBCBU0G6vzRw6kcEQxzlPTrEqgOfphdhx_NHqwK1fZYJSMSB3VWZej22SBMn1PxxSQceiAV4Ej4o8U3m3AzITP2o82g/'
 ---
-[ちょっと前](https://ykwakuto.blogspot.jp/2018/03/raspberrypi3.html)に実施した「ラズパイにLCDをつけて、LCDメーカーのOSイメージで起動したら表示されたのに、`apt-get dist-upgrade`とかしたら表示されなくなった話」の後日談。
+[ちょっと前](/blog/raspberrypi3-セットアップ/)に実施した「ラズパイにLCDをつけて、LCDメーカーのOSイメージで起動したら表示されたのに、`apt-get dist-upgrade`とかしたら表示されなくなった話」の後日談。
 
 色々調べていくつかあたりをつけていたのですが、とりあえずダメ元で最新のドライバ（と、各種設定ファイル）を入れてみようということで
 

@@ -5,7 +5,7 @@ pubDate: 2018-02-07
 category: "Mastodon"
 heroImage: 'https://i.imgur.com/6D1hUWD.png'
 ---
-[前回](https://ykwakuto.blogspot.jp/2018/02/nginx.html)、[前々回](https://ykwakuto.blogspot.jp/2018/02/mastodon-on-docker.html)の続き。
+[前回](/blog/nginx/)、[前々回](/blog/mastodon-on-docker/)の続き。
 未完成ですが、一旦これで終わり。
 
 [手順](https://github.com/tootsuite/documentation/blob/master/Running-Mastodon/Docker-Guide.md)を見直すと[Production Guide](https://github.com/tootsuite/documentation/blob/master/Running-Mastodon/Production-guide.md)を見てHTTPSの設定しとけよ、とあった。
