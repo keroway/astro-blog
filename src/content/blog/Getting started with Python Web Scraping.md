@@ -8,7 +8,7 @@ heroImage: 'https://lh3.googleusercontent.com/QpSBAiXQ86N2DsWcvv8fhWferGw-OxTU8E
 
 https://hub.packtpub.com/getting-started-with-python-web-scraping/
 
-以前([1](https://ykwakuto.blogspot.jp/2018/03/nerodia1.html), [2](https://ykwakuto.blogspot.jp/2018/03/nerodia2.html), [3](https://ykwakuto.blogspot.jp/2018/03/nerodia3.html))、[nerodia](https://github.com/watir/watir)を用いてブラウザを操作し、表示内容の取得や投稿を行いました。
+以前([1](/blog/nerodia1/), [2](/blog/nerodia2/), [3](/blog/nerodia3/))、[nerodia](https://github.com/watir/watir)を用いてブラウザを操作し、表示内容の取得や投稿を行いました。
 次はもうちょっとシンプルに、リクエストを出して帰ってきたHTMLをパースして・・・といったやり方でやってみます。
 
 まず今回は、最初のリンク先にあった内容をそのままやってみます。

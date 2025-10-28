@@ -9,7 +9,7 @@ RaspberryPi3BにWaveshare社の3.2inch Pri LCD(B)を付ける話
 ![enter image description here](https://lh3.googleusercontent.com/bSbtA6Xm4vYBKk2TsoWeiAlcpCxuwh6zyfgejF-eCFod6HwrIZlioZROO1ExS7IO6sMnQnazlcWLJA)
 (前回買ったやつです)
 
-[こちら](https://ykwakuto.blogspot.jp/2018/03/raspberry-pievent.html)で入手した格安ディスプレイですが、付属のQuick Start(Method 1)に従って進めたものの、Raspbianを入れて起動し、ドライバをダウンロードして実行、再起動がかかった後立ち上がらず。
+[こちら](/blog/raspberry-pievent/)で入手した格安ディスプレイですが、付属のQuick Start(Method 1)に従って進めたものの、Raspbianを入れて起動し、ドライバをダウンロードして実行、再起動がかかった後立ち上がらず。
 
 今回はMethod2に従い、ドライバインストール済みのイメージを使用します。
 https://www.waveshare.com/wiki/3.2inch_RPi_LCD_(B)
