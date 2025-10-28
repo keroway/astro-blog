@@ -5,7 +5,7 @@ pubDate: 2018-02-27
 category: "Xamarin"
 heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3Dj1OfjreXIMfV1NGwbOo5rz-FUssjr1Vw-kk0vNu2WxFwSdKQGXx04SI9RnXMOaSpUGC-ExjkE12yvsVeJt-nlBvtdkEI0MgZMH99oS5d7Kifx3gSDXZVvwVtajOcafjExhsstJ31B4/'
 ---
-[前回](https://ykwakuto.blogspot.jp/2018/02/xamarin.html)VisualStudioを立ち上げるところまでしかできなかったので、今回シミュレータ実行くらいまではやろうと思ったのですが・・・
+[前回](/blog/xamarin/)VisualStudioを立ち上げるところまでしかできなかったので、今回シミュレータ実行くらいまではやろうと思ったのですが・・・
 
 1. Xcodeが立ち上がらない
 ![enter image description here](https://lh3.googleusercontent.com/AZBVDLsNI38ZO84yleH8IAaCUHHwvtru4FPEgl8BsRCKrIi12AsqA9-Ds6jGK_i4ll2dC9zqRrJs8Q)

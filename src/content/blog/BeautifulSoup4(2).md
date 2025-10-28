@@ -6,7 +6,7 @@ category: "BeautifulSoup"
 heroImage: 'https://lh3.googleusercontent.com/qRSDidUbAvAo7Wz6FA44pXPAiWucp_enuNje3XU0HJAUAYiiGH85FjgS-GuHiOE8ix-FlGOnW1BTAQ'
 ---
 
-[この間](https://ykwakuto.blogspot.jp/2018/04/beautifulsoup41.html)作成したスクリプトを、Google App Engineで実行してみた、というお話。
+[この間](/blog/beautifulsoup41/)作成したスクリプトを、Google App Engineで実行してみた、というお話。
 
 ## GAEの準備
 [こちら](https://cloud.google.com/appengine/docs/flexible/python/quickstart?hl=ja)のQuickStartにしたがってHello worldが表示されるところまで進めます。

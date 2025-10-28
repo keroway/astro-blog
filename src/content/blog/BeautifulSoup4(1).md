@@ -6,7 +6,7 @@ category: "Solr"
 heroImage: 'https://lh3.googleusercontent.com/zAxzWgVDRLD-Oz7WjvlrdkFyyOVib-p8JZbD7dzZ3nIFIeLqze2HPurdBFii4sjuxphc44YdqzTbWA'
 ---
 
-[以前](https://ykwakuto.blogspot.jp/2018/04/getting-started-with-python-web-scraping.html)サンプルそのままだったPythonでのWeb Scrapingの応用編です。
+[以前](/blog/getting-started-with-python-web-scraping/)サンプルそのままだったPythonでのWeb Scrapingの応用編です。
 
 といっても、今回は参照先を変えただけで、やる事はほとんど変わっていません。
 
@@ -60,4 +60,3 @@ In [14]: for l in lists:
 ```
 
 次回は、これを見やすく表示する表示させてみようと思います。
-

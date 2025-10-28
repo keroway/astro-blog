@@ -7,7 +7,7 @@ heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiTUnSyzfo
 ---
 http://makezine.jp/event/mft2018/
 
-まあ、[以前](https://ykwakuto.blogspot.com/2018/03/maker-faire-tokyo.html)書いてる訳ですが、チケットを購入したので再びお知らせします。
+まあ、[以前](/blog/maker-faire-tokyo/)書いてる訳ですが、チケットを購入したので再びお知らせします。
 
 ![enter image description here](https://lh3.googleusercontent.com/SUZRhJpVVf2aBec7lBZy7yY3fzeb5WTlfOl-YgWfrFRRJuIOv1UsFRsw9u8C8-mYGqytZRXaDjAtjA)
 
