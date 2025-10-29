@@ -15,6 +15,7 @@
     "@astrojs/mdx": "^4.3.7",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/sitemap": "^3.6.0",
+    "@playwright/test": "^1.56.1",
     "astro": "^5.14.8",
     "typescript": "^5.9.3"
   }
