@@ -1,36 +1,32 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 ---
 
-<!doctype html>
-<html lang="ja">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header title={SITE_TITLE} />
-		<main>
-			<h1>keroway技術メモ</h1>
-			<p>
-				このサイトはkerowayによるちょっとした技術メモです。QiitaやZennに投稿するほどでもないような内容を気軽に書いていこうと思います。
-				 <a href="https://ykwakuto.blogspot.com/">おもに社内向け(仮)</a> という、かつて社内向けに書いていたブログの続編です。
-				 （ということにします）
-			</p>
-			<p>
-				おもに社内向け(仮)では <a href="https://www.blogger.com/about/">blogger</a>を使っていましたが、投稿はbloggerのエディタを使わず<a href="https://stackedit.io/">StackEdit</a>で書いて連携していました。
-				StackEditはMarkdownエディタで、bloggerと連携しているので、bloggerのエディタを使わずにMarkdownで書けるのが便利でした。
-			</p>
-			<p>
-				そちらはそのままにして、ここは心機一転という形でもよかったのですが、せっかくなのでいくつかのブログサイトに散らばっていた過去記事を一か所にまとめようと思い
-				StackEditに残っていたMarkdownファイルを中心に、いくつかの過去記事を集めてこのサイトに移行しました。
-			</p>
-			<p>
-				このサイトは <a href="https://astro.build/">Astro</a> の<a href="https://github.com/withastro/astro/tree/main/examples/blog">blogテンプレート</a>を使用しています。
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+<SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<h1>keroway技術メモ</h1>
+	<p>
+		このサイトはkerowayによるちょっとした技術メモです。QiitaやZennに投稿するほどでもないような内容を気軽に書いていこうと思います。
+		 <a href="https://ykwakuto.blogspot.com/" rel="noopener noreferrer" target="_blank">おもに社内向け(仮)</a> という、かつて社内向けに書いていたブログの続編です。
+		 （ということにします）
+	</p>
+	<p>
+		おもに社内向け(仮)では <a href="https://www.blogger.com/about/" rel="noopener noreferrer" target="_blank">blogger</a>を使っていましたが、投稿はbloggerのエディタを使わず<a
+			href="https://stackedit.io/"
+			rel="noopener noreferrer"
+			target="_blank"
+		>StackEdit</a>で書いて連携していました。
+		StackEditはMarkdownエディタで、bloggerと連携しているので、bloggerのエディタを使わずにMarkdownで書けるのが便利でした。
+	</p>
+	<p>
+		そちらはそのままにして、ここは心機一転という形でもよかったのですが、せっかくなのでいくつかのブログサイトに散らばっていた過去記事を一か所にまとめようと思い
+		StackEditに残っていたMarkdownファイルを中心に、いくつかの過去記事を集めてこのサイトに移行しました。
+	</p>
+	<p>
+		このサイトは <a href="https://astro.build/" rel="noopener noreferrer" target="_blank">Astro</a> の<a
+			href="https://github.com/withastro/astro/tree/main/examples/blog"
+			rel="noopener noreferrer"
+			target="_blank"
+		>blogテンプレート</a>を使用しています。
+	</p>
+</SiteLayout>
