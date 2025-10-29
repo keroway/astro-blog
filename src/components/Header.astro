@@ -42,7 +42,8 @@ import { SITE_TITLE } from '../consts';
 		z-index: 50;
 		background: rgba(255, 255, 255, 0.92);
 		backdrop-filter: blur(14px);
-		box-shadow: 0 6px 18px rgba(var(--black), 0.06);
+		border-bottom: 1px solid rgba(var(--gray-light), 0.8);
+		box-shadow: 0 4px 16px rgba(var(--gray), 0.14);
 	}
 	h2 {
 		margin: 0;
@@ -62,10 +63,14 @@ import { SITE_TITLE } from '../consts';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: rgb(var(--black));
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
-		transition: color 120ms ease, border-color 120ms ease;
+		transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+	}
+	nav a:hover {
+		color: var(--accent);
+		border-bottom-color: rgba(35, 55, 255, 0.35);
 	}
 	nav a.active {
 		text-decoration: none;
