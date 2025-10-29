@@ -9,6 +9,7 @@
 - Astro Content Collections による Markdown/MDX 記事管理と型チェック
 - RSS フィードとサイトマップを自動生成
 - `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
+- トップページにはヒーロー、最新記事、フォーカステーマ、連絡用コールアウトを配置し、動線と信頼感を向上
 - すべてのスタイルはカスタマイズ可能な軽量 CSS で構成
 
 ## 技術スタック
@@ -49,6 +50,7 @@ pnpm run dev
 
 - 記事は `src/content/blog/` に配置し、frontmatter で `title`, `pubDate`, `description`, `category`（任意）, `heroImage` などを指定します。
 - 一覧ページはカード UI へ刷新済みで、frontmatter の `heroImage` と `category` を活用します。画像のアスペクト比は CSS の `aspect-ratio` で固定されます。
+- トップページは `getCollection('blog')` で最新 3 件を自動取得して表示するため、新規記事を追加するとホームも自動で更新されます。
 - 各ページは `SiteLayout` を経由して `<Head>` メタ情報とヘッダー／フッターを共有し、OGP `og:locale` を自動付与します。
 - 新しいコンテンツを追加した際は `pnpm run build` で型エラーを確認し、必要に応じて Vercel プレビューでクリック確認を行ってください。
 

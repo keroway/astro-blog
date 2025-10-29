@@ -56,10 +56,11 @@ const posts = (await getCollection('blog'))
 </SiteLayout>
 
 <style>
-	:global(body) {
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		background-size: 100% 520px;
-	}
+		:global(body) {
+			background: linear-gradient(var(--gray-gradient)) no-repeat;
+			background-size: 100% 520px;
+			background-color: var(--surface-muted);
+		}
 	.blog-index {
 		max-width: min(1100px, 100%);
 		padding-block-start: clamp(2.5rem, 5vw, 4rem);
@@ -86,14 +87,15 @@ const posts = (await getCollection('blog'))
 		margin: 0;
 		padding: 0;
 	}
-	.post-card {
-		background: #fff;
-		border-radius: 24px;
-		overflow: clip;
-		box-shadow: 0 12px 32px rgba(var(--gray), 0.12);
-		transition: transform 160ms ease, box-shadow 160ms ease;
-		height: 100%;
-	}
+		.post-card {
+			background: var(--surface);
+			border-radius: 24px;
+			overflow: clip;
+			box-shadow: var(--shadow-sm);
+			border: 1px solid rgba(var(--gray-light), 0.7);
+			transition: transform 160ms ease, box-shadow 160ms ease;
+			height: 100%;
+		}
 	.post-card__link {
 		display: flex;
 		flex-direction: column;
@@ -152,10 +154,10 @@ const posts = (await getCollection('blog'))
 		border-radius: 999px;
 		padding: 0.35rem 0.75rem;
 	}
-	.post-card:is(:hover, :focus-within) {
-		transform: translateY(-4px);
-		box-shadow: 0 16px 40px rgba(var(--gray), 0.18);
-	}
+		.post-card:is(:hover, :focus-within) {
+			transform: translateY(-4px);
+			box-shadow: var(--shadow-md);
+		}
 	.post-card:is(:hover, :focus-within) .post-card__title,
 	.post-card:is(:hover, :focus-within) .post-card__date {
 		color: rgb(var(--accent));
