@@ -4,7 +4,7 @@ import { SITE_TITLE } from '../consts';
 ---
 
 <header>
-	<nav>
+	<nav aria-label="メインナビゲーション">
 		<h2><a href="/">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href="/">Home</HeaderLink>
@@ -12,7 +12,7 @@ import { SITE_TITLE } from '../consts';
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 		<div class="social-links">
-			<a href="https://twitter.com/keroway21" target="_blank">
+			<a href="https://twitter.com/keroway21" target="_blank" rel="noopener noreferrer">
 				<span class="sr-only">Follow keroway on Twitter</span>
 				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
 					><path
@@ -21,7 +21,7 @@ import { SITE_TITLE } from '../consts';
 					></path></svg
 				>
 			</a>
-			<a href="https://github.com/keroway" target="_blank">
+			<a href="https://github.com/keroway" target="_blank" rel="noopener noreferrer">
 				<span class="sr-only">keroway on GitHub</span>
 				<svg viewBox="0 0 16 16" aria-hidden="true" width="32" height="32"
 					><path
@@ -36,9 +36,13 @@ import { SITE_TITLE } from '../consts';
 <style>
 	header {
 		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		padding: 0 clamp(1rem, 4vw, 1.5rem);
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: rgba(255, 255, 255, 0.92);
+		backdrop-filter: blur(14px);
+		box-shadow: 0 6px 18px rgba(var(--black), 0.06);
 	}
 	h2 {
 		margin: 0;
@@ -51,18 +55,26 @@ import { SITE_TITLE } from '../consts';
 	}
 	nav {
 		display: flex;
+		gap: clamp(0.75rem, 2vw, 1.5rem);
 		align-items: center;
 		justify-content: space-between;
+		min-height: 72px;
 	}
 	nav a {
 		padding: 1em 0.5em;
 		color: var(--black);
 		border-bottom: 4px solid transparent;
 		text-decoration: none;
+		transition: color 120ms ease, border-color 120ms ease;
 	}
 	nav a.active {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
+	}
+	.internal-links {
+		display: flex;
+		gap: clamp(0.25rem, 1vw, 0.75rem);
+		align-items: center;
 	}
 	.social-links,
 	.social-links a {
