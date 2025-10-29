@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 const PORT = 4321;
-const HOST = '127.0.0.1';
+const HOST = 'localhost';
 
 export default defineConfig({
   testDir: './tests/playwright',
@@ -12,10 +12,12 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   webServer: {
-    command: `pnpm run dev -- --host ${HOST} --port ${PORT}`,
+    command: `npx astro dev --host ${HOST} --port ${PORT}`,
+    url: `http://${HOST}:${PORT}`,
     timeout: 120_000,
-    port: PORT,
     reuseExistingServer: !process.env.CI,
+    stdout: 'pipe',
+    stderr: 'pipe',
   },
   projects: [
     {
