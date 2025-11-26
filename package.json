@@ -18,8 +18,5 @@
     "@playwright/test": "^1.56.1",
     "astro": "^5.15.2",
     "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "pnpm": "^10.20.0"
   }
 }
