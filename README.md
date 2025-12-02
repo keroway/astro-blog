@@ -14,10 +14,15 @@
 
 ## 技術スタック
 
-- [Astro 5](https://astro.build/) + TypeScript
+- [Astro 5](https://astro.build/) + TypeScript（strict モード有効）
 - [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) による MDX サポート
-- pnpm 9（`package.json` の `packageManager` 参照）
-- デプロイ: [Vercel](https://vercel.com/)（プレビュー環境での動作を想定）
+- [@astrojs/rss](https://docs.astro.build/en/guides/rss/) による RSS フィード自動生成
+- [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) による XML サイトマップ生成
+- [astro:assets](https://docs.astro.build/en/guides/images/) による画像最適化（自動フォーマット変換・リサイズ）
+- [View Transitions](https://docs.astro.build/en/guides/view-transitions/) によるページ遷移アニメーション
+- pnpm 10.24.0（`package.json` の `packageManager` 参照）
+- Playwright による E2E テスト
+- デプロイ: [Vercel](https://vercel.com/)（静的サイト生成）
 
 ## セットアップ
 
