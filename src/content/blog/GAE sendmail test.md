@@ -1,9 +1,9 @@
-﻿---
+---
 title: "GAE でメール送信"
 description: ""
 pubDate: 2018-04-25
 category: "GAE"
-heroImage: 'https://lh3.googleusercontent.com/vMhb6-r32bFH6QB0DHpsI6TKQkBdMrTazuYxMIcCKeEFoEds1KGM-VeiSgZTmr4eaS_uBnTjwKXzjw'
+heroImage: '/images/blog/52cb3d07495c.jpg'
 ---
 
 まずは、課金のお話。

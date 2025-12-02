@@ -3,7 +3,7 @@ title: "Xamarin"
 description: ""
 pubDate: 2018-02-23
 category: "Xamarin"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgtyVr0IHzfqi0Q4HNJkpzeCHeSwWnEmZ3hA0WvgbEG5mcx4PUpd18eNT38GNvSdsKeaIgceCal_py2grprQi1EwWxr6n8U2qs8sbgC6P3tzbU6FKd85ohA-rYwX0AK62C2g7Y7EQsX8IU/'
+heroImage: '/images/blog/9da52b3c19c1.jpg'
 ---
 (ちょっとだけ・・・)
 

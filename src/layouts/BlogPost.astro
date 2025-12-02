@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { Image } from "astro:assets";
 import SiteLayout from "./SiteLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 
@@ -15,7 +14,7 @@ const { title, description, pubDate, updatedDate, heroImage } = post;
 		{
 			heroImage && (
 				<figure class="post__hero">
-					<Image src={heroImage} alt="" width={1200} height={630} transition:name={`hero-${title}`} />
+					<img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
 				</figure>
 			)
 		}
@@ -45,6 +44,7 @@ const { title, description, pubDate, updatedDate, heroImage } = post;
 	.post-layout {
 		width: min(76ch, 100%);
 		padding-block-start: clamp(2.5rem, 6vw, 4rem);
+		padding-inline: clamp(1rem, 3vw, 2rem);
 	}
 	.post {
 		display: grid;
@@ -55,12 +55,17 @@ const { title, description, pubDate, updatedDate, heroImage } = post;
 		border-radius: 18px;
 		overflow: clip;
 		box-shadow: var(--box-shadow);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: var(--surface);
 	}
 	.post__hero img {
 		display: block;
-		width: 100%;
+		max-width: 100%;
+		width: auto;
 		height: auto;
-		object-fit: cover;
+		object-fit: contain;
 	}
 	.post__header {
 		text-align: center;
@@ -85,10 +90,24 @@ const { title, description, pubDate, updatedDate, heroImage } = post;
 	}
 	.post__content {
 		color: rgb(var(--gray-dark));
+		overflow-wrap: break-word;
+		word-wrap: break-word;
 	}
 	.post__content :global(img) {
-		width: 100%;
+		max-width: 100%;
+		width: auto;
 		height: auto;
+		display: block;
+		margin-inline: auto;
+	}
+	.post__content :global(pre) {
+		overflow-x: auto;
+		max-width: 100%;
+	}
+	.post__content :global(table) {
+		display: block;
+		overflow-x: auto;
+		max-width: 100%;
 	}
 	.post__content :global(:where(* + *)) {
 		margin-block-start: clamp(1.5rem, 3vw, 2.25rem);

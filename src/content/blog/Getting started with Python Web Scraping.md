@@ -1,9 +1,9 @@
-﻿---
+---
 title: "Getting started with Python Web Scraping"
 description: ""
 pubDate: 2018-04-06
 category: "Solr"
-heroImage: 'https://lh3.googleusercontent.com/QpSBAiXQ86N2DsWcvv8fhWferGw-OxTU8ERMHABV5VgagSlmF6cHgW0Fqo_frvjQl8g6Bz3Y4s6WQQ'
+heroImage: '/images/blog/c7e1be91b4c8.jpg'
 ---
 
 https://hub.packtpub.com/getting-started-with-python-web-scraping/

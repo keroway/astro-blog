@@ -3,7 +3,7 @@ title: "Mastodon on Docker(2)"
 description: ""
 pubDate: 2018-02-07
 category: "Mastodon"
-heroImage: 'https://i.imgur.com/6D1hUWD.png'
+heroImage: '/images/blog/1be8323d89b5.jpg'
 ---
 [前回](/blog/nginx/)、[前々回](/blog/mastodon-on-docker/)の続き。
 未完成ですが、一旦これで終わり。

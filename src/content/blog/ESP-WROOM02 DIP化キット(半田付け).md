@@ -1,9 +1,9 @@
-﻿---
+---
 title: "ESP-WROOM-02 DIP化キット(半田付け)"
 description: ""
 pubDate: 2018-05-15
 category: "Arduino"
-heroImage: 'https://lh3.googleusercontent.com/sEdDd2nsSNhk9Q5EA5yqGip1l_ZMxUlP7PyNp98tDU_KUU3nJZaiQezEOPIM5SRMG5Zm1jzjawnBOQ'
+heroImage: '/images/blog/8573d47c148c.jpg'
 ---
 
 [以前の記事](/blog/買い物と半田付け/)で秋月さんの[ESP-WROOM-02 DIP化キット](http://akizukidenshi.com/catalog/g/gK-09758/)

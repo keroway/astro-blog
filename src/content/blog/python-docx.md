@@ -3,7 +3,7 @@ title: "python-docx"
 description: ""
 pubDate: 2018-01-30
 category: "python"
-heroImage: 'https://i.imgur.com/W3HQkDK.png'
+heroImage: '/images/blog/6af7be109a50.jpg'
 ---
 [こちら](http://python-docx.readthedocs.io/en/latest/)のサンプルに基づいて実装してみました。
 

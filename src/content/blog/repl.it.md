@@ -3,7 +3,7 @@ title: "repl.it"
 description: ""
 pubDate: 2018-01-26
 category: "REPL"
-heroImage: 'https://i.imgur.com/eq4Ljkc.jpg'
+heroImage: '/images/blog/c9cccf3245fb.jpg'
 ---
 今回のねたは、ちょっとした確認用に、スマホでもプログラム実行できる環境 repl.itです。
   https://repl.it
