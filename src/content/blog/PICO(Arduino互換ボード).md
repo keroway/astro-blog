@@ -3,7 +3,7 @@ title: "PICO (Arduino互換ボード)"
 description: ""
 pubDate: 2018-02-14
 category: "Arduino"
-heroImage: 'https://i.imgur.com/kAyXpwh.png'
+heroImage: '/images/blog/6eab76f6d821.jpg'
 ---
 本日(2018/2/13)、KickStarterで出資していたモノが届いたので、早速動かしてみた。
 [PICO: The world's smallest Arduino compatible board!](https://www.kickstarter.com/projects/melbel/pico-the-worlds-smallest-arduino-board)

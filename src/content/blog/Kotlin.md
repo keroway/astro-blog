@@ -3,7 +3,7 @@ title: "Kotlin"
 description: ""
 pubDate: 2018-02-13
 category: "Kotlin"
-heroImage: 'https://i.imgur.com/nN0WkkO.png'
+heroImage: '/images/blog/2f43afad7109.jpg'
 ---
 手抜きでHello World だけさらっとやるつもりが・・・
 

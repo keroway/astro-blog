@@ -3,7 +3,7 @@ title: "レーザー測距モジュール(VL53L0X)"
 description: ""
 pubDate: 2018-04-07
 category: "Arduino"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjtLf-JHqFjEc46BqVFYnG-pU9SXUZ03PfTVwIZC5zNlpuD5Htcq3p36brw8876njDyUlGMyZo32eq5e9DSrQf1Jr_TPDEtQykukxim035oPIA6idYSYqVBg2cBjlpHfpcHPGXNmYxmEcE/'
+heroImage: '/images/blog/4e9d239903c5.jpg'
 ---
 ![enter image description here](https://lh3.googleusercontent.com/d0hWWPv4R_h3LaVqpbc6krZDXH8SveQ569uRHXytIa9_kngbUNcdJmNQC4W82RxJ_p7Es4vTIbaFmA)
 だいぶ前に秋月で買ったまま放置していたもの（の一部）

@@ -1,9 +1,9 @@
-﻿---
+---
 title: "Google Cloud Source Repositories"
 description: ""
 pubDate: 2018-03-07
 category: "Solr"
-heroImage: 'https://lh3.googleusercontent.com/BkiWZ-u83Ix7QJ-0-wwOvNr8SCudQSmqlqYQUm5JIixKXMTBj-Ur2-Od4Eni-Yr91IWK5BhTEagyrA'
+heroImage: '/images/blog/b638a3920f96.jpg'
 ---
 
 ![enter image description here](https://lh3.googleusercontent.com/BkiWZ-u83Ix7QJ-0-wwOvNr8SCudQSmqlqYQUm5JIixKXMTBj-Ur2-Od4Eni-Yr91IWK5BhTEagyrA)

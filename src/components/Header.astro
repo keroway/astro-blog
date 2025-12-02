@@ -40,10 +40,11 @@ import { SITE_TITLE } from '../consts';
 		position: sticky;
 		top: 0;
 		z-index: 50;
-		background: rgba(255, 255, 255, 0.92);
-		backdrop-filter: blur(14px);
+		background: rgba(255, 255, 255, 0.85);
+		backdrop-filter: blur(16px) saturate(180%);
+		-webkit-backdrop-filter: blur(16px) saturate(180%);
 		border-bottom: 1px solid rgba(var(--gray-light), 0.8);
-		box-shadow: 0 4px 16px rgba(var(--gray), 0.14);
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 	}
 	h2 {
 		margin: 0;
@@ -64,17 +65,19 @@ import { SITE_TITLE } from '../consts';
 	nav a {
 		padding: 1em 0.5em;
 		color: rgb(var(--black));
-		border-bottom: 4px solid transparent;
+		border-bottom: 3px solid transparent;
 		text-decoration: none;
-		transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+		font-weight: 500;
+		transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
 	}
 	nav a:hover {
-		color: var(--accent);
-		border-bottom-color: rgba(35, 55, 255, 0.35);
+		color: var(--accent-dark);
+		border-bottom-color: rgba(29, 78, 216, 0.3);
 	}
 	nav a.active {
 		text-decoration: none;
-		border-bottom-color: var(--accent);
+		border-bottom-color: var(--accent-dark);
+		font-weight: 600;
 	}
 	.internal-links {
 		display: flex;

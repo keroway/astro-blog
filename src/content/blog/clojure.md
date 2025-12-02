@@ -1,9 +1,9 @@
-﻿---
+---
 title: "Clojure"
 description: ""
 pubDate: 2018-02-23
 category: "Clojure"
-heroImage: 'https://lh3.googleusercontent.com/TlIx3YhXCDKsleKBpJktsUsFbsJf65KSjkeigBC-C9KizOxdfDBAS3uCIor4TmZ4RgAKmpT64Zn0pw'
+heroImage: '/images/blog/0f85df943394.jpg'
 ---
 ![enter image description here](https://lh3.googleusercontent.com/MDVKK_c2VzTXRaQ8vY_A9wIt-bB_etYut-9TjjwcHHrlU4hpKEtwRjNWWKREvJDOK9mVekoILXhVqA "clojure.org")
 

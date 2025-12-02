@@ -3,7 +3,7 @@ title: "Mac OS (High Sierra) で X11フォワーディング"
 description: ""
 pubDate: 2018-03-09
 category: "High Sierra"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhzqH27QWnkdSFP8oPMgQxD4KBC0Ux2rytW8-T_MJEj0wfQn0QpN8j8Uy3sS5zuGuAknk2v0T2HUN_g35tjWSRnhIfz2nwUu3ce3tARR9uHGApsvUOjWWd7r_kJzecI-Qvp6EKB36Exm7s/'
+heroImage: '/images/blog/b3caa87f158d.jpg'
 ---
 引き続きラズパイを使って・・・
 

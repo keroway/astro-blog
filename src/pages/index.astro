@@ -39,17 +39,15 @@ const learningTopics = [
 			<div class="hero__copy">
 				<p class="hero__eyebrow">Software Engineer · Yokohama, Japan</p>
 				<h1>
-					テクノロジーの「気になる」を
-					<span>素早く記録</span>
-					して共有するブログ
+					<span>技術研究</span>と
+					実装の記録
 				</h1>
 				<p class="hero__lead">
-					組み込みからクラウド、フロントエンドまで 20 年以上の経験で得た知見や試行錯誤をまとめています。
-					業務で扱う前の実験記録や、Qiita / Zenn に載せる前の下書きを公開する場所です。
+					組み込みからクラウド、フロントエンドまで、20年以上の開発経験を通じて得た知見と実装パターンを記録しています。
 				</p>
 				<div class="hero__actions">
-					<a class="button" href="/blog">最新の記事を見る</a>
-					<a class="button button--ghost" href="/about">プロフィールを読む</a>
+					<a class="button" href="/blog">記事一覧</a>
+					<a class="button button--ghost" href="/about">About</a>
 				</div>
 			</div>
 		</div>
@@ -92,8 +90,7 @@ const learningTopics = [
 
 	<section class="focus-areas" aria-labelledby="focus-areas-heading">
 		<header class="section-heading">
-			<h2 id="focus-areas-heading">よく書くテーマ</h2>
-			<p class="subtle-text">ソフトウェアにまつわる興味範囲を３つの切り口で紹介します。</p>
+			<h2 id="focus-areas-heading">専門分野</h2>
 		</header>
 		<div class="focus-areas__grid">
 			{
@@ -109,8 +106,7 @@ const learningTopics = [
 
 	<section class="learning" aria-labelledby="learning-heading">
 		<header class="section-heading">
-			<h2 id="learning-heading">最近の関心ごと</h2>
-			<p class="subtle-text">今取り組んでいるテーマや、今後記事化したい話題です。</p>
+			<h2 id="learning-heading">研究領域</h2>
 		</header>
 		<ul class="learning__list">
 			{learningTopics.map((topic) => (
@@ -119,26 +115,17 @@ const learningTopics = [
 		</ul>
 	</section>
 
-	<section class="callout" aria-labelledby="callout-heading">
-		<div class="callout__content">
-			<h2 id="callout-heading">お気軽にご連絡ください</h2>
-			<p>
-				ブログの感想やフィードバック、登壇・執筆のご相談などがあれば、以下のリンクからお声がけいただけます。
-				X (旧 Twitter) は DM を開放しています。
-			</p>
-			<ul class="callout__links">
+	<section class="contact" aria-labelledby="contact-heading">
+		<div class="contact__content">
+			<h2 id="contact-heading">Contact</h2>
+			<ul class="contact__links">
 				<li>
 					<a class="button" href="https://twitter.com/keroway21" rel="noopener noreferrer" target="_blank">X (Twitter)</a>
-					<span class="subtle-text">最新情報や雑多なメモを発信中</span>
 				</li>
 				<li>
 					<a class="button button--ghost" href="https://github.com/keroway" rel="noopener noreferrer" target="_blank">GitHub</a>
-					<span class="subtle-text">Issue や Discussions からの連絡も歓迎です</span>
 				</li>
 			</ul>
-			<p class="callout__note">
-				※ 具体的な相談窓口（メールアドレスなど）を設ける場合は、この欄に追記してください。
-			</p>
 		</div>
 	</section>
 </SiteLayout>
@@ -152,49 +139,54 @@ const learningTopics = [
 	.hero__content {
 		display: grid;
 		grid-template-columns: auto 1fr;
-		gap: clamp(1.5rem, 4vw, 2.75rem);
+		gap: clamp(1.75rem, 4vw, 3rem);
 		align-items: center;
 		background: var(--surface);
-		border-radius: 28px;
-		padding: clamp(1.75rem, 4vw, 2.75rem);
+		border-radius: 20px;
+		padding: clamp(2rem, 4.5vw, 3rem);
 		box-shadow: var(--shadow-md);
-		border: 1px solid rgba(var(--gray-light), 0.6);
+		border: 1px solid rgba(var(--gray-light), 0.8);
 	}
 	.hero__avatar {
-		width: clamp(88px, 12vw, 120px);
+		width: clamp(88px, 12vw, 110px);
 		aspect-ratio: 1;
 		display: grid;
 		place-items: center;
-		font-size: clamp(2.25rem, 5vw, 3rem);
-		font-weight: 700;
+		font-size: clamp(2.25rem, 5vw, 2.75rem);
+		font-weight: 800;
 		color: #fff;
-		background: radial-gradient(circle at 30% 30%, #6fa3ff, var(--accent));
-		border-radius: 32px;
+		background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
+		border-radius: 20px;
 		box-shadow: var(--shadow-sm);
 		text-transform: uppercase;
+		letter-spacing: -0.02em;
 	}
 	.hero__copy h1 {
 		margin: 0.25rem 0 1rem;
-		font-size: clamp(2.2rem, 5vw, 3.1rem);
-		line-height: 1.15;
+		font-size: clamp(2rem, 5vw, 2.75rem);
+		line-height: 1.2;
+		font-weight: 800;
 		color: rgb(var(--black));
+		letter-spacing: -0.03em;
 	}
 	.hero__copy span {
-		color: var(--accent);
+		color: var(--accent-dark);
+		font-weight: 800;
 	}
 	.hero__lead {
-		margin: 0 0 1.35rem 0;
+		margin: 0 0 1.5rem 0;
 		color: var(--text-muted);
-		font-size: 1.05rem;
-		line-height: 1.8;
+		font-size: 1rem;
+		line-height: 1.7;
+		letter-spacing: -0.01em;
 	}
 	.hero__eyebrow {
 		margin: 0;
-		font-size: 0.95rem;
+		font-size: 0.875rem;
 		font-weight: 600;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.05em;
 		text-transform: uppercase;
-		color: rgba(var(--gray), 0.8);
+		color: rgba(var(--gray), 0.7);
 	}
 	.hero__actions {
 		display: flex;
@@ -223,10 +215,10 @@ const learningTopics = [
 	}
 	.recent-card {
 		background: var(--surface);
-		border-radius: 22px;
+		border-radius: 16px;
 		box-shadow: var(--shadow-sm);
-		border: 1px solid rgba(var(--gray-light), 0.75);
-		transition: transform 150ms ease, box-shadow 150ms ease;
+		border: 1px solid rgba(var(--gray-light), 0.9);
+		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 		height: 100%;
 	}
 	.recent-card__link {
@@ -258,18 +250,19 @@ const learningTopics = [
 	.recent-card__category {
 		display: inline-flex;
 		align-items: center;
-		padding: 0.2rem 0.65rem;
-		border-radius: 999px;
-		background: rgba(35, 55, 255, 0.12);
-		color: rgb(var(--accent));
+		padding: 0.25rem 0.7rem;
+		border-radius: 6px;
+		background: rgba(29, 78, 216, 0.1);
+		color: var(--accent-dark);
 		font-weight: 600;
-		font-size: 0.8rem;
-		letter-spacing: 0.04em;
+		font-size: 0.75rem;
+		letter-spacing: 0.02em;
 		text-transform: uppercase;
 	}
 	.recent-card:hover {
-		transform: translateY(-4px);
-		box-shadow: var(--shadow-md);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-lg);
+		border-color: rgba(var(--gray), 0.15);
 	}
 
 	.focus-areas {
@@ -282,12 +275,17 @@ const learningTopics = [
 	}
 	.focus-card {
 		background: var(--surface);
-		padding: clamp(1.35rem, 3vw, 1.9rem);
-		border-radius: 20px;
-		border: 1px solid rgba(var(--gray-light), 0.75);
+		padding: clamp(1.5rem, 3vw, 2rem);
+		border-radius: 16px;
+		border: 1px solid rgba(var(--gray-light), 0.9);
 		box-shadow: var(--shadow-sm);
 		display: grid;
 		gap: 0.75rem;
+		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	.focus-card:hover {
+		box-shadow: var(--shadow-md);
+		border-color: rgba(var(--gray), 0.12);
 	}
 	.focus-card h3 {
 		margin: 0;
@@ -327,34 +325,34 @@ const learningTopics = [
 		background: var(--accent);
 	}
 
-	.callout {
-		background: linear-gradient(120deg, rgba(35, 55, 255, 0.12), rgba(35, 55, 255, 0.32));
-		border-radius: 28px;
-		padding: clamp(2rem, 5vw, 2.75rem);
-		box-shadow: var(--shadow-md);
-		border: 1px solid rgba(35, 55, 255, 0.15);
+	.contact {
+		background: linear-gradient(135deg, rgba(15, 18, 25, 0.03), rgba(15, 18, 25, 0.06));
+		border-radius: 24px;
+		padding: clamp(2.5rem, 5vw, 3.5rem);
+		box-shadow: 0 2px 8px rgba(var(--gray), 0.08);
+		border: 1px solid rgba(var(--gray-light), 0.6);
 	}
-	.callout__content {
+	.contact__content {
 		display: grid;
-		gap: 1.25rem;
+		gap: 1.75rem;
+		max-width: 600px;
+		margin: 0 auto;
+		text-align: center;
 	}
-	.callout__links {
+	.contact__content h2 {
+		font-size: clamp(1.8rem, 4vw, 2.2rem);
+		font-weight: 600;
+		margin: 0;
+		letter-spacing: -0.02em;
+	}
+	.contact__links {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		display: grid;
-		gap: 1rem;
-	}
-	.callout__links li {
 		display: flex;
+		gap: 1rem;
+		justify-content: center;
 		flex-wrap: wrap;
-		gap: 0.75rem;
-		align-items: center;
-	}
-	.callout__note {
-		margin: 0;
-		font-size: 0.9rem;
-		color: rgba(var(--gray), 0.9);
 	}
 
 	@media (max-width: 900px) {
