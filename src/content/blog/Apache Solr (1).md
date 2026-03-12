@@ -1,9 +1,9 @@
-﻿---
+---
 title: "Apache Solr (1)"
 description: ""
 pubDate: 2018-05-02
 category: "Solr"
-heroImage: 'https://lh3.googleusercontent.com/zAxzWgVDRLD-Oz7WjvlrdkFyyOVib-p8JZbD7dzZ3nIFIeLqze2HPurdBFii4sjuxphc44YdqzTbWA'
+heroImage: '/images/blog/df1d7b7a4572.jpg'
 ---
 
 Wikipedia(https://ja.wikipedia.org/wiki/Apache_Solr)より

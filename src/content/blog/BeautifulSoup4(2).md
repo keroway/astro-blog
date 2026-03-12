@@ -1,9 +1,9 @@
-﻿---
+---
 title: "BeautifulSoup4(2) (GAE)"
 description: ""
 pubDate: 2018-04-20
 category: "BeautifulSoup"
-heroImage: 'https://lh3.googleusercontent.com/qRSDidUbAvAo7Wz6FA44pXPAiWucp_enuNje3XU0HJAUAYiiGH85FjgS-GuHiOE8ix-FlGOnW1BTAQ'
+heroImage: '/images/blog/7e6f0a65cd18.jpg'
 ---
 
 [この間](/blog/beautifulsoup41/)作成したスクリプトを、Google App Engineで実行してみた、というお話。

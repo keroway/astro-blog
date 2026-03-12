@@ -1,17 +1,19 @@
 ---
+import { ClientRouter } from "astro:transitions";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	locale?: string;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const { title, description, image = "/blog-placeholder-1.jpg", locale = "ja_JP" } = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -26,6 +28,7 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+<ClientRouter />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
@@ -38,6 +41,7 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:locale" content={locale} />
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />

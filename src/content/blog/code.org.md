@@ -1,9 +1,9 @@
-﻿---
+---
 title: "code.org"
 description: ""
 pubDate: 2018-03-29
 category: "Solr"
-heroImage: 'https://lh3.googleusercontent.com/zo21OAOWaEolJUbysPVO9UW_AajHvgci0f-DmiwYmirunN9KBosL_Ni4sIKNrdZCByuCOhhBikwKPg'
+heroImage: '/images/blog/a362ae47f81f.jpg'
 ---
 
 https://code.org

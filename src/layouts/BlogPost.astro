@@ -1,85 +1,120 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import type { CollectionEntry } from "astro:content";
+import SiteLayout from "./SiteLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const post = Astro.props as Props;
+const { title, description, pubDate, updatedDate, heroImage } = post;
 ---
 
-<html lang="en">
-	<head>
-		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
-	</head>
+<SiteLayout title={title} description={description} image={heroImage} mainClass="post-layout">
+	<article class="post">
+		{
+			heroImage && (
+				<figure class="post__hero">
+					<img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
+				</figure>
+			)
+		}
+		<header class="post__header">
+			<div class="post__meta">
+				<time datetime={pubDate.toISOString()}>
+					<FormattedDate date={pubDate} />
+				</time>
+				{
+					updatedDate && (
+						<span class="post__meta-update">
+							最終更新 <FormattedDate date={updatedDate} />
+						</span>
+					)
+				}
+			</div>
+			<h1>{title}</h1>
+			<hr />
+		</header>
+		<div class="post__content">
+			<slot />
+		</div>
+	</article>
+</SiteLayout>
 
-	<body>
-		<Header />
-		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <img width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
-						<hr />
-					</div>
-					<slot />
-				</div>
-			</article>
-		</main>
-		<Footer />
-	</body>
-</html>
+<style>
+	.post-layout {
+		width: min(76ch, 100%);
+		padding-block-start: clamp(2.5rem, 6vw, 4rem);
+		padding-inline: clamp(1rem, 3vw, 2rem);
+	}
+	.post {
+		display: grid;
+		gap: clamp(1.5rem, 4vw, 2.5rem);
+	}
+	.post__hero {
+		margin: 0;
+		border-radius: 18px;
+		overflow: clip;
+		box-shadow: var(--box-shadow);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background: var(--surface);
+	}
+	.post__hero img {
+		display: block;
+		max-width: 100%;
+		width: auto;
+		height: auto;
+		object-fit: contain;
+	}
+	.post__header {
+		text-align: center;
+		display: grid;
+		gap: 0.75rem;
+		color: rgb(var(--gray-dark));
+	}
+	.post__header h1 {
+		margin: 0;
+		font-size: clamp(2.2rem, 4vw, 2.8rem);
+	}
+	.post__meta {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		color: rgb(var(--gray));
+		font-size: 0.95rem;
+		flex-wrap: wrap;
+	}
+	.post__meta-update {
+		font-style: italic;
+	}
+	.post__content {
+		color: rgb(var(--gray-dark));
+		overflow-wrap: break-word;
+		word-wrap: break-word;
+	}
+	.post__content :global(img) {
+		max-width: 100%;
+		width: auto;
+		height: auto;
+		display: block;
+		margin-inline: auto;
+	}
+	.post__content :global(pre) {
+		overflow-x: auto;
+		max-width: 100%;
+	}
+	.post__content :global(table) {
+		display: block;
+		overflow-x: auto;
+		max-width: 100%;
+	}
+	.post__content :global(:where(* + *)) {
+		margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
+	}
+	@media (max-width: 720px) {
+		.post-layout {
+			padding-block-start: 2rem;
+		}
+	}
+</style>

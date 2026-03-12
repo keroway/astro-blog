@@ -3,7 +3,7 @@ title: "Raspberry Pi(Event参加)"
 description: ""
 pubDate: 2018-03-05
 category: "Raspberry Pi"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjsMfWVGN0eI-arbCLv-Xm9dgvLUmQ4Vjfrcqe_Mf9yV6Tgh2tDsttuuunOWdMMpd4gJqNJeKJWt4itkqRZHndmt2WXtUPNtt0lcXecjQV-JVfdcnZM6om-0sJdzms5KJNDcKaoGEBp2x0/'
+heroImage: '/images/blog/efe962f8145c.jpg'
 ---
 予告通り行って来ました。
 

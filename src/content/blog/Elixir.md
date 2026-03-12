@@ -1,9 +1,9 @@
-﻿---
+---
 title: "Elixir"
 description: ""
 pubDate: 2018-02-21
 category: "Elixir"
-heroImage: 'https://lh3.googleusercontent.com/sHfZMtjO4T0Zcq4ofKYViAL11Ul1sO5FR2D4Yxlw7_8AMqZFCKiO_dmxOXy2yS0t_ltw6fkB871vyQ'
+heroImage: '/images/blog/c0e96720e01e.jpg'
 ---
 
 もうちょっと、ちゃんと覚えてから使いたいテーマでしたが、さらっと触れておきます。

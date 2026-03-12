@@ -3,7 +3,7 @@ title: "RaspberryPi3 セットアップ"
 description: ""
 pubDate: 2018-03-06
 category: "RaspberryPi"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjQ0i1KYnkKGs1O0oxJ57oPG8dy2OdNVIWB0T8kWgHWHk9qIuI5TIK4vhjGbWIP6IQ200JtqdfOS5qWhTKcrWdpQZv_eYI6yRbweMIrhlUr7JKXhH9FH50Qbd04q8MPw-B2Dwf4tUFRr1w/'
+heroImage: '/images/blog/3833e04ad749.jpg'
 ---
 RaspberryPi3BにWaveshare社の3.2inch Pri LCD(B)を付ける話
 ![enter image description here](https://lh3.googleusercontent.com/bSbtA6Xm4vYBKk2TsoWeiAlcpCxuwh6zyfgejF-eCFod6HwrIZlioZROO1ExS7IO6sMnQnazlcWLJA)

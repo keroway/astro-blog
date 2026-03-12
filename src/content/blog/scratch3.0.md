@@ -3,7 +3,7 @@ title: "Scratch 3.0"
 description: ""
 pubDate: 2018-03-28
 category: "Scratch"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhmWZlv0MNkOtBNuKhy1CzOjS08BwlBhAnFCejuqWXZ2NYreCMqJuJ2104Afo-T7aF0tQBQdRKzDFX6VpDnJACqrxfztHJWLaWd-MTmzB_cerM2UDDdcjm3TZNRfXE8zzOynK955CBwJww/'
+heroImage: '/images/blog/a85367e42b5d.jpg'
 ---
 https://llk.github.io/scratch-gui/
 ![enter image description here](https://lh3.googleusercontent.com/tLiV1M4mbThSDFpkSb-Wo6__x_rjR_2IIRKIfdqSjtMfVKFJgjihXIXHPtG3saY63sFaj8YtY9nQkw)

@@ -5,17 +5,24 @@
 ## 主な特徴
 
 - 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
-- 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示
+- 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示とホバーインタラクション
 - Astro Content Collections による Markdown/MDX 記事管理と型チェック
 - RSS フィードとサイトマップを自動生成
+- `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
+- トップページにはヒーロー、最新記事、フォーカステーマ、連絡用コールアウトを配置し、動線と信頼感を向上
 - すべてのスタイルはカスタマイズ可能な軽量 CSS で構成
 
 ## 技術スタック
 
-- [Astro 5](https://astro.build/) + TypeScript
+- [Astro 5](https://astro.build/) + TypeScript（strict モード有効）
 - [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) による MDX サポート
-- pnpm 9（`package.json` の `packageManager` 参照）
-- デプロイ: [Vercel](https://vercel.com/)（プレビュー環境での動作を想定）
+- [@astrojs/rss](https://docs.astro.build/en/guides/rss/) による RSS フィード自動生成
+- [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) による XML サイトマップ生成
+- [astro:assets](https://docs.astro.build/en/guides/images/) による画像最適化（自動フォーマット変換・リサイズ）
+- [View Transitions](https://docs.astro.build/en/guides/view-transitions/) によるページ遷移アニメーション
+- pnpm 10.24.0（`package.json` の `packageManager` 参照）
+- Playwright による E2E テスト
+- デプロイ: [Vercel](https://vercel.com/)（静的サイト生成）
 
 ## セットアップ
 
@@ -35,11 +42,11 @@ pnpm run dev
 ```
 ├── public/               # 静的アセット（画像・フォントなど）
 ├── src/
-│   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント
+│   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント（aria 属性や rel=... を付与済み）
 │   ├── content/
 │   │   ├── blog/         # Markdown/MDX の記事本体
 │   │   └── config.ts     # frontmatter スキーマ（title, description, pubDate, category など）
-│   ├── layouts/          # ページレイアウト
+│   ├── layouts/          # ページレイアウト（SiteLayout, BlogPost など）
 │   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
 ├── astro.config.mjs      # Astro 設定（MDX・sitemap を統合）
 ├── pnpm-lock.yaml        # 依存関係ロック
@@ -47,7 +54,9 @@ pnpm run dev
 ```
 
 - 記事は `src/content/blog/` に配置し、frontmatter で `title`, `pubDate`, `description`, `category`（任意）, `heroImage` などを指定します。
-- 一覧ページはカード UI へ刷新済みで、frontmatter の `heroImage` と `category` を活用します。
+- 一覧ページはカード UI へ刷新済みで、frontmatter の `heroImage` と `category` を活用します。画像のアスペクト比は CSS の `aspect-ratio` で固定されます。
+- トップページは `getCollection('blog')` で最新 3 件を自動取得して表示するため、新規記事を追加するとホームも自動で更新されます。
+- 各ページは `SiteLayout` を経由して `<Head>` メタ情報とヘッダー／フッターを共有し、OGP `og:locale` を自動付与します。
 - 新しいコンテンツを追加した際は `pnpm run build` で型エラーを確認し、必要に応じて Vercel プレビューでクリック確認を行ってください。
 
 ## デプロイについて

@@ -3,7 +3,7 @@ title: "nginx"
 description: ""
 pubDate: 2018-02-07
 category: "nginx"
-heroImage: 'https://i.imgur.com/nLyRv4l.png'
+heroImage: '/images/blog/a60de377f29d.jpg'
 ---
 一応[前回](/blog/mastodon-on-docker/)の続き
 
