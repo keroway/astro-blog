@@ -3,7 +3,7 @@ title: "Xamarine(2)"
 description: ""
 pubDate: 2018-02-27
 category: "Xamarin"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj3Dj1OfjreXIMfV1NGwbOo5rz-FUssjr1Vw-kk0vNu2WxFwSdKQGXx04SI9RnXMOaSpUGC-ExjkE12yvsVeJt-nlBvtdkEI0MgZMH99oS5d7Kifx3gSDXZVvwVtajOcafjExhsstJ31B4/'
+heroImage: '/images/blog/49a0651f4a35.jpg'
 ---
 [前回](/blog/xamarin/)VisualStudioを立ち上げるところまでしかできなかったので、今回シミュレータ実行くらいまではやろうと思ったのですが・・・
 

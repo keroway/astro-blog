@@ -3,7 +3,7 @@ title: "StackEdit"
 description: ""
 pubDate: 2018-02-16
 category: "StackEdit"
-heroImage: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhxxRx4iDfnaDuFx9RJnB1Lpwq73jV_owgON3AZkwxi18KFRhhONSTAQP87xObLewDUBfSHclcjrHEmE0uxAdwJpDqgS0ZvvzjM1KbnJBavQbjDaQ1cJmM99uvSBs1SbdFIz1rRPfM55Gk/'
+heroImage: '/images/blog/874078e83e46.jpg'
 ---
 なんか表示が壊れてるので、設定変えてチャレンジ。（2018/02/16）
 

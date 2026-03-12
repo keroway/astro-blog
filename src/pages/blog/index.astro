@@ -1,172 +1,192 @@
 ---
-import BaseHead from '../../components/BaseHead.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
 const posts = (await getCollection('blog'))
-  .slice()
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	.slice()
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<!doctype html>
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				max-width: 1100px;
-				margin: 0 auto;
-				padding: clamp(2.5rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) 4rem;
+<SiteLayout title={`${SITE_TITLE} | Blog`} description={SITE_DESCRIPTION} mainClass="blog-index">
+	<section class="hero-copy">
+		<h1>Blog</h1>
+		<p>技術記事のアーカイブ</p>
+	</section>
+	<section>
+		<ul class="posts-grid">
+			{
+				posts.map((post) => {
+					const description = post.data.description?.trim();
+					const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+					return (
+						<li class="post-card">
+							<a class="post-card__link" href={`/blog/${encodedSlug}/`}>
+								<figure class="post-card__media">
+									<img
+								src={post.data.heroImage || '/blog-placeholder-100.png'}
+										alt={post.data.title}
+										loading="lazy"
+										decoding="async"
+										width="640"
+										height="360"
+										sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+									/>
+								</figure>
+								<div class="post-card__body">
+									{post.data.category && (
+										<span class="post-card__category" aria-label={`カテゴリ: ${post.data.category}`}>
+											{post.data.category}
+										</span>
+									)}
+									<p class="post-card__date">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+									<h3 class="post-card__title">{post.data.title}</h3>
+									{description && <p class="post-card__description">{description}</p>}
+								</div>
+							</a>
+						</li>
+					);
+				})
 			}
-			.hero-copy {
-				margin-bottom: clamp(2rem, 5vw, 3rem);
-				text-align: center;
-			}
-			.hero-copy h1 {
-				font-size: clamp(2.4rem, 5vw, 3.2rem);
-				margin-bottom: 0.75rem;
-			}
-			.hero-copy p {
-				margin: 0 auto;
-				max-width: 48ch;
-				color: rgb(var(--gray));
-			}
-			.posts-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-				gap: clamp(1.5rem, 3vw, 2.5rem);
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			.post-card {
-				background: #fff;
-				border-radius: 24px;
-				overflow: hidden;
-				box-shadow: 0 12px 32px rgba(var(--gray), 0.12);
-				transition: transform 0.18s ease, box-shadow 0.18s ease;
-				height: 100%;
-			}
-			.post-card__link {
-				display: flex;
-				flex-direction: column;
-				height: 100%;
-				text-decoration: none;
-				color: inherit;
-			}
-			.post-card__link:focus-visible {
-				outline: 3px solid rgba(35, 55, 255, 0.4);
-				outline-offset: 4px;
-			}
-			.post-card__media {
-				position: relative;
-				overflow: hidden;
-				aspect-ratio: 16 / 9;
-				background: linear-gradient(135deg, rgba(var(--gray-light), 0.8), rgba(var(--gray-light), 0.3));
-			}
-			.post-card__media img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				display: block;
-			}
-			.post-card__body {
-				display: flex;
-				flex-direction: column;
-				gap: 0.75rem;
-				padding: clamp(1.25rem, 3vw, 1.75rem);
-			}
-			.post-card__date {
-				margin: 0;
-				font-size: 0.95rem;
-				color: rgb(var(--gray));
-			}
-			.post-card__title {
-				margin: 0;
-				font-size: clamp(1.3rem, 3vw, 1.6rem);
-				line-height: 1.2;
-				color: rgb(var(--black));
-			}
-			.post-card__description {
-				margin: 0;
-				color: rgba(var(--gray-dark), 0.8);
-				font-size: 1rem;
-				line-height: 1.6;
-			}
-			.post-card__category {
-				align-self: flex-start;
-				font-size: 0.85rem;
-				font-weight: 600;
-				letter-spacing: 0.05em;
-				text-transform: uppercase;
-				color: rgb(var(--accent));
-				background: rgba(35, 55, 255, 0.12);
-				border-radius: 999px;
-				padding: 0.35rem 0.75rem;
-			}
-			.post-card:hover {
-				transform: translateY(-4px);
-				box-shadow: 0 16px 40px rgba(var(--gray), 0.18);
-			}
-			.post-card:hover .post-card__title,
-			.post-card:hover .post-card__date {
-				color: rgb(var(--accent));
-			}
-			@media (max-width: 640px) {
-				main {
-					padding-top: 2rem;
-				}
-				.post-card {
-					border-radius: 20px;
-				}
-				.post-card__body {
-					padding: 1.25rem;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="hero-copy">
-				<h1>Blog</h1>
-				<p>最新の記事から過去のアーカイブまで、興味のあるトピックを探してみてください。</p>
-			</section>
-			<section>
-				<ul class="posts-grid">
-					{
-						posts.map((post) => {
-							const description = post.data.description?.trim();
-							const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
-							return (
-								<li class="post-card">
-									<a class="post-card__link" href={`/blog/${encodedSlug}/`}>
-										<figure class="post-card__media">
-											<img
-												src={post.data.heroImage}
-												alt={post.data.title}
-												loading="lazy"
-												sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-											/>
-										</figure>
-										<div class="post-card__body">
-											{post.data.category && <span class="post-card__category">{post.data.category}</span>}
-											<p class="post-card__date">
-												<FormattedDate date={post.data.pubDate} />
-											</p>
-											<h3 class="post-card__title">{post.data.title}</h3>
-											{description && <p class="post-card__description">{description}</p>}
-										</div>
-									</a>
-								</li>
-							);
-						})
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+		</ul>
+	</section>
+</SiteLayout>
+
+<style>
+		:global(body) {
+			background: linear-gradient(var(--gray-gradient)) no-repeat;
+			background-size: 100% 520px;
+			background-color: var(--surface-muted);
+		}
+	.blog-index {
+		max-width: min(1100px, 100%);
+		padding-block-start: clamp(2.5rem, 5vw, 4rem);
+		padding-block-end: clamp(3rem, 6vw, 4.5rem);
+	}
+	.hero-copy {
+		margin-bottom: clamp(2rem, 5vw, 3.25rem);
+		text-align: center;
+	}
+	.hero-copy h1 {
+		font-size: clamp(2.2rem, 4.5vw, 2.75rem);
+		margin-bottom: 0.75rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+	}
+	.hero-copy p {
+		margin: 0 auto;
+		max-width: 48ch;
+		color: var(--text-muted);
+		font-size: 1rem;
+		letter-spacing: -0.01em;
+	}
+	.posts-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+		.post-card {
+			background: var(--surface);
+			border-radius: 16px;
+			overflow: clip;
+			box-shadow: var(--shadow-sm);
+			border: 1px solid rgba(var(--gray-light), 0.9);
+			transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+			height: 100%;
+		}
+	.post-card__link {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		text-decoration: none;
+		color: inherit;
+	}
+	.post-card__link:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 4px;
+	}
+	.post-card__media {
+		position: relative;
+		overflow: hidden;
+		aspect-ratio: 16 / 9;
+		background: linear-gradient(135deg, rgba(var(--gray-light), 0.8), rgba(var(--gray-light), 0.3));
+	}
+	.post-card__media img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	.post-card__body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: clamp(1.25rem, 3vw, 1.75rem);
+	}
+	.post-card__date {
+		margin: 0;
+		font-size: 0.95rem;
+		color: rgb(var(--gray));
+	}
+	.post-card__title {
+		margin: 0;
+		font-size: clamp(1.25rem, 3vw, 1.5rem);
+		line-height: 1.3;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+		color: rgb(var(--black));
+	}
+	.post-card__description {
+		margin: 0;
+		color: rgba(var(--gray-dark), 0.8);
+		font-size: 1rem;
+		line-height: 1.6;
+	}
+	.post-card__category {
+		align-self: flex-start;
+		font-size: 0.75rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		text-transform: uppercase;
+		color: var(--accent-dark);
+		background: rgba(29, 78, 216, 0.1);
+		border-radius: 6px;
+		padding: 0.35rem 0.75rem;
+	}
+		.post-card:is(:hover, :focus-within) {
+			transform: translateY(-2px);
+			box-shadow: var(--shadow-lg);
+			border-color: rgba(var(--gray), 0.15);
+		}
+	.post-card:is(:hover, :focus-within) .post-card__title {
+		color: var(--accent-dark);
+	}
+	.post-card:is(:hover, :focus-within) img {
+		transform: scale(1.02);
+	}
+	@media (max-width: 640px) {
+		.blog-index {
+			padding-block-start: 2rem;
+		}
+		.post-card {
+			border-radius: 14px;
+		}
+		.post-card__body {
+			padding: 1.25rem;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.post-card,
+		.post-card__media img {
+			transition-duration: 0.01ms !important;
+			transition-delay: 0ms !important;
+		}
+	}
+</style>
