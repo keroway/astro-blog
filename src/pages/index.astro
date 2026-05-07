@@ -27,7 +27,7 @@ const focusAreas = [
 
 const learningTopics = [
 	'AI エージェントや LLM を活用した開発フロー改善',
-	'Astro 5 のトランジションや Islands の実践',
+	'Astro 6 のトランジションや Islands の実践',
 	'組み込みデバイスとクラウドをつなぐハイブリッド構成',
 ];
 ---
@@ -68,7 +68,7 @@ const learningTopics = [
 			{
 				recentPosts.map((post) => {
 					const description = post.data.description?.trim();
-					const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+					const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
 					return (
 						<article class="recent-card">
 							<a class="recent-card__link" href={`/blog/${encodedSlug}/`}>
