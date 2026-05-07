@@ -7,7 +7,7 @@ test.describe('Basic site functionality', () => {
     await page.goto('/');
 
     await expect(page).toHaveTitle(/keroway 技術メモ/);
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('テクノロジーの「気になる」を');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('技術研究');
   });
 
   test('blog listing shows posts and navigates to the first entry', async ({ page }) => {

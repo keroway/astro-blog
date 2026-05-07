@@ -19,7 +19,7 @@ const posts = (await getCollection('blog'))
 			{
 				posts.map((post) => {
 					const description = post.data.description?.trim();
-					const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+					const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
 					return (
 						<li class="post-card">
 							<a class="post-card__link" href={`/blog/${encodedSlug}/`}>
