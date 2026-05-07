@@ -11,12 +11,20 @@
     "astro": "astro"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.9",
     "@astrojs/mdx": "^5.0.4",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.2",
-    "@playwright/test": "^1.57.0",
+    "@playwright/test": "^1.59.1",
     "astro": "^6.3.0",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup@<4.59.0": ">=4.59.0",
+      "picomatch@<2.3.2": ">=2.3.2",
+      "yaml@>=2.0.0 <2.8.3": ">=2.8.3",
+      "postcss@<8.5.10": ">=8.5.10"
+    }
   }
 }
