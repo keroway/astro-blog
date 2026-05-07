@@ -64,6 +64,30 @@ pnpm run dev
 - Vercel のプレビュー／本番環境を想定した設定です。Astro の静的生成結果（`dist/`）を自動デプロイします。
 - 日本語スラッグを含む URL は `encodeURIComponent` 済みのパスを使用しているため、ミドルウェアの失敗なく動作します。
 
+## 依存関係の管理
+
+### 自動更新
+
+`.github/dependabot.yml` で Dependabot を設定しており、毎週月曜 09:00 (JST) に以下のチェックが走ります。
+
+- `npm` エコシステム: minor/patch のバンドル PR (`@astrojs/*`, `astro`, `@playwright/*`, `typescript` をグループ化)
+- `github-actions`: アクションのバージョン更新
+- `astro` と `typescript` のメジャーアップデートは別途 issue で扱うため Dependabot からは除外
+
+更新 PR には `dependencies` ラベルが自動付与されるため、PR 一覧でフィルタできます。
+
+### 脆弱性監査
+
+社内ミラー (`.npmrc` の `registry=https://registry.npmmirror.com/`) は `audit` エンドポイント非対応のため、監査時のみ公式レジストリへ向ける必要があります。
+
+```bash
+pnpm audit --registry=https://registry.npmjs.org/
+```
+
+#### 現在の監査ステータス
+
+直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `package.json` の `pnpm.overrides` でパッチ済みバージョンへ強制解決しています。upstream で対応版がリリースされたら overrides を順次削除してください。
+
 ## テンプレートについて
 
 このサイトは [Astro Starter Kit: Blog](https://github.com/withastro/astro/tree/latest/examples/blog) をベースに構築しています。テンプレート元の README やドキュメントも参照しつつ、独自のスタイルと運用フローを追加しています。
