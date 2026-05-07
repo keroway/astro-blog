@@ -30,7 +30,7 @@ pnpm exec astro check
 
 ## Architecture Overview
 
-This is a personal technical blog built with **Astro 5** + TypeScript, featuring:
+This is a personal technical blog built with **Astro 6** + TypeScript, featuring:
 - Japanese language support with URL-encoded slugs
 - Content management via Astro Content Collections (Markdown/MDX)
 - Responsive card-based blog listing with 16:9 aspect ratio images
@@ -43,8 +43,8 @@ This is a personal technical blog built with **Astro 5** + TypeScript, featuring
 src/
 ├── components/       # Reusable UI: BaseHead, Header, Footer, FormattedDate, HeaderLink
 ├── content/
-│   ├── blog/        # Markdown/MDX blog posts
-│   └── config.ts    # Content Collections schema (title, pubDate, description, category, heroImage)
+│   └── blog/        # Markdown/MDX blog posts
+├── content.config.ts    # Content Collections schema (title, pubDate, description, category, heroImage)
 ├── layouts/
 │   ├── SiteLayout.astro    # Main page wrapper with Header/Footer
 │   └── BlogPost.astro      # Blog post layout with image optimization
@@ -64,16 +64,14 @@ src/
 
 ## Critical: Japanese Slug Encoding Pattern
 
-Japanese characters (and other non-ASCII) in blog post filenames are encoded in URLs for web server compatibility. This encoding **must be applied consistently** in three locations:
+Astro 6 の Content Layer API では `post.id` がスラグ（ファイル名から拡張子を除いたもの）になります。`post.id` には日本語文字が含まれるため、HTML の `href` 属性では `encodeURIComponent` が必要ですが、`getStaticPaths()` のパラメータでは**エンコード不要**です（Astro が内部処理）。
 
 1. **Blog post routes** (`src/pages/blog/[...slug].astro`):
    ```typescript
    export async function getStaticPaths() {
      const posts = await getCollection('blog');
      return posts.map((post) => ({
-       params: {
-         slug: post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/'),
-       },
+       params: { slug: post.id },  // エンコード不要
        props: post,
      }));
    }
@@ -81,16 +79,16 @@ Japanese characters (and other non-ASCII) in blog post filenames are encoded in 
 
 2. **Blog listing** (`src/pages/blog/index.astro`):
    ```typescript
-   const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+   const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
    // Used in: <a href={`/blog/${encodedSlug}/`}>
    ```
 
 3. **Homepage and RSS feed** (`src/pages/index.astro`, `src/pages/rss.xml.js`):
    ```typescript
-   const encodedSlug = post.slug.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+   const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
    ```
 
-**Why:** Raw filenames like `電子書籍.md` become `/blog/%E7%94%B5%E5%AD%90%E6%9B%B8%E7%B1%8D/` in URLs. Skipping this encoding will cause 404 errors.
+**Why:** HTML の `href` 属性では非ASCII文字をパーセントエンコードする必要がある。`getStaticPaths()` でエンコードすると Astro が二重デコードして 404 になるため、`href` のみエンコードする。
 
 ## Content Collections Schema
 
@@ -107,7 +105,7 @@ updatedDate: 2024-01-20            # Optional
 ---
 ```
 
-Schema is defined in `src/content/config.ts` using Zod. New fields require schema updates.
+Schema is defined in `src/content.config.ts` using Zod (imported from `astro/zod`). New fields require schema updates.
 
 ## Image Handling
 
@@ -181,7 +179,7 @@ No CSS-in-JS framework; pure CSS only.
 4. Build with `pnpm run build` to catch schema errors
 
 **Modifying the Content Collections schema:**
-1. Update `src/content/config.ts`
+1. Update `src/content.config.ts`
 2. Ensure existing posts comply with new schema
 3. Run `pnpm run build` to validate
 
