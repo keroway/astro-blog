@@ -1,0 +1,116 @@
+# CI workflow.
+#
+# NOTE: A `lint` job is intentionally not defined here. Lint tooling is not yet
+# adopted in this repository (tracked by issue #12). Once a `pnpm run lint`
+# script lands, add a `lint` job alongside the others.
+#
+# Design note: `pnpm run build` is `astro check && astro build`, so typecheck
+# is normally bundled into build. We split them into separate jobs (`typecheck`
+# runs `astro check`, `build` runs `astro build` directly) so they run in
+# parallel and surface failures faster on PRs. The minor duplication is
+# acceptable for the latency win.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref so a rapid succession of pushes to
+# a PR doesn't queue up redundant CI work.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Read-only by default; no job here needs write access to the repo.
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Match vercel.json: pnpm is activated via corepack rather than installed
+      # standalone, so CI mirrors the production build environment.
+      - name: Enable corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.24.0 --activate
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run astro check
+        run: pnpm exec astro check
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.24.0 --activate
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Skip `astro check` here -- the `typecheck` job covers it. We invoke
+      # `astro build` directly instead of `pnpm run build` to avoid duplication.
+      - name: Build
+        run: pnpm exec astro build
+
+  test:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Enable corepack
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.24.0 --activate
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Only chromium is configured in playwright.config.ts, so install just
+      # that browser (with OS-level deps) to keep the job fast.
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        run: pnpm exec playwright test
+
+      # Upload the HTML report on failure so flakes / regressions can be
+      # diagnosed without re-running the suite locally.
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
