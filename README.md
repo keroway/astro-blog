@@ -14,7 +14,7 @@
 
 ## 技術スタック
 
-- [Astro 5](https://astro.build/) + TypeScript（strict モード有効）
+- [Astro 6](https://astro.build/) + TypeScript（strict モード有効）
 - [@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) による MDX サポート
 - [@astrojs/rss](https://docs.astro.build/en/guides/rss/) による RSS フィード自動生成
 - [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) による XML サイトマップ生成
@@ -44,8 +44,8 @@ pnpm run dev
 ├── src/
 │   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント（aria 属性や rel=... を付与済み）
 │   ├── content/
-│   │   ├── blog/         # Markdown/MDX の記事本体
-│   │   └── config.ts     # frontmatter スキーマ（title, description, pubDate, category など）
+│   │   └── blog/         # Markdown/MDX の記事本体
+│   ├── content.config.ts # Content Collections スキーマ（title, description, pubDate, category など）
 │   ├── layouts/          # ページレイアウト（SiteLayout, BlogPost など）
 │   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
 ├── astro.config.mjs      # Astro 設定（MDX・sitemap を統合）

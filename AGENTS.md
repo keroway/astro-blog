@@ -1,7 +1,7 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-`src/pages` holds route-level `.astro` files; keep top-level routing logic here and delegate view logic to `src/components`. Shared UI such as `Header.astro` and utilities like `FormattedDate.astro` live under `src/components`. Layout wrappers belong in `src/layouts`. Long-lived constants sit in `src/consts.ts`. Markdown and MDX posts are managed by Astro Content Collections in `src/content/blog`; update `src/content/config.ts` when adding new collections. Global CSS resides in `src/styles`, and static assets go in `public`.
+`src/pages` holds route-level `.astro` files; keep top-level routing logic here and delegate view logic to `src/components`. Shared UI such as `Header.astro` and utilities like `FormattedDate.astro` live under `src/components`. Layout wrappers belong in `src/layouts`. Long-lived constants sit in `src/consts.ts`. Markdown and MDX posts are managed by Astro Content Collections in `src/content/blog`; update `src/content.config.ts` when adding new collections. Global CSS resides in `src/styles`, and static assets go in `public`.
 
 ## Build, Test, and Development Commands
 Run `npm install` before your first change. Use `npm run dev` (alias `npm start`) for the local dev server with hot reload. Ship code with `npm run build`, which runs `astro check` for type safety before producing the production build in `dist/`. Verify output locally with `npm run preview`.
