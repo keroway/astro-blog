@@ -171,6 +171,19 @@ No CSS-in-JS framework; pure CSS only.
 - **PR contents:** Concise summary, screenshots for visual changes, reproduction steps for bugs
 - **Branch strategy:** Main branch is `main`
 
+## Issue / PR Lifecycle
+
+Issue の状態は GitHub ラベルで可視化する。複数の作業者 (人間 / エージェント) が並走するときの重複対応を防ぐためのもの。
+
+| 状態 | ラベル | 遷移トリガー |
+|------|--------|-------------|
+| `open` | (なし) | Issue 起票時 |
+| 対応中 | `in-progress` | 作業者が assignee 設定 + コメントで着手宣言したタイミングで付与 |
+| レビュー中 | `in-review` | 関連 PR を open したタイミングで `in-progress` から差し替え |
+| 完了 | (close) | PR マージ or 手動 close。`done` ラベルは設けず、close 状態で代替 |
+
+着手前には必ず `gh issue view <番号>` で assignees と関連 PR の有無を確認し、重複対応を回避する。`gh issue edit <番号> --add-assignee @me --add-label "in-progress"` で着手を宣言してからブランチを切る。
+
 ## Common Development Tasks
 
 **Adding a new blog post:**
