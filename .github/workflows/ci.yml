@@ -9,6 +9,17 @@
 # runs `astro check`, `build` runs `astro build` directly) so they run in
 # parallel and surface failures faster on PRs. The minor duplication is
 # acceptable for the latency win.
+#
+# pnpm install path: we use `pnpm/action-setup@v4` (the path pnpm officially
+# recommends for GitHub Actions) instead of the corepack route used in
+# `vercel.json`. Reasons: corepack is no longer bundled with Node.js >=25,
+# and the corepack version shipped inside Node.js can hit signing-key
+# verification failures during `corepack prepare`. Vercel's build environment
+# is independent of CI; both still pin pnpm@10.24.0 via the `packageManager`
+# field in package.json, so behaviour stays consistent.
+#
+# Node version: Astro 6 requires Node >= v22.12.0 (even-numbered releases
+# only). LTS 22 is the floor.
 name: CI
 
 on:
@@ -33,16 +44,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Match vercel.json: pnpm is activated via corepack rather than installed
-      # standalone, so CI mirrors the production build environment.
-      - name: Enable corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@10.24.0 --activate
+      # pnpm version is resolved from the `packageManager` field in package.json.
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
 
@@ -58,14 +65,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@10.24.0 --activate
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
 
@@ -83,14 +87,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Enable corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@10.24.0 --activate
+      - uses: pnpm/action-setup@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
 
