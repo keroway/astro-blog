@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PORT = 4321;
-const HOST = 'localhost';
+const PORT = Number(process.env.PLAYWRIGHT_PORT ?? process.env.PORT ?? 4321);
+const HOST = process.env.PLAYWRIGHT_HOST ?? process.env.HOST ?? 'localhost';
 
 export default defineConfig({
   testDir: './tests/playwright',
