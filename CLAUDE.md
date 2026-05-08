@@ -145,6 +145,7 @@ No CSS-in-JS framework; pure CSS only.
 - **E2E tests:** Playwright tests in `tests/playwright/basic.spec.ts`
   - Tests homepage, blog listing navigation, and about page
   - Run with: `pnpm exec playwright test`
+  - Default port is `4321`. If another process (e.g. a different `astro dev`) is already on 4321, override with `PLAYWRIGHT_PORT=4322 pnpm exec playwright test` (also accepts `PLAYWRIGHT_HOST` / falls back to `PORT` / `HOST`). Without the override, `reuseExistingServer: true` would let the wrong dev server answer the requests and cause every test to fail.
 - **No unit tests:** Rely on TypeScript strict mode and Content Collections schema validation
 
 ## Deployment
