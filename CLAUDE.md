@@ -43,8 +43,9 @@ This is a personal technical blog built with **Astro 6** + TypeScript, featuring
 src/
 ├── components/       # Reusable UI: BaseHead, Header, Footer, FormattedDate, HeaderLink
 ├── content/
-│   └── blog/        # Markdown/MDX blog posts
-├── content.config.ts    # Content Collections schema (title, pubDate, description, category, heroImage)
+│   ├── blog/        # Markdown/MDX blog posts
+│   └── works/       # Markdown/MDX entries for portfolio/projects
+├── content.config.ts    # Content Collections schema for blog / works
 ├── layouts/
 │   ├── SiteLayout.astro    # Main page wrapper with Header/Footer
 │   └── BlogPost.astro      # Blog post layout with image optimization
@@ -106,6 +107,25 @@ updatedDate: 2024-01-20            # Optional
 ```
 
 Schema is defined in `src/content.config.ts` using Zod (imported from `astro/zod`). New fields require schema updates.
+
+Works entries in `src/content/works/` use a separate collection with:
+
+```yaml
+---
+title: "Project Name"                   # Required
+description: "Short summary"            # Required
+status: "active"                        # Required: active | archived | wip
+repoUrl: "https://github.com/..."       # Required
+lpUrl: "https://..."                    # Required: landing page / external intro
+demoUrl: "https://..."                  # Optional
+tags: ["Astro", "TypeScript"]           # Required
+createdAt: 2026-05-10                   # Required (coerced to Date)
+updatedAt: 2026-05-10                   # Optional
+featured: true                          # Optional, defaults to false
+---
+```
+
+`works` entries should focus on background, design decisions, and lessons learned. Use `lpUrl` for feature-focused landing pages and `repoUrl` as the primary implementation reference.
 
 ## Image Handling
 
