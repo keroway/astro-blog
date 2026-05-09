@@ -3,12 +3,17 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
+import WorksCard from '../components/WorksCard.astro';
 
 const posts = (await getCollection('blog'))
 	.slice()
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const recentPosts = posts.slice(0, 3);
+const featuredWorks = (await getCollection('works'))
+	.filter((work) => work.data.featured)
+	.sort((a, b) => (b.data.updatedAt ?? b.data.createdAt).valueOf() - (a.data.updatedAt ?? a.data.createdAt).valueOf())
+	.slice(0, 1);
 
 const focusAreas = [
 	{
@@ -87,6 +92,20 @@ const learningTopics = [
 			}
 		</div>
 	</section>
+
+	{
+		featuredWorks.length > 0 && (
+			<section class="featured-works" aria-labelledby="featured-works-heading">
+				<header class="section-heading">
+					<h2 id="featured-works-heading">Featured Work</h2>
+					<a class="button button--ghost" href="/works">Works 一覧へ</a>
+				</header>
+				<div class="featured-works__grid">
+					{featuredWorks.map((work) => <WorksCard work={work} variant="featured" />)}
+				</div>
+			</section>
+		)
+	}
 
 	<section class="focus-areas" aria-labelledby="focus-areas-heading">
 		<header class="section-heading">
@@ -267,6 +286,12 @@ const learningTopics = [
 
 	.focus-areas {
 		margin-bottom: clamp(2.75rem, 6vw, 4rem);
+	}
+	.featured-works {
+		margin-bottom: clamp(2.75rem, 6vw, 4rem);
+	}
+	.featured-works__grid {
+		display: grid;
 	}
 	.focus-areas__grid {
 		display: grid;
