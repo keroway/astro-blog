@@ -44,4 +44,46 @@ test.describe("Basic site functionality", () => {
       "ソフトウェアエンジニア"
     );
   });
+
+  test("works listing and detail page render project links", async ({
+    page,
+  }) => {
+    await page.goto("/works");
+
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(
+      "実装したものを、"
+    );
+
+    const worksCards = page.locator("ul.works-grid > li");
+    await expect(worksCards).toHaveCount(1);
+
+    await expect(
+      page
+        .getByLabel("メインナビゲーション")
+        .getByRole("link", { name: "Works" })
+    ).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
+
+    await worksCards.first().getByRole("link", { name: "Overview" }).click();
+
+    await expect(page).toHaveURL(/\/works\/timeline-dsl\/$/);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "timeline-dsl" })
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "LP を開く" }).first()
+    ).toBeVisible();
+    await expect(page.getByRole("link", { name: "Repository" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Demo" }).first()).toBeVisible();
+    await expect(
+      page
+        .getByLabel("メインナビゲーション")
+        .getByRole("link", { name: "Works" })
+    ).toHaveAttribute(
+      "aria-current",
+      "page"
+    );
+  });
 });
