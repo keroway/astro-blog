@@ -61,10 +61,7 @@ test.describe("Basic site functionality", () => {
       page
         .getByLabel("メインナビゲーション")
         .getByRole("link", { name: "Works" })
-    ).toHaveAttribute(
-      "aria-current",
-      "page"
-    );
+    ).toHaveAttribute("aria-current", "page");
 
     await worksCards.first().getByRole("link", { name: "Overview" }).click();
 
@@ -76,14 +73,13 @@ test.describe("Basic site functionality", () => {
       page.getByRole("link", { name: "LP を開く" }).first()
     ).toBeVisible();
     await expect(page.getByRole("link", { name: "Repository" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Demo" }).first()).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "Demo" }).first()
+    ).toBeVisible();
     await expect(
       page
         .getByLabel("メインナビゲーション")
         .getByRole("link", { name: "Works" })
-    ).toHaveAttribute(
-      "aria-current",
-      "page"
-    );
+    ).toHaveAttribute("aria-current", "page");
   });
 });
