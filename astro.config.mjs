@@ -1,9 +1,8 @@
-import { defineConfig } from 'astro/config';
-import mdx from '@astrojs/mdx';
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
+import { defineConfig } from "astro/config";
 
-import sitemap from '@astrojs/sitemap';
-
-const siteUrl = process.env.SITE_URL ?? 'https://astro-blog.example.com';
+const siteUrl = process.env.SITE_URL ?? "https://astro-blog.example.com";
 
 // https://astro.build/config
 export default defineConfig({
