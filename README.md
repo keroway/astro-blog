@@ -44,8 +44,9 @@ pnpm run dev
 ├── src/
 │   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント（aria 属性や rel=... を付与済み）
 │   ├── content/
-│   │   └── blog/         # Markdown/MDX の記事本体
-│   ├── content.config.ts # Content Collections スキーマ（title, description, pubDate, category など）
+│   │   ├── blog/         # Markdown/MDX の記事本体
+│   │   └── works/        # 制作物紹介の Markdown/MDX
+│   ├── content.config.ts # Content Collections スキーマ（blog / works）
 │   ├── layouts/          # ページレイアウト（SiteLayout, BlogPost など）
 │   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
 ├── astro.config.mjs      # Astro 設定（MDX・sitemap を統合）
@@ -54,10 +55,16 @@ pnpm run dev
 ```
 
 - 記事は `src/content/blog/` に配置し、frontmatter で `title`, `pubDate`, `description`, `category`（任意）, `heroImage` などを指定します。
+- 制作物紹介は `src/content/works/` に配置し、`title`, `description`, `status`（`active` / `archived` / `wip`）, `repoUrl`, `lpUrl`, `demoUrl`, `tags`, `createdAt`, `featured` などを frontmatter で管理します。
 - 一覧ページはカード UI へ刷新済みで、frontmatter の `heroImage` と `category` を活用します。画像のアスペクト比は CSS の `aspect-ratio` で固定されます。
 - トップページは `getCollection('blog')` で最新 3 件を自動取得して表示するため、新規記事を追加するとホームも自動で更新されます。
 - 各ページは `SiteLayout` を経由して `<Head>` メタ情報とヘッダー／フッターを共有し、OGP `og:locale` を自動付与します。
 - 新しいコンテンツを追加した際は `pnpm run build` で型エラーを確認し、必要に応じて Vercel プレビューでクリック確認を行ってください。
+
+## works 運用メモ
+
+- LP は機能訴求と導入導線を担い、本サイトの `works` エントリでは制作経緯・設計判断・学びを掘り下げる。
+- `repoUrl` は実装の一次情報、`lpUrl` は外部ランディングページへの導線として使い分ける。
 
 ## デプロイについて
 
