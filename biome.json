@@ -1,0 +1,41 @@
+{
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": [
+      "**/*.ts",
+      "**/*.js",
+      "**/*.mjs",
+      "**/*.json",
+      "!dist",
+      "!node_modules",
+      "!.astro",
+      "!.claude",
+      "!test-results"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "trailingCommas": "es5"
+    }
+  }
+}
