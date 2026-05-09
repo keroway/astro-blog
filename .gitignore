@@ -24,3 +24,5 @@ pnpm-debug.log*
 .claude/
 .serena/
 test-results/
+.playwright-mcp/
+.pnpm-store/
