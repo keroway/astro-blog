@@ -4,7 +4,7 @@ test.describe("Basic site functionality", () => {
   test("home page renders navigation and intro text", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page).toHaveTitle(/keroway 技術メモ/);
+    await expect(page).toHaveTitle(/keroway\.com/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
       "技術研究"
     );
