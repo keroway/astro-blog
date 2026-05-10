@@ -36,12 +36,10 @@ test.describe("Basic site functionality", () => {
   test("about page renders bio information", async ({ page }) => {
     await page.goto("/about");
 
-    await expect(page).toHaveTitle(/About Me/);
-    await expect(
-      page.getByRole("heading", { level: 1, name: "About Me" })
-    ).toBeVisible();
-    await expect(page.locator("article.post")).toContainText(
-      "ソフトウェアエンジニア"
+    await expect(page).toHaveTitle(/About/);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+    await expect(page.locator("section.profile")).toContainText(
+      "Software Engineer"
     );
   });
 
