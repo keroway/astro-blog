@@ -1,15 +1,15 @@
-# keroway 技術メモ
+# keroway.com
 
-このリポジトリは「Qiita や Zenn に投稿するまででもないちょっとした内容」をメモしていく個人ブログです。Astro のブログテンプレートをベースに、カード型のブログ一覧や日本語スラッグに対応した導線を追加しています。
+エンジニア keroway のポートフォリオ・技術ブログです。Astro 6 をベースに、制作物紹介（Works）とブログ記事を一元管理するポートフォリオサイトを構築しています。
 
 ## 主な特徴
 
+- Works（制作物紹介）と Blog（技術記事）を統合したポートフォリオ構成
 - 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
 - 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示とホバーインタラクション
 - Astro Content Collections による Markdown/MDX 記事管理と型チェック
 - RSS フィードとサイトマップを自動生成
 - `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
-- トップページにはヒーロー、最新記事、フォーカステーマ、連絡用コールアウトを配置し、動線と信頼感を向上
 - すべてのスタイルはカスタマイズ可能な軽量 CSS で構成
 
 ## 技術スタック
@@ -100,3 +100,7 @@ pnpm audit --registry=https://registry.npmjs.org/
 このサイトは [Astro Starter Kit: Blog](https://github.com/withastro/astro/tree/latest/examples/blog) をベースに構築しています。テンプレート元の README やドキュメントも参照しつつ、独自のスタイルと運用フローを追加しています。
 
 テーマのスタイリングは [Bear Blog](https://github.com/HermanMartinus/bearblog/) を参考にしています。
+
+## サイト URL
+
+https://keroway.com
