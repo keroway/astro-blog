@@ -30,7 +30,7 @@ pnpm exec astro check
 
 ## Architecture Overview
 
-This is a personal technical blog built with **Astro 6** + TypeScript, featuring:
+This is a personal portfolio and technical blog (keroway.com) built with **Astro 6** + TypeScript, featuring:
 - Japanese language support with URL-encoded slugs
 - Content management via Astro Content Collections (Markdown/MDX)
 - Responsive card-based blog listing with 16:9 aspect ratio images
