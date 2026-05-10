@@ -1,20 +1,384 @@
 ---
-import Layout from '../layouts/BlogPost.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const skills = {
+  languages: ['C', 'C++', 'Python', 'TypeScript', 'Go', 'Dart'],
+  domains: ['組み込み / IoT', 'Web Frontend', 'クラウドインフラ', 'モバイルアプリ'],
+  tools: ['GCP', 'Arduino', 'Astro', 'Flutter', 'Docker', 'GitHub Actions'],
+};
+
+const focusAreas = [
+  {
+    title: '組み込み・IoT',
+    description:
+      'Arduino / ESP32 などを中心に、センサーやアクチュエーターの制御からクラウド連携まで。ハードウェアとソフトウェアを横断する実装が得意領域です。',
+  },
+  {
+    title: 'Web フロントエンド',
+    description:
+      'Astro を軸に、パフォーマンスとアクセシビリティを両立するコンポーネント設計に取り組んでいます。TypeScript strict モードを前提とした型安全な実装を心がけます。',
+  },
+  {
+    title: 'モバイルアプリ',
+    description:
+      'Flutter によるクロスプラットフォーム開発を実践。ネイティブコードとのブリッジや、BLE デバイスとの連携経験があります。',
+  },
+  {
+    title: 'クラウド・インフラ',
+    description:
+      'GCP を中心に、CI/CD パイプラインの構築や監視・ロギング基盤の整備を担当。オンプレとクラウドを組み合わせたハイブリッド構成の経験も持ちます。',
+  },
+];
+
+const timeline = [
+  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
+  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
+  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
+  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
+];
 ---
 
-<Layout
-	title="About Me"
-	description="A little bit about me and my background."
-	pubDate={new Date('2023-12-30')}
-	heroImage="/blog-placeholder-about.jpg"
+<SiteLayout
+  title="About"
+  description="横浜在住のソフトウェアエンジニア。組み込みからクラウド、フロントエンドまで 20 年以上の開発経験を持ちます。"
+  mainClass="about-page"
 >
-	<p>
-		私は横浜在住のソフトウェアエンジニアです。
-		業務経験は20年以上になります。
-	</p>
-	<p>
-		組み込み、Web、モバイル、デスクトップ、サーバーなど幅広く開発してきました。
-		最近は業務として直接開発する機会は減ってきましたが、変わらず息抜きに開発を楽しんでいます。
-	</p>
+  <section class="profile" aria-labelledby="profile-heading">
+    <div class="profile__card">
+      <div class="profile__avatar" aria-hidden="true">K</div>
+      <div class="profile__copy">
+        <p class="profile__eyebrow">Software Engineer · Yokohama, Japan</p>
+        <!-- TODO: 本名を記入 -->
+        <h1 id="profile-heading" class="profile__name">keroway</h1>
+        <p class="profile__lead">
+          組み込みからクラウド、フロントエンドまで 20 年以上にわたりソフトウェア開発に携わってきました。
+          領域を横断する実装経験を活かし、プロトタイプから本番運用まで幅広く対応します。
+        </p>
+      </div>
+    </div>
+  </section>
 
-</Layout>
+  <section class="timeline-section" aria-labelledby="timeline-heading">
+    <header class="section-heading">
+      <h2 id="timeline-heading">経歴サマリ</h2>
+    </header>
+    <ol class="timeline__list">
+      {
+        timeline.map((item) => (
+          <li class="timeline__item">
+            <span class="timeline__year">{item.year}</span>
+            <span class="timeline__label">{item.note}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="skills" aria-labelledby="skills-heading">
+    <header class="section-heading">
+      <h2 id="skills-heading">スキルセット</h2>
+    </header>
+    <div class="skills__groups">
+      <div class="skills__group">
+        <h3 class="skills__group-label">言語</h3>
+        <ul class="skills__chips" aria-label="使用言語">
+          {skills.languages.map((s) => <li><span class="chip">{s}</span></li>)}
+        </ul>
+      </div>
+      <div class="skills__group">
+        <h3 class="skills__group-label">領域</h3>
+        <ul class="skills__chips" aria-label="専門領域">
+          {skills.domains.map((s) => <li><span class="chip">{s}</span></li>)}
+        </ul>
+      </div>
+      <div class="skills__group">
+        <h3 class="skills__group-label">ツール・インフラ</h3>
+        <ul class="skills__chips" aria-label="ツール・インフラ">
+          {skills.tools.map((s) => <li><span class="chip">{s}</span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="focus-areas" aria-labelledby="focus-areas-heading">
+    <header class="section-heading">
+      <h2 id="focus-areas-heading">主な取り組み領域</h2>
+    </header>
+    <div class="focus-areas__grid">
+      {
+        focusAreas.map((area) => (
+          <article class="focus-card">
+            <h3>{area.title}</h3>
+            <p>{area.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="extras" aria-labelledby="extras-heading">
+    <header class="section-heading">
+      <h2 id="extras-heading">活動・その他</h2>
+    </header>
+    <div class="extras__body">
+      <!-- TODO: OSS 活動・登壇歴を記入 -->
+      <p class="subtle-text">OSS への貢献や勉強会登壇など、近日追記予定です。</p>
+    </div>
+  </section>
+
+  <section class="contact" aria-labelledby="contact-heading">
+    <div class="contact__content">
+      <h2 id="contact-heading">Contact</h2>
+      <ul class="contact__links">
+        <li>
+          <a class="button" href="https://twitter.com/keroway21" rel="noopener noreferrer" target="_blank"
+            >X (Twitter)</a
+          >
+        </li>
+        <li>
+          <a
+            class="button button--ghost"
+            href="https://github.com/keroway"
+            rel="noopener noreferrer"
+            target="_blank">GitHub</a
+          >
+        </li>
+      </ul>
+    </div>
+  </section>
+</SiteLayout>
+
+<style>
+  .about-page {
+    width: min(900px, 100%);
+  }
+
+  /* Profile */
+  .profile {
+    margin-bottom: clamp(2.5rem, 6vw, 4rem);
+  }
+  .profile__card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: center;
+    background: var(--surface);
+    border-radius: 20px;
+    padding: clamp(2rem, 4.5vw, 3rem);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(var(--gray-light), 0.8);
+  }
+  .profile__avatar {
+    width: clamp(88px, 12vw, 110px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    font-size: clamp(2.25rem, 5vw, 2.75rem);
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  .profile__eyebrow {
+    margin: 0 0 0.4rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--gray), 0.7);
+  }
+  .profile__name {
+    margin: 0 0 0.85rem;
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    line-height: 1.2;
+    font-weight: 800;
+    color: rgb(var(--black));
+    letter-spacing: -0.03em;
+  }
+  .profile__lead {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+  }
+
+  /* Timeline */
+  .timeline-section {
+    margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  }
+  .timeline__list {
+    list-style: none;
+    margin: 0 0 0 0.25rem;
+    padding: 0 0 0 clamp(1.5rem, 4vw, 2.25rem);
+    border-left: 2px solid rgba(var(--gray-light), 1);
+  }
+  .timeline__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    padding-block: 0.85rem;
+    align-items: baseline;
+  }
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    left: calc(-1 * clamp(1.5rem, 4vw, 2.25rem) - 5px);
+    top: 1.15rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface-muted);
+  }
+  .timeline__year {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .timeline__label {
+    color: rgb(var(--gray-dark));
+    line-height: 1.6;
+  }
+
+  /* Skills */
+  .skills {
+    margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  }
+  .skills__groups {
+    display: grid;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
+  }
+  .skills__group {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid rgba(var(--gray-light), 0.9);
+    box-shadow: var(--shadow-sm);
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    display: grid;
+    gap: 0.85rem;
+  }
+  .skills__group-label {
+    margin: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: rgba(var(--gray), 0.7);
+  }
+  .skills__chips {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  /* Focus areas */
+  .focus-areas {
+    margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  }
+  .focus-areas__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+  .focus-card {
+    background: var(--surface);
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border-radius: 16px;
+    border: 1px solid rgba(var(--gray-light), 0.9);
+    box-shadow: var(--shadow-sm);
+    display: grid;
+    gap: 0.75rem;
+    transition:
+      box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .focus-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(var(--gray), 0.12);
+  }
+  .focus-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: rgb(var(--black));
+  }
+  .focus-card p {
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* Extras */
+  .extras {
+    margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  }
+  .extras__body {
+    background: var(--surface);
+    border-radius: 16px;
+    border: 1px solid rgba(var(--gray-light), 0.9);
+    box-shadow: var(--shadow-sm);
+    padding: clamp(1.5rem, 3vw, 2rem);
+  }
+  .extras__body p {
+    margin: 0;
+  }
+
+  /* Contact */
+  .contact {
+    background: linear-gradient(135deg, rgba(15, 18, 25, 0.03), rgba(15, 18, 25, 0.06));
+    border-radius: 24px;
+    padding: clamp(2.5rem, 5vw, 3.5rem);
+    box-shadow: 0 2px 8px rgba(var(--gray), 0.08);
+    border: 1px solid rgba(var(--gray-light), 0.6);
+  }
+  .contact__content {
+    display: grid;
+    gap: 1.75rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .contact__content h2 {
+    font-size: clamp(1.8rem, 4vw, 2.2rem);
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .contact__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 900px) {
+    .profile__card {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .profile__avatar {
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .focus-areas__grid {
+      grid-template-columns: 1fr;
+    }
+    .timeline__item {
+      grid-template-columns: 4rem 1fr;
+    }
+  }
+</style>
