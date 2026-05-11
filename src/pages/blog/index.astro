@@ -4,7 +4,7 @@ import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 
-const posts = (await getCollection('blog'))
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
 	.slice()
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
@@ -39,6 +39,13 @@ const posts = (await getCollection('blog'))
 										<span class="post-card__category" aria-label={`カテゴリ: ${post.data.category}`}>
 											{post.data.category}
 										</span>
+									)}
+									{post.data.tags && post.data.tags.length > 0 && (
+										<ul class="post-card__tags" aria-label="タグ">
+											{post.data.tags.slice(0, 3).map((tag) => (
+												<li class="post-card__tag">#{tag}</li>
+											))}
+										</ul>
 									)}
 									<p class="post-card__date">
 										<FormattedDate date={post.data.pubDate} />
@@ -159,6 +166,19 @@ const posts = (await getCollection('blog'))
 		background: rgba(29, 78, 216, 0.1);
 		border-radius: 6px;
 		padding: 0.35rem 0.75rem;
+	}
+	.post-card__tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.post-card__tag {
+		font-size: 0.75rem;
+		color: rgb(var(--gray));
+		line-height: 1;
 	}
 		.post-card:is(:hover, :focus-within) {
 			transform: translateY(-2px);

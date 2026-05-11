@@ -5,7 +5,7 @@ import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import WorksCard from '../components/WorksCard.astro';
 
-const posts = (await getCollection('blog'))
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
 	.slice()
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
