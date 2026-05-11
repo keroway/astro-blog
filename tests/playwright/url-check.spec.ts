@@ -15,7 +15,10 @@ test.describe("URL compatibility check", () => {
           .filter((h): h is string => h !== null)
       );
 
-    expect(hrefs.length, "blog listing should show 50+ posts").toBeGreaterThanOrEqual(50);
+    expect(
+      hrefs.length,
+      "blog listing should show 50+ posts"
+    ).toBeGreaterThanOrEqual(50);
 
     const results = await Promise.all(
       hrefs.map(async (href: string) => {
