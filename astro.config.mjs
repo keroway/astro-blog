@@ -8,4 +8,12 @@ const siteUrl = process.env.SITE_URL ?? "https://keroway.com";
 export default defineConfig({
   site: siteUrl,
   integrations: [mdx(), sitemap()],
+  markdown: {
+    shikiConfig: {
+      themes: {
+        light: 'github-light',
+        dark: 'github-dark',
+      },
+    },
+  },
 });
