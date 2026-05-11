@@ -10,16 +10,17 @@ interface Props {
 	mainClass?: string;
 	lang?: string;
 	locale?: string;
+	canonicalUrl?: string;
 }
 
-const { title, description, image, mainClass, lang = 'ja', locale: localeOverride } = Astro.props;
+const { title, description, image, mainClass, lang = 'ja', locale: localeOverride, canonicalUrl } = Astro.props;
 const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsWith('en') ? 'en_US' : lang.replace('-', '_'));
 ---
 
 <!doctype html>
 <html lang={lang}>
 	<head>
-		<BaseHead title={title} description={description} image={image} locale={locale} />
+		<BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} />
 		<slot name="head" />
 	</head>
 	<body>
