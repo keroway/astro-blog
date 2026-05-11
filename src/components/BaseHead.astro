@@ -28,7 +28,7 @@ const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pa
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
-<ClientRouter />
+<ClientRouter fallback="animate" />
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
