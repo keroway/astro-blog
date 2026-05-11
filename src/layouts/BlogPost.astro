@@ -6,10 +6,11 @@ import FormattedDate from "../components/FormattedDate.astro";
 type Props = CollectionEntry<"blog">["data"];
 
 const post = Astro.props as Props;
-const { title, description, pubDate, updatedDate, heroImage } = post;
+const { title, description, pubDate, updatedDate, heroImage, canonicalUrl } = post;
+const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
 ---
 
-<SiteLayout title={title} description={description} image={heroImage} mainClass="post-layout">
+<SiteLayout title={title} description={description} image={heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
 	<article class="post">
 		{
 			heroImage && (
