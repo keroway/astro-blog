@@ -20,7 +20,7 @@
     "@astrojs/sitemap": "^3.7.2",
     "@biomejs/biome": "^2.4.14",
     "@playwright/test": "^1.59.1",
-    "astro": "^6.3.0",
+    "astro": "^6.3.1",
     "typescript": "^6.0.0"
   },
   "pnpm": {
