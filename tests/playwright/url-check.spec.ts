@@ -8,7 +8,7 @@ test.describe("URL compatibility check", () => {
     await page.goto("/blog");
 
     const hrefs = await page
-      .locator("a.post-card__link")
+      .locator("a.post-row__link")
       .evaluateAll<string[]>((els: Element[]) =>
         els
           .map((el) => el.getAttribute("href"))

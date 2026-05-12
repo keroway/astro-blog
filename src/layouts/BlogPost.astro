@@ -23,161 +23,160 @@ const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 <SiteLayout title={title} description={description} image={heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
-	<div class="post-wrap">
-		<article class="post">
-			{
-				heroImage && (
-					<figure class="post__hero">
-						<img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
-					</figure>
-				)
-			}
-			<header class="post__header">
-				<div class="post__meta">
-					<time datetime={pubDate.toISOString()}>
-						<FormattedDate date={pubDate} />
-					</time>
-					{
-						updatedDate && (
-							<span class="post__meta-update">
-								最終更新 <FormattedDate date={updatedDate} />
-							</span>
-						)
-					}
-				</div>
-				<h1>{title}</h1>
-				<hr />
-			</header>
-			{tocItems.length > 0 && (
-				<div class="toc-mobile">
-					<TableOfContents headings={headings} />
-				</div>
-			)}
-			<div class="post__content">
-				<slot />
-			</div>
-		</article>
-		{tocItems.length > 0 && (
-			<aside class="toc-sidebar" aria-label="目次">
-				<TableOfContents headings={headings} />
-			</aside>
-		)}
-	</div>
+  <div class="post-wrap">
+    <article class="post">
+      {heroImage && (
+        <figure class="post__hero">
+          <img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
+        </figure>
+      )}
+      <header class="post__header">
+        <div class="post__meta">
+          <time class="kw-mono post__meta-date" datetime={pubDate.toISOString()}>
+            <FormattedDate date={pubDate} />
+          </time>
+          {updatedDate && (
+            <span class="kw-mono post__meta-update">
+              最終更新 <FormattedDate date={updatedDate} />
+            </span>
+          )}
+        </div>
+        <h1 class="post__title">{title}</h1>
+        <hr />
+      </header>
+      {tocItems.length > 0 && (
+        <div class="toc-mobile">
+          <TableOfContents headings={headings} />
+        </div>
+      )}
+      <div class="post__content">
+        <slot />
+      </div>
+    </article>
+    {tocItems.length > 0 && (
+      <aside class="toc-sidebar" aria-label="目次">
+        <TableOfContents headings={headings} />
+      </aside>
+    )}
+  </div>
 </SiteLayout>
 
 <style>
-	.post-layout {
-		width: min(76ch, 100%);
-		padding-block-start: clamp(2.5rem, 6vw, 4rem);
-		padding-inline: clamp(1rem, 3vw, 2rem);
-	}
-	.post-wrap {
-		display: contents;
-	}
-	.post {
-		display: grid;
-		gap: clamp(1.5rem, 4vw, 2.5rem);
-	}
-	.toc-mobile {
-		display: block;
-	}
-	.toc-sidebar {
-		display: none;
-	}
-	.post__hero {
-		margin: 0;
-		border-radius: 18px;
-		overflow: clip;
-		box-shadow: var(--box-shadow);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		background: var(--surface);
-	}
-	.post__hero img {
-		display: block;
-		max-width: 100%;
-		width: auto;
-		height: auto;
-		object-fit: contain;
-	}
-	.post__header {
-		text-align: center;
-		display: grid;
-		gap: 0.75rem;
-		color: rgb(var(--gray-dark));
-	}
-	.post__header h1 {
-		margin: 0;
-		font-size: clamp(2.2rem, 4vw, 2.8rem);
-	}
-	.post__meta {
-		display: flex;
-		justify-content: center;
-		gap: 1rem;
-		color: rgb(var(--gray));
-		font-size: 0.95rem;
-		flex-wrap: wrap;
-	}
-	.post__meta-update {
-		font-style: italic;
-	}
-	.post__content {
-		color: rgb(var(--gray-dark));
-		overflow-wrap: break-word;
-		word-wrap: break-word;
-	}
-	.post__content :global(img) {
-		max-width: 100%;
-		width: auto;
-		height: auto;
-		display: block;
-		margin-inline: auto;
-	}
-	.post__content :global(pre) {
-		overflow-x: auto;
-		max-width: 100%;
-	}
-	.post__content :global(table) {
-		display: block;
-		overflow-x: auto;
-		max-width: 100%;
-	}
-	.post__content :global(:where(* + *)) {
-		margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
-	}
+  .post-layout {
+    width: min(76ch, 100%);
+    padding-block-start: var(--kw-space-12);
+  }
+  .post-wrap {
+    display: contents;
+  }
+  .post {
+    display: grid;
+    gap: var(--kw-space-8);
+  }
+  .toc-mobile { display: block; }
+  .toc-sidebar { display: none; }
 
-	@media (min-width: 901px) {
-		:global(.post-layout) {
-			width: min(100%, 112ch);
-		}
-		.post-wrap {
-			display: grid;
-			grid-template-columns: minmax(0, 1fr) 15rem;
-			gap: clamp(2rem, 4vw, 3rem);
-			align-items: start;
-		}
-		.post {
-			grid-column: 1;
-			grid-row: 1;
-		}
-		.toc-mobile {
-			display: none;
-		}
-		.toc-sidebar {
-			display: block;
-			grid-column: 2;
-			grid-row: 1;
-			position: sticky;
-			top: clamp(1.5rem, 3vw, 2rem);
-			max-height: calc(100vh - 5rem);
-			overflow-y: auto;
-		}
-	}
+  .post__hero {
+    margin: 0;
+    border-radius: var(--kw-radius-md);
+    overflow: clip;
+    border: 1px solid var(--kw-rule);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--kw-bg-card);
+  }
+  .post__hero img {
+    display: block;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
 
-	@media (max-width: 900px) {
-		.post-layout {
-			padding-block-start: 2rem;
-		}
-	}
+  .post__header {
+    text-align: start;
+    display: grid;
+    gap: var(--kw-space-4);
+  }
+  .post__meta {
+    display: flex;
+    gap: var(--kw-space-4);
+    flex-wrap: wrap;
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
+  }
+  .post__meta-date,
+  .post__meta-update {
+    font-family: var(--kw-font-mono);
+  }
+  .post__meta-update { font-style: italic; }
+
+  .post__title {
+    font-family: var(--kw-font-display);
+    font-size: clamp(var(--kw-fs-display-sm), 4vw, var(--kw-fs-display-md));
+    font-weight: var(--kw-fw-medium);
+    letter-spacing: var(--kw-ls-display);
+    line-height: var(--kw-lh-snug);
+    color: var(--kw-fg-display);
+    margin: 0;
+  }
+
+  .post__content {
+    color: var(--kw-fg);
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    line-height: var(--kw-lh-prose);
+  }
+  .post__content :global(img) {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    margin-inline: auto;
+  }
+  .post__content :global(pre) {
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .post__content :global(table) {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+  }
+  .post__content :global(:where(* + *)) {
+    margin-block-start: clamp(var(--kw-space-6), 3vw, var(--kw-space-10));
+  }
+
+  @media (min-width: 901px) {
+    :global(.post-layout) {
+      width: min(100%, 112ch);
+    }
+    .post-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 15rem;
+      gap: clamp(var(--kw-space-8), 4vw, var(--kw-space-12));
+      align-items: start;
+    }
+    .post {
+      grid-column: 1;
+      grid-row: 1;
+    }
+    .toc-mobile { display: none; }
+    .toc-sidebar {
+      display: block;
+      grid-column: 2;
+      grid-row: 1;
+      position: sticky;
+      top: clamp(var(--kw-space-6), 3vw, var(--kw-space-8));
+      max-height: calc(100vh - 5rem);
+      overflow-y: auto;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .post-layout {
+      padding-block-start: var(--kw-space-8);
+    }
+  }
 </style>

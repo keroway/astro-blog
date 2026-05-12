@@ -2,202 +2,145 @@
 import type { CollectionEntry } from "astro:content";
 
 interface Props {
-	work: CollectionEntry<"works">;
-	variant?: "grid" | "featured";
+  work: CollectionEntry<"works">;
+  variant?: "grid" | "featured";
 }
 
 const { work, variant = "grid" } = Astro.props;
 
 const statusMap = {
-	active: { label: "Active", className: "is-active" },
-	wip: { label: "WIP", className: "is-wip" },
-	archived: { label: "Archived", className: "is-archived" },
+  active:   { label: "Active",   className: "kw-chip--status-active"   },
+  wip:      { label: "WIP",      className: "kw-chip--status-wip"      },
+  archived: { label: "Archived", className: "kw-chip--status-archived" },
 } as const;
 
 const status = statusMap[work.data.status];
 const href = `/works/${work.id.split("/").map((segment) => encodeURIComponent(segment)).join("/")}/`;
 const timestamp = (work.data.updatedAt ?? work.data.createdAt).toISOString();
 const releaseLabel = (work.data.updatedAt ?? work.data.createdAt).toLocaleDateString("ja-JP", {
-	year: "numeric",
-	month: "short",
-	day: "numeric",
+  year: "numeric",
+  month: "short",
+  day: "numeric",
 });
 ---
 
 <article class:list={["work-card", `work-card--${variant}`]}>
-	<div class="work-card__frame" aria-hidden="true">
-		<span />
-		<span />
-		<span />
-	</div>
-	<div class="work-card__body">
-		<div class="work-card__meta">
-			<span class:list={["work-card__status", status.className]}>{status.label}</span>
-			<time datetime={timestamp}>{releaseLabel}</time>
-		</div>
-		<h3 class="work-card__title">
-			<a href={href}>{work.data.title}</a>
-		</h3>
-		<p class="work-card__description">{work.data.description}</p>
-		<ul class="work-card__tags" aria-label="使用技術">
-			{work.data.tags.map((tag) => (
-				<li>{tag}</li>
-			))}
-		</ul>
-		<div class="work-card__actions">
-			<a class="button button--ghost work-card__button" href={href}>Overview</a>
-			<a
-				class="work-card__external"
-				href={work.data.lpUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				LPを見る
-			</a>
-		</div>
-	</div>
+  <div class="work-card__body">
+    <div class="work-card__meta">
+      <span class:list={["kw-chip", status.className]}>{status.label}</span>
+      <time class="kw-mono work-card__date" datetime={timestamp}>{releaseLabel}</time>
+    </div>
+    <h3 class="work-card__title">
+      <a href={href}>{work.data.title}</a>
+    </h3>
+    <p class="work-card__description no-indent">{work.data.description}</p>
+    <ul class="work-card__tags" aria-label="使用技術">
+      {work.data.tags.map((tag) => (
+        <li><span class="kw-chip work-card__tag">{tag}</span></li>
+      ))}
+    </ul>
+    <div class="work-card__actions">
+      <a class="kw-button work-card__btn" href={href}>Overview <span class="kw-button-arrow">→</span></a>
+      <a class="work-card__external" href={work.data.lpUrl} target="_blank" rel="noopener noreferrer">
+        LP を見る
+      </a>
+    </div>
+  </div>
 </article>
 
 <style>
-	.work-card {
-		position: relative;
-		background:
-			linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.98)),
-			var(--surface);
-		border: 1px solid rgba(var(--gray), 0.12);
-		border-radius: 22px;
-		box-shadow: var(--shadow-md);
-		overflow: clip;
-		min-height: 100%;
-	}
-	.work-card__frame {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-	.work-card__frame span {
-		position: absolute;
-		background: linear-gradient(90deg, transparent, rgba(29, 78, 216, 0.2), transparent);
-	}
-	.work-card__frame span:nth-child(1) {
-		top: 0;
-		left: 8%;
-		right: 8%;
-		height: 1px;
-	}
-	.work-card__frame span:nth-child(2) {
-		right: 0;
-		top: 16%;
-		bottom: 16%;
-		width: 1px;
-		background: linear-gradient(180deg, transparent, rgba(29, 78, 216, 0.18), transparent);
-	}
-	.work-card__frame span:nth-child(3) {
-		left: 0;
-		bottom: 18%;
-		width: 28%;
-		height: 1px;
-	}
-	.work-card__body {
-		position: relative;
-		display: grid;
-		gap: 1rem;
-		padding: clamp(1.4rem, 3vw, 2rem);
-	}
-	.work-card__meta {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		font-size: 0.85rem;
-		color: rgba(var(--gray), 0.9);
-	}
-	.work-card__status {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.35rem 0.75rem;
-		border-radius: 999px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
-	.work-card__status.is-active {
-		background: rgba(22, 163, 74, 0.12);
-		color: #166534;
-	}
-	.work-card__status.is-wip {
-		background: rgba(217, 119, 6, 0.14);
-		color: #9a3412;
-	}
-	.work-card__status.is-archived {
-		background: rgba(var(--gray), 0.1);
-		color: rgb(var(--gray-dark));
-	}
-	.work-card__title {
-		margin: 0;
-		font-size: clamp(1.4rem, 3vw, 1.8rem);
-		line-height: 1.2;
-	}
-	.work-card__title a {
-		color: rgb(var(--black));
-		text-decoration: none;
-	}
-	.work-card__description {
-		margin: 0;
-		color: var(--text-muted);
-		line-height: 1.7;
-	}
-	.work-card__tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.6rem;
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-	.work-card__tags li {
-		padding: 0.35rem 0.75rem;
-		border-radius: 999px;
-		background: rgba(var(--gray-light), 0.8);
-		border: 1px solid rgba(var(--gray), 0.1);
-		font-size: 0.8rem;
-		color: rgb(var(--gray-dark));
-	}
-	.work-card__actions {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.85rem;
-		margin-top: 0.25rem;
-	}
-	.work-card__button {
-		padding-inline: 1rem;
-	}
-	.work-card__external {
-		font-size: 0.95rem;
-		text-decoration: none;
-	}
-	.work-card:is(:hover, :focus-within) {
-		transform: translateY(-2px);
-		box-shadow: var(--shadow-lg);
-	}
-	.work-card:is(:hover, :focus-within) .work-card__title a {
-		color: var(--accent-dark);
-	}
-	.work-card--featured .work-card__body {
-		padding: clamp(1.6rem, 3vw, 2.4rem);
-	}
-	.work-card--featured .work-card__title {
-		font-size: clamp(1.7rem, 3.5vw, 2.2rem);
-	}
-	@media (max-width: 640px) {
-		.work-card {
-			border-radius: 18px;
-		}
-		.work-card__actions {
-			align-items: stretch;
-		}
-	}
+  .work-card {
+    background: var(--kw-bg-card);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    min-height: 100%;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .work-card:is(:hover, :focus-within) {
+    border-color: var(--kw-rule-strong);
+  }
+  .work-card:is(:hover, :focus-within) .work-card__title a {
+    color: var(--kw-fg-link);
+  }
+
+  .work-card__body {
+    display: grid;
+    gap: var(--kw-space-4);
+    padding: var(--kw-space-6);
+  }
+
+  .work-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kw-space-3);
+  }
+  .work-card__date {
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
+  }
+
+  .work-card__title {
+    margin: 0;
+    font-family: var(--kw-font-display);
+    font-size: clamp(var(--kw-fs-h3), 3vw, var(--kw-fs-h2));
+    font-weight: var(--kw-fw-medium);
+    line-height: var(--kw-lh-snug);
+    letter-spacing: var(--kw-ls-display);
+  }
+  .work-card__title a {
+    color: var(--kw-fg-display);
+    text-decoration: none;
+    border-bottom: 0;
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .work-card__description {
+    margin: 0;
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-body-sm);
+    line-height: var(--kw-lh-normal);
+  }
+
+  .work-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-2);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .work-card__tag {
+    font-size: var(--kw-fs-mono-xs);
+  }
+
+  .work-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kw-space-4);
+    margin-top: var(--kw-space-2);
+  }
+  .work-card__btn {
+    padding: 10px 20px;
+  }
+  .work-card__external {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .work-card__external:hover {
+    border-bottom-color: var(--kw-fg-link);
+  }
+
+  .work-card--featured .work-card__body {
+    padding: var(--kw-space-8);
+  }
+  .work-card--featured .work-card__title {
+    font-size: var(--kw-fs-h1);
+  }
 </style>

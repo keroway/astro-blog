@@ -1,5 +1,8 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
+import Monogram from '../components/Monogram.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FocusCard from '../components/FocusCard.astro';
 
 const skills = {
   languages: ['C', 'C++', 'Python', 'TypeScript', 'Go', 'Dart'],
@@ -9,21 +12,25 @@ const skills = {
 
 const focusAreas = [
   {
+    key: 'embedded_iot',
     title: '組み込み・IoT',
     description:
       'Arduino / ESP32 などを中心に、センサーやアクチュエーターの制御からクラウド連携まで。ハードウェアとソフトウェアを横断する実装が得意領域です。',
   },
   {
+    key: 'web_frontend',
     title: 'Web フロントエンド',
     description:
       'Astro を軸に、パフォーマンスとアクセシビリティを両立するコンポーネント設計に取り組んでいます。TypeScript strict モードを前提とした型安全な実装を心がけます。',
   },
   {
+    key: 'mobile_app',
     title: 'モバイルアプリ',
     description:
       'Flutter によるクロスプラットフォーム開発を実践。ネイティブコードとのブリッジや、BLE デバイスとの連携経験があります。',
   },
   {
+    key: 'cloud_infra',
     title: 'クラウド・インフラ',
     description:
       'GCP を中心に、CI/CD パイプラインの構築や監視・ロギング基盤の整備を担当。オンプレとクラウドを組み合わせたハイブリッド構成の経験も持ちます。',
@@ -41,344 +48,189 @@ const timeline = [
 <SiteLayout
   title="About"
   description="横浜在住のソフトウェアエンジニア。組み込みからクラウド、フロントエンドまで 20 年以上の開発経験を持ちます。"
-  mainClass="about-page"
+  mainClass="about-main"
 >
-  <section class="profile" aria-labelledby="profile-heading">
-    <div class="profile__card">
-      <div class="profile__avatar" aria-hidden="true">K</div>
-      <div class="profile__copy">
-        <p class="profile__eyebrow">Software Engineer · Yokohama, Japan</p>
-        <!-- TODO: 本名を記入 -->
-        <h1 id="profile-heading" class="profile__name">keroway</h1>
-        <p class="profile__lead">
-          組み込みからクラウド、フロントエンドまで 20 年以上にわたりソフトウェア開発に携わってきました。
-          領域を横断する実装経験を活かし、プロトタイプから本番運用まで幅広く対応します。
-        </p>
-      </div>
+  <!-- Masthead -->
+  <section class="masthead" aria-labelledby="profile-heading">
+    <div class="masthead__copy">
+      <p class="kw-eyebrow masthead__eyebrow">colophon · author</p>
+      <!-- TODO: 本名を記入 -->
+      <h1 id="profile-heading" class="masthead__title">keroway</h1>
+      <p class="masthead__sub">software engineer · yokohama</p>
+      <p class="masthead__lead no-indent">
+        組み込みからクラウド、フロントエンドまで 20 年以上にわたりソフトウェア開発に携わってきました。
+        領域を横断する実装経験を活かし、プロトタイプから本番運用まで幅広く対応します。
+      </p>
+    </div>
+    <div class="masthead__monogram">
+      <Monogram tag="Vol. XVIII · 著者紹介" />
     </div>
   </section>
 
-  <section class="timeline-section" aria-labelledby="timeline-heading">
-    <header class="section-heading">
-      <h2 id="timeline-heading">経歴サマリ</h2>
-    </header>
-    <ol class="timeline__list">
-      {
-        timeline.map((item) => (
-          <li class="timeline__item">
-            <span class="timeline__year">{item.year}</span>
-            <span class="timeline__label">{item.note}</span>
-          </li>
-        ))
-      }
-    </ol>
-  </section>
-
-  <section class="skills" aria-labelledby="skills-heading">
-    <header class="section-heading">
-      <h2 id="skills-heading">スキルセット</h2>
-    </header>
-    <div class="skills__groups">
-      <div class="skills__group">
-        <h3 class="skills__group-label">言語</h3>
-        <ul class="skills__chips" aria-label="使用言語">
-          {skills.languages.map((s) => <li><span class="chip">{s}</span></li>)}
-        </ul>
-      </div>
-      <div class="skills__group">
-        <h3 class="skills__group-label">領域</h3>
-        <ul class="skills__chips" aria-label="専門領域">
-          {skills.domains.map((s) => <li><span class="chip">{s}</span></li>)}
-        </ul>
-      </div>
-      <div class="skills__group">
-        <h3 class="skills__group-label">ツール・インフラ</h3>
-        <ul class="skills__chips" aria-label="ツール・インフラ">
-          {skills.tools.map((s) => <li><span class="chip">{s}</span></li>)}
-        </ul>
-      </div>
+  <!-- Career timeline -->
+  <section class="section" aria-labelledby="timeline-heading">
+    <SectionHead jp="経歴" en="career timeline" id="timeline-heading" />
+    <div class="timeline">
+      {timeline.map((item, i) => {
+        const num = (i + 1).toString().padStart(2, '0');
+        return (
+          <div class="timeline-row">
+            <span class="timeline-row__num kw-numeral kw-tabular">{num}</span>
+            <div class="timeline-row__body">
+              <p class="kw-eyebrow timeline-row__year no-indent">{item.year}</p>
+              <p class="timeline-row__note no-indent">{item.note}</p>
+            </div>
+          </div>
+        );
+      })}
     </div>
   </section>
 
-  <section class="focus-areas" aria-labelledby="focus-areas-heading">
-    <header class="section-heading">
-      <h2 id="focus-areas-heading">主な取り組み領域</h2>
-    </header>
-    <div class="focus-areas__grid">
-      {
-        focusAreas.map((area) => (
-          <article class="focus-card">
-            <h3>{area.title}</h3>
-            <p>{area.description}</p>
-          </article>
-        ))
-      }
+  <!-- Focus areas -->
+  <section class="section" aria-labelledby="focus-areas-heading">
+    <SectionHead jp="得意分野" en="focus areas" id="focus-areas-heading" />
+    <div class="focus-grid">
+      {focusAreas.map((area, i) => (
+        <FocusCard index={i} key={area.key} title={area.title} description={area.description} />
+      ))}
     </div>
   </section>
 
-  <section class="extras" aria-labelledby="extras-heading">
-    <header class="section-heading">
-      <h2 id="extras-heading">活動・その他</h2>
-    </header>
-    <div class="extras__body">
-      <!-- TODO: OSS 活動・登壇歴を記入 -->
-      <p class="subtle-text">OSS への貢献や勉強会登壇など、近日追記予定です。</p>
-    </div>
-  </section>
-
-  <section class="contact" aria-labelledby="contact-heading">
-    <div class="contact__content">
-      <h2 id="contact-heading">Contact</h2>
-      <ul class="contact__links">
-        <li>
-          <a class="button" href="https://twitter.com/keroway21" rel="noopener noreferrer" target="_blank"
-            >X (Twitter)</a
-          >
-        </li>
-        <li>
-          <a
-            class="button button--ghost"
-            href="https://github.com/keroway"
-            rel="noopener noreferrer"
-            target="_blank">GitHub</a
-          >
-        </li>
-      </ul>
+  <!-- Stack -->
+  <section class="section" aria-labelledby="stack-heading">
+    <SectionHead jp="スタック" en="stack" id="stack-heading" />
+    <div class="stack-groups">
+      {Object.entries({ '言語': skills.languages, '領域': skills.domains, 'ツール・インフラ': skills.tools }).map(([label, items]) => (
+        <div class="stack-group">
+          <h3 class="kw-eyebrow stack-group__label">{label}</h3>
+          <ul class="stack-chips" aria-label={label}>
+            {items.map((s) => <li><span class="kw-chip">{s}</span></li>)}
+          </ul>
+        </div>
+      ))}
     </div>
   </section>
 </SiteLayout>
 
 <style>
-  .about-page {
+  .about-main {
     width: min(900px, 100%);
   }
 
-  /* Profile */
-  .profile {
-    margin-bottom: clamp(2.5rem, 6vw, 4rem);
-  }
-  .profile__card {
+  /* Masthead */
+  .masthead {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: clamp(1.75rem, 4vw, 3rem);
-    align-items: center;
-    background: var(--surface);
-    border-radius: 20px;
-    padding: clamp(2rem, 4.5vw, 3rem);
-    box-shadow: var(--shadow-md);
-    border: 1px solid rgba(var(--gray-light), 0.8);
+    grid-template-columns: 1fr auto;
+    gap: var(--kw-space-12);
+    align-items: end;
+    margin-bottom: var(--kw-space-20);
+    padding-bottom: var(--kw-space-10);
+    border-bottom: 1px solid var(--kw-rule);
   }
-  .profile__avatar {
-    width: clamp(88px, 12vw, 110px);
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
-    font-size: clamp(2.25rem, 5vw, 2.75rem);
-    font-weight: 800;
-    color: #fff;
-    background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
-    border-radius: 20px;
-    box-shadow: var(--shadow-sm);
+  .masthead__eyebrow {
+    margin-bottom: var(--kw-space-4);
+  }
+  .masthead__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-display-xl);
+    font-weight: var(--kw-fw-medium);
+    line-height: var(--kw-lh-tight);
+    letter-spacing: var(--kw-ls-display);
+    color: var(--kw-fg-display);
+    margin: 0 0 var(--kw-space-2);
+  }
+  .masthead__sub {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono);
     text-transform: uppercase;
-    letter-spacing: -0.02em;
+    letter-spacing: var(--kw-ls-eyebrow);
+    color: var(--kw-fg-link);
+    margin: 0 0 var(--kw-space-6);
+    text-indent: 0;
   }
-  .profile__eyebrow {
-    margin: 0 0 0.4rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: rgba(var(--gray), 0.7);
-  }
-  .profile__name {
-    margin: 0 0 0.85rem;
-    font-size: clamp(1.75rem, 4vw, 2.4rem);
-    line-height: 1.2;
-    font-weight: 800;
-    color: rgb(var(--black));
-    letter-spacing: -0.03em;
-  }
-  .profile__lead {
+  .masthead__lead {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-body-lg);
+    line-height: var(--kw-lh-prose);
+    max-width: 44ch;
     margin: 0;
-    color: var(--text-muted);
-    font-size: 1rem;
-    line-height: 1.7;
-    letter-spacing: -0.01em;
+  }
+
+  /* Sections */
+  .section {
+    margin-bottom: var(--kw-space-20);
   }
 
   /* Timeline */
-  .timeline-section {
-    margin-bottom: clamp(2.75rem, 6vw, 4rem);
+  .timeline {
+    display: flex;
+    flex-direction: column;
   }
-  .timeline__list {
-    list-style: none;
-    margin: 0 0 0 0.25rem;
-    padding: 0 0 0 clamp(1.5rem, 4vw, 2.25rem);
-    border-left: 2px solid rgba(var(--gray-light), 1);
-  }
-  .timeline__item {
-    position: relative;
+  .timeline-row {
     display: grid;
-    grid-template-columns: 5rem 1fr;
-    gap: 1rem;
-    padding-block: 0.85rem;
+    grid-template-columns: 56px 1fr;
+    gap: var(--kw-space-6);
     align-items: baseline;
+    padding: var(--kw-space-6) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
   }
-  .timeline__item::before {
-    content: '';
-    position: absolute;
-    left: calc(-1 * clamp(1.5rem, 4vw, 2.25rem) - 5px);
-    top: 1.15rem;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    border: 2px solid var(--surface-muted);
+  .timeline-row__num {
+    font-size: 22px;
   }
-  .timeline__year {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: var(--accent-dark);
-    letter-spacing: 0.02em;
-    white-space: nowrap;
+  .timeline-row__year {
+    margin-bottom: var(--kw-space-1);
+    color: var(--kw-accent);
   }
-  .timeline__label {
-    color: rgb(var(--gray-dark));
-    line-height: 1.6;
+  .timeline-row__note {
+    color: var(--kw-fg);
+    margin: 0;
   }
 
-  /* Skills */
-  .skills {
-    margin-bottom: clamp(2.75rem, 6vw, 4rem);
-  }
-  .skills__groups {
+  /* Focus grid */
+  .focus-grid {
     display: grid;
-    gap: clamp(1rem, 2.5vw, 1.5rem);
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--kw-space-8);
   }
-  .skills__group {
-    background: var(--surface);
-    border-radius: 16px;
-    border: 1px solid rgba(var(--gray-light), 0.9);
-    box-shadow: var(--shadow-sm);
-    padding: clamp(1.25rem, 3vw, 1.75rem);
+
+  /* Stack */
+  .stack-groups {
     display: grid;
-    gap: 0.85rem;
+    gap: var(--kw-space-6);
   }
-  .skills__group-label {
+  .stack-group {
+    padding: var(--kw-space-5) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
+    display: grid;
+    gap: var(--kw-space-3);
+  }
+  .stack-group:last-child {
+    border-bottom: 0;
+  }
+  .stack-group__label {
     margin: 0;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: rgba(var(--gray), 0.7);
   }
-  .skills__chips {
+  .stack-chips {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
+    gap: var(--kw-space-2);
   }
 
-  /* Focus areas */
-  .focus-areas {
-    margin-bottom: clamp(2.75rem, 6vw, 4rem);
-  }
-  .focus-areas__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: clamp(1.25rem, 3vw, 2rem);
-  }
-  .focus-card {
-    background: var(--surface);
-    padding: clamp(1.5rem, 3vw, 2rem);
-    border-radius: 16px;
-    border: 1px solid rgba(var(--gray-light), 0.9);
-    box-shadow: var(--shadow-sm);
-    display: grid;
-    gap: 0.75rem;
-    transition:
-      box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 200ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .focus-card:hover {
-    box-shadow: var(--shadow-md);
-    border-color: rgba(var(--gray), 0.12);
-  }
-  .focus-card h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    color: rgb(var(--black));
-  }
-  .focus-card p {
-    margin: 0;
-    color: var(--text-muted);
-    line-height: 1.7;
-  }
-
-  /* Extras */
-  .extras {
-    margin-bottom: clamp(2.75rem, 6vw, 4rem);
-  }
-  .extras__body {
-    background: var(--surface);
-    border-radius: 16px;
-    border: 1px solid rgba(var(--gray-light), 0.9);
-    box-shadow: var(--shadow-sm);
-    padding: clamp(1.5rem, 3vw, 2rem);
-  }
-  .extras__body p {
-    margin: 0;
-  }
-
-  /* Contact */
-  .contact {
-    background: linear-gradient(135deg, rgba(15, 18, 25, 0.03), rgba(15, 18, 25, 0.06));
-    border-radius: 24px;
-    padding: clamp(2.5rem, 5vw, 3.5rem);
-    box-shadow: 0 2px 8px rgba(var(--gray), 0.08);
-    border: 1px solid rgba(var(--gray-light), 0.6);
-  }
-  .contact__content {
-    display: grid;
-    gap: 1.75rem;
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .contact__content h2 {
-    font-size: clamp(1.8rem, 4vw, 2.2rem);
-    font-weight: 600;
-    margin: 0;
-    letter-spacing: -0.02em;
-  }
-  .contact__links {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  @media (max-width: 900px) {
-    .profile__card {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-    .profile__avatar {
-      justify-self: center;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .focus-areas__grid {
+  @media (max-width: 720px) {
+    .masthead {
       grid-template-columns: 1fr;
     }
-    .timeline__item {
-      grid-template-columns: 4rem 1fr;
+    .masthead__title {
+      font-size: var(--kw-fs-display-sm);
+    }
+    .masthead__monogram {
+      display: none;
+    }
+    .focus-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
