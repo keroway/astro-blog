@@ -2,43 +2,67 @@
 import type { CollectionEntry } from "astro:content";
 import SiteLayout from "./SiteLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+type BlogData = CollectionEntry<"blog">["data"];
+
+interface Props extends BlogData {
+  headings?: Heading[];
+}
 
 const post = Astro.props as Props;
-const { title, description, pubDate, updatedDate, heroImage, canonicalUrl } = post;
+const { title, description, pubDate, updatedDate, heroImage, canonicalUrl, headings = [] } = post;
 const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
+const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
 <SiteLayout title={title} description={description} image={heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
-	<article class="post">
-		{
-			heroImage && (
-				<figure class="post__hero">
-					<img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
-				</figure>
-			)
-		}
-		<header class="post__header">
-			<div class="post__meta">
-				<time datetime={pubDate.toISOString()}>
-					<FormattedDate date={pubDate} />
-				</time>
-				{
-					updatedDate && (
-						<span class="post__meta-update">
-							最終更新 <FormattedDate date={updatedDate} />
-						</span>
-					)
-				}
+	<div class="post-wrap">
+		<article class="post">
+			{
+				heroImage && (
+					<figure class="post__hero">
+						<img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
+					</figure>
+				)
+			}
+			<header class="post__header">
+				<div class="post__meta">
+					<time datetime={pubDate.toISOString()}>
+						<FormattedDate date={pubDate} />
+					</time>
+					{
+						updatedDate && (
+							<span class="post__meta-update">
+								最終更新 <FormattedDate date={updatedDate} />
+							</span>
+						)
+					}
+				</div>
+				<h1>{title}</h1>
+				<hr />
+			</header>
+			{tocItems.length > 0 && (
+				<div class="toc-mobile">
+					<TableOfContents headings={headings} />
+				</div>
+			)}
+			<div class="post__content">
+				<slot />
 			</div>
-			<h1>{title}</h1>
-			<hr />
-		</header>
-		<div class="post__content">
-			<slot />
-		</div>
-	</article>
+		</article>
+		{tocItems.length > 0 && (
+			<aside class="toc-sidebar" aria-label="目次">
+				<TableOfContents headings={headings} />
+			</aside>
+		)}
+	</div>
 </SiteLayout>
 
 <style>
@@ -47,9 +71,18 @@ const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
 		padding-block-start: clamp(2.5rem, 6vw, 4rem);
 		padding-inline: clamp(1rem, 3vw, 2rem);
 	}
+	.post-wrap {
+		display: contents;
+	}
 	.post {
 		display: grid;
 		gap: clamp(1.5rem, 4vw, 2.5rem);
+	}
+	.toc-mobile {
+		display: block;
+	}
+	.toc-sidebar {
+		display: none;
 	}
 	.post__hero {
 		margin: 0;
@@ -113,7 +146,36 @@ const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
 	.post__content :global(:where(* + *)) {
 		margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
 	}
-	@media (max-width: 720px) {
+
+	@media (min-width: 901px) {
+		:global(.post-layout) {
+			width: min(100%, 112ch);
+		}
+		.post-wrap {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 15rem;
+			gap: clamp(2rem, 4vw, 3rem);
+			align-items: start;
+		}
+		.post {
+			grid-column: 1;
+			grid-row: 1;
+		}
+		.toc-mobile {
+			display: none;
+		}
+		.toc-sidebar {
+			display: block;
+			grid-column: 2;
+			grid-row: 1;
+			position: sticky;
+			top: clamp(1.5rem, 3vw, 2rem);
+			max-height: calc(100vh - 5rem);
+			overflow-y: auto;
+		}
+	}
+
+	@media (max-width: 900px) {
 		.post-layout {
 			padding-block-start: 2rem;
 		}

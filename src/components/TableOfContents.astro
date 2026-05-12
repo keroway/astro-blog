@@ -1,0 +1,92 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <details class="toc" open>
+      <summary class="toc__summary">目次</summary>
+      <nav aria-label="記事の目次">
+        <ol class="toc__list">
+          {items.map((h) => (
+            <li class:list={['toc__item', h.depth === 3 && 'toc__item--sub']}>
+              <a class="toc__link" href={`#${h.slug}`}>
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  )
+}
+
+<style>
+  .toc {
+    background: var(--surface);
+    border: 1px solid rgba(var(--gray-light), 0.9);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  .toc__summary {
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    color: rgb(var(--black));
+    cursor: pointer;
+    padding-block: 0.15rem;
+    user-select: none;
+  }
+  .toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    display: grid;
+    gap: 0.35rem;
+  }
+  .toc__item {
+    line-height: 1.4;
+  }
+  .toc__item--sub {
+    padding-inline-start: 1rem;
+  }
+  .toc__link {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: block;
+    padding-block: 0.1rem;
+    transition: color 150ms ease;
+  }
+  .toc__link:hover {
+    color: var(--accent-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* PC: summary を見出しとして表示し、折りたたみを無効化 */
+  @media (min-width: 901px) {
+    .toc summary::-webkit-details-marker {
+      display: none;
+    }
+    .toc summary::marker {
+      display: none;
+    }
+    .toc__summary {
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+</style>
