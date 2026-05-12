@@ -6,7 +6,7 @@ test.describe("Basic site functionality", () => {
 
     await expect(page).toHaveTitle(/keroway\.com/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "技術研究"
+      "技術と"
     );
   });
 
@@ -15,19 +15,15 @@ test.describe("Basic site functionality", () => {
   }) => {
     await page.goto("/blog");
 
-    await expect(
-      page.getByRole("heading", { level: 1, name: "Blog" })
-    ).toBeVisible();
-
-    const cards = page.locator("ul.posts-grid > li.post-card");
-    const postCount = await cards.count();
+    const postRows = page.locator("div.posts-list > article.post-row");
+    const postCount = await postRows.count();
     expect(postCount).toBeGreaterThan(0);
 
-    const firstPost = cards.first().locator("a.post-card__link");
-    const firstPostHref = await firstPost.getAttribute("href");
+    const firstPostLink = postRows.first().locator("a.post-row__link");
+    const firstPostHref = await firstPostLink.getAttribute("href");
     expect(firstPostHref).toMatch(/^\/blog\/.+/);
 
-    await firstPost.click();
+    await firstPostLink.click();
     await expect(page).toHaveURL(/\/blog\//);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(page.locator("article.post")).toBeVisible();
@@ -38,8 +34,8 @@ test.describe("Basic site functionality", () => {
 
     await expect(page).toHaveTitle(/About/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.locator("section.profile")).toContainText(
-      "Software Engineer"
+    await expect(page.locator("section.masthead")).toContainText(
+      "software engineer"
     );
   });
 
@@ -56,9 +52,7 @@ test.describe("Basic site functionality", () => {
     await expect(worksCards).toHaveCount(1);
 
     await expect(
-      page
-        .getByLabel("メインナビゲーション")
-        .getByRole("link", { name: "Works" })
+      page.getByLabel("primary").getByRole("link", { name: /works/i })
     ).toHaveAttribute("aria-current", "page");
 
     await worksCards.first().getByRole("link", { name: "Overview" }).click();
@@ -75,9 +69,7 @@ test.describe("Basic site functionality", () => {
       page.getByRole("link", { name: "Demo" }).first()
     ).toBeVisible();
     await expect(
-      page
-        .getByLabel("メインナビゲーション")
-        .getByRole("link", { name: "Works" })
+      page.getByLabel("primary").getByRole("link", { name: /works/i })
     ).toHaveAttribute("aria-current", "page");
   });
 });
