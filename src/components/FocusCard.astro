@@ -1,0 +1,64 @@
+---
+interface Props {
+  index: number;
+  key: string;
+  title: string;
+  description: string;
+}
+const { index, key, title, description } = Astro.props;
+const num = (index + 1).toString().padStart(2, '0');
+---
+
+<article class="focus-card">
+  <div class="kw-placeholder focus-card__thumb" aria-hidden="true">[ {key} ]</div>
+  <div class="focus-card__eyebrow kw-eyebrow">
+    <span class="focus-card__num kw-tabular">{num}<span class="focus-card__slash">/</span></span>
+    <span>{key}</span>
+  </div>
+  <h3 class="focus-card__title">{title}</h3>
+  <p class="focus-card__desc">{description}</p>
+</article>
+
+<style>
+  .focus-card {
+    display: grid;
+    gap: var(--kw-space-3);
+  }
+  .focus-card__thumb {
+    height: 120px;
+    border-radius: var(--kw-radius-md);
+    font-size: var(--kw-fs-mono-xs);
+    margin-bottom: var(--kw-space-1);
+  }
+  .focus-card__eyebrow {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: var(--kw-space-1);
+    white-space: nowrap;
+  }
+  .focus-card__num {
+    color: var(--kw-accent);
+    white-space: nowrap;
+  }
+  .focus-card__slash {
+    margin-left: 4px;
+  }
+  .focus-card__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-h3);
+    font-weight: var(--kw-fw-medium);
+    color: var(--kw-fg-display);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--kw-space-2);
+    line-height: var(--kw-lh-snug);
+  }
+  .focus-card__desc {
+    font-family: var(--kw-font-body);
+    font-size: var(--kw-fs-body-sm);
+    line-height: var(--kw-lh-relaxed);
+    color: var(--kw-fg-muted);
+    text-indent: 1em;
+    margin: 0;
+  }
+</style>

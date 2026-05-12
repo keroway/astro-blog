@@ -1,0 +1,21 @@
+---
+interface Props {
+  jp: string;
+  en: string;
+  action?: string;
+  actionHref?: string;
+  id?: string;
+}
+const { jp, en, action, actionHref = '#', id } = Astro.props;
+---
+
+<div class="kw-section-head">
+  <div class="kw-section-head__title">
+    <span class="kw-section-head__jp" id={id}>{jp}</span>
+    <span class="kw-section-head__divider" aria-hidden="true"></span>
+    <span class="kw-section-head__en">{en}</span>
+  </div>
+  {action && (
+    <a href={actionHref} class="kw-section-head__en" style="color: var(--kw-fg-link);">{action}</a>
+  )}
+</div>
