@@ -1,0 +1,51 @@
+---
+interface Props {
+  caption?: string;
+  tag?: string;
+}
+const { caption = '/ keroway', tag = 'Vol. XVIII · 二〇二六' } = Astro.props;
+---
+
+<div class="kw-monogram">
+  <div class="kw-monogram__row">
+    <span class="kw-monogram__k">K</span>
+    <span class="kw-monogram__caption">{caption}</span>
+  </div>
+  <div class="kw-wave" aria-hidden="true"></div>
+  <div class="kw-monogram__tag">{tag}</div>
+</div>
+
+<style>
+  .kw-monogram {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--kw-space-3);
+  }
+  .kw-monogram__row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--kw-space-2);
+  }
+  .kw-monogram__k {
+    font-family: var(--kw-font-display);
+    font-size: 56px;
+    font-weight: var(--kw-fw-medium);
+    line-height: 1;
+    color: var(--kw-fg-display);
+    letter-spacing: -0.04em;
+  }
+  .kw-monogram__caption {
+    font-family: var(--kw-font-display);
+    font-size: 14px;
+    color: var(--kw-fg-link);
+    letter-spacing: 0.1em;
+  }
+  .kw-monogram__tag {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--kw-ls-eyebrow);
+    color: var(--kw-fg-faint);
+  }
+</style>

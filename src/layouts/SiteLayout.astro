@@ -4,50 +4,93 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
 interface Props {
-	title: string;
-	description: string;
-	image?: string;
-	mainClass?: string;
-	lang?: string;
-	locale?: string;
-	canonicalUrl?: string;
+  title: string;
+  description: string;
+  image?: string;
+  mainClass?: string;
+  lang?: string;
+  locale?: string;
+  canonicalUrl?: string;
+  leftRail?: string;
+  rightRail?: string;
 }
 
-const { title, description, image, mainClass, lang = 'ja', locale: localeOverride, canonicalUrl } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  mainClass,
+  lang = 'ja',
+  locale: localeOverride,
+  canonicalUrl,
+  leftRail = '二〇二六年五月十三日 — 横浜にて記す',
+  rightRail = 'Vol. XVIII · 鴎路 · keroway portfolio',
+} = Astro.props;
 const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsWith('en') ? 'en_US' : lang.replace('-', '_'));
 ---
 
 <!doctype html>
 <html lang={lang}>
-	<head>
-		<BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} />
-		<slot name="head" />
-	</head>
-	<body>
-		<Header />
-		<main class:list={['site-main', mainClass]} transition:animate="fade" transition:name="site-main">
-			<slot />
-		</main>
-		<Footer />
-		<slot name="body-end" />
-	</body>
+  <head>
+    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="kw-page">
+      <aside class="kw-rail" aria-hidden="true">
+        <div class="kw-rail__text">{leftRail}</div>
+      </aside>
+      <div class="kw-page__main">
+        <Header />
+        <main class:list={['site-main', mainClass]} transition:animate="fade" transition:name="site-main">
+          <slot />
+        </main>
+        <Footer />
+      </div>
+      <aside class="kw-rail kw-rail--right" aria-hidden="true">
+        <div class="kw-rail__text">{rightRail}</div>
+      </aside>
+    </div>
+    <slot name="body-end" />
+  </body>
 </html>
 
 <style>
-	.site-main {
-		width: min(70ch, 100%);
-		margin: 0 auto;
-		padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem) clamp(3rem, 6vw, 4rem);
-	}
-	@media (max-width: 720px) {
-		.site-main {
-			padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1rem, 4vw, 1.75rem) clamp(2.5rem, 8vw, 3.5rem);
-		}
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.site-main {
-			transition-duration: 0.01ms !important;
-			transition-delay: 0ms !important;
-		}
-	}
+  .kw-page {
+    display: grid;
+    grid-template-columns: var(--kw-rail-width) 1fr var(--kw-rail-width);
+    min-height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .kw-page__main {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .site-main {
+    flex: 1;
+    width: min(var(--kw-content-max), 100%);
+    margin: 0 auto;
+    padding: var(--kw-space-16) var(--kw-space-8) var(--kw-space-20);
+  }
+  @media (max-width: 900px) {
+    .kw-page {
+      grid-template-columns: 1fr;
+    }
+    :global(.kw-rail) {
+      display: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .site-main {
+      padding: var(--kw-space-8) var(--kw-space-4) var(--kw-space-12);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-main {
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+    }
+  }
 </style>

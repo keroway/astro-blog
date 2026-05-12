@@ -3,405 +3,222 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
-import WorksCard from '../components/WorksCard.astro';
+import Monogram from '../components/Monogram.astro';
+import SectionHead from '../components/SectionHead.astro';
+import FocusCard from '../components/FocusCard.astro';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
-	.slice()
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  .slice()
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-const recentPosts = posts.slice(0, 3);
-const featuredWorks = (await getCollection('works'))
-	.filter((work) => work.data.featured)
-	.sort((a, b) => (b.data.updatedAt ?? b.data.createdAt).valueOf() - (a.data.updatedAt ?? a.data.createdAt).valueOf())
-	.slice(0, 1);
+const recentPosts = posts.slice(0, 4);
 
 const focusAreas = [
-	{
-		title: 'クラウド & DevOps',
-		description: 'GCP やオンプレ環境を組み合わせた運用ノウハウ、CI/CD、監視などの構築メモをまとめます。',
-	},
-	{
-		title: 'フロントエンド UI',
-		description: 'Astro を中心に、使いやすさとパフォーマンスを両立する UI デザインや実装の記録。',
-	},
-	{
-		title: '組み込み・IoT',
-		description: 'Arduino / ESP32 などのマイコン検証や、クラウド連携を含めたプロトタイピングの学び。',
-	},
-];
-
-const learningTopics = [
-	'AI エージェントや LLM を活用した開発フロー改善',
-	'Astro 6 のトランジションや Islands の実践',
-	'組み込みデバイスとクラウドをつなぐハイブリッド構成',
+  { key: 'cloud_devops', title: 'クラウド & DevOps',  description: 'GCP やオンプレ環境を組み合わせた運用ノウハウ、CI/CD、監視などの構築メモをまとめます。' },
+  { key: 'frontend_ui',  title: 'フロントエンド UI',  description: 'Astro を中心に、使いやすさとパフォーマンスを両立する UI デザインや実装の記録。' },
+  { key: 'embedded_iot', title: '組み込み・IoT',      description: 'Arduino / ESP32 などのマイコン検証や、クラウド連携を含めたプロトタイピングの学び。' },
 ];
 ---
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
-	<section class="hero">
-		<div class="hero__content">
-			<div class="hero__avatar" aria-hidden="true">K</div>
-			<div class="hero__copy">
-				<p class="hero__eyebrow">Software Engineer · Yokohama, Japan</p>
-				<h1>
-					<span>技術研究</span>と
-					実装の記録
-				</h1>
-				<p class="hero__lead">
-					組み込みからクラウド、フロントエンドまで、20年以上の開発経験を通じて得た知見と実装パターンを記録しています。
-				</p>
-				<div class="hero__actions">
-					<a class="button" href="/blog">記事一覧</a>
-					<a class="button button--ghost" href="/about">About</a>
-				</div>
-			</div>
-		</div>
-		<ul class="hero__tags" aria-label="主な関心領域">
-			<li><span class="chip">Embedded</span></li>
-			<li><span class="chip">Web Frontend</span></li>
-			<li><span class="chip">Cloud Infra</span></li>
-			<li><span class="chip">Mobile Apps</span></li>
-		</ul>
-	</section>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero__copy">
+      <p class="kw-eyebrow hero__eyebrow">vol. xviii · software · 横浜</p>
+      <h1 id="hero-heading" class="hero__title">
+        技術と<span class="hero__title-alt">記録</span>の<br />二十年。
+      </h1>
+      <p class="hero__lead no-indent">
+        組み込みからクラウド、フロントエンドまで、領域を横断する実装の記録。
+        プロトタイプから本番運用まで、二十年以上の開発経験を通じて得た知見と実装パターンを綴っている。
+      </p>
+      <div class="hero__actions">
+        <a class="kw-button" href="/blog">記事一覧へ <span class="kw-button-arrow">→</span></a>
+        <a class="kw-button kw-button--ghost" href="/about">about_keroway</a>
+      </div>
+    </div>
+    <div class="hero__monogram">
+      <Monogram />
+    </div>
+  </section>
 
-	<section class="recent-posts" aria-labelledby="recent-posts-heading">
-		<header class="section-heading">
-			<h2 id="recent-posts-heading">最新の記事</h2>
-			<a class="button button--ghost recent-posts__all-link" href="/blog">すべての記事を見る</a>
-		</header>
-		<div class="recent-posts__grid">
-			{
-				recentPosts.map((post) => {
-					const description = post.data.description?.trim();
-					const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
-					return (
-						<article class="recent-card">
-							<a class="recent-card__link" href={`/blog/${encodedSlug}/`}>
-								<h3>{post.data.title}</h3>
-								<p class="recent-card__summary">
-									{description ?? '本文で詳細を解説しています。'}
-								</p>
-								<p class="recent-card__meta">
-									<FormattedDate date={post.data.pubDate} />
-									{post.data.category && <span aria-label="カテゴリ" class="recent-card__category">{post.data.category}</span>}
-								</p>
-							</a>
-						</article>
-					);
-				})
-			}
-		</div>
-	</section>
+  <!-- Recent posts -->
+  <section class="section" aria-labelledby="recent-posts-heading">
+    <SectionHead
+      jp="最近の記録"
+      en="recent posts"
+      id="recent-posts-heading"
+      action={`see all (${posts.length}) →`}
+      actionHref="/blog"
+    />
+    <div class="posts-list">
+      {recentPosts.map((post, i) => {
+        const description = post.data.description?.trim();
+        const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+        const num = (i + 1).toString().padStart(2, '0');
+        return (
+          <article class="post-row">
+            <a href={`/blog/${encodedSlug}/`} class="post-row__link">
+              <span class="post-row__num kw-numeral kw-tabular">{num}</span>
+              <div class="post-row__body">
+                <p class="kw-eyebrow post-row__meta no-indent">
+                  <FormattedDate date={post.data.pubDate} />
+                  {post.data.category && <span>· {post.data.category}</span>}
+                </p>
+                <h3 class="post-row__title">{post.data.title}</h3>
+                {description && <p class="post-row__desc no-indent">{description}</p>}
+              </div>
+              <span class="post-row__arrow" aria-hidden="true">→</span>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  </section>
 
-	{
-		featuredWorks.length > 0 && (
-			<section class="featured-works" aria-labelledby="featured-works-heading">
-				<header class="section-heading">
-					<h2 id="featured-works-heading">Featured Work</h2>
-					<a class="button button--ghost" href="/works">Works 一覧へ</a>
-				</header>
-				<div class="featured-works__grid">
-					{featuredWorks.map((work) => <WorksCard work={work} variant="featured" />)}
-				</div>
-			</section>
-		)
-	}
-
-	<section class="focus-areas" aria-labelledby="focus-areas-heading">
-		<header class="section-heading">
-			<h2 id="focus-areas-heading">専門分野</h2>
-		</header>
-		<div class="focus-areas__grid">
-			{
-				focusAreas.map((area) => (
-					<article class="focus-card">
-						<h3>{area.title}</h3>
-						<p>{area.description}</p>
-					</article>
-				))
-			}
-		</div>
-	</section>
-
-	<section class="learning" aria-labelledby="learning-heading">
-		<header class="section-heading">
-			<h2 id="learning-heading">研究領域</h2>
-		</header>
-		<ul class="learning__list">
-			{learningTopics.map((topic) => (
-				<li>{topic}</li>
-			))}
-		</ul>
-	</section>
-
-	<section class="contact" aria-labelledby="contact-heading">
-		<div class="contact__content">
-			<h2 id="contact-heading">Contact</h2>
-			<ul class="contact__links">
-				<li>
-					<a class="button" href="https://twitter.com/keroway21" rel="noopener noreferrer" target="_blank">X (Twitter)</a>
-				</li>
-				<li>
-					<a class="button button--ghost" href="https://github.com/keroway" rel="noopener noreferrer" target="_blank">GitHub</a>
-				</li>
-			</ul>
-		</div>
-	</section>
+  <!-- Focus areas -->
+  <section class="section" aria-labelledby="focus-areas-heading">
+    <SectionHead jp="専門分野" en="focus areas" id="focus-areas-heading" />
+    <div class="focus-grid">
+      {focusAreas.map((area, i) => (
+        <FocusCard index={i} key={area.key} title={area.title} description={area.description} />
+      ))}
+    </div>
+  </section>
 </SiteLayout>
 
 <style>
-	.hero {
-		display: grid;
-		gap: clamp(1.75rem, 4vw, 2.75rem);
-		margin-bottom: clamp(2.5rem, 6vw, 4rem);
-	}
-	.hero__content {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: clamp(1.75rem, 4vw, 3rem);
-		align-items: center;
-		background: var(--surface);
-		border-radius: 20px;
-		padding: clamp(2rem, 4.5vw, 3rem);
-		box-shadow: var(--shadow-md);
-		border: 1px solid rgba(var(--gray-light), 0.8);
-	}
-	.hero__avatar {
-		width: clamp(88px, 12vw, 110px);
-		aspect-ratio: 1;
-		display: grid;
-		place-items: center;
-		font-size: clamp(2.25rem, 5vw, 2.75rem);
-		font-weight: 800;
-		color: #fff;
-		background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
-		border-radius: 20px;
-		box-shadow: var(--shadow-sm);
-		text-transform: uppercase;
-		letter-spacing: -0.02em;
-	}
-	.hero__copy h1 {
-		margin: 0.25rem 0 1rem;
-		font-size: clamp(2rem, 5vw, 2.75rem);
-		line-height: 1.2;
-		font-weight: 800;
-		color: rgb(var(--black));
-		letter-spacing: -0.03em;
-	}
-	.hero__copy span {
-		color: var(--accent-dark);
-		font-weight: 800;
-	}
-	.hero__lead {
-		margin: 0 0 1.5rem 0;
-		color: var(--text-muted);
-		font-size: 1rem;
-		line-height: 1.7;
-		letter-spacing: -0.01em;
-	}
-	.hero__eyebrow {
-		margin: 0;
-		font-size: 0.875rem;
-		font-weight: 600;
-		letter-spacing: 0.05em;
-		text-transform: uppercase;
-		color: rgba(var(--gray), 0.7);
-	}
-	.hero__actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.85rem;
-	}
-	.hero__tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		margin: 0;
-		padding: 0;
-		list-style: none;
-	}
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--kw-space-12);
+    align-items: end;
+    margin-bottom: var(--kw-space-20);
+    padding-bottom: var(--kw-space-10);
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .hero__eyebrow {
+    margin-bottom: var(--kw-space-4);
+  }
+  .hero__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-display-lg);
+    font-weight: var(--kw-fw-medium);
+    line-height: var(--kw-lh-tight);
+    letter-spacing: var(--kw-ls-display);
+    color: var(--kw-fg-display);
+    margin: 0 0 var(--kw-space-6);
+  }
+  .hero__title-alt { color: var(--kw-fg-link); }
+  .hero__lead {
+    font-family: var(--kw-font-body);
+    font-size: var(--kw-fs-body-lg);
+    color: var(--kw-fg-muted);
+    margin: 0 0 var(--kw-space-8);
+    max-width: 42ch;
+    line-height: var(--kw-lh-prose);
+  }
+  .hero__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--kw-space-5);
+    flex-wrap: wrap;
+  }
+  .hero__monogram {
+    align-self: end;
+  }
 
-	.recent-posts {
-		margin-bottom: clamp(2.75rem, 6vw, 4rem);
-	}
-	.recent-posts__grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-		gap: clamp(1.5rem, 4vw, 2.25rem);
-	}
-	.recent-posts__all-link {
-		padding-inline: 1rem;
-	}
-	.recent-card {
-		background: var(--surface);
-		border-radius: 16px;
-		box-shadow: var(--shadow-sm);
-		border: 1px solid rgba(var(--gray-light), 0.9);
-		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-		height: 100%;
-	}
-	.recent-card__link {
-		display: grid;
-		gap: 0.75rem;
-		padding: clamp(1.35rem, 3vw, 1.8rem);
-		text-decoration: none;
-		color: inherit;
-	}
-	.recent-card__link h3 {
-		margin: 0;
-		font-size: clamp(1.2rem, 3vw, 1.45rem);
-		line-height: 1.35;
-	}
-	.recent-card__summary {
-		margin: 0;
-		color: var(--text-muted);
-		font-size: 0.98rem;
-		line-height: 1.6;
-	}
-	.recent-card__meta {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		margin: 0;
-		font-size: 0.9rem;
-		color: rgba(var(--gray), 0.85);
-	}
-	.recent-card__category {
-		display: inline-flex;
-		align-items: center;
-		padding: 0.25rem 0.7rem;
-		border-radius: 6px;
-		background: rgba(29, 78, 216, 0.1);
-		color: var(--accent-dark);
-		font-weight: 600;
-		font-size: 0.75rem;
-		letter-spacing: 0.02em;
-		text-transform: uppercase;
-	}
-	.recent-card:hover {
-		transform: translateY(-2px);
-		box-shadow: var(--shadow-lg);
-		border-color: rgba(var(--gray), 0.15);
-	}
+  /* Sections */
+  .section {
+    margin-bottom: var(--kw-space-20);
+  }
 
-	.focus-areas {
-		margin-bottom: clamp(2.75rem, 6vw, 4rem);
-	}
-	.featured-works {
-		margin-bottom: clamp(2.75rem, 6vw, 4rem);
-	}
-	.featured-works__grid {
-		display: grid;
-	}
-	.focus-areas__grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-		gap: clamp(1.25rem, 3vw, 2rem);
-	}
-	.focus-card {
-		background: var(--surface);
-		padding: clamp(1.5rem, 3vw, 2rem);
-		border-radius: 16px;
-		border: 1px solid rgba(var(--gray-light), 0.9);
-		box-shadow: var(--shadow-sm);
-		display: grid;
-		gap: 0.75rem;
-		transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-	}
-	.focus-card:hover {
-		box-shadow: var(--shadow-md);
-		border-color: rgba(var(--gray), 0.12);
-	}
-	.focus-card h3 {
-		margin: 0;
-		font-size: 1.2rem;
-		color: rgb(var(--black));
-	}
-	.focus-card p {
-		margin: 0;
-		color: var(--text-muted);
-		line-height: 1.7;
-	}
+  /* Post numbered rows */
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .post-row__link {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: var(--kw-space-6);
+    align-items: baseline;
+    padding: var(--kw-space-6) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
+    text-decoration: none;
+    color: inherit;
+    border-bottom-width: 1px;
+    transition: background var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-row__link:hover {
+    border-bottom-color: var(--kw-rule);
+  }
+  .post-row__link:hover .post-row__title {
+    color: var(--kw-fg-link);
+  }
+  .post-row__num {
+    font-size: 22px;
+  }
+  .post-row__meta {
+    margin-bottom: var(--kw-space-2);
+    color: var(--kw-fg-muted);
+  }
+  .post-row__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-h3);
+    font-weight: var(--kw-fw-medium);
+    color: var(--kw-fg-display);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--kw-space-1);
+    line-height: var(--kw-lh-snug);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-row__desc {
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-normal);
+    margin: 0;
+    max-width: 60ch;
+  }
+  .post-row__arrow {
+    font-family: var(--kw-font-display);
+    font-size: 20px;
+    color: var(--kw-fg-link);
+    align-self: center;
+  }
 
-	.learning {
-		margin-bottom: clamp(2.75rem, 6vw, 4.2rem);
-	}
-	.learning__list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-		display: grid;
-		gap: 0.75rem;
-	}
-	.learning__list li {
-		position: relative;
-		padding-inline-start: 1.5rem;
-		color: rgb(var(--gray-dark));
-		line-height: 1.6;
-	}
-	.learning__list li::before {
-		content: '';
-		position: absolute;
-		left: 0;
-		top: 0.6em;
-		width: 0.55rem;
-		height: 0.55rem;
-		border-radius: 50%;
-		background: var(--accent);
-	}
+  /* Focus grid */
+  .focus-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--kw-space-10);
+  }
 
-	.contact {
-		background: linear-gradient(135deg, rgba(15, 18, 25, 0.03), rgba(15, 18, 25, 0.06));
-		border-radius: 24px;
-		padding: clamp(2.5rem, 5vw, 3.5rem);
-		box-shadow: 0 2px 8px rgba(var(--gray), 0.08);
-		border: 1px solid rgba(var(--gray-light), 0.6);
-	}
-	.contact__content {
-		display: grid;
-		gap: 1.75rem;
-		max-width: 600px;
-		margin: 0 auto;
-		text-align: center;
-	}
-	.contact__content h2 {
-		font-size: clamp(1.8rem, 4vw, 2.2rem);
-		font-weight: 600;
-		margin: 0;
-		letter-spacing: -0.02em;
-	}
-	.contact__links {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		gap: 1rem;
-		justify-content: center;
-		flex-wrap: wrap;
-	}
-
-	@media (max-width: 900px) {
-		.hero__content {
-			grid-template-columns: 1fr;
-			text-align: center;
-		}
-		.hero__avatar {
-			justify-self: center;
-		}
-		.hero__actions {
-			justify-content: center;
-		}
-		.recent-posts__grid {
-			grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		}
-	}
-
-	@media (max-width: 640px) {
-		.hero__tags {
-			justify-content: center;
-		}
-		.recent-posts__grid {
-			grid-template-columns: 1fr;
-		}
-	}
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .hero__title {
+      font-size: var(--kw-fs-display-sm);
+    }
+    .hero__monogram {
+      display: none;
+    }
+    .focus-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 640px) {
+    .post-row__link {
+      grid-template-columns: 40px 1fr auto;
+      gap: var(--kw-space-4);
+    }
+    .focus-grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__title {
+      font-size: var(--kw-fs-h1);
+    }
+  }
 </style>

@@ -34,56 +34,52 @@ const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 <style>
   .toc {
-    background: var(--surface);
-    border: 1px solid rgba(var(--gray-light), 0.9);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-    box-shadow: var(--shadow-sm);
+    background: var(--kw-bg-card);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    padding: var(--kw-space-5) var(--kw-space-6);
   }
   .toc__summary {
-    font-weight: 700;
-    font-size: 0.875rem;
-    letter-spacing: 0.02em;
-    color: rgb(var(--black));
+    font-family: var(--kw-font-display);
+    font-weight: var(--kw-fw-medium);
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-display);
     cursor: pointer;
     padding-block: 0.15rem;
     user-select: none;
+    letter-spacing: var(--kw-ls-display);
   }
   .toc__list {
     list-style: none;
     padding: 0;
-    margin: 0.75rem 0 0;
+    margin: var(--kw-space-3) 0 0;
     display: grid;
-    gap: 0.35rem;
+    gap: var(--kw-space-2);
   }
   .toc__item {
-    line-height: 1.4;
+    line-height: var(--kw-lh-snug);
   }
   .toc__item--sub {
-    padding-inline-start: 1rem;
+    padding-inline-start: var(--kw-space-4);
   }
   .toc__link {
-    font-size: 0.875rem;
-    color: var(--text-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
     text-decoration: none;
     display: block;
-    padding-block: 0.1rem;
-    transition: color 150ms ease;
+    padding-block: 2px;
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+    border-bottom: 0;
   }
   .toc__link:hover {
-    color: var(--accent-dark);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--kw-fg-link);
+    border-bottom: 0;
   }
 
-  /* PC: summary を見出しとして表示し、折りたたみを無効化 */
   @media (min-width: 901px) {
-    .toc summary::-webkit-details-marker {
-      display: none;
-    }
-    .toc summary::marker {
-      display: none;
-    }
+    .toc summary::-webkit-details-marker { display: none; }
+    .toc summary::marker { display: none; }
     .toc__summary {
       cursor: default;
       pointer-events: none;
