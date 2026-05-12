@@ -52,9 +52,7 @@ test.describe("Basic site functionality", () => {
     await expect(worksCards).toHaveCount(1);
 
     await expect(
-      page
-        .getByLabel("primary")
-        .getByRole("link", { name: /works/i })
+      page.getByLabel("primary").getByRole("link", { name: /works/i })
     ).toHaveAttribute("aria-current", "page");
 
     await worksCards.first().getByRole("link", { name: "Overview" }).click();
@@ -71,9 +69,7 @@ test.describe("Basic site functionality", () => {
       page.getByRole("link", { name: "Demo" }).first()
     ).toBeVisible();
     await expect(
-      page
-        .getByLabel("primary")
-        .getByRole("link", { name: /works/i })
+      page.getByLabel("primary").getByRole("link", { name: /works/i })
     ).toHaveAttribute("aria-current", "page");
   });
 });
