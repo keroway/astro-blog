@@ -1,5 +1,5 @@
-import { defineConfig, presetWind3 } from "unocss";
+import { defineConfig, presetWind4 } from "unocss";
 
 export default defineConfig({
-  presets: [presetWind3({ preflight: false })],
+  presets: [presetWind4({ preflight: false })],
 });
