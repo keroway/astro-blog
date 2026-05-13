@@ -9,6 +9,48 @@ export default defineConfig({
       dark: { dark: '[data-theme="dark"]' },
     }),
   ],
+  shortcuts: {
+    // ---- Font utilities ----
+    "kw-mono": "font-[var(--kw-font-mono)]",
+    "kw-display": "font-[var(--kw-font-display)]",
+    "kw-tabular": "[font-variant-numeric:tabular-nums]",
+
+    // ---- Eyebrow — mono uppercase label ----
+    "kw-eyebrow":
+      "font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[var(--kw-ls-eyebrow)] text-kw-fg-muted",
+
+    // ---- Button — primary base ----
+    // border-bottom:0!important / transition / :hover / .kw-button-arrow は global.css に残す
+    "kw-button":
+      "inline-flex items-center gap-kw-3 py-[12px] px-[24px] font-[var(--kw-font-display)] [font-weight:var(--kw-fw-medium)] text-[var(--kw-fs-body-sm)] tracking-[var(--kw-ls-button)] bg-kw-btn-primary-bg text-kw-btn-primary-fg border-0 rounded-kw-sm cursor-pointer no-underline",
+
+    // ---- Chip / status pill — base ----
+    "kw-chip":
+      "inline-flex items-baseline gap-kw-2 py-[4px] px-[10px] font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[0.15em] text-kw-fg-muted border border-kw-rule rounded-kw-xs bg-transparent",
+
+    // ---- Chip — status variants ----
+    "kw-chip--status-active":
+      "text-kw-status-active-fg bg-kw-status-active-bg border-transparent",
+    "kw-chip--status-wip":
+      "text-kw-status-wip-fg bg-kw-status-wip-bg border-transparent",
+    "kw-chip--status-archived":
+      "text-kw-status-archived-fg bg-kw-status-archived-bg border-transparent",
+
+    // ---- Section head — Japanese title + rule + mono en label ----
+    "kw-section-head":
+      "flex items-baseline justify-between gap-kw-6 pb-kw-4 mb-kw-10 border-b border-b-kw-rule",
+    "kw-section-head__title": "flex items-baseline gap-kw-5 flex-wrap",
+    "kw-section-head__jp":
+      "font-[var(--kw-font-display)] text-[var(--kw-fs-display-sm)] [font-weight:var(--kw-fw-medium)] text-kw-fg-display tracking-[var(--kw-ls-display)]",
+    "kw-section-head__divider":
+      "inline-block w-[24px] h-[1px] bg-kw-accent shrink-0",
+    "kw-section-head__en":
+      "font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[var(--kw-ls-eyebrow)] text-kw-fg-muted whitespace-nowrap",
+
+    // ---- Sand numeral ----
+    "kw-numeral":
+      "font-[var(--kw-font-mono)] [font-variant-numeric:tabular-nums] text-[22px] [font-weight:var(--kw-fw-medium)] text-kw-accent tracking-[-0.04em]",
+  },
   extendTheme: (theme) => {
     // --- Colors ---
     theme.colors ??= {};
