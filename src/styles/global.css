@@ -116,36 +116,14 @@ input    { font-size: 16px; }
 
 /* ============================================================
  * UTILITY CLASSES
+ * ============================================================
+ * kw-eyebrow, kw-mono, kw-display, kw-tabular, kw-button (base),
+ * kw-chip (base + status variants), kw-section-head*, kw-numeral
+ * は uno.config.ts の shortcuts に移行済み。
  * ============================================================ */
 
-.kw-eyebrow {
-  font-family: var(--kw-font-mono);
-  font-size: var(--kw-fs-mono-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--kw-ls-eyebrow);
-  color: var(--kw-fg-muted);
-}
-
-.kw-mono    { font-family: var(--kw-font-mono); }
-.kw-display { font-family: var(--kw-font-display); }
-.kw-tabular { font-variant-numeric: tabular-nums; }
-
-/* Primary button */
+/* Button — !important / transition / hover は shortcuts で表現できないため CSS に残す */
 .kw-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--kw-space-3);
-  padding: 12px 24px;
-  font-family: var(--kw-font-display);
-  font-weight: var(--kw-fw-medium);
-  font-size: var(--kw-fs-body-sm);
-  letter-spacing: var(--kw-ls-button);
-  background: var(--kw-btn-primary-bg);
-  color: var(--kw-btn-primary-fg);
-  border: 0;
-  border-radius: var(--kw-radius-sm);
-  cursor: pointer;
-  text-decoration: none;
   border-bottom: 0 !important;
   transition: background var(--kw-duration-fast) var(--kw-easing);
 }
@@ -155,7 +133,7 @@ input    { font-size: 16px; }
 }
 .kw-button .kw-button-arrow { color: var(--kw-accent); }
 
-/* Ghost button */
+/* Ghost button — !important な border override を含むため CSS に残す */
 .kw-button--ghost {
   background: transparent;
   color: var(--kw-btn-ghost-fg);
@@ -166,65 +144,7 @@ input    { font-size: 16px; }
   border-bottom-color: var(--kw-btn-ghost-border) !important;
 }
 
-/* Chip / status pill */
-.kw-chip {
-  display: inline-flex;
-  align-items: baseline;
-  gap: var(--kw-space-2);
-  padding: 4px 10px;
-  font-family: var(--kw-font-mono);
-  font-size: var(--kw-fs-mono-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--kw-fg-muted);
-  border: 1px solid var(--kw-rule);
-  border-radius: var(--kw-radius-xs);
-  background: transparent;
-}
-.kw-chip--status-active   { color: var(--kw-status-active-fg);   background: var(--kw-status-active-bg);   border-color: transparent; }
-.kw-chip--status-wip      { color: var(--kw-status-wip-fg);      background: var(--kw-status-wip-bg);      border-color: transparent; }
-.kw-chip--status-archived { color: var(--kw-status-archived-fg); background: var(--kw-status-archived-bg); border-color: transparent; }
-
-/* Section head — Japanese title + sand rule + mono en label */
-.kw-section-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--kw-space-6);
-  padding-bottom: var(--kw-space-4);
-  margin-bottom: var(--kw-space-10);
-  border-bottom: 1px solid var(--kw-rule);
-}
-.kw-section-head__title {
-  display: flex;
-  align-items: baseline;
-  gap: var(--kw-space-5);
-  flex-wrap: wrap;
-}
-.kw-section-head__jp {
-  font-family: var(--kw-font-display);
-  font-size: var(--kw-fs-display-sm);
-  font-weight: var(--kw-fw-medium);
-  color: var(--kw-fg-display);
-  letter-spacing: var(--kw-ls-display);
-}
-.kw-section-head__divider {
-  display: inline-block;
-  width: 24px;
-  height: 1px;
-  background: var(--kw-accent);
-  flex-shrink: 0;
-}
-.kw-section-head__en {
-  font-family: var(--kw-font-mono);
-  font-size: var(--kw-fs-mono-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--kw-ls-eyebrow);
-  color: var(--kw-fg-muted);
-  white-space: nowrap;
-}
-
-/* Vertical writing rail */
+/* Vertical writing rail — writing-mode は UnoCSS 標準外のため CSS に残す */
 .kw-rail {
   width: var(--kw-rail-width);
   border-right: 1px solid var(--kw-rule-soft);
@@ -282,29 +202,6 @@ input    { font-size: 16px; }
   font-size: var(--kw-fs-mono-sm);
   text-transform: lowercase;
   letter-spacing: 0.05em;
-}
-
-/* Sand numeral for numbered lists */
-.kw-numeral {
-  font-family: var(--kw-font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 22px;
-  font-weight: var(--kw-fw-medium);
-  color: var(--kw-accent);
-  letter-spacing: -0.04em;
-}
-
-/* Accessibility */
-.kw-sr-only {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 /* Prose content area */
