@@ -16,8 +16,8 @@ const isActive = (href: string) => {
 ---
 
 <header class="kw-header" role="banner">
-  <a href="/" class="kw-header__brand" aria-label="鴎路 (keroway.com)">
-    <span class="kw-header__brand-jp">鴎路</span>
+  <a href="/" class="kw-header__brand" aria-label="keroway.com">
+    <span class="kw-header__brand-mark" aria-hidden="true">✦</span>
     <span class="kw-header__brand-en">keroway.com</span>
   </a>
 
@@ -58,18 +58,19 @@ const isActive = (href: string) => {
     text-decoration: none;
     border-bottom: 0 !important;
   }
-  .kw-header__brand-jp {
-    font-family: var(--kw-font-display);
-    font-size: 22px;
-    font-weight: var(--kw-fw-medium);
-    color: var(--kw-fg-display);
-    letter-spacing: -0.01em;
+  .kw-header__brand-mark {
+    font-size: 18px;
+    color: var(--kw-accent);
     line-height: 1;
+    display: inline-block;
+    transform: translateY(1px);
   }
   .kw-header__brand-en {
     font-family: var(--kw-font-mono);
     font-size: var(--kw-fs-mono-sm);
-    color: var(--kw-fg-muted);
+    color: var(--kw-fg-display);
+    font-weight: var(--kw-fw-medium);
+    letter-spacing: 0.02em;
   }
 
   .kw-header__nav {
