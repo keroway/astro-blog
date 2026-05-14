@@ -2,6 +2,7 @@
 title: "Unityサンプル"
 description: ""
 pubDate: 2018-01-23
+readingTime: 4
 category: "unity"
 heroImage: '/images/blog/d8c6ea08585a.jpg'
 ---

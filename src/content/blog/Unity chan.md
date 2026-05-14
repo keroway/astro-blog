@@ -2,6 +2,7 @@
 title: "Unity Chan"
 description: ""
 pubDate: 2018-03-10
+readingTime: 2
 category: "unity"
 heroImage: '/images/blog/1a296afb8031.jpg'
 ---

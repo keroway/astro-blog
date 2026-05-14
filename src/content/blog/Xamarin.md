@@ -2,6 +2,7 @@
 title: "Xamarin"
 description: ""
 pubDate: 2018-02-23
+readingTime: 3
 category: "Xamarin"
 heroImage: '/images/blog/9da52b3c19c1.jpg'
 ---

@@ -2,6 +2,7 @@
 title: "StackEdit"
 description: ""
 pubDate: 2018-02-16
+readingTime: 3
 category: "StackEdit"
 heroImage: '/images/blog/874078e83e46.jpg'
 ---

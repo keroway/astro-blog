@@ -2,7 +2,8 @@
 title: "Raspberry Jam Big Birthday Weekend 2018 in TOKYO"
 description: ""
 pubDate: 2018-03-01
-category: "Raspberry Pi"
+readingTime: 2
+category: "RaspberryPi"
 heroImage: '/images/blog/3a57d69e67fb.jpg'
 ---
 興味ある分野のイベントがないか探していたところ、ちょうどtwitterで通知が流れて来ましたので、参加してみようかと。

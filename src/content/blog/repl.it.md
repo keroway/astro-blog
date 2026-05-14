@@ -2,6 +2,7 @@
 title: "repl.it"
 description: ""
 pubDate: 2018-01-26
+readingTime: 1
 category: "REPL"
 heroImage: '/images/blog/c9cccf3245fb.jpg'
 ---

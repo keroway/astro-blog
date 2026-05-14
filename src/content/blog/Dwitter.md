@@ -2,7 +2,8 @@
 title: "Dwitter"
 description: ""
 pubDate: 2018-01-25
-category: "javascript"
+readingTime: 2
+category: "JavaScript"
 heroImage: '/FmugmCR.png'
 ---
 

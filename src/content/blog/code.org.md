@@ -2,7 +2,8 @@
 title: "code.org"
 description: ""
 pubDate: 2018-03-29
-category: "Solr"
+readingTime: 2
+category: "Scratch"
 heroImage: '/images/blog/a362ae47f81f.jpg'
 ---
 

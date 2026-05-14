@@ -2,6 +2,7 @@
 title: "Maker Faire Tokyo"
 description: ""
 pubDate: 2018-03-13
+readingTime: 3
 category: "Maker Faire Tokyo"
 heroImage: '/images/blog/dbef7bef09c6.jpg'
 ---

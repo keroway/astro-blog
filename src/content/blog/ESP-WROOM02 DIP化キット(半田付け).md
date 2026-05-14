@@ -2,6 +2,7 @@
 title: "ESP-WROOM-02 DIP化キット(半田付け)"
 description: ""
 pubDate: 2018-05-15
+readingTime: 2
 category: "Arduino"
 heroImage: '/images/blog/8573d47c148c.jpg'
 ---

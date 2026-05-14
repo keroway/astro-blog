@@ -2,6 +2,7 @@
 title: "cloud9 (PHP)"
 description: ""
 pubDate: 2018-02-15
+readingTime: 2
 category: "PHP"
 heroImage: '/04wfjnk.png'
 ---
