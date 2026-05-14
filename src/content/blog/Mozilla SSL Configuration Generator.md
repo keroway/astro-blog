@@ -2,6 +2,7 @@
 title: "Mozilla SSL Configuration Generator"
 description: ""
 pubDate: 2018-02-09
+readingTime: 1
 category: "Mozilla"
 heroImage: '/images/blog/52e82198caf6.jpg'
 ---

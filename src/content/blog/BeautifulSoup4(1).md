@@ -2,7 +2,8 @@
 title: "BeautifulSoup4(1)"
 description: ""
 pubDate: 2018-04-18
-category: "Solr"
+readingTime: 9
+category: "Python"
 heroImage: '/images/blog/df1d7b7a4572.jpg'
 ---
 

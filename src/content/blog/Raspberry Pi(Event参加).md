@@ -2,7 +2,8 @@
 title: "Raspberry Pi(Event参加)"
 description: ""
 pubDate: 2018-03-05
-category: "Raspberry Pi"
+readingTime: 4
+category: "RaspberryPi"
 heroImage: '/images/blog/efe962f8145c.jpg'
 ---
 予告通り行って来ました。

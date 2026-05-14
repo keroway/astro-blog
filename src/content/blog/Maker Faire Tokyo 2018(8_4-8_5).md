@@ -2,7 +2,8 @@
 title: "Maker Faire Tokyo 2018(8/4-8/5)"
 description: ""
 pubDate: 2018-06-09
-category: "MakerFaireTokyo"
+readingTime: 1
+category: "Maker Faire Tokyo"
 heroImage: '/images/blog/0f8a9b1f8b45.jpg'
 ---
 http://makezine.jp/event/mft2018/

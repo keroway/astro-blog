@@ -2,6 +2,7 @@
 title: "Clojure"
 description: ""
 pubDate: 2018-02-23
+readingTime: 4
 category: "Clojure"
 heroImage: '/images/blog/0f85df943394.jpg'
 ---

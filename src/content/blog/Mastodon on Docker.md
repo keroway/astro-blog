@@ -2,6 +2,7 @@
 title: "Mastodon on Docker"
 description: ""
 pubDate: 2018-02-06
+readingTime: 2
 category: "Mastodon"
 heroImage: '/images/blog/1be8323d89b5.jpg'
 ---

@@ -2,6 +2,7 @@
 title: "BeautifulSoup4(2) (GAE)"
 description: ""
 pubDate: 2018-04-20
+readingTime: 8
 category: "BeautifulSoup"
 heroImage: '/images/blog/7e6f0a65cd18.jpg'
 ---

@@ -2,6 +2,7 @@
 title: "hackmd.io"
 description: ""
 pubDate: 2018-03-20
+readingTime: 1
 category: "Markdown"
 heroImage: '/images/blog/9e8750a74277.jpg'
 ---
