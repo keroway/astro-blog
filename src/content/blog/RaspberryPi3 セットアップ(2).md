@@ -2,6 +2,7 @@
 title: "RaspberryPi3 セットアップ(2)"
 description: ""
 pubDate: 2018-03-08
+readingTime: 3
 category: "RaspberryPi"
 heroImage: '/images/blog/d1f761788582.jpg'
 ---

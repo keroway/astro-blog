@@ -2,7 +2,8 @@
 title: "python-docx"
 description: ""
 pubDate: 2018-01-30
-category: "python"
+readingTime: 5
+category: "Python"
 heroImage: '/images/blog/6af7be109a50.jpg'
 ---
 [こちら](http://python-docx.readthedocs.io/en/latest/)のサンプルに基づいて実装してみました。

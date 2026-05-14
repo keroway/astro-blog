@@ -2,6 +2,7 @@
 title: "nerodia(1)"
 description: ""
 pubDate: 2018-03-22
+readingTime: 3
 category: "nerodia"
 heroImage: '/images/blog/eb126bd239c2.jpg'
 ---

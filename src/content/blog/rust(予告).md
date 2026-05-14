@@ -2,6 +2,7 @@
 title: "rust(予告)"
 description: ""
 pubDate: 2018-02-01
+readingTime: 1
 category: "Rust"
 heroImage: '/images/blog/1b4ca21c9ca1.jpg'
 ---

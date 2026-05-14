@@ -2,6 +2,7 @@
 title: "rust on Codeanywhere"
 description: ""
 pubDate: 2018-02-05
+readingTime: 7
 category: "Rust"
 heroImage: '/images/blog/d1c3b65c53fe.jpg'
 ---

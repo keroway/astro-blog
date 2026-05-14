@@ -2,6 +2,7 @@
 title: "GAE でメール送信"
 description: ""
 pubDate: 2018-04-25
+readingTime: 4
 category: "GAE"
 heroImage: '/images/blog/52cb3d07495c.jpg'
 ---

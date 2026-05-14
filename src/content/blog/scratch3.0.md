@@ -2,6 +2,7 @@
 title: "Scratch 3.0"
 description: ""
 pubDate: 2018-03-28
+readingTime: 2
 category: "Scratch"
 heroImage: '/images/blog/a85367e42b5d.jpg'
 ---
