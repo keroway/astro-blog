@@ -16,6 +16,18 @@ const { title, description, image = "/blog-placeholder-100.png", locale = "ja_JP
 const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pathname, Astro.site);
 ---
 
+<!-- Theme: FOUC prevention — must run before first paint -->
+<script is:inline>
+  (function () {
+    try {
+      var s = localStorage.getItem('theme');
+      var t = s === 'dark' || s === 'light' ? s
+        : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  })();
+</script>
+
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
