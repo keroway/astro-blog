@@ -2,6 +2,7 @@
 title: "PICO (Arduino互換ボード)"
 description: ""
 pubDate: 2018-02-14
+readingTime: 3
 category: "Arduino"
 heroImage: '/images/blog/6eab76f6d821.jpg'
 ---

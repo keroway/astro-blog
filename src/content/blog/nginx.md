@@ -2,6 +2,7 @@
 title: "nginx"
 description: ""
 pubDate: 2018-02-07
+readingTime: 3
 category: "nginx"
 heroImage: '/images/blog/a60de377f29d.jpg'
 ---

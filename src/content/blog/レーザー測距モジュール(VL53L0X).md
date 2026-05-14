@@ -2,6 +2,7 @@
 title: "レーザー測距モジュール(VL53L0X)"
 description: ""
 pubDate: 2018-04-07
+readingTime: 4
 category: "Arduino"
 heroImage: '/images/blog/4e9d239903c5.jpg'
 ---

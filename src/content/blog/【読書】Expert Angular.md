@@ -2,6 +2,7 @@
 title: "【読書】Expert Angular"
 description: ""
 pubDate: 2018-04-24
+readingTime: 2
 category: "読書"
 heroImage: '/blog-store.png'
 ---

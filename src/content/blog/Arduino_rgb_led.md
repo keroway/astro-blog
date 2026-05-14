@@ -2,6 +2,7 @@
 title: "ArduinoでRGB LEDを光らせる"
 description: ""
 pubDate: 2018-01-24
+readingTime: 7
 category: "Arduino"
 heroImage: '/9OnF3a4.jpg'
 ---

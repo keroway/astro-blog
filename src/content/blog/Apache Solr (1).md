@@ -2,6 +2,7 @@
 title: "Apache Solr (1)"
 description: ""
 pubDate: 2018-05-02
+readingTime: 9
 category: "Solr"
 heroImage: '/images/blog/df1d7b7a4572.jpg'
 ---

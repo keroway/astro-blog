@@ -2,6 +2,7 @@
 title: "Elixir"
 description: ""
 pubDate: 2018-02-21
+readingTime: 3
 category: "Elixir"
 heroImage: '/images/blog/c0e96720e01e.jpg'
 ---

@@ -2,6 +2,7 @@
 title: "Go"
 description: ""
 pubDate: 2018-01-31
+readingTime: 2
 category: "Go"
 heroImage: '/GEsYkI0.png'
 ---

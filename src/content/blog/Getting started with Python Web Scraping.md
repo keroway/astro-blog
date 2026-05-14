@@ -2,7 +2,8 @@
 title: "Getting started with Python Web Scraping"
 description: ""
 pubDate: 2018-04-06
-category: "Solr"
+readingTime: 4
+category: "Python"
 heroImage: '/images/blog/c7e1be91b4c8.jpg'
 ---
 

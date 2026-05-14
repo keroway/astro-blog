@@ -2,6 +2,7 @@
 title: "Mac OS (High Sierra) で X11フォワーディング"
 description: ""
 pubDate: 2018-03-09
+readingTime: 2
 category: "High Sierra"
 heroImage: '/images/blog/b3caa87f158d.jpg'
 ---

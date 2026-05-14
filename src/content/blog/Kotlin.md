@@ -2,6 +2,7 @@
 title: "Kotlin"
 description: ""
 pubDate: 2018-02-13
+readingTime: 1
 category: "Kotlin"
 heroImage: '/images/blog/2f43afad7109.jpg'
 ---
