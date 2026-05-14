@@ -1,0 +1,678 @@
+# Kanagawa デザインシステム
+
+> パレット: 葛飾北斎「神奈川沖浪裏」に着想した紺碧・白浪・砂金の三色を軸に、
+> 和文組版の伝統を現代的 Web UI に昇華したデザインシステム。
+
+---
+
+## 目次
+
+1. [カラーパレット](#1-カラーパレット)
+2. [タイポグラフィスケール](#2-タイポグラフィスケール)
+3. [余白・グリッド](#3-余白グリッド)
+4. [コンポーネント命名規則](#4-コンポーネント命名規則)
+5. [`--kw-*` トークン変数表](#5----kw--トークン変数表)
+6. [3カラムグリッド・縦書きレール仕様](#6-3カラムグリッド縦書きレール仕様)
+7. [コンポーネント用途と使い分け](#7-コンポーネント用途と使い分け)
+8. [フォント設定](#8-フォント設定)
+
+---
+
+## 1. カラーパレット
+
+### 1.1 プリミティブカラー
+
+プリミティブカラーは具体的な色値を保持する最下層のトークンです。セマンティックトークンはこれらを参照します。
+
+| トークン | light 値 | dark 値 | 意味 |
+|---|---|---|---|
+| `--kw-navy` | `#003366` | `#9CB4DA` | 紺碧・主役色 |
+| `--kw-blue` | `#1E50A2` | `#7AA2D0` | 水色・インタラクション色 |
+| `--kw-paper` | `#F2F2F2` | `#0B1B33` | 紙白・主背景 |
+| `--kw-paper-warm` | `#EBE7DC` | `#0F2244` | 温かみのある紙色・代替背景 |
+| `--kw-paper-card` | `#FFFFFF` | `#122548` | カード背景 |
+| `--kw-sand` | `#D9B382` | `#D9B382` | 砂金・アクセント（両モード共通） |
+| `--kw-sand-soft` | `rgba(217,179,130,0.45)` | `rgba(217,179,130,0.30)` | 砂金の薄掛け |
+| `--kw-ink` | `#0B1B33` | `#E8EDF6` | 墨・主テキスト |
+| `--kw-ink-dim` | `#4A5874` | `#9AA6BD` | 薄墨・補助テキスト |
+| `--kw-ink-faint` | `#8290AC` | `#6E7A94` | 最薄墨・装飾テキスト |
+| `--kw-rule` | `rgba(0,51,102,0.16)` | `rgba(232,237,246,0.18)` | 罫線 |
+| `--kw-rule-soft` | `rgba(0,51,102,0.08)` | `rgba(232,237,246,0.08)` | 薄罫線 |
+| `--kw-rule-strong` | `rgba(0,51,102,0.28)` | `rgba(232,237,246,0.32)` | 強罫線 |
+
+### 1.2 セマンティックカラー
+
+用途を明示したトークンです。実装では必ずセマンティックトークンを使用します（プリミティブを直接参照しない）。
+
+#### 背景 (Background)
+
+| トークン | light の参照先 | dark の参照先 | 用途 |
+|---|---|---|---|
+| `--kw-bg` | `--kw-paper` | `--kw-paper` | ページ主背景 |
+| `--kw-bg-card` | `--kw-paper-card` | `--kw-paper-card` | カード・フローティング要素 |
+| `--kw-bg-alt` | `--kw-paper-warm` | `--kw-paper-warm` | コードブロック・代替背景 |
+| `--kw-bg-inverse` | `--kw-navy` | `--kw-ink` | 反転背景（ヒーロー等） |
+
+#### 前景 (Foreground)
+
+| トークン | light の参照先 | dark の参照先 | 用途 |
+|---|---|---|---|
+| `--kw-fg` | `--kw-ink` | `--kw-ink` | 主テキスト |
+| `--kw-fg-muted` | `--kw-ink-dim` | `--kw-ink-dim` | 補助テキスト・メタ情報 |
+| `--kw-fg-faint` | `--kw-ink-faint` | `--kw-ink-faint` | 装飾テキスト・縦書きレール |
+| `--kw-fg-display` | `--kw-navy` | `--kw-navy` | 見出し・ブランド表示 |
+| `--kw-fg-link` | `--kw-blue` | `--kw-blue` | リンク・インタラクション |
+| `--kw-fg-on-navy` | `--kw-paper` | `--kw-paper` | navy 背景上のテキスト |
+
+#### アクセント
+
+| トークン | 参照先 | 用途 |
+|---|---|---|
+| `--kw-accent` | `--kw-sand` | 砂金アクセント（番号・区切り線） |
+| `--kw-accent-soft` | `--kw-sand-soft` | アクセントの薄掛け（選択状態） |
+
+#### ボタン
+
+| トークン | light 値 | dark 値 | 用途 |
+|---|---|---|---|
+| `--kw-btn-primary-bg` | `--kw-navy` | `--kw-blue` | プライマリボタン背景 |
+| `--kw-btn-primary-fg` | `--kw-paper` | `--kw-paper` | プライマリボタン文字色 |
+| `--kw-btn-primary-hover` | `--kw-blue` | `--kw-navy` | プライマリボタンホバー背景 |
+| `--kw-btn-ghost-fg` | `--kw-navy` | `--kw-ink` | ゴーストボタン文字色 |
+| `--kw-btn-ghost-border` | `--kw-rule-strong` | `--kw-rule-strong` | ゴーストボタン枠線 |
+
+#### ステータスピル
+
+works エントリのステータス表示に使用する 3種。
+
+| ステータス | トークン (fg / bg) | light fg | dark fg |
+|---|---|---|---|
+| `active` | `--kw-status-active-fg` / `-bg` | `--kw-blue` | `#B3CCEC` |
+| `wip` | `--kw-status-wip-fg` / `-bg` | `#8A5A1F` | `--kw-sand` |
+| `archived` | `--kw-status-archived-fg` / `-bg` | `--kw-ink-dim` | `--kw-ink-dim` |
+
+---
+
+## 2. タイポグラフィスケール
+
+### 2.1 フォントファミリー
+
+| トークン | 値 |
+|---|---|
+| `--kw-font-display` | `'Shippori Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'Noto Serif JP', serif` |
+| `--kw-font-body` | `var(--kw-font-display)` — 本文も明朝体を使用 |
+| `--kw-font-mono` | `'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace` |
+
+### 2.2 フォントサイズ
+
+#### ディスプレイ（大見出し・ヒーロー）
+
+| トークン | 値 | 使用例 |
+|---|---|---|
+| `--kw-fs-display-xl` | `96px` | About ページマストヘッド見出し |
+| `--kw-fs-display-lg` | `72px` | ホームページヒーロー見出し |
+| `--kw-fs-display-md` | `40px` | フッターキャッチコピー |
+| `--kw-fs-display-sm` | `32px` | SectionHead タイトル、レスポンシブ縮小時のヒーロー |
+
+#### 見出し（article 内）
+
+| トークン | 値 | HTML 要素 |
+|---|---|---|
+| `--kw-fs-h1` | `56px` | `<h1>` |
+| `--kw-fs-h2` | `32px` | `<h2>` |
+| `--kw-fs-h3` | `22px` | `<h3>`（FocusCard タイトル等） |
+| `--kw-fs-h4` | `18px` | `<h4>` |
+
+#### 本文・モノスペース
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `--kw-fs-body-lg` | `17px` | リード文・長文 |
+| `--kw-fs-body` | `16px` | 通常本文 |
+| `--kw-fs-body-sm` | `14px` | 補助テキスト・FocusCard 説明 |
+| `--kw-fs-mono` | `13px` | モノスペース標準 |
+| `--kw-fs-mono-sm` | `12px` | ヘッダーナビ・フッターリンク |
+| `--kw-fs-mono-xs` | `10px` | アイウェイブロウ・ステータスチップ |
+
+### 2.3 フォントウェイト
+
+| トークン | 値 | 適用箇所 |
+|---|---|---|
+| `--kw-fw-regular` | `400` | 通常テキスト |
+| `--kw-fw-medium` | `500` | 見出し・ボタン |
+| `--kw-fw-semibold` | `600` | 強調 |
+| `--kw-fw-bold` | `700` | `<strong>`, `<b>` |
+
+### 2.4 行間 (line-height)
+
+| トークン | 値 | 適用箇所 |
+|---|---|---|
+| `--kw-lh-tight` | `1.05` | ディスプレイ見出し |
+| `--kw-lh-snug` | `1.25` | カードタイトル等 |
+| `--kw-lh-normal` | `1.6` | 短文説明 |
+| `--kw-lh-relaxed` | `1.85` | 通常本文（`<html>` デフォルト） |
+| `--kw-lh-prose` | `1.9` | 長文プロース・リード |
+
+### 2.5 字間 (letter-spacing)
+
+| トークン | 値 | 適用箇所 |
+|---|---|---|
+| `--kw-ls-display` | `-0.02em` | ディスプレイ見出し・詰め組み |
+| `--kw-ls-body` | `-0.01em` | 通常本文 |
+| `--kw-ls-mono` | `0` | モノスペース |
+| `--kw-ls-eyebrow` | `0.3em` | アイウェイブロウ・大文字ラベル |
+| `--kw-ls-eyebrow-lg` | `0.4em` | 大型アイウェイブロウ |
+| `--kw-ls-button` | `0.1em` | ボタンラベル |
+
+---
+
+## 3. 余白・グリッド
+
+### 3.1 スペーシングスケール
+
+8px ベースのスペーシングスケールです。
+
+| トークン | 値 |
+|---|---|
+| `--kw-space-1` | `4px` |
+| `--kw-space-2` | `8px` |
+| `--kw-space-3` | `12px` |
+| `--kw-space-4` | `16px` |
+| `--kw-space-5` | `20px` |
+| `--kw-space-6` | `24px` |
+| `--kw-space-8` | `32px` |
+| `--kw-space-10` | `40px` |
+| `--kw-space-12` | `48px` |
+| `--kw-space-16` | `64px` |
+| `--kw-space-20` | `80px` |
+| `--kw-space-24` | `96px` |
+
+### 3.2 角丸 (border-radius)
+
+| トークン | 値 | 用途例 |
+|---|---|---|
+| `--kw-radius-none` | `0` | エッジシャープ要素 |
+| `--kw-radius-xs` | `2px` | インラインコード、フォーカスリング |
+| `--kw-radius-sm` | `4px` | ボタン |
+| `--kw-radius-md` | `6px` | コードブロック・カードサムネイル |
+| `--kw-radius-lg` | `8px` | カード |
+| `--kw-radius-pill` | `9999px` | ピル型チップ |
+
+### 3.3 エレベーション (shadow)
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `--kw-shadow-none` | `none` | 影なし |
+| `--kw-shadow-card` | `0 1px 0 0 rgba(0,51,102,0.06)` | カード下線影 |
+| `--kw-shadow-pop` | `0 4px 16px rgba(0,51,102,0.12), 0 1px 2px rgba(0,51,102,0.08)` | ポップアップ・ドロップダウン |
+
+### 3.4 ボーダー
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `--kw-border-hair` | `1px solid var(--kw-rule)` | 標準罫線 |
+| `--kw-border-soft` | `1px solid var(--kw-rule-soft)` | 薄罫線（行間仕切り） |
+| `--kw-border-strong` | `1px solid var(--kw-rule-strong)` | 強調罫線 |
+| `--kw-border-accent` | `1px solid var(--kw-accent)` | アクセントカラー罫線 |
+
+### 3.5 モーション
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `--kw-duration-fast` | `140ms` | ホバー・フォーカストランジション |
+| `--kw-duration-normal` | `220ms` | パネル開閉等 |
+| `--kw-easing` | `cubic-bezier(0.4, 0, 0.2, 1)` | 標準イージング（Material Design 準拠） |
+
+### 3.6 レイアウト定数
+
+| トークン | 値 | 用途 |
+|---|---|---|
+| `--kw-rail-width` | `64px` | 縦書きレール幅 |
+| `--kw-content-max` | `1100px` | コンテンツ最大幅 |
+| `--kw-prose-max` | `72ch` | プロースエリア最大幅 |
+
+---
+
+## 4. コンポーネント命名規則
+
+### 4.1 CSS クラス命名
+
+`kw-` プレフィックスを持つ BEM 変形を採用します。
+
+```
+kw-{block}
+kw-{block}__{element}
+kw-{block}--{modifier}
+```
+
+**例:**
+- `.kw-rail` — ブロック（縦書きレール）
+- `.kw-rail__text` — エレメント（レール内テキスト）
+- `.kw-rail--right` — モディファイア（右レール）
+
+### 4.2 CSS カスタムプロパティ命名
+
+`--kw-{category}-{scale}` の形式を取ります。
+
+```
+--kw-{color|font|fs|fw|lh|ls|space|radius|shadow|border|duration}-{name}
+```
+
+**例:** `--kw-fs-display-lg`, `--kw-space-6`, `--kw-btn-primary-bg`
+
+### 4.3 Astro コンポーネント命名
+
+PascalCase。コンポーネントが代表する UI 概念を名詞で表現します。
+
+| ファイル名 | 役割の分類 |
+|---|---|
+| `SiteLayout.astro` | ページ全体ラッパー（レイアウト） |
+| `BlogPost.astro` | ブログ記事ラッパー（レイアウト） |
+| `SectionHead.astro` | セクション見出し（汎用コンポーネント） |
+| `FocusCard.astro` | 専門分野カード（汎用コンポーネント） |
+| `Monogram.astro` | ブランドシグネチャ（汎用コンポーネント） |
+| `Header.astro` | サイトヘッダー（構造コンポーネント） |
+| `Footer.astro` | サイトフッター（構造コンポーネント） |
+
+### 4.4 UnoCSS Shortcuts 命名
+
+`kw-{component}` または `kw-{component}__{element}` の形式で定義します。Shortcut が表現できない CSS プロパティ（`writing-mode`, `!important`, `:hover` 等）は `global.css` に残します。
+
+---
+
+## 5. `--kw-*` トークン変数表
+
+全トークンの一覧です。詳細な値は「カラーパレット」「タイポグラフィスケール」「余白・グリッド」の各セクションを参照してください。
+
+### カラートークン（light / dark）
+
+| 変数名 | 種別 | 用途 |
+|---|---|---|
+| `--kw-navy` | Primitive | 紺碧・主役色 |
+| `--kw-blue` | Primitive | 水色・インタラクション |
+| `--kw-paper` | Primitive | 紙白 |
+| `--kw-paper-warm` | Primitive | 温紙色 |
+| `--kw-paper-card` | Primitive | カード白 |
+| `--kw-sand` | Primitive | 砂金アクセント |
+| `--kw-sand-soft` | Primitive | 砂金薄掛け |
+| `--kw-ink` | Primitive | 墨・主テキスト |
+| `--kw-ink-dim` | Primitive | 薄墨 |
+| `--kw-ink-faint` | Primitive | 最薄墨 |
+| `--kw-rule` | Primitive | 罫線色 |
+| `--kw-rule-soft` | Primitive | 薄罫線色 |
+| `--kw-rule-strong` | Primitive | 強罫線色 |
+| `--kw-bg` | Semantic | ページ主背景 |
+| `--kw-bg-card` | Semantic | カード背景 |
+| `--kw-bg-alt` | Semantic | 代替背景 |
+| `--kw-bg-inverse` | Semantic | 反転背景 |
+| `--kw-fg` | Semantic | 主テキスト |
+| `--kw-fg-muted` | Semantic | 補助テキスト |
+| `--kw-fg-faint` | Semantic | 装飾テキスト |
+| `--kw-fg-display` | Semantic | 見出し色 |
+| `--kw-fg-link` | Semantic | リンク色 |
+| `--kw-fg-on-navy` | Semantic | navy 背景上のテキスト |
+| `--kw-accent` | Semantic | アクセントカラー |
+| `--kw-accent-soft` | Semantic | アクセント薄掛け |
+| `--kw-btn-primary-bg` | Component | プライマリボタン背景 |
+| `--kw-btn-primary-fg` | Component | プライマリボタン文字 |
+| `--kw-btn-primary-hover` | Component | プライマリボタンホバー背景 |
+| `--kw-btn-ghost-fg` | Component | ゴーストボタン文字 |
+| `--kw-btn-ghost-border` | Component | ゴーストボタン枠線 |
+| `--kw-status-active-fg` | Component | active ステータス文字色 |
+| `--kw-status-active-bg` | Component | active ステータス背景 |
+| `--kw-status-wip-fg` | Component | wip ステータス文字色 |
+| `--kw-status-wip-bg` | Component | wip ステータス背景 |
+| `--kw-status-archived-fg` | Component | archived ステータス文字色 |
+| `--kw-status-archived-bg` | Component | archived ステータス背景 |
+
+### タイポグラフィトークン（:root 固定）
+
+| 変数名 | 値 | 用途 |
+|---|---|---|
+| `--kw-font-display` | Shippori Mincho スタック | 見出し・本文フォント |
+| `--kw-font-body` | `var(--kw-font-display)` | 本文フォント |
+| `--kw-font-mono` | JetBrains Mono スタック | コード・ラベル |
+| `--kw-fs-display-xl` | `96px` | 最大ディスプレイ |
+| `--kw-fs-display-lg` | `72px` | 大ディスプレイ |
+| `--kw-fs-display-md` | `40px` | 中ディスプレイ |
+| `--kw-fs-display-sm` | `32px` | 小ディスプレイ |
+| `--kw-fs-h1` | `56px` | 見出し 1 |
+| `--kw-fs-h2` | `32px` | 見出し 2 |
+| `--kw-fs-h3` | `22px` | 見出し 3 |
+| `--kw-fs-h4` | `18px` | 見出し 4 |
+| `--kw-fs-body-lg` | `17px` | 大本文 |
+| `--kw-fs-body` | `16px` | 通常本文 |
+| `--kw-fs-body-sm` | `14px` | 小本文 |
+| `--kw-fs-mono` | `13px` | モノスペース標準 |
+| `--kw-fs-mono-sm` | `12px` | モノスペース小 |
+| `--kw-fs-mono-xs` | `10px` | モノスペース最小 |
+| `--kw-fw-regular` | `400` | 通常ウェイト |
+| `--kw-fw-medium` | `500` | 中ウェイト |
+| `--kw-fw-semibold` | `600` | セミボールド |
+| `--kw-fw-bold` | `700` | ボールド |
+| `--kw-lh-tight` | `1.05` | 詰め行間 |
+| `--kw-lh-snug` | `1.25` | スナグ行間 |
+| `--kw-lh-normal` | `1.6` | 通常行間 |
+| `--kw-lh-relaxed` | `1.85` | ゆったり行間 |
+| `--kw-lh-prose` | `1.9` | 長文行間 |
+| `--kw-ls-display` | `-0.02em` | ディスプレイ字間 |
+| `--kw-ls-body` | `-0.01em` | 本文字間 |
+| `--kw-ls-mono` | `0` | モノ字間 |
+| `--kw-ls-eyebrow` | `0.3em` | アイウェイブロウ字間 |
+| `--kw-ls-eyebrow-lg` | `0.4em` | 大アイウェイブロウ字間 |
+| `--kw-ls-button` | `0.1em` | ボタン字間 |
+
+### スペーシング・その他トークン（:root 固定）
+
+| 変数名 | 値 | 変数名 | 値 |
+|---|---|---|---|
+| `--kw-space-1` | `4px` | `--kw-space-12` | `48px` |
+| `--kw-space-2` | `8px` | `--kw-space-16` | `64px` |
+| `--kw-space-3` | `12px` | `--kw-space-20` | `80px` |
+| `--kw-space-4` | `16px` | `--kw-space-24` | `96px` |
+| `--kw-space-5` | `20px` | `--kw-radius-none` | `0` |
+| `--kw-space-6` | `24px` | `--kw-radius-xs` | `2px` |
+| `--kw-space-8` | `32px` | `--kw-radius-sm` | `4px` |
+| `--kw-space-10` | `40px` | `--kw-radius-md` | `6px` |
+| — | — | `--kw-radius-lg` | `8px` |
+| — | — | `--kw-radius-pill` | `9999px` |
+| `--kw-rail-width` | `64px` | `--kw-content-max` | `1100px` |
+| `--kw-prose-max` | `72ch` | `--kw-duration-fast` | `140ms` |
+| `--kw-duration-normal` | `220ms` | `--kw-easing` | `cubic-bezier(0.4,0,0.2,1)` |
+
+---
+
+## 6. 3カラムグリッド・縦書きレール仕様
+
+### 6.1 3カラムページレイアウト
+
+`SiteLayout.astro` の `.kw-page` が全ページに適用する 3カラムグリッドです。
+
+```
+┌──────────┬──────────────────────────────────┬──────────┐
+│  左レール  │           メインコンテンツ         │  右レール  │
+│  64px    │     1fr（最大 1400px に制限）       │  64px    │
+└──────────┴──────────────────────────────────┴──────────┘
+```
+
+| 属性 | 値 |
+|---|---|
+| グリッド定義 | `grid-template-columns: var(--kw-rail-width) 1fr var(--kw-rail-width)` |
+| 最大幅 | `1400px`（`margin: 0 auto` で中央寄せ） |
+| レール幅 | `64px`（`--kw-rail-width`） |
+| コンテンツ最大幅 | `min(1100px, 100%)`（`--kw-content-max`、`site-main` 内部で適用） |
+| コンテンツパディング（デスクトップ） | `64px (top) 32px (side) 80px (bottom)` |
+| コンテンツパディング（モバイル ≤720px） | `32px (top) 16px (side) 48px (bottom)` |
+
+### 6.2 縦書きレール
+
+左右のレールは `<aside aria-hidden="true">` として実装し、装飾テキストを縦書きで表示します。
+
+**クラス:**
+
+| クラス | 役割 |
+|---|---|
+| `.kw-rail` | 左レール（右辺に `1px solid --kw-rule-soft`） |
+| `.kw-rail--right` | 右レール（左辺に `1px solid --kw-rule-soft`） |
+| `.kw-rail__text` | レール内テキスト（縦書き） |
+
+**`.kw-rail__text` スタイル:**
+
+| プロパティ | 値 |
+|---|---|
+| `writing-mode` | `vertical-rl` |
+| `text-orientation` | `mixed` |
+| `font-family` | `var(--kw-font-display)` |
+| `font-size` | `13px` |
+| `line-height` | `2.2` |
+| `letter-spacing` | `0.15em` |
+| `color` | `var(--kw-fg-faint)` |
+| `user-select` | `none` |
+
+**デフォルトテキスト（SiteLayout.astro）:**
+
+| レール | デフォルト値 |
+|---|---|
+| 左 (`leftRail` prop) | `'二〇二六年五月十三日 — 横浜にて記す'` |
+| 右 (`rightRail` prop) | `'Vol. XVIII · keroway portfolio'` |
+
+### 6.3 ブレークポイント
+
+| ブレークポイント | 変更内容 |
+|---|---|
+| `≤ 900px` | 3カラム → 1カラム（`.kw-rail` を `display: none`） |
+| `≤ 720px` | `site-main` の padding を縮小 |
+| `≤ 640px` | ヘッダーの padding 縮小・日付・ブランド名を非表示 |
+
+---
+
+## 7. コンポーネント用途と使い分け
+
+### 7.1 Numbered Row（番号付き行リスト）
+
+**実装場所:** `src/pages/index.astro`（最近の記録セクション）、`src/pages/about.astro`（キャリア年表）
+
+**用途:** ブログ記事一覧・時系列リストなど、順序付きリンク行の表示に使用します。コンポーネントとして独立はしておらず、各ページ内にパターンとして実装されています。
+
+**構造:**
+
+```
+.post-row / .timeline-row
+  ├── [番号] .kw-numeral .kw-tabular  （砂金色の番号、22px、JetBrains Mono）
+  ├── [本文]
+  │    ├── メタ情報  .kw-eyebrow       （日付・カテゴリ）
+  │    ├── タイトル  font-display h3   （--kw-fs-h3, --kw-fw-medium）
+  │    └── 説明文   font-body-sm      （--kw-fg-muted）
+  └── [矢印] →  font-display 20px     （--kw-fg-link）
+```
+
+**グリッド列:** デスクトップ `56px 1fr auto`、モバイル(≤640px) `40px 1fr auto`
+
+**使い分け指針:**
+- 記事一覧・ランキングなど「クリックできる順序付きリスト」には Numbered Row を使う。
+- 単純な見出し行には SectionHead を使う。
+- カードグリッドにする場合は FocusCard を使う。
+
+---
+
+### 7.2 FocusCard
+
+**実装:** `src/components/FocusCard.astro`
+
+**Props:**
+
+| prop | 型 | 説明 |
+|---|---|---|
+| `index` | `number` | 0始まりの連番（`01/`, `02/` の表示番号を生成） |
+| `key` | `string` | 識別キー（スネークケース、サムネイルのプレースホルダテキストにも使用） |
+| `title` | `string` | 日本語タイトル |
+| `description` | `string` | 説明文 |
+
+**構造:**
+
+```
+article.focus-card
+  ├── div.focus-card__thumb  （プレースホルダ画像、高さ 120px、border-radius md）
+  ├── div.focus-card__eyebrow  kw-eyebrow
+  │    ├── span.focus-card__num  kw-numeral  （01/ 形式、砂金色）
+  │    └── span  （key テキスト）
+  ├── h3.focus-card__title    （--kw-fs-h3, medium, navy）
+  └── p.focus-card__desc      （--kw-fs-body-sm, muted, text-indent: 1em）
+```
+
+**使用箇所:** ホーム「専門分野」、About「得意分野」の 2〜4列グリッド表示。
+
+**使い分け指針:**
+- 専門領域・スキル・サービス紹介など「カテゴリのグループ展示」に使用。
+- リンクを持たない静的な説明カード。リンクが必要な場合は別途カードコンポーネントを検討。
+- サムネイルは現在プレースホルダ表示。実画像が必要な場合は `focus-card__thumb` を `<Image>` に置き換える。
+
+---
+
+### 7.3 SectionHead
+
+**実装:** `src/components/SectionHead.astro`
+
+**Props:**
+
+| prop | 型 | 必須 | 説明 |
+|---|---|---|---|
+| `jp` | `string` | 必須 | 日本語セクションタイトル |
+| `en` | `string` | 必須 | 英語ラベル（モノスペース・大文字） |
+| `action` | `string` | 任意 | アクションリンクのラベル（例：`see all (12) →`） |
+| `actionHref` | `string` | 任意 | アクションリンクの URL（デフォルト `'#'`） |
+| `id` | `string` | 任意 | ARIA アンカー用 ID（`<h2>` 等の `aria-labelledby` と対応） |
+
+**構造:**
+
+```
+div.kw-section-head
+  └── div.kw-section-head__title
+       ├── span.kw-section-head__jp    （--kw-fs-display-sm, medium, navy）
+       ├── span.kw-section-head__divider  （砂金の 24px 横線）
+       └── span.kw-section-head__en    （kw-eyebrow スタイル）
+  └── [a].kw-section-head__en          （action がある場合のみ、--kw-fg-link 色）
+```
+
+**使い分け指針:**
+- ページ内の各セクション（「最近の記録」「専門分野」等）の区切り見出しとして使用。
+- `jp` + `en` の2言語ラベルが必須。英語ラベルは `kw-eyebrow` スタイルのモノスペース大文字。
+- `action` を指定すると右端に「全件表示」リンクを追加できる。
+- `id` を指定して `aria-labelledby` と組み合わせることで、セクションのアクセシビリティを担保する。
+
+---
+
+### 7.4 Monogram
+
+**実装:** `src/components/Monogram.astro`
+
+**Props:**
+
+| prop | 型 | デフォルト | 説明 |
+|---|---|---|---|
+| `caption` | `string` | `'/ keroway'` | K の隣に表示するテキスト |
+| `tag` | `string` | `'Vol. XVIII · 二〇二六'` | 波紋の下のタグライン |
+
+**構造:**
+
+```
+div.kw-monogram
+  ├── div.kw-monogram__row
+  │    ├── span.kw-monogram__k        （Shippori Mincho, 56px, medium, navy）
+  │    └── span.kw-monogram__caption  （Shippori Mincho, 14px, blue, tracking 0.1em）
+  ├── div.kw-wave  （CSS のみの波紋モチーフ、aria-hidden）
+  └── div.kw-monogram__tag            （JetBrains Mono, 10px, uppercase, faint）
+```
+
+**`.kw-wave` 仕様:** CSS `radial-gradient` で 5つの弧を描く波紋モチーフ。幅 140px・高さ 12px。`--kw-fg-link` 色、opacity 0.85。
+
+**使用箇所:** ホームヒーロー右端、About マストヘッド右端、フッター左下。
+
+**使い分け指針:**
+- ページの「署名」として機能するブランドアイデンティティ要素。
+- ヒーロー右、フッター左等の「コーナー」に配置してページ全体に統一感を持たせる。
+- `caption` と `tag` で文脈に応じた情報を表示（About ページでは `tag="Vol. XVIII · 著者紹介"` 等）。
+- モバイルではヒーロー・マストヘッドの Monogram を `display: none` にして省スペース化する。
+
+---
+
+## 8. フォント設定
+
+### 8.1 Shippori Mincho
+
+明朝体の和文フォント。Google Fonts から読み込みます。見出し（`--kw-font-display`）・本文（`--kw-font-body`）の両方に使用し、サイト全体を明朝体で統一します。
+
+**ロードウェイト（`BaseHead.astro` より）:**
+
+```
+family=Shippori+Mincho:wght@400;500;600;700
+```
+
+| ウェイト | トークン | 主な用途 |
+|---|---|---|
+| 400 (`--kw-fw-regular`) | 通常本文・補助テキスト |
+| 500 (`--kw-fw-medium`) | 見出し全般・ボタン・SectionHead タイトル・Monogram の K |
+| 600 (`--kw-fw-semibold`) | 強調（限定使用） |
+| 700 (`--kw-fw-bold`) | `<strong>`, `<b>` 要素 |
+
+**サイズ使用例:**
+
+| 箇所 | サイズトークン | ウェイト |
+|---|---|---|
+| About マストヘッド見出し | `--kw-fs-display-xl` (96px) | medium |
+| ホームヒーロー見出し | `--kw-fs-display-lg` (72px) | medium |
+| SectionHead タイトル | `--kw-fs-display-sm` (32px) | medium |
+| Monogram `K` | `56px` | medium |
+| FocusCard タイトル / h3 | `--kw-fs-h3` (22px) | medium |
+| 通常本文 | `--kw-fs-body` (16px) | regular |
+
+**グローバル設定（`global.css`）:**
+
+```css
+html {
+  font-family: var(--kw-font-body);
+  font-size: var(--kw-fs-body);        /* 16px */
+  line-height: var(--kw-lh-relaxed);  /* 1.85 */
+  letter-spacing: var(--kw-ls-body);  /* -0.01em */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--kw-font-display);
+  font-weight: var(--kw-fw-medium);   /* 500 */
+  letter-spacing: var(--kw-ls-display); /* -0.02em */
+  line-height: var(--kw-lh-tight);    /* 1.05 */
+}
+```
+
+---
+
+### 8.2 JetBrains Mono
+
+等幅フォント（`--kw-font-mono`）。Google Fonts から読み込みます。コード・ラベル・ナビゲーション・日付表示などの「機械的・情報的」要素に使用します。
+
+**ロードウェイト（`BaseHead.astro` より）:**
+
+```
+family=JetBrains+Mono:wght@400;500;700
+```
+
+| ウェイト | トークン | 主な用途 |
+|---|---|---|
+| 400 (`--kw-fw-regular`) | `kw-eyebrow`, コードブロック, ヘッダーナビ |
+| 500 (`--kw-fw-medium`) | `kw-numeral`（番号）, ヘッダーブランド名 |
+| 700 (`--kw-fw-bold`) | 限定使用 |
+
+**サイズ使用例:**
+
+| 箇所 | サイズ | ウェイト |
+|---|---|---|
+| `kw-numeral`（番号） | `22px` | medium |
+| ヘッダーブランド名 | `--kw-fs-mono-sm` (12px) | medium |
+| ヘッダーナビリンク | `--kw-fs-mono-sm` (12px) | regular |
+| `kw-eyebrow`（アイウェイブロウ） | `--kw-fs-mono-xs` (10px) | regular |
+| ステータスチップ | `--kw-fs-mono-xs` (10px) | regular |
+| インラインコード | `0.92em`（親の92%） | regular |
+| 縦書きレールテキスト | `13px` | regular |
+
+**特殊設定:**
+
+```css
+code, kbd, samp {
+  font-feature-settings: "liga" 0, "calt" 0;  /* 合字・文脈依存代替を無効化 */
+}
+```
+
+コードブロック内での意図しない合字を防ぐため、OpenType の `liga` および `calt` 機能を無効にしています。
+
+---
+
+## 補足: テーマ切り替え
+
+ダークモードは `[data-theme="dark"]` 属性セレクタで切り替えます（`prefers-color-scheme` メディアクエリは使用しません）。UnoCSS の `dark:` バリアントも同一セレクタに対応しています。
+
+```css
+/* uno.config.ts */
+dark: { dark: '[data-theme="dark"]' }
+```
+
+`color-scheme` プロパティも各テーマで宣言しており、ブラウザのネイティブ UI（スクロールバー・フォームコントロール等）にもテーマが反映されます。
