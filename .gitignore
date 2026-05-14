@@ -20,8 +20,9 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# local tooling / test artifacts
-.claude/
+# local tooling / test artifacts (.claude/settings.json は project plugin 設定としてトラッキング)
+.claude/*
+!.claude/settings.json
 .serena/
 test-results/
 .playwright-mcp/
