@@ -221,4 +221,70 @@ const focusAreas = [
       font-size: var(--kw-fs-h1);
     }
   }
+
+  /* Scroll-in animation */
+  .scroll-hidden {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 350ms var(--kw-easing, ease-out),
+      transform 350ms var(--kw-easing, ease-out);
+  }
+  .scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-hidden {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
 </style>
+
+<script>
+  function initScrollAnimation(): void {
+    // prefers-reduced-motion チェック
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // アニメーション対象: hero + .section
+    const targets = document.querySelectorAll<HTMLElement>('.hero, .section');
+
+    if (prefersReduced) {
+      // モーション無効時は即表示（クラスを付けない）
+      targets.forEach((el) => {
+        el.classList.remove('scroll-hidden', 'scroll-visible');
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('scroll-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -40px 0px',
+      }
+    );
+
+    targets.forEach((el) => {
+      el.classList.add('scroll-hidden');
+      observer.observe(el);
+    });
+  }
+
+  // 初回ロード
+  initScrollAnimation();
+
+  // Astro View Transitions での再初期化
+  document.addEventListener('astro:page-load', () => {
+    initScrollAnimation();
+  });
+</script>
