@@ -34,8 +34,49 @@ const isActive = (href: string) => {
     ))}
   </nav>
 
-  <div class="kw-header__date" aria-label="issue date">令和八年 · 2026</div>
+  <div class="kw-header__actions">
+    <button id="theme-toggle" class="kw-header__theme-btn" type="button" aria-label="ダークモードに切り替える">
+      <span aria-hidden="true">☽</span>
+    </button>
+    <div class="kw-header__date" aria-label="issue date">令和八年 · 2026</div>
+  </div>
 </header>
+
+<script>
+  function initThemeToggle() {
+    const btn = document.getElementById('theme-toggle');
+    if (!btn) return;
+    const el = btn;
+    const icon = el.querySelector('span')!;
+
+    function sync() {
+      const dark = document.documentElement.dataset.theme === 'dark';
+      icon.textContent = dark ? '☀' : '☽';
+      el.setAttribute('aria-label', dark ? 'ライトモードに切り替える' : 'ダークモードに切り替える');
+    }
+
+    sync();
+
+    el.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      sync();
+    });
+  }
+
+  initThemeToggle();
+
+  document.addEventListener('astro:after-swap', () => {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'dark' || stored === 'light') {
+        document.documentElement.dataset.theme = stored;
+      }
+    } catch (e) {}
+    initThemeToggle();
+  });
+</script>
 
 <style>
   .kw-header {
@@ -108,6 +149,12 @@ const isActive = (href: string) => {
     font-variant-numeric: tabular-nums;
   }
 
+  .kw-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--kw-space-4);
+  }
+
   .kw-header__date {
     font-family: var(--kw-font-mono);
     font-size: var(--kw-fs-mono-xs);
@@ -115,6 +162,28 @@ const isActive = (href: string) => {
     letter-spacing: var(--kw-ls-eyebrow);
     color: var(--kw-fg-muted);
     white-space: nowrap;
+  }
+
+  .kw-header__theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--kw-fg-muted);
+    font-size: 14px;
+    line-height: 1;
+    padding: 4px var(--kw-space-2);
+    border-radius: var(--kw-radius-sm);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .kw-header__theme-btn:hover {
+    color: var(--kw-fg-display);
+  }
+  .kw-header__theme-btn:focus-visible {
+    outline: 2px solid var(--kw-accent);
+    outline-offset: 2px;
   }
 
   @media (max-width: 640px) {
