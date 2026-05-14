@@ -37,9 +37,9 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
   </head>
   <body>
     <div class="kw-page">
-      <aside class="kw-rail" aria-hidden="true">
+      <div class="kw-rail" role="presentation" aria-hidden="true">
         <div class="kw-rail__text">{leftRail}</div>
-      </aside>
+      </div>
       <div class="kw-page__main">
         <Header />
         <main class:list={['site-main', mainClass]} transition:animate="fade" transition:name="site-main">
@@ -47,9 +47,9 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
         </main>
         <Footer />
       </div>
-      <aside class="kw-rail kw-rail--right" aria-hidden="true">
+      <div class="kw-rail kw-rail--right" role="presentation" aria-hidden="true">
         <div class="kw-rail__text">{rightRail}</div>
-      </aside>
+      </div>
     </div>
     <slot name="body-end" />
   </body>
