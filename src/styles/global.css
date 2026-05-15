@@ -82,6 +82,18 @@ pre > code {
   word-wrap: normal;
 }
 
+/* Shiki dual-theme switching — activated by [data-theme="dark"] on <html> */
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light) !important;
+  background-color: var(--shiki-light-bg) !important;
+}
+[data-theme="dark"] .astro-code,
+[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
+
 code {
   padding: 2px 5px;
   background: var(--kw-bg-alt);
