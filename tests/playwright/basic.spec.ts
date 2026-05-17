@@ -6,7 +6,7 @@ test.describe("Basic site functionality", () => {
 
     await expect(page).toHaveTitle(/keroway\.com/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "技術と"
+      "20 年ぶん"
     );
   });
 
@@ -45,7 +45,7 @@ test.describe("Basic site functionality", () => {
     await page.goto("/works");
 
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "実装したものを、"
+      "作ったものを、"
     );
 
     const worksCards = page.locator("ul.works-grid > li");
