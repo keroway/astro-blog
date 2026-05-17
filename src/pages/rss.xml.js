@@ -15,11 +15,16 @@ export async function GET(context) {
     site: context.site,
     items: posts
       .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-      .map((post) => ({
-        title: post.data.title,
-        description: post.data.description,
-        pubDate: post.data.pubDate,
-        link: `/blog/${toEncodedSlug(post.id)}/`,
-      })),
+      .map((post) => {
+        const encodedSlug = toEncodedSlug(post.id);
+        const ogImageUrl = new URL(`og/${encodedSlug}.png`, context.site).href;
+        return {
+          title: post.data.title,
+          description: post.data.description,
+          pubDate: post.data.pubDate,
+          link: `/blog/${encodedSlug}/`,
+          customData: `<enclosure url="${ogImageUrl}" type="image/png" length="0" />`,
+        };
+      }),
   });
 }
