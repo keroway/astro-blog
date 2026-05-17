@@ -8,6 +8,10 @@ import SectionHead from '../../components/SectionHead.astro';
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
   .slice()
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const categories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))].sort() as string[];
+const years = [...new Set(posts.map((p) => p.data.pubDate.getFullYear()))].sort((a, b) => b - a);
+const showYearFilter = years.length >= 2;
 ---
 
 <SiteLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} mainClass="blog-index">
@@ -18,15 +22,58 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
     actionHref="/rss.xml"
   />
 
-  <div class="posts-list">
-    {posts.map((post, i) => {
+  <div class="filter-bar">
+    <div class="filter-group">
+      <button
+        class="filter-btn filter-btn--active"
+        data-filter-type="category"
+        data-filter-value=""
+        aria-pressed="true"
+      >すべて</button>
+      {categories.map((cat) => (
+        <button
+          class="filter-btn"
+          data-filter-type="category"
+          data-filter-value={cat}
+          aria-pressed="false"
+        >{cat}</button>
+      ))}
+    </div>
+    {showYearFilter && (
+      <div class="filter-group filter-group--year">
+        <button
+          class="filter-btn filter-btn--active"
+          data-filter-type="year"
+          data-filter-value=""
+          aria-pressed="true"
+        >全年</button>
+        {years.map((year) => (
+          <button
+            class="filter-btn"
+            data-filter-type="year"
+            data-filter-value={String(year)}
+            aria-pressed="false"
+          >{year}</button>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <p class="filter-count no-indent" id="filter-count" hidden></p>
+
+  <div class="posts-list" id="posts-list">
+    {posts.map((post) => {
       const description = post.data.description?.trim();
       const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
-      const num = (i + 1).toString().padStart(2, '0');
+      const year = post.data.pubDate.getFullYear();
       return (
-        <article class="post-row">
+        <article
+          class="post-row"
+          data-year={String(year)}
+          {...(post.data.category ? { 'data-category': post.data.category } : {})}
+        >
           <a href={`/blog/${encodedSlug}/`} class="post-row__link">
-            <span class="post-row__num kw-numeral kw-tabular">{num}</span>
+            <span class="post-row__num kw-numeral kw-tabular"></span>
             <div class="post-row__body">
               <p class="kw-eyebrow post-row__meta no-indent">
                 <FormattedDate date={post.data.pubDate} />
@@ -41,11 +88,148 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
       );
     })}
   </div>
+
+  <p class="empty-message no-indent" id="empty-message" hidden>該当する記事がありません</p>
 </SiteLayout>
+
+<script>
+  function initFilter() {
+    const params = new URLSearchParams(window.location.search);
+    let activeCategory = params.get('category') ?? '';
+    let activeYear = params.get('year') ?? '';
+
+    const articles = Array.from(document.querySelectorAll<HTMLElement>('#posts-list .post-row'));
+    const countEl = document.getElementById('filter-count');
+    const emptyEl = document.getElementById('empty-message');
+
+    function applyFilter() {
+      let visible = 0;
+      articles.forEach((article) => {
+        const cat = article.dataset.category ?? '';
+        const year = article.dataset.year ?? '';
+        const catMatch = activeCategory === '' || cat === activeCategory;
+        const yearMatch = activeYear === '' || year === activeYear;
+        const show = catMatch && yearMatch;
+        article.hidden = !show;
+        if (show) visible++;
+      });
+
+      const isFiltered = activeCategory !== '' || activeYear !== '';
+
+      if (countEl) {
+        countEl.hidden = !isFiltered;
+        countEl.textContent = `${visible} 件`;
+      }
+      if (emptyEl) {
+        emptyEl.hidden = visible > 0;
+      }
+
+      let n = 0;
+      articles.forEach((article) => {
+        if (!article.hidden) {
+          n++;
+          const numEl = article.querySelector('.post-row__num');
+          if (numEl) numEl.textContent = n.toString().padStart(2, '0');
+        }
+      });
+    }
+
+    function updateButtons() {
+      document.querySelectorAll<HTMLButtonElement>('[data-filter-type="category"]').forEach((btn) => {
+        const active = btn.dataset.filterValue === activeCategory;
+        btn.classList.toggle('filter-btn--active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      document.querySelectorAll<HTMLButtonElement>('[data-filter-type="year"]').forEach((btn) => {
+        const active = btn.dataset.filterValue === activeYear;
+        btn.classList.toggle('filter-btn--active', active);
+        btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+    }
+
+    function pushState() {
+      const p = new URLSearchParams();
+      if (activeCategory) p.set('category', activeCategory);
+      if (activeYear) p.set('year', activeYear);
+      const qs = p.toString();
+      history.pushState({}, '', qs ? `?${qs}` : window.location.pathname);
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('[data-filter-type]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const type = btn.dataset.filterType!;
+        const value = btn.dataset.filterValue!;
+        if (type === 'category') activeCategory = value;
+        if (type === 'year') activeYear = value;
+        pushState();
+        updateButtons();
+        applyFilter();
+      });
+    });
+
+    updateButtons();
+    applyFilter();
+  }
+
+  initFilter();
+  document.addEventListener('astro:after-swap', initFilter);
+</script>
 
 <style>
   .blog-index {
     width: min(var(--kw-content-max), 100%);
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kw-space-3);
+    margin-bottom: var(--kw-space-6);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-2);
+  }
+
+  .filter-btn {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    padding: var(--kw-space-2) var(--kw-space-4);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    background: transparent;
+    color: var(--kw-fg-muted);
+    cursor: pointer;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing),
+                color var(--kw-duration-fast) var(--kw-easing),
+                background var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--kw-rule);
+    color: var(--kw-fg);
+  }
+
+  .filter-btn--active {
+    border-color: var(--kw-accent);
+    color: var(--kw-accent);
+    background: color-mix(in srgb, var(--kw-accent) 8%, transparent);
+  }
+
+  .filter-count {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    margin-bottom: var(--kw-space-4);
+  }
+
+  .empty-message {
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-muted);
+    padding: var(--kw-space-10) 0;
+    text-align: center;
   }
 
   .posts-list {
