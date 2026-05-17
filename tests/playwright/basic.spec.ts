@@ -1,5 +1,43 @@
 import { expect, test } from "@playwright/test";
 
+test.describe("SEO: canonical URL", () => {
+  test("homepage outputs canonical URL with trailing slash", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const canonical = page.locator('link[rel="canonical"]');
+    await expect(canonical).toHaveAttribute("href", "https://keroway.com/");
+  });
+
+  test("blog listing outputs canonical URL for site origin", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    const canonical = page.locator('link[rel="canonical"]');
+    // dev server may omit trailing slash; production SSG always adds it
+    const href = await canonical.getAttribute("href");
+    expect(href).toMatch(/^https:\/\/keroway\.com\/blog\/?$/);
+  });
+
+  test("blog post page outputs canonical URL without query strings", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    const firstPostLink = page
+      .locator("div.posts-list > article.post-row")
+      .first()
+      .locator("a.post-row__link");
+    const postHref = await firstPostLink.getAttribute("href");
+    if (!postHref) throw new Error("post href not found");
+    await page.goto(postHref);
+
+    const canonical = page.locator('link[rel="canonical"]');
+    const canonicalHref = await canonical.getAttribute("href");
+    // Must be an absolute URL starting with site origin, no query string
+    expect(canonicalHref).toMatch(/^https:\/\/keroway\.com\/blog\/.+\/$/);
+  });
+});
+
 test.describe("Basic site functionality", () => {
   test("home page renders navigation and intro text", async ({ page }) => {
     await page.goto("/");
