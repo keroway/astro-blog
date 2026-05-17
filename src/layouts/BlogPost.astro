@@ -14,6 +14,7 @@ type BlogData = CollectionEntry<"blog">["data"];
 type BlogEntry = CollectionEntry<"blog">;
 
 interface Props extends BlogData {
+  ogImage?: string;
   headings?: Heading[];
   prevPost?: BlogEntry | null;
   nextPost?: BlogEntry | null;
@@ -28,6 +29,7 @@ const {
   updatedDate,
   heroImage,
   canonicalUrl,
+  ogImage,
   headings = [],
   prevPost = null,
   nextPost = null,
@@ -44,7 +46,7 @@ const shareUrl = Astro.url.href;
 const xIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`;
 ---
 
-<SiteLayout title={title} description={description} image={heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
+<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
   <div class="post-wrap">
     <article class="post">
       {heroImage && (
