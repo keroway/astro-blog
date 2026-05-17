@@ -54,32 +54,28 @@ const root = el(
     boxSizing: "border-box",
   },
   [
-    el(
-      "div",
-      { display: "flex", flexDirection: "column", gap: 16 },
-      [
-        el(
-          "div",
-          {
-            fontSize: 28,
-            color: COLORS.sand,
-            fontWeight: 400,
-            letterSpacing: "0.06em",
-          },
-          "keroway.com"
-        ),
-        el(
-          "div",
-          {
-            fontSize: 64,
-            fontWeight: 700,
-            color: COLORS.ink,
-            lineHeight: 1.4,
-          },
-          "engineering + design"
-        ),
-      ]
-    ),
+    el("div", { display: "flex", flexDirection: "column", gap: 16 }, [
+      el(
+        "div",
+        {
+          fontSize: 28,
+          color: COLORS.sand,
+          fontWeight: 400,
+          letterSpacing: "0.06em",
+        },
+        "keroway.com"
+      ),
+      el(
+        "div",
+        {
+          fontSize: 64,
+          fontWeight: 700,
+          color: COLORS.ink,
+          lineHeight: 1.4,
+        },
+        "engineering + design"
+      ),
+    ]),
     el(
       "div",
       {
@@ -90,7 +86,12 @@ const root = el(
       [
         el(
           "div",
-          { width: 4, height: 28, backgroundColor: COLORS.sand, borderRadius: 2 },
+          {
+            width: 4,
+            height: 28,
+            backgroundColor: COLORS.sand,
+            borderRadius: 2,
+          },
           undefined,
           "bar"
         ),
@@ -109,8 +110,20 @@ const svg = await satori(root, {
   width: WIDTH,
   height: HEIGHT,
   fonts: [
-    { name: "Zen Maru Gothic", data: fonts.regular, weight: 400, style: "normal", lang: "ja-JP" },
-    { name: "Zen Maru Gothic", data: fonts.bold, weight: 700, style: "normal", lang: "ja-JP" },
+    {
+      name: "Zen Maru Gothic",
+      data: fonts.regular,
+      weight: 400,
+      style: "normal",
+      lang: "ja-JP",
+    },
+    {
+      name: "Zen Maru Gothic",
+      data: fonts.bold,
+      weight: 700,
+      style: "normal",
+      lang: "ja-JP",
+    },
   ],
 });
 
