@@ -51,10 +51,15 @@ type Props = {
 
 const { post, prevPost, nextPost, relatedPosts } = Astro.props as Props;
 const { Content, headings } = await render(post);
+
+const encodeSlug = (id: string) =>
+	id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+const ogImage = `/og/${encodeSlug(post.id)}.png`;
 ---
 
 <BlogPost
 	{...post.data}
+	ogImage={ogImage}
 	headings={headings}
 	prevPost={prevPost}
 	nextPost={nextPost}
