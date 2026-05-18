@@ -24,7 +24,7 @@
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@keystatic/astro": "^5.0.6",
     "@keystatic/core": "^0.5.50",
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.60.0",
     "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
