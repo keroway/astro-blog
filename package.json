@@ -11,7 +11,8 @@
     "astro": "astro",
     "lint": "biome ci .",
     "format": "biome format --write .",
-    "check": "biome check ."
+    "check": "biome check .",
+    "lint:alt": "node --experimental-strip-types scripts/lint-alt.ts"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
