@@ -33,7 +33,7 @@ http://www.st.com/ja/embedded-software/stsw-img005.html
 
 さっぱりわからないと思いますが、センサーに手を近づけたり離したりした時のデバッグプリントの様子です（動画）
 [
-![](https://img.youtube.com/vi/S9DZRoHKFVg/0.jpg)](https://youtu.be/S9DZRoHKFVg)
+![レーザー測距モジュール動作確認動画のサムネイル](https://img.youtube.com/vi/S9DZRoHKFVg/0.jpg)](https://youtu.be/S9DZRoHKFVg)
 
 今回は以上です。
 

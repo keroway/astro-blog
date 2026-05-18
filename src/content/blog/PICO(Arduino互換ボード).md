@@ -17,7 +17,7 @@ heroImage: '/images/blog/6eab76f6d821.jpg'
 ![enter image description here](https://i.imgur.com/aCRfy3V.png)
 
 とりあえず接続してシリアルモニターを有効にしていたら、こんなメッセージが(動画)
-[![](https://img.youtube.com/vi/4YGrQIP1-TQ/0.jpg)](https://www.youtube.com/watch?v=4YGrQIP1-TQ)
+[![シリアルモニター動作確認動画のサムネイル](https://img.youtube.com/vi/4YGrQIP1-TQ/0.jpg)](https://www.youtube.com/watch?v=4YGrQIP1-TQ)
 
 で、何か動かしてみようとしたときにボード設定に困ったものの、プロジェクトページの記載を見つけたので、Leonardoに合わせる。
 ![enter image description here](https://i.imgur.com/PmZ4lkw.png)
@@ -49,4 +49,4 @@ void loop() {
 ```
 
 動いた！(動画)
-[![](https://img.youtube.com/vi/MOfG1G_-Gu8/0.jpg)](https://www.youtube.com/watch?v=MOfG1G_-Gu8)
+[![LED フェード動作確認動画のサムネイル](https://img.youtube.com/vi/MOfG1G_-Gu8/0.jpg)](https://www.youtube.com/watch?v=MOfG1G_-Gu8)
