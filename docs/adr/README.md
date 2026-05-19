@@ -9,7 +9,7 @@
 | 番号 | カテゴリ | ファイル | ステータス |
 |------|----------|---------|-----------|
 | 0001 | CSS フレームワーク | [0001-css-framework.md](./0001-css-framework.md) | Proposed |
-| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Proposed |
+| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Accepted |
 | 0003 | レンダリング戦略 | [0003-rendering-strategy.md](./0003-rendering-strategy.md) | Proposed |
 | 0004 | メディア管理 | [0004-media-storage.md](./0004-media-storage.md) | Accepted |
 
