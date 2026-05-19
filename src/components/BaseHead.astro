@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
@@ -10,10 +11,21 @@ interface Props {
 	image?: string;
 	locale?: string;
 	canonicalUrl?: string;
+	articleSchema?: Record<string, unknown>;
 }
 
-const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl } = Astro.props;
+const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl, articleSchema } = Astro.props;
 const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pathname, Astro.site);
+
+const siteUrl = Astro.site ? new URL("/", Astro.site).toString() : `${Astro.url.origin}/`;
+const websiteSchema = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	name: SITE_TITLE,
+	description: SITE_DESCRIPTION,
+	url: siteUrl,
+	inLanguage: locale.replace("_", "-"),
+};
 ---
 
 <!-- Theme: FOUC prevention — must run before first paint -->
@@ -62,3 +74,9 @@ const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pa
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={new URL(image, Astro.url)} />
+
+<!-- Structured data (JSON-LD) -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{articleSchema && (
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}

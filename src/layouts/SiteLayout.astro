@@ -13,6 +13,7 @@ interface Props {
   canonicalUrl?: string;
   leftRail?: string;
   rightRail?: string;
+  articleSchema?: Record<string, unknown>;
 }
 
 const {
@@ -25,6 +26,7 @@ const {
   canonicalUrl,
   leftRail = '2026-05-17 — yokohama',
   rightRail = 'Vol. XVIII · keroway portfolio',
+  articleSchema,
 } = Astro.props;
 const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsWith('en') ? 'en_US' : lang.replace('-', '_'));
 ---
@@ -32,7 +34,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
 <!doctype html>
 <html lang={lang}>
   <head>
-    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} />
+    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} articleSchema={articleSchema} />
     <slot name="head" />
   </head>
   <body>
