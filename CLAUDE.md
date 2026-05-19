@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Claude Code セットアップ
+
+このリポジトリは Claude Code 用に次の構成を持つ。**実装に着手する前に必ず参照する。**
+
+- **詳細な実装方針:** @.claude/rules/implementation.md (スコープ管理、Astro 6 固有の罠、検証順序などのルール)
+- **サブエージェント:**
+  - `web-designer` — UI/UX 改善・新規ページ設計 (`docs/design-system.md` 準拠、Playwright MCP でスクリーンショット比較可)
+  - `web-director` — 要件/アーキテクチャ判断、PR スコープ管理、ADR 起票判断
+- **スラッシュコマンド:**
+  - `/ship-check [pw filter]` — CI 4 ジョブ (lint / typecheck / build / playwright) と同じコマンドを順に走らせる PR 直前ゲート。build は `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩きで、CI と同じ並列構成を再現する。
+  - `/fix-ci <PR番号>` — 指定 PR の落ちた CI ログを `gh` で取得して修正に当たる (PR 番号は必ず明示)
+- **自動 hook:** `Edit | Write | MultiEdit` 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
+
 ## Development Commands
 
 This project uses **pnpm** (version 10.24.0) as the package manager:
