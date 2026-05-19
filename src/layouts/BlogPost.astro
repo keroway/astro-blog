@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import SiteLayout from "./SiteLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import TableOfContents from "../components/TableOfContents.astro";
+import { SITE_AUTHOR } from "../consts";
 
 interface Heading {
   depth: number;
@@ -30,6 +31,7 @@ const {
   heroImage,
   canonicalUrl,
   ogImage,
+  author,
   headings = [],
   prevPost = null,
   nextPost = null,
@@ -44,9 +46,33 @@ const postHref = (entry: BlogEntry) => `/blog/${encodeSlug(entry.id)}/`;
 
 const shareUrl = Astro.url.href;
 const xIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`;
+
+const postUrl = canonicalUrl ?? new URL(Astro.url.pathname, Astro.site).toString();
+const heroImageAbsolute = heroImage
+  ? (Astro.site ? new URL(heroImage, Astro.site).toString() : heroImage)
+  : undefined;
+const articleSchema: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  author: {
+    "@type": "Person",
+    name: author ?? SITE_AUTHOR,
+  },
+  url: postUrl,
+  mainEntityOfPage: postUrl,
+};
+if (updatedDate) {
+  articleSchema.dateModified = updatedDate.toISOString();
+}
+if (heroImageAbsolute) {
+  articleSchema.image = heroImageAbsolute;
+}
 ---
 
-<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl}>
+<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema}>
   <div class="post-wrap">
     <article class="post">
       {heroImage && (

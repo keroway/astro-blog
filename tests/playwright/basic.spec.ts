@@ -1,5 +1,45 @@
 import { expect, test } from "@playwright/test";
 
+test.describe("SEO: JSON-LD structured data", () => {
+  test("homepage outputs WebSite JSON-LD", async ({ page }) => {
+    await page.goto("/");
+    const ldJson = page.locator('script[type="application/ld+json"]');
+    const count = await ldJson.count();
+    expect(count).toBeGreaterThanOrEqual(1);
+    const payload = await ldJson.first().textContent();
+    if (!payload) throw new Error("ld+json payload not found");
+    const parsed = JSON.parse(payload);
+    expect(parsed["@type"]).toBe("WebSite");
+    expect(parsed.url).toMatch(/^https:\/\/keroway\.com\/?$/);
+  });
+
+  test("blog post outputs BlogPosting JSON-LD alongside WebSite", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    const firstPostLink = page
+      .locator("div.posts-list > article.post-row")
+      .first()
+      .locator("a.post-row__link");
+    const postHref = await firstPostLink.getAttribute("href");
+    if (!postHref) throw new Error("post href not found");
+    await page.goto(postHref);
+
+    const ldJson = page.locator('script[type="application/ld+json"]');
+    await expect(ldJson).toHaveCount(2);
+    const payloads = await ldJson.allTextContents();
+    const parsed = payloads.map((p) => JSON.parse(p));
+    const types = parsed.map((p) => p["@type"]);
+    expect(types).toContain("WebSite");
+    expect(types).toContain("BlogPosting");
+    const post = parsed.find((p) => p["@type"] === "BlogPosting");
+    expect(post.headline).toBeTruthy();
+    expect(post.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    expect(post.author?.name).toBeTruthy();
+    expect(post.url).toMatch(/^https:\/\/keroway\.com\/blog\/.+\/$/);
+  });
+});
+
 test.describe("SEO: canonical URL", () => {
   test("homepage outputs canonical URL with trailing slash", async ({
     page,
