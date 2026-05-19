@@ -20,9 +20,15 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# local tooling / test artifacts (.claude/settings.json は project plugin 設定としてトラッキング)
+# local tooling / test artifacts。
+# settings.json / agents / commands / rules / hooks はチーム共有する Claude Code 設定としてトラッキング。
+# settings.local.json / worktrees / file-history などのセッションローカルなものは ignore のまま。
 .claude/*
 !.claude/settings.json
+!.claude/agents/
+!.claude/commands/
+!.claude/rules/
+!.claude/hooks/
 .serena/
 test-results/
 .playwright-mcp/
