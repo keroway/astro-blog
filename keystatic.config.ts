@@ -1,9 +1,40 @@
 import { collection, config, fields } from "@keystatic/core";
 
+// 本番では GitHub mode (branch storage)、ローカル / Preview では local mode を使う。
+// 環境変数で明示的に "github" を指定したときのみ GitHub mode に切り替える。
+// 必須変数 (本番):
+//   KEYSTATIC_STORAGE_KIND=github
+//   KEYSTATIC_GITHUB_REPO_OWNER / KEYSTATIC_GITHUB_REPO_NAME
+//   KEYSTATIC_GITHUB_CLIENT_ID / KEYSTATIC_GITHUB_CLIENT_SECRET / KEYSTATIC_SECRET
+//   PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+// セットアップ手順は docs/cms-flow.md を参照。
+const storageKind = process.env.KEYSTATIC_STORAGE_KIND;
+
+// Vercel Production で env が揃っていないと local モードで起動してしまい、
+// Vercel Function の ephemeral filesystem に書き込もうとして実質的に admin UI が
+// 機能不全になる。設定漏れに早く気付けるよう、Vercel Production では github
+// モードを強制し、ビルド時に fail-fast させる。Preview / Dev は local 許容。
+if (process.env.VERCEL_ENV === "production" && storageKind !== "github") {
+  throw new Error(
+    "Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です。" +
+      " Vercel の環境変数を docs/cms-flow.md の手順に従って設定してください。"
+  );
+}
+
+const storage =
+  storageKind === "github"
+    ? ({
+        kind: "github",
+        repo: {
+          owner: process.env.KEYSTATIC_GITHUB_REPO_OWNER ?? "keroway",
+          name: process.env.KEYSTATIC_GITHUB_REPO_NAME ?? "astro-blog",
+        },
+        branchPrefix: "keystatic/",
+      } as const)
+    : ({ kind: "local" } as const);
+
 export default config({
-  storage: {
-    kind: "local",
-  },
+  storage,
 
   collections: {
     blog: collection({

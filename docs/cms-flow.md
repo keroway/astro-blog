@@ -205,19 +205,70 @@ const posts = (
 
 | 変数名 | 説明 | ローカル | Vercel |
 |--------|------|---------|--------|
-| `KEYSTATIC_GITHUB_CLIENT_ID` | GitHub OAuth App の Client ID | `.env` | Vercel 環境変数 |
-| `KEYSTATIC_GITHUB_CLIENT_SECRET` | GitHub OAuth App の Client Secret | `.env` | Vercel 環境変数（暗号化） |
-| `KEYSTATIC_SECRET` | セッション署名用の乱数文字列 | `.env` | Vercel 環境変数（暗号化） |
+| `KEYSTATIC_STORAGE_KIND` | `local` / `github` の切替フラグ。本番では `github` を必ず設定 | 通常未設定（= local） | `github` |
+| `KEYSTATIC_GITHUB_REPO_OWNER` | branch storage 先のリポジトリ owner | 通常不要 | `keroway` |
+| `KEYSTATIC_GITHUB_REPO_NAME` | branch storage 先のリポジトリ name | 通常不要 | `astro-blog` |
+| `KEYSTATIC_GITHUB_CLIENT_ID` | Keystatic GitHub App の Client ID | `.env` | Vercel 環境変数 |
+| `KEYSTATIC_GITHUB_CLIENT_SECRET` | Keystatic GitHub App の Client Secret | `.env` | Vercel 環境変数（暗号化） |
+| `KEYSTATIC_SECRET` | セッション署名用の乱数文字列（`openssl rand -hex 32` 等で生成） | `.env` | Vercel 環境変数（暗号化） |
+| `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` | Admin UI から GitHub App をインストールさせる際の遷移先 slug | `.env` | Vercel 環境変数 |
 | `VERCEL_DEPLOY_HOOK_URL` | 公開予約 cron 用のフック URL | 不要 | GitHub Actions Secrets |
 
-> **注意**: `KEYSTATIC_GITHUB_CLIENT_SECRET` と `KEYSTATIC_SECRET` は機密情報のため、`.env` には追加しても `.gitignore` 対象であることを確認してください。
+> **注意**: `KEYSTATIC_GITHUB_CLIENT_SECRET` と `KEYSTATIC_SECRET` は機密情報のため、`.env` には追加しても `.gitignore` 対象であることを確認してください。サンプルは `.env.example` を参照。
+
+---
+
+## 本番有効化セットアップ手順（Vercel + GitHub App + branch storage）
+
+ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway.com/keystatic` で Keystatic Admin UI を運用するための手順です。
+
+### 前提
+
+- 本リポジトリの `astro.config.mjs` に `@astrojs/vercel` adapter が設定済み（`output: "static"` + on-demand な `/keystatic/*` 関数）
+- `keystatic.config.ts` の `storage` が `KEYSTATIC_STORAGE_KIND` で `local` / `github` を切り替えられる構造になっている
+- main ブランチに保護設定（PR 必須・レビュー必須）が入っている
+
+### 手順
+
+1. **ローカルで GitHub App セットアップを起動する**
+   - `.env` に `KEYSTATIC_STORAGE_KIND=github` と `KEYSTATIC_GITHUB_REPO_OWNER=keroway` / `KEYSTATIC_GITHUB_REPO_NAME=astro-blog` を設定。
+   - `pnpm run dev` で http://127.0.0.1:4321/keystatic を開き、「GitHub App をセットアップ」のフローに従う。
+   - Keystatic が自動で GitHub App を作成し、生成された Client ID / Client Secret / `KEYSTATIC_SECRET` / App slug を `.env` に書き込む。
+2. **GitHub App の権限を確認する**
+   - Permissions: Contents `Read & Write`、Pull requests `Read & Write`、Metadata `Read`
+   - Install 対象は `keroway/astro-blog` のみ（個人 account scope 推奨）
+3. **Vercel 側に環境変数を登録する**
+   - Vercel ダッシュボード → Project → Settings → Environment Variables から、Production 環境向けに以下を登録:
+     ```
+     KEYSTATIC_STORAGE_KIND=github
+     KEYSTATIC_GITHUB_REPO_OWNER=keroway
+     KEYSTATIC_GITHUB_REPO_NAME=astro-blog
+     KEYSTATIC_GITHUB_CLIENT_ID=...
+     KEYSTATIC_GITHUB_CLIENT_SECRET=...  (Encrypted)
+     KEYSTATIC_SECRET=...                 (Encrypted)
+     PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=keroway-keystatic
+     ```
+   - Preview 環境向けには `KEYSTATIC_STORAGE_KIND` を未設定（= local）にしておき、Preview デプロイから本番リポジトリへ commit が走らないようにする。
+   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `keystatic.config.ts` が build 時に `Error: Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
+4. **デプロイ後に手動検証する**
+   - `https://keroway.com/keystatic` にアクセス → GitHub 認証 → 編集 → 保存で `keystatic/<title>` ブランチへ commit → PR 作成までを確認する。
+   - **未認証ユーザーが書き込めないこと**: Keystatic GitHub mode は GitHub App 経由でトークンを発行するため、リポジトリへの write 権限を持たない GitHub アカウントでは PR 作成に失敗する仕様。Admin UI 自体は公開されているため、追加で公開を制限したい場合は Vercel Password Protection（Pro プラン）または Vercel Authentication（Preview のみ無料）を併用する。
+
+### 保護ブランチ運用との整合
+
+- Keystatic は `keystatic/<slug>` ブランチへ直接 commit し、main へは PR 経由でしかマージされない。
+- main ブランチの保護設定（PR 必須 / 1 レビュー / Required status checks）を有効化しておけば、Keystatic からの編集も他の PR と同じレビューフローに乗る。
+- Keystatic の "Draft" 機能で連続編集 → 1 PR にまとめる運用が可能。
 
 ---
 
 ## 参考リンク
 
 - [Keystatic ドキュメント — GitHub mode](https://keystatic.com/docs/github-mode)
+- [Keystatic ドキュメント — Astro installation](https://keystatic.com/docs/installation-astro)
 - [Vercel — Deploy Hooks](https://vercel.com/docs/deployments/deploy-hooks)
 - [Vercel — Preview Deployments](https://vercel.com/docs/deployments/preview-deployments)
+- [Vercel — Password Protection](https://vercel.com/docs/security/deployment-protection/methods-to-protect-deployments/password-protection)
 - [ADR 0002 — CMS: Keystatic 採用](./adr/0002-cms.md)
-- [ADR 0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)
+- [ADR 0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)（ADR 0005 で Superseded）
+- [ADR 0005 — Keystatic admin ランタイム: Vercel adapter + hybrid 出力](./adr/0005-keystatic-admin-runtime.md)
