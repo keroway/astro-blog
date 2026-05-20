@@ -8,7 +8,19 @@ import { collection, config, fields } from "@keystatic/core";
 //   KEYSTATIC_GITHUB_CLIENT_ID / KEYSTATIC_GITHUB_CLIENT_SECRET / KEYSTATIC_SECRET
 //   PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
 // セットアップ手順は docs/cms-flow.md を参照。
-const storageKind = process.env.KEYSTATIC_STORAGE_KIND ?? "local";
+const storageKind = process.env.KEYSTATIC_STORAGE_KIND;
+
+// Vercel Production で env が揃っていないと local モードで起動してしまい、
+// Vercel Function の ephemeral filesystem に書き込もうとして実質的に admin UI が
+// 機能不全になる。設定漏れに早く気付けるよう、Vercel Production では github
+// モードを強制し、ビルド時に fail-fast させる。Preview / Dev は local 許容。
+if (process.env.VERCEL_ENV === "production" && storageKind !== "github") {
+  throw new Error(
+    "Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です。" +
+      " Vercel の環境変数を docs/cms-flow.md の手順に従って設定してください。"
+  );
+}
+
 const storage =
   storageKind === "github"
     ? ({
