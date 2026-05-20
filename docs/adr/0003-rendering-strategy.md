@@ -1,7 +1,8 @@
 # 0003 — レンダリング戦略: SSG 継続
 
-- **ステータス**: Proposed
+- **ステータス**: Superseded by [ADR 0005](./0005-keystatic-admin-runtime.md)
 - **決定日**: 2026-05-16
+- **置換日**: 2026-05-21
 - **決定者**: @keroway
 - **関連 Issue**: [#63 ADR 起票](https://github.com/keroway/astro-blog/issues/63), [#15 Vercel Adapter / SSR 化の評価](https://github.com/keroway/astro-blog/issues/15), [#61 SSG vs SSR vs ISR 評価レポート](https://github.com/keroway/astro-blog/issues/61)
 - **関連 Issue（影響先）**: [#25 OGP 動的生成](https://github.com/keroway/astro-blog/issues/25), [#34 プレビュー / デプロイフロー](https://github.com/keroway/astro-blog/issues/34), [#101 ビルドフック / 公開予約](https://github.com/keroway/astro-blog/issues/101)

@@ -1,5 +1,7 @@
 # build output
 dist/
+# Vercel adapter (@astrojs/vercel) build artifact
+.vercel/
 # generated types
 .astro/
 
