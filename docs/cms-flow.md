@@ -248,8 +248,8 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
      KEYSTATIC_SECRET=...                 (Encrypted)
      PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=keroway-keystatic
      ```
-   - Preview 環境向けには `KEYSTATIC_STORAGE_KIND` を未設定（= local）にしておき、Preview デプロイから本番リポジトリへ commit が走らないようにする。
-   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `keystatic.config.ts` が build 時に `Error: Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
+   - **Preview 環境では Keystatic 自体を無効化する**（環境変数を増やす必要なし）。`astro.config.mjs` が `VERCEL_ENV=preview` のとき Keystatic 統合を mount しないため、Preview URL の `/keystatic` は 404 になる。Preview の Vercel Function も ephemeral filesystem なので、もし local モードで起動すると "保存できた" と誤認させてデータロストになるため、編集は禁止する設計。Preview は記事ページのプレビューにのみ使う。
+   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
 4. **デプロイ後に手動検証する**
    - `https://keroway.com/keystatic` にアクセス → GitHub 認証 → 編集 → 保存で `keystatic/<title>` ブランチへ commit → PR 作成までを確認する。
    - **未認証ユーザーが書き込めないこと**: Keystatic GitHub mode は GitHub App 経由でトークンを発行するため、リポジトリへの write 権限を持たない GitHub アカウントでは PR 作成に失敗する仕様。Admin UI 自体は公開されているため、追加で公開を制限したい場合は Vercel Password Protection（Pro プラン）または Vercel Authentication（Preview のみ無料）を併用する。
