@@ -55,6 +55,11 @@ jobs:
       - name: Run Biome lint
         run: pnpm run lint
 
+      # `scripts/lint-alt.ts` を走らせ、MIN_ALT_LENGTH (= 4) 未満の alt が
+      # 含まれる markdown を退行検知する。
+      - name: Lint markdown alt text
+        run: pnpm run lint:alt
+
   typecheck:
     name: Typecheck
     runs-on: ubuntu-latest
