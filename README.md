@@ -93,7 +93,7 @@ pnpm audit --registry=https://registry.npmjs.org/
 
 #### 現在の監査ステータス
 
-直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `package.json` の `pnpm.overrides` でパッチ済みバージョンへ強制解決しています。upstream で対応版がリリースされたら overrides を順次削除してください。
+直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `pnpm-workspace.yaml` の `overrides` でパッチ済みバージョンへ強制解決しています (pnpm 11 で `package.json#pnpm` から移設)。upstream で対応版がリリースされたら overrides を順次削除してください。
 
 ## テンプレートについて
 
