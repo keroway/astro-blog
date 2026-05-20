@@ -10,6 +10,7 @@
       "!node_modules",
       "!.astro",
       "!.claude",
+      "!.vercel",
       "!test-results"
     ]
   },
