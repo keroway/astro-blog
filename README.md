@@ -20,7 +20,7 @@
 - [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) による XML サイトマップ生成
 - [astro:assets](https://docs.astro.build/en/guides/images/) による画像最適化（自動フォーマット変換・リサイズ）
 - [View Transitions](https://docs.astro.build/en/guides/view-transitions/) によるページ遷移アニメーション
-- pnpm 10.24.0（`package.json` の `packageManager` 参照）
+- pnpm 11.1.3（`package.json` の `packageManager` 参照、サプライチェーン保護有効化）
 - Playwright による E2E テスト
 - デプロイ: [Vercel](https://vercel.com/)（静的サイト生成）
 
