@@ -179,6 +179,7 @@ No CSS-in-JS framework; pure CSS only.
   - Tests homepage, blog listing navigation, and about page
   - Run with: `pnpm exec playwright test`
   - Default port is `4321`. If another process (e.g. a different `astro dev`) is already on 4321, override with `PLAYWRIGHT_PORT=4322 pnpm exec playwright test` (also accepts `PLAYWRIGHT_HOST` / falls back to `PORT` / `HOST`). Without the override, `reuseExistingServer: true` would let the wrong dev server answer the requests and cause every test to fail.
+- **alt テキスト lint:** `pnpm run lint:alt` で `src/content/{blog,works}/**/*.{md,mdx}` 内の markdown 画像を走査し、alt が空または 4 文字未満の箇所を検出する (`scripts/lint-alt.ts`)。CI の `lint` ジョブで Biome lint と並んで自動実行され、退行を検知する。
 - **No unit tests:** Rely on TypeScript strict mode and Content Collections schema validation
 
 ## Deployment
