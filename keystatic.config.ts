@@ -19,8 +19,10 @@ export default config({
           label: "更新日",
           validation: { isRequired: false },
         }),
-        heroImage: fields.text({
-          label: "ヒーロー画像 URL / パス",
+        heroImage: fields.image({
+          label: "ヒーロー画像",
+          directory: "public/images/blog",
+          publicPath: "/images/blog/",
           validation: { isRequired: false },
         }),
         category: fields.text({
@@ -68,8 +70,10 @@ export default config({
           ],
           defaultValue: "active",
         }),
-        heroImage: fields.text({
-          label: "ヒーロー画像 URL / パス",
+        heroImage: fields.image({
+          label: "ヒーロー画像",
+          directory: "public/images/blog",
+          publicPath: "/images/blog/",
           validation: { isRequired: false },
         }),
         repoUrl: fields.text({ label: "リポジトリ URL" }),
