@@ -109,7 +109,7 @@ ADR 0003 が前提としていた「Vercel SSG の静的配信を継続」「ビ
 
 ### Issue #100 — Vercel Preview × CMS
 
-本 ADR の決定により、Preview 環境でも `KEYSTATIC_STORAGE_KIND` を明示しない限り Keystatic は local モードで動く。Preview から本番リポジトリへ commit が走らない構成を `docs/cms-flow.md` に記載済み。
+本 ADR の決定により、Preview デプロイでは Keystatic 統合を mount しない (`/keystatic` は 404)。Preview の Vercel Function も ephemeral filesystem で、local モードで起動するとサイレントなデータロストになるため、Preview からの編集自体を禁止する設計。Preview は記事ページの表示確認専用とし、編集は local dev か Production の `/keystatic` で行う。手順は `docs/cms-flow.md` に記載済み。
 
 ### Issue #101 — ビルドフック / 公開予約
 
