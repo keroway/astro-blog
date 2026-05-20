@@ -20,7 +20,7 @@
 - [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) による XML サイトマップ生成
 - [astro:assets](https://docs.astro.build/en/guides/images/) による画像最適化（自動フォーマット変換・リサイズ）
 - [View Transitions](https://docs.astro.build/en/guides/view-transitions/) によるページ遷移アニメーション
-- pnpm 10.24.0（`package.json` の `packageManager` 参照）
+- pnpm 11.1.3（`package.json` の `packageManager` 参照、サプライチェーン保護有効化）
 - Playwright による E2E テスト
 - デプロイ: [Vercel](https://vercel.com/)（静的サイト生成）
 
@@ -93,7 +93,7 @@ pnpm audit --registry=https://registry.npmjs.org/
 
 #### 現在の監査ステータス
 
-直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `package.json` の `pnpm.overrides` でパッチ済みバージョンへ強制解決しています。upstream で対応版がリリースされたら overrides を順次削除してください。
+直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `pnpm-workspace.yaml` の `overrides` でパッチ済みバージョンへ強制解決しています (pnpm 11 で `package.json#pnpm` から移設)。upstream で対応版がリリースされたら overrides を順次削除してください。
 
 ## テンプレートについて
 

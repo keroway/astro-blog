@@ -6,12 +6,12 @@
 # parallel and surface failures faster on PRs. The minor duplication is
 # acceptable for the latency win.
 #
-# pnpm install path: we use `pnpm/action-setup@v4` (the path pnpm officially
+# pnpm install path: we use `pnpm/action-setup@v6` (the path pnpm officially
 # recommends for GitHub Actions) instead of the corepack route used in
 # `vercel.json`. Reasons: corepack is no longer bundled with Node.js >=25,
 # and the corepack version shipped inside Node.js can hit signing-key
 # verification failures during `corepack prepare`. Vercel's build environment
-# is independent of CI; both still pin pnpm@10.24.0 via the `packageManager`
+# is independent of CI; both still pin pnpm@11.1.3 via the `packageManager`
 # field in package.json, so behaviour stays consistent.
 #
 # Node version: Astro 6 requires Node >= v22.12.0 (even-numbered releases

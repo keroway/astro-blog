@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-This project uses **pnpm** (version 10.24.0) as the package manager:
+This project uses **pnpm** (version 11.1.3) as the package manager:
 
 ```bash
 # Install dependencies
@@ -39,7 +39,7 @@ pnpm exec playwright test
 pnpm exec astro check
 ```
 
-**Important:** This project uses `pnpm-workspace.yaml` which ignores `esbuild` and `sharp` in dependencies. The `.npmrc` file configures registry access; in restricted environments, set `COREPACK_NPM_REGISTRY` appropriately.
+**Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
 
 ## Architecture Overview
 
