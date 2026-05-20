@@ -41,16 +41,22 @@ test.describe("URL compatibility check", () => {
 
   // sitemap-index.xml is generated only at build time (astro build),
   // not served by the dev server. Verify the build artifact exists instead.
+  // ADR 0005 (Vercel adapter 導入) 以降は SSG 静的アセットが dist/client/ に出力される。
   test("sitemap-index.xml is generated at build time", () => {
-    const distSitemap = join(process.cwd(), "dist", "sitemap-index.xml");
-    const distSitemap0 = join(process.cwd(), "dist", "sitemap-0.xml");
+    const distSitemap = join(
+      process.cwd(),
+      "dist",
+      "client",
+      "sitemap-index.xml"
+    );
+    const distSitemap0 = join(process.cwd(), "dist", "client", "sitemap-0.xml");
     expect(
       existsSync(distSitemap),
-      "dist/sitemap-index.xml must exist after build"
+      "dist/client/sitemap-index.xml must exist after build"
     ).toBe(true);
     expect(
       existsSync(distSitemap0),
-      "dist/sitemap-0.xml must exist after build"
+      "dist/client/sitemap-0.xml must exist after build"
     ).toBe(true);
   });
 });
