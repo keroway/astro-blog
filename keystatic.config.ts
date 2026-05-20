@@ -1,9 +1,28 @@
 import { collection, config, fields } from "@keystatic/core";
 
+// 本番では GitHub mode (branch storage)、ローカル / Preview では local mode を使う。
+// 環境変数で明示的に "github" を指定したときのみ GitHub mode に切り替える。
+// 必須変数 (本番):
+//   KEYSTATIC_STORAGE_KIND=github
+//   KEYSTATIC_GITHUB_REPO_OWNER / KEYSTATIC_GITHUB_REPO_NAME
+//   KEYSTATIC_GITHUB_CLIENT_ID / KEYSTATIC_GITHUB_CLIENT_SECRET / KEYSTATIC_SECRET
+//   PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+// セットアップ手順は docs/cms-flow.md を参照。
+const storageKind = process.env.KEYSTATIC_STORAGE_KIND ?? "local";
+const storage =
+  storageKind === "github"
+    ? ({
+        kind: "github",
+        repo: {
+          owner: process.env.KEYSTATIC_GITHUB_REPO_OWNER ?? "keroway",
+          name: process.env.KEYSTATIC_GITHUB_REPO_NAME ?? "astro-blog",
+        },
+        branchPrefix: "keystatic/",
+      } as const)
+    : ({ kind: "local" } as const);
+
 export default config({
-  storage: {
-    kind: "local",
-  },
+  storage,
 
   collections: {
     blog: collection({
