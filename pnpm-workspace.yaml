@@ -1,5 +1,34 @@
 packages:
   - ./
-ignoredBuiltDependencies:
-  - esbuild
-  - sharp
+
+# pnpm 11 のサプライチェーン保護はデフォルトで有効
+# (https://pnpm.io/blog/releases/11.0):
+#   - minimumReleaseAge: 1440 (= 1 day) — 公開直後の悪意あるバージョンを遮断
+#   - strictDepBuilds: true             — postinstall などのライフサイクル実行を遮断
+#   - blockExoticSubdeps: true          — git URL 等の非標準ソースを間接依存に許可しない
+# 以下は既定値の上に追加で固める設定。
+#
+# minimumReleaseAgeStrict: 制約を満たすバージョンが無いときに resolve を失敗させ、
+#   古いバージョンへフォールバックしない (デフォルトの「黙って妥協」を禁止)。
+minimumReleaseAgeStrict: true
+# trustPolicy: no-downgrade は本来追加で入れたいが、現状 Astro が依存する
+# `chokidar@4.0.3` が過去版で持っていた provenance attestation を落としているため
+# 全件 install が落ちる。依存側で provenance が復活したら有効化する。
+
+# v11 で onlyBuiltDependencies / ignoredBuiltDependencies は allowBuilds に統合された。
+# esbuild / sharp は astro が transitively 依存するが、build スクリプト実行は不要。
+allowBuilds:
+  esbuild: false
+  sharp: false
+
+# v11 では overrides / peerDependencyRules は pnpm-workspace.yaml に置く
+# (package.json#pnpm からの移動)。
+overrides:
+  "rollup@<4.59.0": ">=4.59.0"
+  "picomatch@<2.3.2": ">=2.3.2"
+  "yaml@>=2.0.0 <2.8.3": ">=2.8.3"
+  "postcss@<8.5.10": ">=8.5.10"
+
+peerDependencyRules:
+  allowedVersions:
+    "@keystatic/astro>astro": "6"
