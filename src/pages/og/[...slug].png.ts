@@ -38,7 +38,11 @@ function loadFonts() {
 }
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  const now = new Date();
+  const posts = await getCollection(
+    "blog",
+    ({ data }) => !data.draft && data.pubDate <= now
+  );
   return posts.map((post) => ({
     params: { slug: post.id },
     props: post,

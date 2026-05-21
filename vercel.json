@@ -1,4 +1,10 @@
 {
   "installCommand": "corepack pnpm install --frozen-lockfile",
-  "buildCommand": "corepack pnpm run build"
+  "buildCommand": "corepack pnpm run build",
+  "crons": [
+    {
+      "path": "/api/trigger-build",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }
