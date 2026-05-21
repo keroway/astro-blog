@@ -2,6 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { SITE_VOLUME } from '../consts';
 
 interface Props {
   title: string;
@@ -24,8 +25,8 @@ const {
   lang = 'ja',
   locale: localeOverride,
   canonicalUrl,
-  leftRail = '2026-05-17 — yokohama',
-  rightRail = 'Vol. XVIII · keroway portfolio',
+  leftRail = 'keroway.com · yokohama',
+  rightRail = `Vol. ${SITE_VOLUME} · keroway portfolio`,
   articleSchema,
 } = Astro.props;
 const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsWith('en') ? 'en_US' : lang.replace('-', '_'));
