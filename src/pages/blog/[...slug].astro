@@ -5,7 +5,8 @@ import BlogPost from '../../layouts/BlogPost.astro';
 type BlogEntry = CollectionEntry<'blog'>;
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	const now = new Date();
+	const posts = await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now);
 	const sorted = posts
 		.slice()
 		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
