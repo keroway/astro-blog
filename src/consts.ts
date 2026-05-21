@@ -3,5 +3,9 @@
 
 export const SITE_TITLE = "keroway.com";
 export const SITE_DESCRIPTION =
-  "エンジニア keroway のポートフォリオ・技術ブログ。プロダクト開発・ソフトウェア設計・技術メモ。";
+  "横浜のソフトウェアエンジニア keroway の個人サイト。組み込みからクラウド、フロントエンドまで横断的に手を動かしてきた記録と、プロダクト・ツール・技術メモを置いています。";
 export const SITE_AUTHOR = "keroway";
+
+// サイトのメジャー改修世代を示す通巻番号。年では繰り上がらない。
+// レイアウトやテーマの大規模刷新の節目で更新する。
+export const SITE_VOLUME = "III";
