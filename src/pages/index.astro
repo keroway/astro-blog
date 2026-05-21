@@ -1,6 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME } from '../consts';
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import Monogram from '../components/Monogram.astro';
@@ -14,9 +14,9 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft))
 const recentPosts = posts.slice(0, 4);
 
 const focusAreas = [
-  { key: 'cloud_devops', title: 'クラウド & DevOps',  description: 'GCP やオンプレ環境を組み合わせた CI/CD・監視の構築ログです。運用で詰まったことも書いてます。' },
-  { key: 'frontend_ui',  title: 'フロントエンド UI',  description: 'Astro 中心に、パフォーマンスとアクセシビリティを意識したコンポーネント設計の記録。' },
-  { key: 'embedded_iot', title: '組み込み・IoT',      description: 'Arduino / ESP32 などのマイコン検証から、クラウド連携まで。ハードとソフトをまたぐ実装が好きです。' },
+  { key: 'cloud_devops', title: 'クラウド & DevOps',  description: '開発と運用をつなぐ仕組みづくり。継続的デリバリ、可観測性、コスト設計など、サービスを健全に動かし続けるための判断と落とし穴の記録。' },
+  { key: 'web_frontend', title: 'Web フロントエンド', description: '読みやすさ・速さ・支援技術での到達しやすさを揃えるための実装メモ。コンポーネント設計、レンダリング戦略、タイポグラフィの細部。' },
+  { key: 'embedded_iot', title: '組み込み・IoT',      description: 'センサーとマイコンから、ネットワーク越しのクラウドまで。ハードの制約とソフトの抽象が交わる地点で起きることを書きます。' },
 ];
 ---
 
@@ -24,13 +24,13 @@ const focusAreas = [
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__copy">
-      <p class="kw-eyebrow hero__eyebrow">vol. xviii · software · 横浜</p>
+      <p class="kw-eyebrow hero__eyebrow">vol. {SITE_VOLUME.toLowerCase()} · software · yokohama</p>
       <h1 id="hero-heading" class="hero__title">
-        20 年ぶん書いてきた、<br /><span class="hero__title-alt">技術</span>と記録。
+        横に渡って、<br /><span class="hero__title-alt">技術</span>を書く。
       </h1>
       <p class="hero__lead no-indent">
-        組み込みからクラウド、フロントエンドまで、20 年分の実装メモです。
-        プロトタイプから本番まで、試行錯誤してきたパターンをまとめてます。
+        組み込みからクラウド、フロントエンドまでを行き来しながら書いた、実装と設計の手控えです。
+        プロトタイプから本番運用まで、手元で試したことを残しています。
       </p>
       <div class="hero__actions">
         <a class="kw-button" href="/blog">記事一覧へ <span class="kw-button-arrow">→</span></a>
