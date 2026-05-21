@@ -1,9 +1,11 @@
 ---
+import { SITE_VOLUME } from '../consts';
+
 interface Props {
   caption?: string;
   tag?: string;
 }
-const { caption = '/ keroway', tag = 'Vol. XVIII · 二〇二六' } = Astro.props;
+const { caption = '/ keroway', tag = `Vol. ${SITE_VOLUME} · field notes` } = Astro.props;
 ---
 
 <div class="kw-monogram">

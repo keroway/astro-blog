@@ -3,6 +3,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
+import { SITE_VOLUME } from '../consts';
 
 const skills = {
   languages: ['C', 'C++', 'Python', 'TypeScript', 'Go', 'Dart'],
@@ -15,39 +16,39 @@ const focusAreas = [
     key: 'embedded_iot',
     title: '組み込み・IoT',
     description:
-      'Arduino / ESP32 を中心に、センサー制御からクラウド連携まで触ってきました。ハードとソフトをまたぐ実装が得意です。',
+      '物理に触れる回路と、ネットワークの向こうにあるデータ。両者をつなぐ細い導線を設計し、書く仕事に長く関わってきました。',
   },
   {
     key: 'web_frontend',
     title: 'Web フロントエンド',
     description:
-      'Astro を軸に、パフォーマンスとアクセシビリティを両立するコンポーネント設計に取り組んでます。TypeScript strict モードで型安全に書くのが好きです。',
+      '読み込みの速さ、支援技術での到達しやすさ、コードの型安全性。三方を同時に下げない設計に関心があります。',
   },
   {
     key: 'mobile_app',
     title: 'モバイルアプリ',
     description:
-      'Flutter でのクロスプラットフォーム開発をやってます。ネイティブコードとのブリッジや、BLE デバイス連携の経験もあります。',
+      '単一コードベースから iOS / Android の両側に届けるクロスプラットフォーム開発。ネイティブ実装とのブリッジや、近接無線デバイスとの連携も含めて手を動かしてきました。',
   },
   {
     key: 'cloud_infra',
     title: 'クラウド・インフラ',
     description:
-      'GCP を中心に、CI/CD パイプラインの構築や監視・ロギング基盤の整備を担当してきました。オンプレとクラウドを組み合わせたハイブリッド構成の経験もあります。',
+      '本番に届けたコードを、夜の間も静かに走らせ続ける仕組み。クラウド、オンプレ、その境界を渡る経路まで、長く担当してきた裏方の領域です。',
   },
 ];
 
-const timeline = [
-  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
-  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
-  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
-  { year: '20xx', note: 'TODO: 企業名/役割を記入' },
+const strata = [
+  { layer: '物理層', note: '回路、センサー、マイコンの上で動く制御コードを書く。最初に長く居た場所。' },
+  { layer: '分散層', note: '複数台のマシンが協調する仕組みを組む。CI/CD、監視、運用の自動化を含む。' },
+  { layer: '抽象層', note: '言語処理系、データの形、API の設計など、仕組みの上に乗る規約を扱う。' },
+  { layer: '表層',   note: '画面とタイポグラフィ、人が触れる面。最近の主な関心の一つ。' },
 ];
 ---
 
 <SiteLayout
   title="About"
-  description="横浜在住のソフトウェアエンジニア。組み込みからクラウド、フロントエンドまで 20 年以上の開発経験を持ちます。"
+  description="横浜のソフトウェアエンジニア keroway のプロフィール。組み込みからクラウド、フロントエンドまで横断して手を動かしてきた領域、関心、使ってきた道具についてまとめています。"
   mainClass="about-main"
 >
   {/* UnoCSS 動作検証用サンプル（非表示） */}
@@ -60,26 +61,26 @@ const timeline = [
       <h1 id="profile-heading" class="masthead__title">keroway</h1>
       <p class="masthead__sub">software engineer · yokohama</p>
       <p class="masthead__lead no-indent">
-        組み込みからクラウド、フロントエンドまで 20 年以上触ってきたエンジニアです。
-        プロトタイプから本番運用まで、幅広くやってます。
+        組み込みからクラウド、フロントエンドまで、領域を横断しながら手を動かしてきました。
+        プロトタイプの試作から、本番運用の地味な調整まで、どちらの側も好んで書いています。
       </p>
     </div>
     <div class="masthead__monogram">
-      <Monogram tag="Vol. XVIII · 著者紹介" />
+      <Monogram tag={`Vol. ${SITE_VOLUME} · 著者`} />
     </div>
   </section>
 
-  <!-- Career timeline -->
-  <section class="section" aria-labelledby="timeline-heading">
-    <SectionHead jp="経歴" en="career timeline" id="timeline-heading" />
+  <!-- Strata of interest -->
+  <section class="section" aria-labelledby="strata-heading">
+    <SectionHead jp="関心の地層" en="strata of interest" id="strata-heading" />
     <div class="timeline">
-      {timeline.map((item, i) => {
+      {strata.map((item, i) => {
         const num = (i + 1).toString().padStart(2, '0');
         return (
           <div class="timeline-row">
             <span class="timeline-row__num kw-numeral kw-tabular">{num}</span>
             <div class="timeline-row__body">
-              <p class="kw-eyebrow timeline-row__year no-indent">{item.year}</p>
+              <p class="kw-eyebrow timeline-row__year no-indent">{item.layer}</p>
               <p class="timeline-row__note no-indent">{item.note}</p>
             </div>
           </div>
