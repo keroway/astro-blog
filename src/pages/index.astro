@@ -7,7 +7,8 @@ import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
+const now = new Date();
+const posts = (await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now))
   .slice()
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
