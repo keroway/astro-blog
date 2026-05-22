@@ -13,6 +13,7 @@
 | 0003 | レンダリング戦略 | [0003-rendering-strategy.md](./0003-rendering-strategy.md) | Superseded by 0005 |
 | 0004 | メディア管理 | [0004-media-storage.md](./0004-media-storage.md) | Accepted |
 | 0005 | Keystatic admin ランタイム | [0005-keystatic-admin-runtime.md](./0005-keystatic-admin-runtime.md) | Proposed |
+| 0006 | CMS リポジトリ構成 | [0006-repo-structure.md](./0006-repo-structure.md) | Accepted |
 
 ## ADR の書き方
 
