@@ -203,6 +203,8 @@ const posts = (
 
 ## 環境変数一覧（Keystatic ブランチモード）
 
+> Preview Deployment の挙動・env・検証手順の詳細は [vercel-preview.md](./vercel-preview.md) を参照。
+
 Preview デプロイでは Keystatic 統合自体が mount されない (`astro.config.mjs` の `VERCEL_ENV === "preview"` 分岐) ため、Preview 列の env を設定しても無視される。Preview からの編集はそもそも不可。
 
 | 変数名 | 説明 | ローカル dev | Vercel Production | Vercel Preview |
@@ -220,6 +222,8 @@ Preview デプロイでは Keystatic 統合自体が mount されない (`astro.
 ---
 
 ## 本番有効化セットアップ手順（Vercel + GitHub App + branch storage）
+
+> Preview 環境側の挙動・検証手順は [vercel-preview.md](./vercel-preview.md) を参照。本節は Production セットアップに特化。
 
 ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway.com/keystatic` で Keystatic Admin UI を運用するための手順です。
 
@@ -271,3 +275,4 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 - [ADR 0002 — CMS: Keystatic 採用](./adr/0002-cms.md)
 - [ADR 0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)（ADR 0005 で Superseded）
 - [ADR 0005 — Keystatic admin ランタイム: Vercel adapter + hybrid 出力](./adr/0005-keystatic-admin-runtime.md)
+- [docs/vercel-preview.md — Vercel Preview Deployment 運用ガイド](./vercel-preview.md)
