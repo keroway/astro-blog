@@ -27,7 +27,7 @@ const works = defineCollection({
     description: z.string(),
     status: z.enum(["active", "archived", "wip"]),
     heroImage: z.string().optional(),
-    repoUrl: z.string().url(),
+    repoUrl: z.string().url().optional(),
     lpUrl: z.string().url(),
     demoUrl: z.string().url().optional(),
     tags: z.array(z.string()),
