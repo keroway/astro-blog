@@ -34,7 +34,9 @@ const statusMeta = statusMap[status];
         <p class="work-hero__lead no-indent">{description}</p>
         <div class="work-hero__actions">
           <a class="kw-button" href={lpUrl} target="_blank" rel="noopener noreferrer">LP を開く <span class="kw-button-arrow">→</span></a>
-          <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>
+          {repoUrl && (
+            <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>
+          )}
           {demoUrl && (
             <a class="kw-button kw-button--ghost" href={demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>
           )}
@@ -82,7 +84,9 @@ const statusMeta = statusMap[status];
       </div>
       <div class="work-cta__actions">
         <a class="kw-button" href={lpUrl} target="_blank" rel="noopener noreferrer">LP を見る <span class="kw-button-arrow">→</span></a>
-        <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+        {repoUrl && (
+          <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+        )}
         {demoUrl && (
           <a class="kw-button kw-button--ghost" href={demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>
         )}
