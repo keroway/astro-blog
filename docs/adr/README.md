@@ -14,6 +14,7 @@
 | 0004 | メディア管理 | [0004-media-storage.md](./0004-media-storage.md) | Accepted |
 | 0005 | Keystatic admin ランタイム | [0005-keystatic-admin-runtime.md](./0005-keystatic-admin-runtime.md) | Proposed |
 | 0006 | CMS リポジトリ構成 | [0006-repo-structure.md](./0006-repo-structure.md) | Accepted |
+| 0007 | モチーフ語彙の拡張 | [0007-motif-vocabulary-expansion.md](./0007-motif-vocabulary-expansion.md) | Accepted |
 
 ## ADR の書き方
 
