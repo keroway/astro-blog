@@ -14,6 +14,10 @@ const statusMap = {
 } as const;
 
 const statusMeta = statusMap[status];
+
+const ctaDescription = repoUrl
+  ? "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP / リポジトリ側に集約しています。"
+  : "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP 側に集約しています。";
 ---
 
 <SiteLayout
@@ -34,7 +38,9 @@ const statusMeta = statusMap[status];
         <p class="work-hero__lead no-indent">{description}</p>
         <div class="work-hero__actions">
           <a class="kw-button" href={lpUrl} target="_blank" rel="noopener noreferrer">LP を開く <span class="kw-button-arrow">→</span></a>
-          <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>
+          {repoUrl && (
+            <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">Repository</a>
+          )}
           {demoUrl && (
             <a class="kw-button kw-button--ghost" href={demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>
           )}
@@ -78,11 +84,13 @@ const statusMeta = statusMap[status];
       <div class="work-cta__copy">
         <p class="kw-eyebrow work-cta__eyebrow">External Links</p>
         <h2 id="work-cta-heading" class="work-cta__heading">プロダクト本体や LP に移動</h2>
-        <p class="no-indent">このページでは背景と設計判断をまとめ、詳細な導線は外部 LP / リポジトリ側に集約しています。</p>
+        <p class="no-indent">{ctaDescription}</p>
       </div>
       <div class="work-cta__actions">
         <a class="kw-button" href={lpUrl} target="_blank" rel="noopener noreferrer">LP を見る <span class="kw-button-arrow">→</span></a>
-        <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+        {repoUrl && (
+          <a class="kw-button kw-button--ghost" href={repoUrl} target="_blank" rel="noopener noreferrer">GitHub</a>
+        )}
         {demoUrl && (
           <a class="kw-button kw-button--ghost" href={demoUrl} target="_blank" rel="noopener noreferrer">Demo</a>
         )}
