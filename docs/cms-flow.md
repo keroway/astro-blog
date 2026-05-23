@@ -207,9 +207,8 @@ Preview デプロイでは Keystatic 統合自体が mount されない (`astro.
 
 | 変数名 | 説明 | ローカル dev | Vercel Production | Vercel Preview |
 |--------|------|------------|------------------|---------------|
-| `KEYSTATIC_STORAGE_KIND` | `local` / `github` の切替フラグ | 通常未設定（= local） | `github`（必須・未設定なら build fail） | 設定不要（統合 mount しない） |
-| `KEYSTATIC_GITHUB_REPO_OWNER` | branch storage 先のリポジトリ owner | 通常不要 | `keroway` | 設定不要 |
-| `KEYSTATIC_GITHUB_REPO_NAME` | branch storage 先のリポジトリ name | 通常不要 | `astro-blog` | 設定不要 |
+| `PUBLIC_KEYSTATIC_STORAGE_KIND` | `local` / `github` の切替フラグ。`keystatic.config.ts` がブラウザにも bundle される都合上、`PUBLIC_` プレフィックスが必須 (`import.meta.env` 経由) | 通常未設定（= local） | `github`（必須・未設定なら build fail） | 設定不要（統合 mount しない） |
+| (リポジトリ owner / name) | `keystatic.config.ts` に `keroway/astro-blog` をハードコード | env 不要 | env 不要 | env 不要 |
 | `KEYSTATIC_GITHUB_CLIENT_ID` | Keystatic GitHub App の Client ID | `.env` | Vercel 環境変数 | 設定不要 |
 | `KEYSTATIC_GITHUB_CLIENT_SECRET` | Keystatic GitHub App の Client Secret | `.env` | Vercel 環境変数（暗号化） | 設定不要 |
 | `KEYSTATIC_SECRET` | セッション署名用の乱数文字列（`openssl rand -hex 32` 等で生成） | `.env` | Vercel 環境変数（暗号化） | 設定不要 |
@@ -227,13 +226,13 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 ### 前提
 
 - 本リポジトリの `astro.config.mjs` に `@astrojs/vercel` adapter が設定済み（`output: "static"` + on-demand な `/keystatic/*` 関数）
-- `keystatic.config.ts` の `storage` が `KEYSTATIC_STORAGE_KIND` で `local` / `github` を切り替えられる構造になっている
+- `keystatic.config.ts` の `storage` が `PUBLIC_KEYSTATIC_STORAGE_KIND` で `local` / `github` を切り替えられる構造になっている
 - main ブランチに保護設定（PR 必須・レビュー必須）が入っている
 
 ### 手順
 
 1. **ローカルで GitHub App セットアップを起動する**
-   - `.env` に `KEYSTATIC_STORAGE_KIND=github` と `KEYSTATIC_GITHUB_REPO_OWNER=keroway` / `KEYSTATIC_GITHUB_REPO_NAME=astro-blog` を設定。
+   - `.env` に `PUBLIC_KEYSTATIC_STORAGE_KIND=github` を設定 (リポジトリ owner / name は `keystatic.config.ts` でハードコード済み)。
    - `pnpm run dev` で http://127.0.0.1:4321/keystatic を開き、「GitHub App をセットアップ」のフローに従う。
    - Keystatic が自動で GitHub App を作成し、生成された Client ID / Client Secret / `KEYSTATIC_SECRET` / App slug を `.env` に書き込む。
 2. **GitHub App の権限を確認する**
@@ -242,16 +241,14 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 3. **Vercel 側に環境変数を登録する**
    - Vercel ダッシュボード → Project → Settings → Environment Variables から、Production 環境向けに以下を登録:
      ```
-     KEYSTATIC_STORAGE_KIND=github
-     KEYSTATIC_GITHUB_REPO_OWNER=keroway
-     KEYSTATIC_GITHUB_REPO_NAME=astro-blog
+     PUBLIC_KEYSTATIC_STORAGE_KIND=github
      KEYSTATIC_GITHUB_CLIENT_ID=...
      KEYSTATIC_GITHUB_CLIENT_SECRET=...  (Encrypted)
      KEYSTATIC_SECRET=...                 (Encrypted)
      PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=keroway-keystatic
      ```
    - **Preview 環境では Keystatic 自体を無効化する**（環境変数を増やす必要なし）。`astro.config.mjs` が `VERCEL_ENV=preview` のとき Keystatic 統合を mount しないため、Preview URL の `/keystatic` は 404 になる。Preview の Vercel Function も ephemeral filesystem なので、もし local モードで起動すると "保存できた" と誤認させてデータロストになるため、編集は禁止する設計。Preview は記事ページのプレビューにのみ使う。
-   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
+   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `PUBLIC_KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では PUBLIC_KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
 4. **デプロイ後に手動検証する**
    - `https://keroway.com/keystatic` にアクセス → GitHub 認証 → 編集 → 保存で `keystatic/<title>` ブランチへ commit → PR 作成までを確認する。
    - **未認証ユーザーが書き込めないこと**: Keystatic GitHub mode は GitHub App 経由でトークンを発行するため、リポジトリへの write 権限を持たない GitHub アカウントでは PR 作成に失敗する仕様。Admin UI 自体は公開されているため、追加で公開を制限したい場合は Vercel Password Protection（Pro プラン）または Vercel Authentication（Preview のみ無料）を併用する。

@@ -14,11 +14,15 @@ const isVercelPreview = vercelEnv === "preview";
 
 // Vercel Production で Keystatic の env が揃っていないと local モードで動いてしまい、
 // Vercel Function の ephemeral filesystem に書き込もうとして admin UI が無音で機能不全になる。
-// keystatic.config.ts のガードはランタイム保険として残すが、ビルド時の fail-fast は
-// 確実に毎回評価される astro.config.mjs 側でも担保する。
-if (isVercelProduction && process.env.KEYSTATIC_STORAGE_KIND !== "github") {
+// keystatic.config.ts はブラウザにも bundle されるため process.env を読めない (PUBLIC_ prefix の
+// import.meta.env を使う) 一方、astro.config.mjs はサーバー専用なので process.env で十分。
+// ビルド時に確実に fail-fast させたいのでこのチェックは astro.config.mjs 側に集約する。
+if (
+  isVercelProduction &&
+  process.env.PUBLIC_KEYSTATIC_STORAGE_KIND !== "github"
+) {
   throw new Error(
-    "Keystatic: VERCEL_ENV=production では KEYSTATIC_STORAGE_KIND=github が必須です。" +
+    "Keystatic: VERCEL_ENV=production では PUBLIC_KEYSTATIC_STORAGE_KIND=github が必須です。" +
       " Vercel の環境変数を docs/cms-flow.md の手順に従って設定してください。"
   );
 }
