@@ -6,6 +6,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
+import WorksCard from '../components/WorksCard.astro';
 
 const now = new Date();
 const posts = (await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now))
@@ -13,6 +14,12 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft && data.pub
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const recentPosts = posts.slice(0, 4);
+
+const allWorks = (await getCollection('works'))
+  .slice()
+  .sort((a, b) => (b.data.updatedAt ?? b.data.createdAt).valueOf() - (a.data.updatedAt ?? a.data.createdAt).valueOf());
+const featuredWorks = allWorks.filter((w) => w.data.featured);
+const displayWorks = (featuredWorks.length > 0 ? featuredWorks : allWorks).slice(0, 3);
 
 const focusAreas = [
   { key: 'cloud_devops', title: 'クラウド & DevOps',  description: '開発と運用をつなぐ仕組みづくり。継続的デリバリ、可観測性、コスト設計など、サービスを健全に動かし続けるための判断と落とし穴の記録。' },
@@ -76,6 +83,26 @@ const focusAreas = [
       })}
     </div>
   </section>
+
+  <!-- Works -->
+  {displayWorks.length > 0 && (
+    <section class="section" aria-labelledby="works-heading">
+      <SectionHead
+        jp="制作物"
+        en="works"
+        id="works-heading"
+        action="see all →"
+        actionHref="/works"
+      />
+      <ul class="works-grid">
+        {displayWorks.map((work) => (
+          <li>
+            <WorksCard work={work} />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
 
   <!-- Focus areas -->
   <section class="section" aria-labelledby="focus-areas-heading">
@@ -187,6 +214,19 @@ const focusAreas = [
     font-size: 20px;
     color: var(--kw-fg-link);
     align-self: center;
+  }
+
+  /* Works grid */
+  .works-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--kw-space-6);
+    padding: 0;
+    margin: 0;
+  }
+  .works-grid li {
+    min-width: 0;
   }
 
   /* Focus grid */
