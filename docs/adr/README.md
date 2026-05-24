@@ -15,6 +15,7 @@
 | 0005 | Keystatic admin ランタイム | [0005-keystatic-admin-runtime.md](./0005-keystatic-admin-runtime.md) | Proposed |
 | 0006 | CMS リポジトリ構成 | [0006-repo-structure.md](./0006-repo-structure.md) | Accepted |
 | 0007 | モチーフ語彙の拡張 | [0007-motif-vocabulary-expansion.md](./0007-motif-vocabulary-expansion.md) | Accepted |
+| 0008 | 記事作成補助の自動化 (Agent SDK) | [0008-agent-sdk-authoring-assist.md](./0008-agent-sdk-authoring-assist.md) | Accepted |
 
 ## ADR の書き方
 
