@@ -1,0 +1,50 @@
+---
+title: "obsidian-clipper"
+description: "iPhone やブラウザから 1 タップで送った URL を、本文 + AI 要約付き Markdown として Obsidian Vault (R2) に保存する Cloudflare Worker、obsidian-clipper の紹介枠です。"
+status: "active"
+repoUrl: "https://github.com/keroway/obsidian-clipper"
+lpUrl: "https://github.com/keroway/obsidian-clipper"
+tags:
+  - "Cloudflare Workers"
+  - "Hono"
+  - "TypeScript"
+  - "R2"
+  - "Workers AI"
+  - "Obsidian"
+createdAt: 2026-05-24
+updatedAt: 2026-05-24
+---
+
+## 制作経緯
+
+Pocket や Omnivore のような "Read It Later" は便利な一方で、サービス終了やロックインのリスクがつきまといます。保存した記事が手元のナレッジベースから切り離されてしまうのが、ずっと引っかかっていました。
+
+obsidian-clipper は「あとで読む」を自分の Obsidian Vault に閉じた形で実現するための最小レイヤーです。Vault はすでに Remotely Save 経由で Cloudflare R2 に同期している。であれば、そこに 1 タップで本文 + 要約付きの Markdown を流し込む薄い Worker を 1 枚足せば済む、という発想から始めました。インフラは Cloudflare の無料枠に収め、ベンダーロックインも回避しています。
+
+## 概要
+
+iOS ショートカット / Mac の共有シート / Chrome ブックマークレット / `curl` のいずれからでも、`POST /clip` に URL を投げるだけで動きます。Worker は Jina Reader で本文を Markdown 化し、Workers AI または Anthropic Claude で 3〜5 文の日本語要約を付け、`created` / `source_url` / `tags` / `summary` を含む Dataview フレンドリーな frontmatter 付きノートとして R2 の `Inbox/` に保存します。
+
+Obsidian 側は普段どおりの Remotely Save 同期で取り込むだけ。即時反映ではなく「次に Obsidian を開いたら来ている」体験に割り切っているのが特徴です。Worker 本体は `src/index.ts` のおよそ 400 行のシングルファイルで、読みきれるサイズに収めています。
+
+## 技術選定
+
+- **Cloudflare Workers + Hono** — エッジ実行 (V8 isolate) を前提に、`bearerAuth` / `cors` ミドルウェアで認証と CORS を最小コードで構成。
+- **R2** — Remotely Save がすでに使っている Vault バケットに相乗りし、新しいストレージを増やさない。
+- **要約は 2 プロバイダ切替** — 既定は Workers AI (Llama 3.1 8B)、品質が要るときは `SUMMARY_PROVIDER` で Anthropic Claude Haiku 4.5 に切替。Anthropic 経路が失敗したら Workers AI へ 1 回だけ自動フォールバックする。
+- **本文抽出は Jina Reader に委譲** — SPA や動的サイトでもそれなりに動く。`JINA_API_KEY` を入れれば rate limit が緩む。
+- **Bun + Wrangler 4 + TypeScript strict** — 開発・デプロイ・Secrets 管理を Wrangler に一本化。
+
+設計の肝は「失敗してもクリップは成功扱い」という方針です。本文取得や要約が落ちても 200 を返し、最低限 URL とユーザーのメモだけは必ず保存される構造にしています。
+
+## 学び
+
+- **失敗ポリシーの単純化が効いた。** 外部依存 (Jina / LLM) をすべて best-effort 扱いにし、コアの「URL を保存する」だけは絶対に落とさない設計にしたことで、運用中の一時的なエラーがユーザー体験を壊さなくなった。
+- **サプライチェーン保護を install 段階で。** npm パッケージは公開直後にマルウェアが紛れ込むことがあるため、`bunfig.toml` / `.npmrc` で公開 7 日未満のバージョンをブロックする age gate を導入。lockfile コミット + frozen install + Dependabot + gitleaks の多層防御に寄せた。
+- **残った制約を正直に TODO 化した。** タイムスタンプの JST ハードコード、paywall / SPA に弱い本文抽出、テスト未導入といった割り切りは、設計指針付きで `HANDOFF.md` に集約してある。
+
+## 今後の方向性
+
+ロードマップは `HANDOFF.md` にまとめています。主な候補は、URL 重複検知 (`Inbox/.index/urls.json` ベース)、Jina 障害時の Browser Rendering フォールバック、LLM によるタグ自動付与、Slack / Discord への失敗通知 webhook、vitest によるテスト導入、Workers Logpush での観測性向上。機能追加の際は `docs/adr/` に ADR を書いてから着手する方針です。
+
+本サイト側では、実運用での要約品質比較 (Workers AI と Claude Haiku の使い分け) を別途記事として深掘りしたいと考えています。
