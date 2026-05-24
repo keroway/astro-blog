@@ -12,9 +12,11 @@
     "lint": "biome ci .",
     "format": "biome format --write .",
     "check": "biome check .",
-    "lint:alt": "node --experimental-strip-types scripts/lint-alt.ts"
+    "lint:alt": "node --experimental-strip-types scripts/lint-alt.ts",
+    "suggest-frontmatter": "node --experimental-strip-types scripts/suggest-frontmatter.ts"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.3.150",
     "@astrojs/check": "^0.9.9",
     "@astrojs/mdx": "^5.0.6",
     "@astrojs/react": "^5.0.5",
