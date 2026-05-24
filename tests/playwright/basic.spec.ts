@@ -127,13 +127,22 @@ test.describe("Basic site functionality", () => {
     );
 
     const worksCards = page.locator("ul.works-grid > li");
-    await expect(worksCards).toHaveCount(1);
+    expect(await worksCards.count()).toBeGreaterThanOrEqual(2);
+
+    await expect(
+      worksCards.filter({
+        has: page.getByRole("heading", { name: "obsidian-clipper" }),
+      })
+    ).toHaveCount(1);
 
     await expect(
       page.getByLabel("primary").getByRole("link", { name: /works/i })
     ).toHaveAttribute("aria-current", "page");
 
-    await worksCards.first().getByRole("link", { name: "Overview" }).click();
+    const timelineCard = worksCards.filter({
+      has: page.getByRole("heading", { name: "timeline-dsl" }),
+    });
+    await timelineCard.getByRole("link", { name: "Overview" }).click();
 
     await expect(page).toHaveURL(/\/works\/timeline-dsl\/$/);
     await expect(
