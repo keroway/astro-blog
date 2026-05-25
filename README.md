@@ -31,7 +31,7 @@ pnpm install
 pnpm run dev
 ```
 
-- 開発サーバー: http://localhost:4321
+- 開発サーバー: https://keroway.localhost（`pnpm run dev` は portless 経由。初回のみ HTTPS proxy 用に sudo 昇格）。素の `astro dev`（http://localhost:4321）は `pnpm run dev:astro`
 - 本番ビルド: `pnpm run build`
 - ビルドのローカル確認: `pnpm run preview`
 
