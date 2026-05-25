@@ -13,7 +13,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **スラッシュコマンド:**
   - `/ship-check [pw filter]` — CI 4 ジョブ (lint / typecheck / build / playwright) と同じコマンドを順に走らせる PR 直前ゲート。build は `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩きで、CI と同じ並列構成を再現する。
   - `/fix-ci <PR番号>` — 指定 PR の落ちた CI ログを `gh` で取得して修正に当たる (PR 番号は必ず明示)
-- **自動 hook:** `Edit | Write | MultiEdit` 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
+- **自動 hook:**
+  - `PostToolUse` (`Edit | Write | MultiEdit`) 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
+  - `SessionEnd` hook 用に `.claude/hooks/stop-dev-server.sh` を用意 (セッション中に立ち上げた `astro dev` を cwd スコープで停止＝立ちっぱなし防止、共有 portless proxy デーモンは残す)。**有効化には `.claude/settings.json` の `hooks` に `SessionEnd` エントリの登録が必要** (エージェント設定ファイルの自己改変ガードにより登録は手動で行う)。
 
 ## Development Commands
 
@@ -23,8 +25,10 @@ This project uses **pnpm** (version 11.1.3) as the package manager:
 # Install dependencies
 pnpm install
 
-# Development server (http://localhost:4321)
-pnpm run dev       # or: pnpm start
+# Development server (portless 経由, https://keroway.localhost)
+pnpm run dev       # or: pnpm start  (portless run --name keroway astro dev)
+# portless を使わず素の astro dev を 4321 で起動したいとき:
+pnpm run dev:astro
 
 # Production build (includes type checking)
 pnpm run build     # Runs: astro check && astro build
@@ -38,6 +42,8 @@ pnpm exec playwright test
 # Type check only
 pnpm exec astro check
 ```
+
+**Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (下記、要登録) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
 
 **Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
 
