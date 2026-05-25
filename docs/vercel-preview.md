@@ -157,7 +157,7 @@ openssl rand -hex 32
 curl -H "Authorization: Bearer $CRON_SECRET" https://keroway.com/api/trigger-build
 
 # ローカルで動作確認 (CRON_SECRET 未設定なら認証スキップ)
-pnpm run dev
+pnpm run dev:astro
 curl http://localhost:4321/api/trigger-build
 ```
 
