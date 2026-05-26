@@ -1,0 +1,114 @@
+---
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const xIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+---
+
+<section class="post-share" aria-label="この記事をシェア">
+  <p class="kw-eyebrow post-share__label no-indent">share</p>
+  <div class="post-share__actions">
+    <a
+      class="post-share__btn"
+      href={xIntent}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="X で共有"
+    >
+      <span class="post-share__btn-arrow" aria-hidden="true">→</span>
+      X で共有
+    </a>
+    <button
+      type="button"
+      class="post-share__btn post-share__copy"
+      data-share-url={url}
+      data-copy-label="URL をコピー"
+      data-copied-label="コピーしました"
+    >
+      <span class="post-share__btn-arrow" aria-hidden="true">→</span>
+      <span class="post-share__copy-text">URL をコピー</span>
+    </button>
+  </div>
+</section>
+
+<script>
+  const bindCopyButtons = () => {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('.post-share__copy');
+    buttons.forEach((btn) => {
+      if (btn.dataset.bound === '1') return;
+      btn.dataset.bound = '1';
+      btn.addEventListener('click', async () => {
+        const url = btn.dataset.shareUrl;
+        const textEl = btn.querySelector<HTMLElement>('.post-share__copy-text');
+        if (!url || !textEl) return;
+        const original = btn.dataset.copyLabel ?? textEl.textContent ?? '';
+        const copied = btn.dataset.copiedLabel ?? 'コピーしました';
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch {
+          return;
+        }
+        textEl.textContent = copied;
+        btn.disabled = true;
+        window.setTimeout(() => {
+          textEl.textContent = original;
+          btn.disabled = false;
+        }, 1500);
+      });
+    });
+  };
+
+  bindCopyButtons();
+  document.addEventListener('astro:page-load', bindCopyButtons);
+</script>
+
+<style>
+  .post-share {
+    display: grid;
+    gap: var(--kw-space-3);
+    padding-block-start: var(--kw-space-6);
+    border-top: 1px solid var(--kw-rule);
+  }
+  .post-share__label {
+    margin: 0;
+  }
+  .post-share__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-3);
+  }
+  .post-share__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kw-space-2);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-display);
+    background: transparent;
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-sm);
+    padding: var(--kw-space-2) var(--kw-space-4);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      color var(--kw-duration-fast) var(--kw-easing),
+      background var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-share__btn:hover {
+    border-color: var(--kw-fg-link);
+    color: var(--kw-fg-link);
+  }
+  .post-share__btn:disabled {
+    cursor: default;
+    color: var(--kw-fg-muted);
+    border-color: var(--kw-rule);
+  }
+  .post-share__btn-arrow {
+    color: var(--kw-accent);
+    font-family: var(--kw-font-display);
+  }
+</style>
