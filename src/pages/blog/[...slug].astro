@@ -1,40 +1,17 @@
 ---
-import { type CollectionEntry, getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
-
-type BlogEntry = CollectionEntry<'blog'>;
+import type { BlogEntry } from '../../types/content';
+import { encodeSlugId } from '../../lib/slug';
+import { getPublishedPosts, getRelatedPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
-	const now = new Date();
-	const posts = await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now);
-	const sorted = posts
-		.slice()
-		.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+	const sorted = await getPublishedPosts();
 
 	return sorted.map((post, idx) => {
 		const prevPost = sorted[idx + 1] ?? null;
 		const nextPost = sorted[idx - 1] ?? null;
-
-		const myCategory = post.data.category;
-		const myTags = new Set(post.data.tags ?? []);
-		const relatedPosts = sorted
-			.filter((p) => p.id !== post.id)
-			.map((p) => {
-				let score = 0;
-				if (myCategory && p.data.category === myCategory) score += 2;
-				for (const tag of p.data.tags ?? []) {
-					if (myTags.has(tag)) score += 1;
-				}
-				return { post: p, score };
-			})
-			.filter((x) => x.score > 0)
-			.sort(
-				(a, b) =>
-					b.score - a.score ||
-					b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf(),
-			)
-			.slice(0, 3)
-			.map((x) => x.post);
+		const relatedPosts = getRelatedPosts(post, sorted);
 
 		return {
 			params: { slug: post.id },
@@ -53,9 +30,7 @@ type Props = {
 const { post, prevPost, nextPost, relatedPosts } = Astro.props as Props;
 const { Content, headings } = await render(post);
 
-const encodeSlug = (id: string) =>
-	id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
-const ogImage = `/og/${encodeSlug(post.id)}.png`;
+const ogImage = `/og/${encodeSlugId(post.id)}.png`;
 ---
 
 <BlogPost

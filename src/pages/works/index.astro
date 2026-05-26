@@ -1,14 +1,12 @@
 ---
-import { getCollection } from "astro:content";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import WorksCard from "../../components/WorksCard.astro";
 import SectionHead from "../../components/SectionHead.astro";
 import Monogram from "../../components/Monogram.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../../consts";
+import { getSortedWorks } from "../../lib/content";
 
-const works = (await getCollection("works"))
-  .slice()
-  .sort((a, b) => (b.data.updatedAt ?? b.data.createdAt).valueOf() - (a.data.updatedAt ?? a.data.createdAt).valueOf());
+const works = await getSortedWorks();
 ---
 
 <SiteLayout title={`Works | ${SITE_TITLE}`} description={SITE_DESCRIPTION} mainClass="works-index">
