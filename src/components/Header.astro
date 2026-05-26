@@ -129,7 +129,7 @@ const isActive = (href: string) => {
     letter-spacing: 0.12em;
     color: var(--kw-fg-muted);
     text-decoration: none;
-    padding: 4px 0;
+    padding: var(--kw-space-1) 0;
     border-bottom: 1px solid transparent;
     transition: color var(--kw-duration-fast) var(--kw-easing),
                 border-color var(--kw-duration-fast) var(--kw-easing);
@@ -143,7 +143,7 @@ const isActive = (href: string) => {
   }
 
   .kw-header__link-num {
-    font-size: 10px;
+    font-size: var(--kw-fs-mono-xs);
     color: var(--kw-accent);
     font-variant-numeric: tabular-nums;
   }
@@ -162,9 +162,9 @@ const isActive = (href: string) => {
     border: none;
     cursor: pointer;
     color: var(--kw-fg-muted);
-    font-size: 14px;
+    font-size: var(--kw-fs-body-sm);
     line-height: 1;
-    padding: 4px var(--kw-space-2);
+    padding: var(--kw-space-1) var(--kw-space-2);
     border-radius: var(--kw-radius-sm);
     transition: color var(--kw-duration-fast) var(--kw-easing);
   }
