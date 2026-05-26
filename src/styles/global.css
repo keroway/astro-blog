@@ -172,7 +172,7 @@ input    { font-size: 16px; }
   writing-mode: vertical-rl;
   text-orientation: mixed;
   font-family: var(--kw-font-display);
-  font-size: 13px;
+  font-size: var(--kw-fs-mono);
   line-height: 2.2;
   letter-spacing: 0.15em;
   color: var(--kw-fg-faint);

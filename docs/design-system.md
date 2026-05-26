@@ -130,9 +130,9 @@ works エントリのステータス表示に使用する 3種。
 |---|---|---|
 | `--kw-fs-body-lg` | `17px` | リード文・長文 |
 | `--kw-fs-body` | `16px` | 通常本文 |
-| `--kw-fs-body-sm` | `14px` | 補助テキスト・FocusCard 説明 |
-| `--kw-fs-mono` | `13px` | モノスペース標準 |
-| `--kw-fs-mono-sm` | `12px` | ヘッダーナビ・フッターリンク |
+| `--kw-fs-body-sm` | `14px` | 補助テキスト・FocusCard 説明・フッターリンク |
+| `--kw-fs-mono` | `13px` | モノスペース標準・縦書きレールテキスト |
+| `--kw-fs-mono-sm` | `12px` | ヘッダーナビ・ヘッダーブランド名 |
 | `--kw-fs-mono-xs` | `10px` | アイウェイブロウ・ステータスチップ |
 
 ### 2.3 フォントウェイト
@@ -424,7 +424,7 @@ PascalCase。コンポーネントが代表する UI 概念を名詞で表現し
 | `writing-mode` | `vertical-rl` |
 | `text-orientation` | `mixed` |
 | `font-family` | `var(--kw-font-display)` |
-| `font-size` | `13px` |
+| `font-size` | `var(--kw-fs-mono)` (13px) |
 | `line-height` | `2.2` |
 | `letter-spacing` | `0.15em` |
 | `color` | `var(--kw-fg-faint)` |
@@ -653,7 +653,7 @@ family=JetBrains+Mono:wght@400;500;700
 | `kw-eyebrow`（アイウェイブロウ） | `--kw-fs-mono-xs` (10px) | regular |
 | ステータスチップ | `--kw-fs-mono-xs` (10px) | regular |
 | インラインコード | `0.92em`（親の92%） | regular |
-| 縦書きレールテキスト | `13px` | regular |
+| 縦書きレールテキスト | `--kw-fs-mono` (13px) | regular |
 
 **特殊設定:**
 
