@@ -1,0 +1,92 @@
+---
+import FormattedDate from "./FormattedDate.astro";
+import type { BlogEntry } from "../types/content";
+import { encodeSlugId } from "../lib/slug";
+
+interface Props {
+  posts: BlogEntry[];
+}
+
+const { posts } = Astro.props;
+const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
+---
+
+{posts.length > 0 && (
+  <section class="post-related" aria-label="関連記事">
+    <p class="kw-eyebrow post-related__label no-indent">related</p>
+    <ul class="post-related__list">
+      {posts.map((entry) => (
+        <li class="post-related__item">
+          <a class="post-related__link" href={postHref(entry)}>
+            <span class="kw-mono post-related__meta">
+              <FormattedDate date={entry.data.pubDate} />
+              {entry.data.category && <span> · {entry.data.category}</span>}
+            </span>
+            <span class="post-related__title">{entry.data.title}</span>
+            <span class="post-related__arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<style>
+  .post-related {
+    display: grid;
+    gap: var(--kw-space-4);
+    padding-block-start: var(--kw-space-6);
+    border-top: 1px solid var(--kw-rule);
+  }
+  .post-related__label {
+    margin: 0;
+  }
+  .post-related__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--kw-space-2);
+  }
+  .post-related__link {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: var(--kw-space-4);
+    padding: var(--kw-space-3) var(--kw-space-4);
+    border: 1px solid transparent;
+    border-radius: var(--kw-radius-sm);
+    color: var(--kw-fg-display);
+    text-decoration: none;
+    transition:
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      background var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-related__link:hover {
+    border-color: var(--kw-rule);
+    background: var(--kw-bg-card);
+  }
+  .post-related__meta {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-mono-sm);
+    white-space: nowrap;
+  }
+  .post-related__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-md);
+    line-height: var(--kw-lh-snug);
+  }
+  .post-related__arrow {
+    color: var(--kw-accent);
+    font-family: var(--kw-font-display);
+  }
+
+  @media (max-width: 720px) {
+    .post-related__link {
+      grid-template-columns: 1fr auto;
+    }
+    .post-related__meta {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
