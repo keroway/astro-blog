@@ -1,14 +1,12 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
-import { getCollection } from 'astro:content';
 import FormattedDate from '../../components/FormattedDate.astro';
 import SectionHead from '../../components/SectionHead.astro';
+import { encodeSlugId } from '../../lib/slug';
+import { getPublishedPosts } from '../../lib/content';
 
-const now = new Date();
-const posts = (await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now))
-  .slice()
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const posts = await getPublishedPosts();
 
 const categories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))].sort() as string[];
 const years = [...new Set(posts.map((p) => p.data.pubDate.getFullYear()))].sort((a, b) => b - a);
@@ -65,7 +63,7 @@ const showYearFilter = years.length >= 2;
   <div class="posts-list" id="posts-list">
     {posts.map((post) => {
       const description = post.data.description?.trim();
-      const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+      const encodedSlug = encodeSlugId(post.id);
       const year = post.data.pubDate.getFullYear();
       return (
         <article

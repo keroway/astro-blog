@@ -1,25 +1,19 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME } from '../consts';
-import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
 import WorksCard from '../components/WorksCard.astro';
+import { encodeSlugId } from '../lib/slug';
+import { getPublishedPosts, getSortedWorks, pickFeaturedWorks } from '../lib/content';
 
-const now = new Date();
-const posts = (await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now))
-  .slice()
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
+const posts = await getPublishedPosts();
 const recentPosts = posts.slice(0, 4);
 
-const allWorks = (await getCollection('works'))
-  .slice()
-  .sort((a, b) => (b.data.updatedAt ?? b.data.createdAt).valueOf() - (a.data.updatedAt ?? a.data.createdAt).valueOf());
-const featuredWorks = allWorks.filter((w) => w.data.featured);
-const displayWorks = (featuredWorks.length > 0 ? featuredWorks : allWorks).slice(0, 3);
+const allWorks = await getSortedWorks();
+const displayWorks = pickFeaturedWorks(allWorks, 3);
 
 const focusAreas = [
   { key: 'cloud_devops', title: 'クラウド & DevOps',  description: '開発と運用をつなぐ仕組みづくり。継続的デリバリ、可観測性、コスト設計など、サービスを健全に動かし続けるための判断と落とし穴の記録。' },
@@ -62,7 +56,7 @@ const focusAreas = [
     <div class="posts-list">
       {recentPosts.map((post, i) => {
         const description = post.data.description?.trim();
-        const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
+        const encodedSlug = encodeSlugId(post.id);
         const num = (i + 1).toString().padStart(2, '0');
         return (
           <article class="post-row">

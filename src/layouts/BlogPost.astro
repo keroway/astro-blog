@@ -1,18 +1,16 @@
 ---
-import type { CollectionEntry } from "astro:content";
 import SiteLayout from "./SiteLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import { SITE_AUTHOR } from "../consts";
+import type { BlogData, BlogEntry } from "../types/content";
+import { encodeSlugId } from "../lib/slug";
 
 interface Heading {
   depth: number;
   slug: string;
   text: string;
 }
-
-type BlogData = CollectionEntry<"blog">["data"];
-type BlogEntry = CollectionEntry<"blog">;
 
 interface Props extends BlogData {
   ogImage?: string;
@@ -40,9 +38,7 @@ const {
 const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
 const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
-const encodeSlug = (id: string) =>
-  id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
-const postHref = (entry: BlogEntry) => `/blog/${encodeSlug(entry.id)}/`;
+const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
 
 const shareUrl = Astro.url.href;
 const xIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(shareUrl)}`;
