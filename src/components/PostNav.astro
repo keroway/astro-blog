@@ -1,0 +1,85 @@
+---
+import type { BlogEntry } from "../types/content";
+import { encodeSlugId } from "../lib/slug";
+
+interface Props {
+  prevPost?: BlogEntry | null;
+  nextPost?: BlogEntry | null;
+}
+
+const { prevPost = null, nextPost = null } = Astro.props;
+const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
+---
+
+{(prevPost || nextPost) && (
+  <nav class="post-nav" aria-label="前後の記事">
+    {prevPost ? (
+      <a class="post-nav__item post-nav__item--prev" href={postHref(prevPost)}>
+        <span class="kw-eyebrow post-nav__dir no-indent">← 前の記事</span>
+        <span class="post-nav__title">{prevPost.data.title}</span>
+      </a>
+    ) : (
+      <span class="post-nav__item post-nav__item--empty" aria-hidden="true"></span>
+    )}
+    {nextPost ? (
+      <a class="post-nav__item post-nav__item--next" href={postHref(nextPost)}>
+        <span class="kw-eyebrow post-nav__dir no-indent">次の記事 →</span>
+        <span class="post-nav__title">{nextPost.data.title}</span>
+      </a>
+    ) : (
+      <span class="post-nav__item post-nav__item--empty" aria-hidden="true"></span>
+    )}
+  </nav>
+)}
+
+<style>
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--kw-space-4);
+    padding-block-start: var(--kw-space-6);
+    border-top: 1px solid var(--kw-rule);
+  }
+  .post-nav__item {
+    display: grid;
+    gap: var(--kw-space-2);
+    padding: var(--kw-space-4);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    background: var(--kw-bg-card);
+    color: var(--kw-fg-display);
+    text-decoration: none;
+    transition:
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      transform var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-nav__item--empty {
+    background: transparent;
+    border-color: transparent;
+    pointer-events: none;
+  }
+  .post-nav__item--next {
+    text-align: end;
+  }
+  a.post-nav__item:hover {
+    border-color: var(--kw-fg-link);
+    transform: translateY(-2px);
+  }
+  .post-nav__dir {
+    color: var(--kw-fg-muted);
+  }
+  .post-nav__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-md);
+    line-height: var(--kw-lh-snug);
+  }
+
+  @media (max-width: 720px) {
+    .post-nav {
+      grid-template-columns: 1fr;
+    }
+    .post-nav__item--next {
+      text-align: start;
+    }
+  }
+</style>
