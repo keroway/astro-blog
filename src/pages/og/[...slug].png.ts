@@ -1,9 +1,10 @@
-import { type CollectionEntry, getCollection } from "astro:content";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute } from "astro";
 import satori from "satori";
+import { getPublishedPosts } from "../../lib/content";
+import type { BlogEntry } from "../../types/content";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -38,11 +39,7 @@ function loadFonts() {
 }
 
 export async function getStaticPaths() {
-  const now = new Date();
-  const posts = await getCollection(
-    "blog",
-    ({ data }) => !data.draft && data.pubDate <= now
-  );
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({
     params: { slug: post.id },
     props: post,
@@ -50,7 +47,7 @@ export async function getStaticPaths() {
 }
 
 export const GET: APIRoute = async ({ props }) => {
-  const post = props as CollectionEntry<"blog">;
+  const post = props as BlogEntry;
   const { title, category } = post.data;
   const fonts = loadFonts();
 

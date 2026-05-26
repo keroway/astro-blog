@@ -1,8 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
+import type { WorksEntry } from "../types/content";
+import { encodeSlugId } from "../lib/slug";
+import { resolveWorksDate } from "../lib/content";
 
 interface Props {
-  work: CollectionEntry<"works">;
+  work: WorksEntry;
   variant?: "grid" | "featured";
 }
 
@@ -15,9 +17,10 @@ const statusMap = {
 } as const;
 
 const status = statusMap[work.data.status];
-const href = `/works/${work.id.split("/").map((segment) => encodeURIComponent(segment)).join("/")}/`;
-const timestamp = (work.data.updatedAt ?? work.data.createdAt).toISOString();
-const releaseLabel = (work.data.updatedAt ?? work.data.createdAt).toLocaleDateString("ja-JP", {
+const href = `/works/${encodeSlugId(work.id)}/`;
+const releaseDate = resolveWorksDate(work);
+const timestamp = releaseDate.toISOString();
+const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
   year: "numeric",
   month: "short",
   day: "numeric",
