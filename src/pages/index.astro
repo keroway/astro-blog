@@ -25,6 +25,7 @@ const focusAreas = [
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-heading">
+    <div class="kw-watermark-fuji" aria-hidden="true" role="presentation"></div>
     <div class="hero__copy">
       <p class="kw-eyebrow hero__eyebrow">vol. {SITE_VOLUME.toLowerCase()} · software · yokohama</p>
       <h1 id="hero-heading" class="hero__title">
@@ -43,6 +44,7 @@ const focusAreas = [
       <Monogram />
     </div>
   </section>
+  <div class="kw-divider-pine" aria-hidden="true" role="presentation"></div>
 
   <!-- Recent posts -->
   <section class="section" aria-labelledby="recent-posts-heading">
@@ -112,13 +114,14 @@ const focusAreas = [
 <style>
   /* Hero */
   .hero {
+    position: relative;
+    isolation: isolate;
     display: grid;
     grid-template-columns: 1fr auto;
     gap: var(--kw-space-12);
     align-items: end;
-    margin-bottom: var(--kw-space-20);
+    margin-bottom: var(--kw-space-8);
     padding-bottom: var(--kw-space-10);
-    border-bottom: 1px solid var(--kw-rule);
   }
   .hero__eyebrow {
     margin-bottom: var(--kw-space-4);
@@ -154,6 +157,9 @@ const focusAreas = [
   /* Sections */
   .section {
     margin-bottom: var(--kw-space-20);
+  }
+  .kw-divider-pine {
+    margin-bottom: var(--kw-space-16);
   }
 
   /* Post numbered rows */

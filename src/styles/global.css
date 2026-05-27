@@ -193,6 +193,47 @@ input    { font-size: 16px; }
   opacity: 0.85;
 }
 
+/* Pine grove divider — 松並木ディバイダ、conic-gradient で三角形シルエットを繰り返す */
+.kw-divider-pine {
+  width: 100%;
+  height: 20px;
+  background-image:
+    conic-gradient(
+      from -20deg at 50% 100%,
+      var(--kw-pine-soft) 0deg,
+      var(--kw-pine-soft) 40deg,
+      transparent 40deg
+    ),
+    linear-gradient(var(--kw-pine) 0, var(--kw-pine) 100%);
+  background-size: 24px 17px, 100% 1px;
+  background-position: 0 2px, 0 100%;
+  background-repeat: repeat-x, no-repeat;
+}
+
+/* Fuji distant silhouette watermark — 富士遠景ウォーターマーク、clip-path polygon でシルエット */
+.kw-watermark-fuji {
+  position: absolute;
+  inset: 0;
+  background: var(--kw-fuji);
+  clip-path: polygon(
+    0% 100%,
+    15% 100%,
+    27% 55%,
+    42% 10%,
+    48% 2%,
+    50% 4%,
+    52% 2%,
+    58% 10%,
+    73% 55%,
+    85% 100%,
+    100% 100%
+  );
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+}
+
 /* Placeholder imagery */
 .kw-placeholder {
   position: relative;
