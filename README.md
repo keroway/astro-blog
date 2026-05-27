@@ -47,7 +47,7 @@ pnpm install
 pnpm run dev
 ```
 
-- 開発サーバー: https://keroway.localhost（`pnpm run dev` は portless 経由。初回のみ HTTPS proxy 用に sudo 昇格）。素の `astro dev`（http://localhost:4321）は `pnpm run dev:astro`
+- 開発サーバー: <https://keroway.localhost>（`pnpm run dev` は portless 経由。初回のみ HTTPS proxy 用に sudo 昇格）。素の `astro dev`（<http://localhost:4321>）は `pnpm run dev:astro`
 - 本番ビルド: `pnpm run build`（`astro check && astro build`）
 - ビルドのローカル確認: `pnpm run preview`
 
@@ -127,7 +127,7 @@ flowchart TD
 
 ### アクセス方法
 
-- **ローカル**: `pnpm run dev` を起動して `/keystatic`（例: https://keroway.localhost/keystatic ／ 素の dev では http://localhost:4321/keystatic）を開く。ローカルモードはファイルへ直接書き込むため GitHub 認証は不要です。
+- **ローカル**: `pnpm run dev` を起動して `/keystatic`（例: <https://keroway.localhost/keystatic> ／ 素の dev では <http://localhost:4321/keystatic>）を開く。ローカルモードはファイルへ直接書き込むため GitHub 認証は不要です。
 - **本番**: https://keroway.com/keystatic から GitHub 認証して編集する（GitHub ブランチモード）。`@astrojs/vercel` adapter により `/keystatic` の admin / API ルートだけが on-demand な Vercel Function になり、コンテンツページは引き続き SSG で配信されます。
 - **Preview デプロイ**: Keystatic 統合を意図的に mount しないため `/keystatic` は 404 になります（記事ページのプレビュー専用）。
 
