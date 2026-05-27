@@ -240,7 +240,16 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 2. **GitHub App の権限を確認する**
    - Permissions: Contents `Read & Write`、Pull requests `Read & Write`、Metadata `Read`
    - Install 対象は `keroway/astro-blog` のみ（個人 account scope 推奨）
-3. **Vercel 側に環境変数を登録する**
+3. **本番ドメインの Callback URL を GitHub App に追加する**（重要・見落としやすい）
+   - 手順 1 のウィザードはローカル（`http://127.0.0.1:4321`）で走るため、自動生成された GitHub App の **Callback URL はローカル分しか登録されない**。この状態で `https://keroway.com/keystatic` から GitHub 認証すると、Keystatic が送る `redirect_uri`（`https://keroway.com/api/keystatic/github/oauth/callback`）が App 未登録のため **`The redirect_uri is not associated with this application.`** で失敗する。
+   - GitHub → Settings → Developer settings → GitHub Apps → 対象アプリ（slug = `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`）の **Edit** → **Callback URL** に本番分を追加する（GitHub App は複数行で複数登録できるので、ローカル分も残す）:
+     ```
+     https://keroway.com/api/keystatic/github/oauth/callback
+     https://keroway.localhost/api/keystatic/github/oauth/callback
+     http://127.0.0.1:4321/api/keystatic/github/oauth/callback
+     ```
+   - `redirect_uri` は完全一致でなければならない。スキーム / ホスト / パスのいずれかがずれても同じエラーになる。
+4. **Vercel 側に環境変数を登録する**
    - Vercel ダッシュボード → Project → Settings → Environment Variables から、Production 環境向けに以下を登録:
      ```
      PUBLIC_KEYSTATIC_STORAGE_KIND=github
@@ -251,7 +260,7 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
      ```
    - **Preview 環境では Keystatic 自体を無効化する**（環境変数を増やす必要なし）。`astro.config.mjs` が `VERCEL_ENV=preview` のとき Keystatic 統合を mount しないため、Preview URL の `/keystatic` は 404 になる。Preview の Vercel Function も ephemeral filesystem なので、もし local モードで起動すると "保存できた" と誤認させてデータロストになるため、編集は禁止する設計。Preview は記事ページのプレビューにのみ使う。
    - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `PUBLIC_KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では PUBLIC_KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
-4. **デプロイ後に手動検証する**
+5. **デプロイ後に手動検証する**
    - `https://keroway.com/keystatic` にアクセス → GitHub 認証 → 編集 → 保存で `keystatic/<title>` ブランチへ commit → PR 作成までを確認する。
    - **未認証ユーザーが書き込めないこと**: Keystatic GitHub mode は GitHub App 経由でトークンを発行するため、リポジトリへの write 権限を持たない GitHub アカウントでは PR 作成に失敗する仕様。Admin UI 自体は公開されているため、追加で公開を制限したい場合は Vercel Password Protection（Pro プラン）または Vercel Authentication（Preview のみ無料）を併用する。
 
