@@ -14,7 +14,8 @@
 
 `.claude/rules/implementation.md` の検証順序（`/ship-check` で E1〜E4 を一括実行可）。
 
-- [ ] `pnpm run lint` — Biome lint + format / alt テキスト lint
+- [ ] `pnpm run lint` — Biome lint + format check（`biome ci .`）
+- [ ] `pnpm run lint:alt` — markdown 画像の alt テキスト lint（記事追加・変更時）
 - [ ] `pnpm exec astro check` — typecheck
 - [ ] `pnpm exec astro build` — schema / build エラー
 - [ ] `pnpm exec playwright test` — E2E

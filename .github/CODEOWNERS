@@ -1,5 +1,0 @@
-# Code owners
-# 既定で全ファイルのレビュー担当をリポジトリオーナーに設定する。
-# main ブランチ ruleset では code owner review は必須化していないため、
-# ここでの指定は PR への自動レビュアー提案として機能する。
-* @keroway
