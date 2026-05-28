@@ -52,6 +52,11 @@ a:focus-visible {
   outline-offset: 3px;
   border-radius: var(--kw-radius-xs);
 }
+button:focus-visible {
+  outline: 2px solid var(--kw-blue);
+  outline-offset: 3px;
+  border-radius: var(--kw-radius-xs);
+}
 
 ::selection {
   background: var(--kw-sand-soft);

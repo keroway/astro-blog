@@ -22,7 +22,7 @@ const showYearFilter = years.length >= 2;
   />
 
   <div class="filter-bar">
-    <div class="filter-group">
+    <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">
       <button
         class="filter-btn filter-btn--active"
         data-filter-type="category"
@@ -39,7 +39,7 @@ const showYearFilter = years.length >= 2;
       ))}
     </div>
     {showYearFilter && (
-      <div class="filter-group filter-group--year">
+      <div class="filter-group filter-group--year" role="group" aria-label="年で絞り込む">
         <button
           class="filter-btn filter-btn--active"
           data-filter-type="year"
@@ -215,6 +215,11 @@ const showYearFilter = years.length >= 2;
     border-color: var(--kw-accent);
     color: var(--kw-accent);
     background: color-mix(in srgb, var(--kw-accent) 8%, transparent);
+  }
+
+  .filter-btn:focus-visible {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 3px;
   }
 
   .filter-count {
