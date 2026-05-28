@@ -8,7 +8,7 @@ interface Props {
 const { caption = '/ keroway', tag = `Vol. ${SITE_VOLUME} · field notes` } = Astro.props;
 ---
 
-<div class="kw-monogram">
+<div class="kw-monogram" aria-hidden="true">
   <div class="kw-monogram__row">
     <span class="kw-monogram__k">K</span>
     <span class="kw-monogram__caption">{caption}</span>
