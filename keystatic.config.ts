@@ -94,7 +94,10 @@ export default config({
           publicPath: "/images/blog/",
           validation: { isRequired: false },
         }),
-        repoUrl: fields.text({ label: "リポジトリ URL" }),
+        repoUrl: fields.text({
+          label: "リポジトリ URL",
+          validation: { isRequired: false },
+        }),
         lpUrl: fields.text({ label: "ランディングページ URL" }),
         demoUrl: fields.text({
           label: "デモ URL",
