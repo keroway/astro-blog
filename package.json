@@ -19,6 +19,7 @@
   "devDependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.3.150",
     "@astrojs/check": "^0.9.9",
+    "@astrojs/markdoc": "1.0.6",
     "@astrojs/mdx": "^5.0.6",
     "@astrojs/react": "^5.0.5",
     "@astrojs/rss": "^4.0.18",
@@ -27,6 +28,7 @@
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@keystatic/astro": "^5.0.6",
     "@keystatic/core": "^0.5.50",
+    "@markdoc/markdoc": "0.5.7",
     "@playwright/test": "^1.60.0",
     "@resvg/resvg-js": "^2.6.2",
     "@types/react": "^19.2.15",

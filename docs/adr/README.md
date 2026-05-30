@@ -16,6 +16,7 @@
 | 0006 | CMS リポジトリ構成 | [0006-repo-structure.md](./0006-repo-structure.md) | Accepted |
 | 0007 | モチーフ語彙の拡張 | [0007-motif-vocabulary-expansion.md](./0007-motif-vocabulary-expansion.md) | Accepted |
 | 0008 | 記事作成補助の自動化 (Agent SDK) | [0008-agent-sdk-authoring-assist.md](./0008-agent-sdk-authoring-assist.md) | Accepted |
+| 0009 | 本文 content フィールドの format (Markdoc) | [0009-content-authoring-format.md](./0009-content-authoring-format.md) | Accepted |
 
 ## ADR の書き方
 

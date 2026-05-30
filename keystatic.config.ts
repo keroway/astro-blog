@@ -76,6 +76,9 @@ export default config({
       slugField: "title",
       path: "src/content/works/*",
       columns: ["title", "status", "featured"],
+      // 本文を content フィールド (markdoc → .mdoc) に束ねる。Keystatic は collection 単位で
+      // format を決めるため、works の全エントリを .mdoc に揃える。blog は別途 #218 で移行。詳細は ADR 0009。
+      format: { contentField: "content" },
       schema: {
         title: fields.slug({ name: { label: "プロジェクト名" } }),
         description: fields.text({ label: "概要", multiline: true }),
@@ -116,6 +119,7 @@ export default config({
           label: "注目プロジェクト",
           defaultValue: false,
         }),
+        content: fields.markdoc({ label: "本文" }),
       },
     }),
   },
