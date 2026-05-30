@@ -29,9 +29,6 @@ export default config({
       slugField: "title",
       path: "src/content/blog/*",
       columns: ["title", "pubDate", "category", "draft"],
-      // 本文を content フィールドに束ねる。markdoc 形式のため書き出しは .mdoc。
-      // 既存 .md は未移行のまま (loader が混在を許容)。詳細は ADR 0009。
-      format: { contentField: "content" },
       schema: {
         title: fields.slug({ name: { label: "タイトル" } }),
         description: fields.text({ label: "概要", multiline: true }),
@@ -71,7 +68,6 @@ export default config({
           label: "読了時間（分）",
           validation: { isRequired: false, min: 0 },
         }),
-        content: fields.markdoc({ label: "本文" }),
       },
     }),
 
@@ -80,7 +76,8 @@ export default config({
       slugField: "title",
       path: "src/content/works/*",
       columns: ["title", "status", "featured"],
-      // blog と同様に本文を content フィールド (markdoc → .mdoc) に束ねる。詳細は ADR 0009。
+      // 本文を content フィールド (markdoc → .mdoc) に束ねる。Keystatic は collection 単位で
+      // format を決めるため、works の全エントリを .mdoc に揃える。blog は別途 #218 で移行。詳細は ADR 0009。
       format: { contentField: "content" },
       schema: {
         title: fields.slug({ name: { label: "プロジェクト名" } }),

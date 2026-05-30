@@ -24,13 +24,23 @@ Keystatic の content フィールドは format によって**書き出すファ
 
 ## 決定事項
 
-**Markdoc (`.mdoc`) を採用する。** `keystatic.config.ts` の blog / works 両 collection に `format: { contentField: "content" }` と `content: fields.markdoc(...)` を追加する。
+**本文 content フィールドの format には Markdoc (`.mdoc`) を採用する。** ただし collection 単位で段階導入し、**まず `works` collection に適用**する。`blog` collection への適用は後述の理由で follow-up（[#218](https://github.com/keroway/astro-blog/issues/218)）に分離する。
 
-付随する構成:
+### 前提となる Keystatic の挙動（重要）
 
+Keystatic は **collection 単位で1つの format（＝ファイル拡張子）**を持つ。`path` が `.../*`（単一ファイル）の collection では:
+
+- **content フィールドなし** → format は既定で **YAML**（`.yaml` を読み書き）。**`.md` ファイルは一覧されない。**
+- **`fields.markdoc` の content フィールドあり** → format は **Markdoc**（`.mdoc`）。`.mdoc` のみ一覧される。
+
+このため、本リポの既存記事（blog 52件・works 2件はすべて `.md`）は **#213 以前から Keystatic admin UI に一覧されていなかった**（frontmatter-only = YAML 既定のため）。`.md` を Keystatic で編集可能にするには、その collection の**全エントリを Keystatic が期待する拡張子に変換する**必要がある。content フィールドを足すだけで既存 `.md` を変換しないと、その collection は admin 上で空のままになる（編集対象が増えない）。
+
+### 適用内容（works）
+
+- `keystatic.config.ts` の `works` collection に `format: { contentField: "content" }` + `content: fields.markdoc(...)` を追加し、**works の全2件（`obsidian-clipper` / `timeline-dsl`）を `.mdoc` に変換**する。これにより works は admin UI で本文＋frontmatter を編集できるようになる（初めて編集対象になる）。
 - `@astrojs/markdoc` + `@markdoc/markdoc` を devDependencies に追加し、`astro.config.mjs` の `baseIntegrations` に `markdoc()` を加える（Preview でも有効。書き込みを伴わないため。mount を絞るのは `keystatic()` 統合のみ）。
 - `markdoc.config.mjs` を新設し、`@astrojs/markdoc/shiki` extension で dual theme (`github-light` / `github-dark`) を**再宣言**する。Markdoc 本文は `astro.config.mjs` の `markdown.shikiConfig` を参照しないため。
-- `src/content.config.ts` の glob を `**/*.{md,mdx,mdoc}` に拡張し、`.md` / `.mdoc` 混在を許容する。Zod schema は frontmatter 対象なので変更不要。
+- `src/content.config.ts` の `works` loader glob を `**/*.{md,mdx,mdoc}` に拡張する（`blog` は `.mdoc` を持たないので `{md,mdx}` のまま）。Zod schema は frontmatter 対象なので変更不要。
 
 ## 採用理由（Why Markdoc）
 
@@ -42,15 +52,20 @@ Keystatic の content フィールドは format によって**書き出すファ
 
 - 既存 `@astrojs/mdx` を再利用でき追加依存ゼロという利点はあるが、上記 1 の round-trip リスクが致命的。`.md` → `.mdx` 一括移行は `<` / `{` の個別エスケープを要し、52件規模で破壊リスクが高い。
 
-## スコープと影響範囲
+## なぜ blog を分離するか（#218）
 
-- **本 PR の範囲**: content フィールド追加 + markdoc 統合導入 + shiki 再設定 + 代表1件（`src/content/works/obsidian-clipper.md` → `.mdoc`）の round-trip 実証まで。
-- **本 PR の範囲外**: 既存 blog `.md` 約52件の `.mdoc` 一括移行。変換スクリプト + 全文 diff レビューが必要で関心事が肥大化するため follow-up issue に分離する。glob が混在を許容するので、未移行 `.md` は従来どおり描画され続ける。
-- **URL への影響なし**: ルートは `post.id`（ファイル名から拡張子を除いたもの）で決まるため、`.md` → `.mdoc` でスラグ・URL は不変（例: `/works/obsidian-clipper`）。
+- blog は `.md` 52件で、うち **生 HTML を含む5件・`{` を含む9件** がある。Markdoc は生 HTML の扱いが Astro 既定の markdown と異なる（既定で素の HTML をそのまま通さない）ため、`.md` → `.mdoc` 変換は記事ごとに描画差分を確認する必要がある。
+- 全 collection を一度に変換すると差分が大きく、`1 PR = 1 関心事` の原則に反する。blog は変換スクリプト + 全文 diff レビューを伴う独立タスクとして #218 で扱う。
+- works は2件のみで、両者とも `{% %}` / `<` / `{` を含まずクリーンに変換でき、本 PR で round-trip を実証できる。
+
+## 影響範囲
+
+- **works（本 PR）**: 2件を `.mdoc` 化。admin UI で本文編集が可能になる。`/works/obsidian-clipper`・`/works/timeline-dsl` の URL は不変（ルートは拡張子を除いた `id` で決まる）。
+- **blog（変更なし）**: frontmatter-only のまま。#213 以前と同じく Keystatic では一覧されないが、Astro 側の描画は従来どおり。本文編集の有効化は #218 の blog 一括移行で実現する。
 - **shiki の二重管理**: `.md` 側は `astro.config.mjs` の `markdown.shikiConfig`、`.mdoc` 側は `markdoc.config.mjs` の shiki extension で別々に設定する。テーマを github-light / github-dark で一致させ、コードブロックの色が乖離しないようにする。
 
 ## 結果
 
-- Keystatic admin UI から本文を編集・保存できるようになる（ADR 0002 の必須要件を達成）。
-- 既存 `.md` 記事は無変更で描画され続け、段階的に `.mdoc` へ移行できる。
-- format 選択の根拠と影響範囲を本 ADR に記録し、受け入れ条件「ADR か PR 説明に明記」を満たす。
+- works の本文を Keystatic admin UI から編集・保存できるようになる（ADR 0002 の必須要件を works で達成）。
+- Markdoc 統合・shiki 再設定・format 判断という共通基盤を本 PR で確立し、blog 移行（#218）は記事変換に集中できる。
+- format 選択の根拠・Keystatic の format 挙動・影響範囲を本 ADR に記録し、受け入れ条件「ADR か PR 説明に明記」を満たす。
