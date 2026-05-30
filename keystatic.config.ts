@@ -29,6 +29,9 @@ export default config({
       slugField: "title",
       path: "src/content/blog/*",
       columns: ["title", "pubDate", "category", "draft"],
+      // works と同様に本文を content フィールド (markdoc → .mdoc) に束ねる。
+      // Keystatic は collection 単位で format を決めるため全エントリを .mdoc に揃える。詳細は ADR 0009。
+      format: { contentField: "content" },
       schema: {
         title: fields.slug({ name: { label: "タイトル" } }),
         description: fields.text({ label: "概要", multiline: true }),
@@ -68,6 +71,7 @@ export default config({
           label: "読了時間（分）",
           validation: { isRequired: false, min: 0 },
         }),
+        content: fields.markdoc({ label: "本文" }),
       },
     }),
 
