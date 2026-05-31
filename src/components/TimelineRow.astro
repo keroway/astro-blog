@@ -1,0 +1,39 @@
+---
+interface Props {
+  num: string;
+  layer: string;
+  note: string;
+}
+
+const { num, layer, note } = Astro.props;
+---
+
+<div class="timeline-row">
+  <span class="timeline-row__num kw-numeral kw-tabular">{num}</span>
+  <div class="timeline-row__body">
+    <p class="kw-eyebrow timeline-row__year no-indent">{layer}</p>
+    <p class="timeline-row__note no-indent">{note}</p>
+  </div>
+</div>
+
+<style>
+  .timeline-row {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--kw-space-6);
+    align-items: baseline;
+    padding: var(--kw-space-6) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
+  }
+  .timeline-row__num {
+    font-size: 22px;
+  }
+  .timeline-row__year {
+    margin-bottom: var(--kw-space-1);
+    color: var(--kw-accent);
+  }
+  .timeline-row__note {
+    color: var(--kw-fg);
+    margin: 0;
+  }
+</style>
