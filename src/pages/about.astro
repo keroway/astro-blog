@@ -3,6 +3,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
+import TimelineRow from '../components/TimelineRow.astro';
 import { SITE_VOLUME } from '../consts';
 
 const skills = {
@@ -74,18 +75,13 @@ const strata = [
   <section class="section" aria-labelledby="strata-heading">
     <SectionHead jp="関心の地層" en="strata of interest" id="strata-heading" />
     <div class="timeline">
-      {strata.map((item, i) => {
-        const num = (i + 1).toString().padStart(2, '0');
-        return (
-          <div class="timeline-row">
-            <span class="timeline-row__num kw-numeral kw-tabular">{num}</span>
-            <div class="timeline-row__body">
-              <p class="kw-eyebrow timeline-row__year no-indent">{item.layer}</p>
-              <p class="timeline-row__note no-indent">{item.note}</p>
-            </div>
-          </div>
-        );
-      })}
+      {strata.map((item, i) => (
+        <TimelineRow
+          num={(i + 1).toString().padStart(2, '0')}
+          layer={item.layer}
+          note={item.note}
+        />
+      ))}
     </div>
   </section>
 
@@ -168,25 +164,6 @@ const strata = [
   .timeline {
     display: flex;
     flex-direction: column;
-  }
-  .timeline-row {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: var(--kw-space-6);
-    align-items: baseline;
-    padding: var(--kw-space-6) 0;
-    border-bottom: 1px solid var(--kw-rule-soft);
-  }
-  .timeline-row__num {
-    font-size: 22px;
-  }
-  .timeline-row__year {
-    margin-bottom: var(--kw-space-1);
-    color: var(--kw-accent);
-  }
-  .timeline-row__note {
-    color: var(--kw-fg);
-    margin: 0;
   }
 
   /* Focus grid */

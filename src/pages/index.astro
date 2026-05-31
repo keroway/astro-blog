@@ -1,11 +1,11 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME } from '../consts';
-import FormattedDate from '../components/FormattedDate.astro';
 import Monogram from '../components/Monogram.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
 import WorksCard from '../components/WorksCard.astro';
+import PostRow from '../components/PostRow.astro';
 import { encodeSlugId } from '../lib/slug';
 import { getPublishedPosts, getSortedWorks, pickFeaturedWorks } from '../lib/content';
 
@@ -56,27 +56,16 @@ const focusAreas = [
       actionHref="/blog"
     />
     <div class="posts-list">
-      {recentPosts.map((post, i) => {
-        const description = post.data.description?.trim();
-        const encodedSlug = encodeSlugId(post.id);
-        const num = (i + 1).toString().padStart(2, '0');
-        return (
-          <article class="post-row">
-            <a href={`/blog/${encodedSlug}/`} class="post-row__link">
-              <span class="post-row__num kw-numeral kw-tabular">{num}</span>
-              <div class="post-row__body">
-                <p class="kw-eyebrow post-row__meta no-indent">
-                  <FormattedDate date={post.data.pubDate} />
-                  {post.data.category && <span>· {post.data.category}</span>}
-                </p>
-                <h3 class="post-row__title">{post.data.title}</h3>
-                {description && <p class="post-row__desc no-indent">{description}</p>}
-              </div>
-              <span class="post-row__arrow" aria-hidden="true">→</span>
-            </a>
-          </article>
-        );
-      })}
+      {recentPosts.map((post, i) => (
+        <PostRow
+          num={(i + 1).toString().padStart(2, '0')}
+          href={`/blog/${encodeSlugId(post.id)}/`}
+          title={post.data.title}
+          description={post.data.description?.trim()}
+          pubDate={post.data.pubDate}
+          category={post.data.category}
+        />
+      ))}
     </div>
   </section>
 
@@ -167,54 +156,6 @@ const focusAreas = [
     display: flex;
     flex-direction: column;
   }
-  .post-row__link {
-    display: grid;
-    grid-template-columns: 56px 1fr auto;
-    gap: var(--kw-space-6);
-    align-items: baseline;
-    padding: var(--kw-space-6) 0;
-    border-bottom: 1px solid var(--kw-rule-soft);
-    text-decoration: none;
-    color: inherit;
-    border-bottom-width: 1px;
-    transition: background var(--kw-duration-fast) var(--kw-easing);
-  }
-  .post-row__link:hover {
-    border-bottom-color: var(--kw-rule);
-  }
-  .post-row__link:hover .post-row__title {
-    color: var(--kw-fg-link);
-  }
-  .post-row__num {
-    font-size: 22px;
-  }
-  .post-row__meta {
-    margin-bottom: var(--kw-space-2);
-    color: var(--kw-fg-muted);
-  }
-  .post-row__title {
-    font-family: var(--kw-font-display);
-    font-size: var(--kw-fs-h3);
-    font-weight: var(--kw-fw-medium);
-    color: var(--kw-fg-display);
-    letter-spacing: -0.01em;
-    margin: 0 0 var(--kw-space-1);
-    line-height: var(--kw-lh-snug);
-    transition: color var(--kw-duration-fast) var(--kw-easing);
-  }
-  .post-row__desc {
-    font-size: var(--kw-fs-body-sm);
-    color: var(--kw-fg-muted);
-    line-height: var(--kw-lh-normal);
-    margin: 0;
-    max-width: 60ch;
-  }
-  .post-row__arrow {
-    font-family: var(--kw-font-display);
-    font-size: 20px;
-    color: var(--kw-fg-link);
-    align-self: center;
-  }
 
   /* Works grid */
   .works-grid {
@@ -251,10 +192,6 @@ const focusAreas = [
     }
   }
   @media (max-width: 640px) {
-    .post-row__link {
-      grid-template-columns: 40px 1fr auto;
-      gap: var(--kw-space-4);
-    }
     .focus-grid {
       grid-template-columns: 1fr;
     }
