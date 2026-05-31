@@ -1,0 +1,105 @@
+---
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  num?: string;
+  href: string;
+  titleTag?: 'h2' | 'h3';
+  title: string;
+  description?: string;
+  pubDate: Date;
+  category?: string;
+  accentNum?: boolean;
+  dataYear?: string;
+  dataCategory?: string;
+}
+
+const {
+  num = '',
+  href,
+  titleTag = 'h3',
+  title,
+  description,
+  pubDate,
+  category,
+  accentNum = false,
+  dataYear,
+  dataCategory,
+} = Astro.props;
+
+const TitleTag = titleTag;
+---
+
+<article class="post-row" data-year={dataYear} data-category={dataCategory}>
+  <a href={href} class="post-row__link">
+    <span class:list={['post-row__num', 'kw-numeral', 'kw-tabular', { 'post-row__num--accent': accentNum }]}>{num}</span>
+    <div class="post-row__body">
+      <p class="kw-eyebrow post-row__meta no-indent">
+        <FormattedDate date={pubDate} />
+        {category && <span>· {category}</span>}
+      </p>
+      <TitleTag class="post-row__title">{title}</TitleTag>
+      {description && <p class="post-row__desc no-indent">{description}</p>}
+    </div>
+    <span class="post-row__arrow" aria-hidden="true">→</span>
+  </a>
+</article>
+
+<style>
+  .post-row__link {
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: var(--kw-space-6);
+    align-items: baseline;
+    padding: var(--kw-space-6) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-row__link:hover {
+    border-bottom-color: var(--kw-rule);
+  }
+  .post-row__link:hover .post-row__title {
+    color: var(--kw-fg-link);
+  }
+  .post-row__num {
+    font-size: 22px;
+  }
+  .post-row__num--accent {
+    color: var(--kw-accent);
+  }
+  .post-row__meta {
+    margin-bottom: var(--kw-space-2);
+    color: var(--kw-fg-muted);
+  }
+  .post-row__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-h3);
+    font-weight: var(--kw-fw-medium);
+    color: var(--kw-fg-display);
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--kw-space-1);
+    line-height: var(--kw-lh-snug);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post-row__desc {
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-normal);
+    margin: 0;
+    max-width: 60ch;
+  }
+  .post-row__arrow {
+    font-family: var(--kw-font-display);
+    font-size: 20px;
+    color: var(--kw-fg-link);
+    align-self: center;
+  }
+  @media (max-width: 640px) {
+    .post-row__link {
+      grid-template-columns: 40px 1fr auto;
+      gap: var(--kw-space-4);
+    }
+  }
+</style>
