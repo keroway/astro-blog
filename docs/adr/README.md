@@ -9,7 +9,7 @@
 | 番号 | カテゴリ | ファイル | ステータス |
 |------|----------|---------|-----------|
 | 0001 | CSS フレームワーク | [0001-css-framework.md](./0001-css-framework.md) | Proposed |
-| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Accepted |
+| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Accepted (一部 0009 / 0010 で改定) |
 | 0003 | レンダリング戦略 | [0003-rendering-strategy.md](./0003-rendering-strategy.md) | Superseded by 0005 |
 | 0004 | メディア管理 | [0004-media-storage.md](./0004-media-storage.md) | Accepted |
 | 0005 | Keystatic admin ランタイム | [0005-keystatic-admin-runtime.md](./0005-keystatic-admin-runtime.md) | Proposed |
@@ -17,6 +17,7 @@
 | 0007 | モチーフ語彙の拡張 | [0007-motif-vocabulary-expansion.md](./0007-motif-vocabulary-expansion.md) | Accepted |
 | 0008 | 記事作成補助の自動化 (Agent SDK) | [0008-agent-sdk-authoring-assist.md](./0008-agent-sdk-authoring-assist.md) | Accepted |
 | 0009 | 本文 content フィールドの format (Markdoc) | [0009-content-authoring-format.md](./0009-content-authoring-format.md) | Accepted |
+| 0010 | blog slug の ASCII 正規化 + 旧 URL リダイレクト | [0010-blog-slug-normalization.md](./0010-blog-slug-normalization.md) | Accepted |
 
 ## ADR の書き方
 
