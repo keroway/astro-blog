@@ -1,0 +1,59 @@
+# ADR 0010 — blog slug 正規化マッピング (旧 post.id → 新 ASCII slug)
+# 列: old_id<TAB>new_slug
+# - old_id: 現行ファイル名から拡張子 (.mdoc) を除いた値 (= post.id = 現行 slug)。空白・括弧・日本語を含む。
+# - new_slug: リネーム後のファイル名 (拡張子除く) = 新 URL の slug。[a-z0-9-] のみ。
+# 後続 issue #223 がこの TSV を機械消費し、(1) git rename と (2) 旧→新 308 リダイレクト生成を行う。
+# 旧 URL は /blog/<encodeURIComponent(old_id)>/ 形式。リダイレクト source は old_id を URL エンコードして組み立てる。
+# このファイルは ADR 0010 本文 appendix の表と一致させること (single source は本 TSV、表はレビュー用ミラー)。
+0.96インチ有機ELディスプレイ(SSD1306)	oled-display-ssd1306
+Apache Solr (1)	apache-solr-1
+Arduino_rgb_led	arduino-rgb-led
+BeautifulSoup4(1)	beautifulsoup4-1
+BeautifulSoup4(2)	beautifulsoup4-2
+clojure	clojure
+cloud9 (php)	cloud9-php
+code.org	code-org
+Dwitter	dwitter
+Elixir	elixir
+ESP-WROOM02 DIP化キット(半田付け)	esp-wroom02-dip-kit-soldering
+GAE sendmail test	gae-sendmail-test
+Getting started with Python Web Scraping	getting-started-with-python-web-scraping
+go	go
+GoogleCloudSourceRepositories	google-cloud-source-repositories
+HackMd.io	hackmd-io
+Kotlin	kotlin
+Mac OS (High Sierra) で X11フォワーディング	macos-high-sierra-x11-forwarding
+Maker Faire Tokyo	maker-faire-tokyo
+Maker Faire Tokyo 2018(8_4-8_5)	maker-faire-tokyo-2018
+Mastodon on Docker(2)	mastodon-on-docker-2
+Mastodon on Docker	mastodon-on-docker
+Mozilla SSL Configuration Generator	mozilla-ssl-configuration-generator
+nerodia(1)	nerodia-1
+nerodia(2)	nerodia-2
+nerodia(3)	nerodia-3
+nginx	nginx
+PICO(Arduino互換ボード)	pico-arduino-compatible-board
+python-docx	python-docx
+Raspberry Pi(Event)	raspberry-pi-event
+Raspberry Pi(Event参加)	raspberry-pi-event-attend
+RaspberryPi3 セットアップ(2)	raspberrypi3-setup-2
+RaspberryPi3 セットアップ	raspberrypi3-setup
+repl.it	repl-it
+rust(予告)	rust-preview
+rust on Codeanywhere	rust-on-codeanywhere
+scratch3.0	scratch3-0
+StackEdit	stackedit
+unity_sample	unity-sample
+Unity chan	unity-chan
+Xamarin(2)	xamarin-2
+Xamarin	xamarin
+【読書】100人のプロが選んだソフトウェア開発の名著	book-software-dev-masterpieces
+【読書】Expert Angular	book-expert-angular
+【読書】ソフトウェア・グローバリゼーション入門	book-software-globalization
+【読書】プログラマの数学(第2版)	book-programmers-math-2nd-edition
+【読書】プログラマーとお仕事をするということ	book-working-with-programmers
+【読書】新装版 達人プログラマー	book-pragmatic-programmer
+レーザー測距モジュール(VL53L0X)	laser-distance-module-vl53l0x
+技術系電子書籍（国内）	tech-ebooks-domestic
+買い物と半田付け	shopping-and-soldering
+電子書籍	ebooks
