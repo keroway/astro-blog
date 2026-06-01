@@ -6,5 +6,487 @@
       "path": "/api/trigger-build",
       "schedule": "0 0 * * *"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/blog/0.96%E3%82%A4%E3%83%B3%E3%83%81%E6%9C%89%E6%A9%9FEL%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4(SSD1306)/",
+      "destination": "/blog/oled-display-ssd1306/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/0.96%E3%82%A4%E3%83%B3%E3%83%81%E6%9C%89%E6%A9%9FEL%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4(SSD1306)",
+      "destination": "/blog/oled-display-ssd1306/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Apache%20Solr%20(1)/",
+      "destination": "/blog/apache-solr-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Apache%20Solr%20(1)",
+      "destination": "/blog/apache-solr-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Arduino_rgb_led/",
+      "destination": "/blog/arduino-rgb-led/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Arduino_rgb_led",
+      "destination": "/blog/arduino-rgb-led/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/BeautifulSoup4(1)/",
+      "destination": "/blog/beautifulsoup4-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/BeautifulSoup4(1)",
+      "destination": "/blog/beautifulsoup4-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/BeautifulSoup4(2)/",
+      "destination": "/blog/beautifulsoup4-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/BeautifulSoup4(2)",
+      "destination": "/blog/beautifulsoup4-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cloud9%20(php)/",
+      "destination": "/blog/cloud9-php/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/cloud9%20(php)",
+      "destination": "/blog/cloud9-php/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/code.org/",
+      "destination": "/blog/code-org/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/code.org",
+      "destination": "/blog/code-org/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Dwitter/",
+      "destination": "/blog/dwitter/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Dwitter",
+      "destination": "/blog/dwitter/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Elixir/",
+      "destination": "/blog/elixir/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Elixir",
+      "destination": "/blog/elixir/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ESP-WROOM02%20DIP%E5%8C%96%E3%82%AD%E3%83%83%E3%83%88(%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91)/",
+      "destination": "/blog/esp-wroom02-dip-kit-soldering/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/ESP-WROOM02%20DIP%E5%8C%96%E3%82%AD%E3%83%83%E3%83%88(%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91)",
+      "destination": "/blog/esp-wroom02-dip-kit-soldering/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/GAE%20sendmail%20test/",
+      "destination": "/blog/gae-sendmail-test/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/GAE%20sendmail%20test",
+      "destination": "/blog/gae-sendmail-test/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Getting%20started%20with%20Python%20Web%20Scraping/",
+      "destination": "/blog/getting-started-with-python-web-scraping/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Getting%20started%20with%20Python%20Web%20Scraping",
+      "destination": "/blog/getting-started-with-python-web-scraping/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/GoogleCloudSourceRepositories/",
+      "destination": "/blog/google-cloud-source-repositories/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/GoogleCloudSourceRepositories",
+      "destination": "/blog/google-cloud-source-repositories/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/HackMd.io/",
+      "destination": "/blog/hackmd-io/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/HackMd.io",
+      "destination": "/blog/hackmd-io/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Kotlin/",
+      "destination": "/blog/kotlin/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Kotlin",
+      "destination": "/blog/kotlin/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mac%20OS%20(High%20Sierra)%20%E3%81%A7%20X11%E3%83%95%E3%82%A9%E3%83%AF%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0/",
+      "destination": "/blog/macos-high-sierra-x11-forwarding/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mac%20OS%20(High%20Sierra)%20%E3%81%A7%20X11%E3%83%95%E3%82%A9%E3%83%AF%E3%83%BC%E3%83%87%E3%82%A3%E3%83%B3%E3%82%B0",
+      "destination": "/blog/macos-high-sierra-x11-forwarding/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Maker%20Faire%20Tokyo/",
+      "destination": "/blog/maker-faire-tokyo/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Maker%20Faire%20Tokyo",
+      "destination": "/blog/maker-faire-tokyo/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Maker%20Faire%20Tokyo%202018(8_4-8_5)/",
+      "destination": "/blog/maker-faire-tokyo-2018/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Maker%20Faire%20Tokyo%202018(8_4-8_5)",
+      "destination": "/blog/maker-faire-tokyo-2018/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mastodon%20on%20Docker(2)/",
+      "destination": "/blog/mastodon-on-docker-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mastodon%20on%20Docker(2)",
+      "destination": "/blog/mastodon-on-docker-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mastodon%20on%20Docker/",
+      "destination": "/blog/mastodon-on-docker/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mastodon%20on%20Docker",
+      "destination": "/blog/mastodon-on-docker/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mozilla%20SSL%20Configuration%20Generator/",
+      "destination": "/blog/mozilla-ssl-configuration-generator/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Mozilla%20SSL%20Configuration%20Generator",
+      "destination": "/blog/mozilla-ssl-configuration-generator/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(1)/",
+      "destination": "/blog/nerodia-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(1)",
+      "destination": "/blog/nerodia-1/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(2)/",
+      "destination": "/blog/nerodia-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(2)",
+      "destination": "/blog/nerodia-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(3)/",
+      "destination": "/blog/nerodia-3/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/nerodia(3)",
+      "destination": "/blog/nerodia-3/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/PICO(Arduino%E4%BA%92%E6%8F%9B%E3%83%9C%E3%83%BC%E3%83%89)/",
+      "destination": "/blog/pico-arduino-compatible-board/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/PICO(Arduino%E4%BA%92%E6%8F%9B%E3%83%9C%E3%83%BC%E3%83%89)",
+      "destination": "/blog/pico-arduino-compatible-board/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Raspberry%20Pi(Event)/",
+      "destination": "/blog/raspberry-pi-event/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Raspberry%20Pi(Event)",
+      "destination": "/blog/raspberry-pi-event/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Raspberry%20Pi(Event%E5%8F%82%E5%8A%A0)/",
+      "destination": "/blog/raspberry-pi-event-attend/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Raspberry%20Pi(Event%E5%8F%82%E5%8A%A0)",
+      "destination": "/blog/raspberry-pi-event-attend/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/RaspberryPi3%20%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97(2)/",
+      "destination": "/blog/raspberrypi3-setup-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/RaspberryPi3%20%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97(2)",
+      "destination": "/blog/raspberrypi3-setup-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/RaspberryPi3%20%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97/",
+      "destination": "/blog/raspberrypi3-setup/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/RaspberryPi3%20%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97",
+      "destination": "/blog/raspberrypi3-setup/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/repl.it/",
+      "destination": "/blog/repl-it/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/repl.it",
+      "destination": "/blog/repl-it/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/rust(%E4%BA%88%E5%91%8A)/",
+      "destination": "/blog/rust-preview/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/rust(%E4%BA%88%E5%91%8A)",
+      "destination": "/blog/rust-preview/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/rust%20on%20Codeanywhere/",
+      "destination": "/blog/rust-on-codeanywhere/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/rust%20on%20Codeanywhere",
+      "destination": "/blog/rust-on-codeanywhere/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/scratch3.0/",
+      "destination": "/blog/scratch3-0/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/scratch3.0",
+      "destination": "/blog/scratch3-0/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/StackEdit/",
+      "destination": "/blog/stackedit/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/StackEdit",
+      "destination": "/blog/stackedit/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/unity_sample/",
+      "destination": "/blog/unity-sample/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/unity_sample",
+      "destination": "/blog/unity-sample/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Unity%20chan/",
+      "destination": "/blog/unity-chan/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Unity%20chan",
+      "destination": "/blog/unity-chan/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Xamarin(2)/",
+      "destination": "/blog/xamarin-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Xamarin(2)",
+      "destination": "/blog/xamarin-2/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Xamarin/",
+      "destination": "/blog/xamarin/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/Xamarin",
+      "destination": "/blog/xamarin/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91100%E4%BA%BA%E3%81%AE%E3%83%97%E3%83%AD%E3%81%8C%E9%81%B8%E3%82%93%E3%81%A0%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E9%96%8B%E7%99%BA%E3%81%AE%E5%90%8D%E8%91%97/",
+      "destination": "/blog/book-software-dev-masterpieces/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91100%E4%BA%BA%E3%81%AE%E3%83%97%E3%83%AD%E3%81%8C%E9%81%B8%E3%82%93%E3%81%A0%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E9%96%8B%E7%99%BA%E3%81%AE%E5%90%8D%E8%91%97",
+      "destination": "/blog/book-software-dev-masterpieces/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91Expert%20Angular/",
+      "destination": "/blog/book-expert-angular/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91Expert%20Angular",
+      "destination": "/blog/book-expert-angular/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%83%BB%E3%82%B0%E3%83%AD%E3%83%BC%E3%83%90%E3%83%AA%E3%82%BC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E5%85%A5%E9%96%80/",
+      "destination": "/blog/book-software-globalization/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E3%83%BB%E3%82%B0%E3%83%AD%E3%83%BC%E3%83%90%E3%83%AA%E3%82%BC%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E5%85%A5%E9%96%80",
+      "destination": "/blog/book-software-globalization/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AE%E6%95%B0%E5%AD%A6(%E7%AC%AC2%E7%89%88)/",
+      "destination": "/blog/book-programmers-math-2nd-edition/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%81%AE%E6%95%B0%E5%AD%A6(%E7%AC%AC2%E7%89%88)",
+      "destination": "/blog/book-programmers-math-2nd-edition/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%83%BC%E3%81%A8%E3%81%8A%E4%BB%95%E4%BA%8B%E3%82%92%E3%81%99%E3%82%8B%E3%81%A8%E3%81%84%E3%81%86%E3%81%93%E3%81%A8/",
+      "destination": "/blog/book-working-with-programmers/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%83%BC%E3%81%A8%E3%81%8A%E4%BB%95%E4%BA%8B%E3%82%92%E3%81%99%E3%82%8B%E3%81%A8%E3%81%84%E3%81%86%E3%81%93%E3%81%A8",
+      "destination": "/blog/book-working-with-programmers/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E6%96%B0%E8%A3%85%E7%89%88%20%E9%81%94%E4%BA%BA%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%83%BC/",
+      "destination": "/blog/book-pragmatic-programmer/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%80%90%E8%AA%AD%E6%9B%B8%E3%80%91%E6%96%B0%E8%A3%85%E7%89%88%20%E9%81%94%E4%BA%BA%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9E%E3%83%BC",
+      "destination": "/blog/book-pragmatic-programmer/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%83%AC%E3%83%BC%E3%82%B6%E3%83%BC%E6%B8%AC%E8%B7%9D%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB(VL53L0X)/",
+      "destination": "/blog/laser-distance-module-vl53l0x/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E3%83%AC%E3%83%BC%E3%82%B6%E3%83%BC%E6%B8%AC%E8%B7%9D%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB(VL53L0X)",
+      "destination": "/blog/laser-distance-module-vl53l0x/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E6%8A%80%E8%A1%93%E7%B3%BB%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D%EF%BC%88%E5%9B%BD%E5%86%85%EF%BC%89/",
+      "destination": "/blog/tech-ebooks-domestic/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E6%8A%80%E8%A1%93%E7%B3%BB%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D%EF%BC%88%E5%9B%BD%E5%86%85%EF%BC%89",
+      "destination": "/blog/tech-ebooks-domestic/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%A8%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91/",
+      "destination": "/blog/shopping-and-soldering/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%A8%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91",
+      "destination": "/blog/shopping-and-soldering/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D/",
+      "destination": "/blog/ebooks/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D",
+      "destination": "/blog/ebooks/",
+      "permanent": true
+    }
   ]
 }
