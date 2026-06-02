@@ -1,5 +1,23 @@
 import { expect, test } from "@playwright/test";
 
+// JSON-LD の image は文字列 / 配列 / ImageObject のいずれの形でも許容されるため、
+// どの形でも先頭の URL 文字列を取り出して検証できるよう正規化する。
+function extractImageUrl(image: unknown): string | undefined {
+  const pick = (v: unknown): string | undefined => {
+    if (typeof v === "string") return v;
+    if (
+      v &&
+      typeof v === "object" &&
+      typeof (v as { url?: unknown }).url === "string"
+    ) {
+      return (v as { url: string }).url;
+    }
+    return undefined;
+  };
+  if (Array.isArray(image)) return pick(image[0]);
+  return pick(image);
+}
+
 test.describe("SEO: JSON-LD structured data", () => {
   test("homepage outputs WebSite JSON-LD", async ({ page }) => {
     await page.goto("/");
@@ -37,6 +55,18 @@ test.describe("SEO: JSON-LD structured data", () => {
     expect(post.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}/);
     expect(post.author?.name).toBeTruthy();
     expect(post.url).toMatch(/^https:\/\/keroway\.com\/blog\/.+\/$/);
+
+    // OG 画像生成 (gen-og-default.ts / heroImage) のデグレ検知:
+    // BlogPosting JSON-LD の image が有効な絶対 URL であること
+    const jsonLdImage = extractImageUrl(post.image);
+    expect(jsonLdImage).toBeTruthy();
+    expect(jsonLdImage).toMatch(/^https?:\/\//);
+
+    // og:image meta タグが有効な絶対 URL であること
+    const ogImage = await page
+      .locator('meta[property="og:image"]')
+      .getAttribute("content");
+    expect(ogImage).toMatch(/^https?:\/\//);
   });
 });
 
