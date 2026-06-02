@@ -47,6 +47,7 @@ export function pickFeaturedWorks(
 /**
  * category 一致 +2 / tag 一致 +1 でスコアリングし、関連度の高い記事を上位 limit 件返す。
  * 同点は pubDate 降順。自分自身とスコア 0 は除外する。
+ * limit 件に満たない場合は pubDate 降順の最新記事で補完する。
  */
 export function getRelatedPosts(
   post: BlogEntry,
@@ -55,7 +56,7 @@ export function getRelatedPosts(
 ): BlogEntry[] {
   const myCategory = post.data.category;
   const myTags = new Set(post.data.tags ?? []);
-  return posts
+  const related = posts
     .filter((p) => p.id !== post.id)
     .map((p) => {
       let score = 0;
@@ -73,4 +74,15 @@ export function getRelatedPosts(
     )
     .slice(0, limit)
     .map((x) => x.post);
+
+  if (related.length < limit) {
+    const relatedIds = new Set(related.map((r) => r.id));
+    const fallback = posts
+      .filter((p) => p.id !== post.id && !relatedIds.has(p.id))
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+      .slice(0, limit - related.length);
+    related.push(...fallback);
+  }
+
+  return related;
 }
