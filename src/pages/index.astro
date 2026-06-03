@@ -2,6 +2,7 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME } from '../consts';
 import Monogram from '../components/Monogram.astro';
+import HeroBackdrop from '../components/HeroBackdrop.astro';
 import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
 import WorksCard from '../components/WorksCard.astro';
@@ -25,7 +26,7 @@ const focusAreas = [
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <!-- Hero -->
   <section class="hero" aria-labelledby="hero-heading">
-    <div class="kw-watermark-fuji" aria-hidden="true" role="presentation"></div>
+    <HeroBackdrop />
     <div class="hero__copy">
       <p class="kw-eyebrow hero__eyebrow">vol. {SITE_VOLUME.toLowerCase()} · software · yokohama</p>
       <h1 id="hero-heading" class="hero__title">
