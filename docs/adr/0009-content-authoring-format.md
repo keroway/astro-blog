@@ -62,7 +62,7 @@ Keystatic は **collection 単位で1つの format（＝ファイル拡張子）
 
 - **works（本 PR）**: 2件を `.mdoc` 化。admin UI で本文編集が可能になる。`/works/obsidian-clipper`・`/works/timeline-dsl` の URL は不変（ルートは拡張子を除いた `id` で決まる）。
 - **blog（変更なし）**: frontmatter-only のまま。#213 以前と同じく Keystatic では一覧されないが、Astro 側の描画は従来どおり。本文編集の有効化は #218 の blog 一括移行で実現する。
-- **shiki の二重管理**: `.md` 側は `astro.config.mjs` の `markdown.shikiConfig`、`.mdoc` 側は `markdoc.config.mjs` の shiki extension で別々に設定する。テーマを github-light / github-dark で一致させ、コードブロックの色が乖離しないようにする。
+- **shiki の管理**: `works` 移行後（本 ADR）は `.mdoc` / `.md` が並存し、`.md` 側は `astro.config.mjs` の `markdown.shikiConfig`、`.mdoc` 側は `markdoc.config.mjs` の shiki extension で別々に設定していた。`blog` の `.mdoc` 一括移行（#218 完了）後は `.md` / `.mdx` がゼロになり、`markdown.shikiConfig` はデッドコードとなった。そのため #239 で `astro.config.mjs` の `markdown.shikiConfig` ブロックを削除し、shiki 設定は `markdoc.config.mjs` 側に一本化された。
 
 ## 結果
 
