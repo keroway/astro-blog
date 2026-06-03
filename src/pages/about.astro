@@ -101,7 +101,7 @@ const strata = [
     <div class="stack-groups">
       {Object.entries({ '言語': skills.languages, '領域': skills.domains, 'ツール・インフラ': skills.tools }).map(([label, items]) => (
         <div class="stack-group">
-          <h3 class="kw-eyebrow stack-group__label">{label}</h3>
+          <h3 class="kw-eyebrow-ja stack-group__label">{label}</h3>
           <ul class="stack-chips" aria-label={label}>
             {items.map((s) => <li><span class="kw-chip">{s}</span></li>)}
           </ul>
