@@ -29,9 +29,9 @@
 |---|---|---|---|
 | `--kw-navy` | `#003366` | `#9CB4DA` | 紺碧・主役色 |
 | `--kw-blue` | `#1E50A2` | `#7AA2D0` | 水色・インタラクション色 |
-| `--kw-paper` | `#F2F2F2` | `#0B1B33` | 紙白・主背景 |
-| `--kw-paper-warm` | `#EBE7DC` | `#0F2244` | 温かみのある紙色・代替背景 |
-| `--kw-paper-card` | `#FFFFFF` | `#122548` | カード背景 |
+| `--kw-paper` | `#F3F1EC` | `#0B1B33` | わずかに温かい紙白・主背景 |
+| `--kw-paper-warm` | `#E9DECB` | `#0F2244` | 温かみのある紙色・代替背景 |
+| `--kw-paper-card` | `#FFFDF8` | `#122548` | カード背景 |
 | `--kw-sand` | `#D9B382` | `#D9B382` | 砂金・アクセント（両モード共通） |
 | `--kw-sand-soft` | `rgba(217,179,130,0.45)` | `rgba(217,179,130,0.30)` | 砂金の薄掛け |
 | `--kw-vermilion` | `#B43D2F` | `#E07A66` | 朱印・強アクセント |
@@ -626,7 +626,7 @@ html {
   font-family: var(--kw-font-body);
   font-size: var(--kw-fs-body);        /* 16px */
   line-height: var(--kw-lh-relaxed);  /* 1.85 */
-  letter-spacing: var(--kw-ls-body);  /* -0.01em */
+  letter-spacing: var(--kw-ls-body);  /* 0 */
 }
 
 h1, h2, h3, h4, h5, h6 {
