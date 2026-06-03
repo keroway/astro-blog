@@ -215,29 +215,7 @@ input    { font-size: 16px; }
   background-repeat: repeat-x, no-repeat;
 }
 
-/* Fuji distant silhouette watermark — 富士遠景ウォーターマーク、clip-path polygon でシルエット */
-.kw-watermark-fuji {
-  position: absolute;
-  inset: 0;
-  background: var(--kw-fuji);
-  clip-path: polygon(
-    0% 100%,
-    15% 100%,
-    27% 55%,
-    42% 10%,
-    48% 2%,
-    50% 4%,
-    52% 2%,
-    58% 10%,
-    73% 55%,
-    85% 100%,
-    100% 100%
-  );
-  opacity: 0.06;
-  pointer-events: none;
-  user-select: none;
-  z-index: -1;
-}
+/* 富士遠景ウォーターマークは HeroBackdrop.astro のインライン SVG に統合（道筋・地点・水面と同一座標系） */
 
 /* Placeholder imagery */
 .kw-placeholder {
