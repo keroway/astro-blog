@@ -50,12 +50,4 @@ export default defineConfig({
   output: "static",
   adapter: vercel(),
   integrations,
-  markdown: {
-    shikiConfig: {
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-    },
-  },
 });

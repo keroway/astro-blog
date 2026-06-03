@@ -1,9 +1,9 @@
 import { defineMarkdocConfig } from "@astrojs/markdoc/config";
 import shiki from "@astrojs/markdoc/shiki";
 
-// Markdoc 本文 (.mdoc) は astro.config.mjs の markdown.shikiConfig を参照しない。
-// コードブロックのハイライトを既存 .md 記事と揃えるため、ここで同じ dual theme
-// (github-light / github-dark) を再宣言する。テーマがズレるとコード色が乖離する。
+// コンテンツはすべて .mdoc (blog/works 計54件以上)。
+// Markdoc 本文は astro.config.mjs の markdown.shikiConfig を参照しないため、
+// dual theme (github-light / github-dark) をここで設定する。
 export default defineMarkdocConfig({
   extends: [
     shiki({
