@@ -26,7 +26,7 @@ export default defineConfig({
 
     // ---- Chip / status pill — base ----
     "kw-chip":
-      "inline-flex items-baseline gap-kw-2 py-[4px] px-[10px] font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[0.15em] text-kw-fg-muted border border-kw-rule rounded-kw-xs bg-transparent",
+      "inline-flex items-baseline gap-kw-2 py-[4px] px-[10px] font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[0] text-kw-fg-muted border border-kw-rule rounded-kw-xs bg-transparent",
 
     // ---- Chip — status variants ----
     "kw-chip--status-active":
@@ -49,7 +49,7 @@ export default defineConfig({
 
     // ---- Sand numeral ----
     "kw-numeral":
-      "font-[var(--kw-font-mono)] [font-variant-numeric:tabular-nums] text-[22px] [font-weight:var(--kw-fw-medium)] text-kw-accent tracking-[-0.04em]",
+      "font-[var(--kw-font-mono)] [font-variant-numeric:tabular-nums] text-[22px] [font-weight:var(--kw-fw-medium)] text-kw-accent tracking-[0]",
   },
   extendTheme: (theme) => {
     // --- Colors ---

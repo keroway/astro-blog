@@ -1,15 +1,15 @@
 ---
 /**
- * HeroBackdrop — HERO 背景の装飾（モチーフ語彙: 富士の遠景 + 道筋 + 地点 + 水面）
+ * HeroBackdrop — HERO 背景の装飾（モチーフ語彙: 海岸線 + 道筋 + 地点 + 水面）
  *
- * 横浜近郊の浮世絵語彙（design-system.md §9 / ADR 0007・0011）を 1 枚の
- * インライン SVG に統合する。新色は足さず、既存トークン
- * (--kw-fuji / --kw-rule(-soft) / --kw-sand) のみで描く。
+ * 横浜近郊の浮世絵語彙（design-system.md §9 / ADR 0007・0011・0012）を 1 枚の
+ * インライン SVG に統合する。地名ラベルは置かず、おおよその道筋と宿場点だけで
+ * Tokaido Field Notes の気配を出す。
  *
  * - aria-hidden の純粋な装飾（情報を持たない）
  * - 静止（モーションなし）。CLS を出さない（absolute inset:0 で .hero に重なるだけ）
  * - preserveAspectRatio="none" で .hero の比率に追従（既存 .kw-watermark-fuji と同じ振る舞い）
- * - ≤900px では道筋・地点・水面を隠し、富士のみ残して簡略化
+ * - ≤640px では細部を隠し、道筋の印象だけ残す
  */
 ---
 
@@ -21,25 +21,43 @@
     focusable="false"
     aria-hidden="true"
   >
-    <!-- 富士の遠景: 程ヶ谷越しの稜線（既存 .kw-watermark-fuji の形状を SVG 化） -->
-    <polygon
-      class="hero-backdrop__fuji"
-      points="0,700 180,700 324,385 504,70 576,14 600,28 624,14 696,70 876,385 1020,700 1200,700"
+    <defs>
+      <filter id="hero-backdrop-roughen" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="17" />
+        <feDisplacementMap in="SourceGraphic" scale="2.4" />
+      </filter>
+    </defs>
+
+    <!-- 海岸線: 川崎〜横浜〜江ノ島方面を抽象化した低い輪郭 -->
+    <path
+      class="hero-backdrop__coast-fill"
+      d="M 0 612 C 130 594, 222 540, 342 554 C 452 568, 506 522, 612 508 C 746 490, 812 526, 928 494 C 1038 464, 1114 430, 1200 444 L 1200 700 L 0 700 Z"
+    />
+    <path
+      class="hero-backdrop__coast-line"
+      d="M 0 612 C 130 594, 222 540, 342 554 C 452 568, 506 522, 612 508 C 746 490, 812 526, 928 494 C 1038 464, 1114 430, 1200 444"
+      fill="none"
     />
 
-    <!-- 道筋: 左上→右下へゆるく抜ける一本の街道 -->
+    <!-- 道筋: 旧東海道を思わせる抽象ルート。文字の前景を邪魔しないよう薄く扱う -->
+    <path
+      class="hero-backdrop__road-band"
+      d="M 84 338 C 230 282, 330 306, 448 258 C 576 206, 660 172, 790 188 C 936 206, 1014 270, 1132 358"
+      fill="none"
+    />
     <path
       class="hero-backdrop__road"
-      d="M 70 110 C 360 250, 620 350, 1140 600"
+      d="M 84 338 C 230 282, 330 306, 448 258 C 576 206, 660 172, 790 188 C 936 206, 1014 270, 1132 358"
       fill="none"
     />
 
     <!-- 地点（宿場）: 道筋上の中継点を示す小円 -->
     <g class="hero-backdrop__stations">
-      <circle cx="232" cy="190" r="6" />
-      <circle cx="520" cy="318" r="6" />
-      <circle cx="812" cy="448" r="6" />
-      <circle cx="1064" cy="566" r="6" />
+      <circle cx="206" cy="292" r="5" />
+      <circle cx="448" cy="258" r="5" />
+      <circle cx="646" cy="176" r="5" />
+      <circle cx="806" cy="190" r="5" />
+      <circle cx="1018" cy="272" r="5" />
     </g>
 
     <!-- 水面の水平線: 横浜の海を示唆する薄い水平線 -->
@@ -59,31 +77,65 @@
     user-select: none;
     overflow: hidden;
   }
+  .hero-backdrop::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background:
+      linear-gradient(90deg, transparent 0 72%, var(--kw-accent-strong-soft) 72% 73%, transparent 73%),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0,
+        transparent 31px,
+        var(--kw-rule-soft) 32px
+      );
+    opacity: 0.34;
+  }
   .hero-backdrop__svg {
+    position: relative;
     width: 100%;
     height: 100%;
     display: block;
   }
 
-  /* 富士の遠景 — 既存ウォーターマークと同じ極薄の塗り */
-  .hero-backdrop__fuji {
-    fill: var(--kw-fuji);
-    opacity: 0.06;
+  /* 海岸線 — 低い位置に沈めて、前景コピーの可読性を優先する */
+  .hero-backdrop__coast-fill {
+    fill: var(--kw-fuji-faint);
+    opacity: 0.74;
   }
-
-  /* 道筋 — 遠景の藍で細く、ごく薄く */
-  .hero-backdrop__road {
-    stroke: var(--kw-fuji);
-    stroke-width: 2;
+  .hero-backdrop__coast-line {
+    stroke: var(--kw-road);
+    stroke-width: 1.2;
     stroke-linecap: round;
     opacity: 0.22;
     vector-effect: non-scaling-stroke;
   }
 
-  /* 地点 — 砂金アクセントを控えめに */
+  /* 道筋 — 地図の気配だけを残す薄いレイヤー */
+  .hero-backdrop__road-band {
+    stroke: var(--kw-road-soft);
+    stroke-width: 20;
+    stroke-linecap: round;
+    opacity: 0.34;
+    filter: url(#hero-backdrop-roughen);
+    vector-effect: non-scaling-stroke;
+  }
+  .hero-backdrop__road {
+    stroke: var(--kw-road);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-dasharray: 2 12;
+    opacity: 0.2;
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* 地点 — 地名ラベルの代わりに、宿場のプロットだけを残す */
   .hero-backdrop__stations circle {
     fill: var(--kw-sand);
-    opacity: 0.5;
+    opacity: 0.38;
+    stroke: var(--kw-bg);
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
   }
 
   /* 水面 — 既存の薄罫線トークンで水平線 */
@@ -93,12 +145,20 @@
     vector-effect: non-scaling-stroke;
   }
 
-  /* モバイルでは装飾を簡略化（道筋・地点・水面を隠し、富士のみ残す） */
-  @media (max-width: 900px) {
-    .hero-backdrop__road,
-    .hero-backdrop__stations,
+  @media (max-width: 640px) {
+    .hero-backdrop::before,
     .hero-backdrop__water {
       display: none;
+    }
+    .hero-backdrop__road-band {
+      stroke-width: 14;
+      opacity: 0.18;
+    }
+    .hero-backdrop__road {
+      opacity: 0.1;
+    }
+    .hero-backdrop__stations circle {
+      opacity: 0.2;
     }
   }
 </style>
