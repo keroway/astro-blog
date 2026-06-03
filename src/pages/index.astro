@@ -45,12 +45,7 @@ const focusAreas = [
       </div>
     </div>
     <div class="hero__artifact" aria-hidden="true">
-      <KSeal size="lg" detail="横浜" />
-      <div class="hero__route">
-        <span>東海道</span>
-        <span>戸塚</span>
-        <span>横浜</span>
-      </div>
+      <KSeal size="lg" />
       <div class="hero__monogram">
         <Monogram />
       </div>
@@ -172,19 +167,6 @@ const focusAreas = [
     min-height: 100%;
     padding: var(--kw-space-6);
     border-inline-start: 1px solid var(--kw-rule-soft);
-  }
-  .hero__route {
-    display: flex;
-    gap: var(--kw-space-5);
-    align-items: flex-start;
-    justify-content: flex-end;
-    font-family: var(--kw-font-display);
-    color: var(--kw-fg-faint);
-    letter-spacing: 0;
-  }
-  .hero__route span {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
   }
   .hero__monogram {
     align-self: end;

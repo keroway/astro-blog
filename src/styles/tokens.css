@@ -26,8 +26,8 @@
   --kw-fuji-faint:  rgba(110, 139, 173, 0.08);
 
   /* ---- Motif: 道筋 (Tokaido route) ---- */
-  --kw-road:        #385D7E;
-  --kw-road-soft:   rgba(56, 93, 126, 0.22);
+  --kw-road:        #5E7892;
+  --kw-road-soft:   rgba(94, 120, 146, 0.14);
 
   --kw-ink:         #0B1B33;
   --kw-ink-dim:     #4A5874;
@@ -98,8 +98,8 @@
   --kw-fuji-faint:  rgba(139, 165, 194, 0.10);
 
   /* ---- Motif: 道筋 ---- */
-  --kw-road:        #A0B7D0;
-  --kw-road-soft:   rgba(160, 183, 208, 0.24);
+  --kw-road:        #8CA6BD;
+  --kw-road-soft:   rgba(140, 166, 189, 0.14);
 
   --kw-ink:         #E8EDF6;
   --kw-ink-dim:     #9AA6BD;

@@ -5,7 +5,7 @@ interface Props {
   size?: 'sm' | 'md' | 'lg';
 }
 
-const { label = 'K', detail = '横浜', size = 'md' } = Astro.props;
+const { label = 'K', detail = '録', size = 'md' } = Astro.props;
 ---
 
 <span class:list={['k-seal', `k-seal--${size}`]} aria-hidden="true">
