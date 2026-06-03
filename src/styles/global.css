@@ -24,16 +24,10 @@ body {
   background:
     radial-gradient(
       circle at 10% 6%,
-      color-mix(in srgb, var(--kw-accent-strong-soft) 40%, transparent),
-      transparent 13rem
+      color-mix(in srgb, var(--kw-accent-strong-soft) 30%, transparent),
+      transparent 10rem
     ),
     radial-gradient(circle at 88% 0%, var(--kw-fuji-faint), transparent 26rem),
-    repeating-linear-gradient(
-      90deg,
-      transparent 0,
-      transparent 39px,
-      color-mix(in srgb, var(--kw-rule-soft) 45%, transparent) 40px
-    ),
     var(--kw-bg);
 }
 
