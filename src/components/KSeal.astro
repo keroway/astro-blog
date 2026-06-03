@@ -1,0 +1,68 @@
+---
+interface Props {
+  label?: string;
+  detail?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { label = 'K', detail = '横浜', size = 'md' } = Astro.props;
+---
+
+<span class:list={['k-seal', `k-seal--${size}`]} aria-hidden="true">
+  <span class="k-seal__label">{label}</span>
+  <span class="k-seal__detail">{detail}</span>
+</span>
+
+<style>
+  .k-seal {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 56px;
+    block-size: 56px;
+    border: 1px solid var(--kw-seal-border);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.18), transparent 40%),
+      var(--kw-seal-bg);
+    color: var(--kw-seal-fg);
+    box-shadow: 0 10px 24px rgba(180, 61, 47, 0.18);
+    transform: rotate(-4deg);
+    user-select: none;
+  }
+  .k-seal__label {
+    font-family: var(--kw-font-display);
+    font-size: 28px;
+    line-height: 0.9;
+    letter-spacing: 0;
+  }
+  .k-seal__detail {
+    font-family: var(--kw-font-display);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0;
+    writing-mode: vertical-rl;
+    position: absolute;
+    inset-inline-end: 6px;
+  }
+  .k-seal--sm {
+    inline-size: 40px;
+    block-size: 40px;
+  }
+  .k-seal--sm .k-seal__label {
+    font-size: 21px;
+  }
+  .k-seal--sm .k-seal__detail {
+    display: none;
+  }
+  .k-seal--lg {
+    inline-size: 72px;
+    block-size: 72px;
+  }
+  .k-seal--lg .k-seal__label {
+    font-size: 36px;
+  }
+  .k-seal--lg .k-seal__detail {
+    inset-inline-end: 8px;
+    font-size: 11px;
+  }
+</style>

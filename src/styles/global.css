@@ -14,8 +14,23 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 12% 8%, var(--kw-accent-strong-soft), transparent 22rem),
+    radial-gradient(circle at 88% 0%, var(--kw-fuji-faint), transparent 26rem),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 23px,
+      var(--kw-rule-soft) 24px
+    ),
+    var(--kw-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -48,18 +63,18 @@ a:hover {
   border-bottom-color: var(--kw-fg-link);
 }
 a:focus-visible {
-  outline: 2px solid var(--kw-blue);
+  outline: 2px solid var(--kw-accent-strong);
   outline-offset: 3px;
   border-radius: var(--kw-radius-xs);
 }
 button:focus-visible {
-  outline: 2px solid var(--kw-blue);
+  outline: 2px solid var(--kw-accent-strong);
   outline-offset: 3px;
   border-radius: var(--kw-radius-xs);
 }
 
 ::selection {
-  background: var(--kw-sand-soft);
+  background: var(--kw-accent-strong-soft);
   color: var(--kw-ink);
 }
 
@@ -148,7 +163,7 @@ input    { font-size: 16px; }
   background: var(--kw-btn-primary-hover);
   border-bottom-color: transparent;
 }
-.kw-button .kw-button-arrow { color: var(--kw-accent); }
+.kw-button .kw-button-arrow { color: var(--kw-accent-strong); }
 
 /* Ghost button — !important な border override を含むため CSS に残す */
 .kw-button--ghost {
@@ -157,7 +172,7 @@ input    { font-size: 16px; }
   border: 1px solid var(--kw-btn-ghost-border) !important;
 }
 .kw-button--ghost:hover {
-  background: var(--kw-rule-soft);
+  background: var(--kw-accent-strong-soft);
   border-bottom-color: var(--kw-btn-ghost-border) !important;
 }
 
@@ -179,7 +194,7 @@ input    { font-size: 16px; }
   font-family: var(--kw-font-display);
   font-size: var(--kw-fs-mono);
   line-height: 2.2;
-  letter-spacing: 0.15em;
+  letter-spacing: 0;
   color: var(--kw-fg-faint);
   user-select: none;
 }
@@ -194,7 +209,7 @@ input    { font-size: 16px; }
     radial-gradient(circle at  70px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
     radial-gradient(circle at  98px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
     radial-gradient(circle at 126px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px);
-  color: var(--kw-fg-link);
+  color: var(--kw-road);
   opacity: 0.85;
 }
 
@@ -213,6 +228,7 @@ input    { font-size: 16px; }
   background-size: 24px 17px, 100% 1px;
   background-position: 0 2px, 0 100%;
   background-repeat: repeat-x, no-repeat;
+  opacity: 0.82;
 }
 
 /* 富士遠景ウォーターマークは HeroBackdrop.astro のインライン SVG に統合（道筋・地点・水面と同一座標系） */
@@ -237,7 +253,7 @@ input    { font-size: 16px; }
   font-family: var(--kw-font-mono);
   font-size: var(--kw-fs-mono-sm);
   text-transform: lowercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
 }
 
 /* Prose content area */

@@ -9,11 +9,13 @@
   /* ---- Primitives ---- */
   --kw-navy:        #003366;
   --kw-blue:        #1E50A2;
-  --kw-paper:       #F2F2F2;
-  --kw-paper-warm:  #EBE7DC;
-  --kw-paper-card:  #FFFFFF;
+  --kw-paper:       #F5F0E6;
+  --kw-paper-warm:  #E9DECB;
+  --kw-paper-card:  #FFFDF8;
   --kw-sand:        #D9B382;
   --kw-sand-soft:   rgba(217, 179, 130, 0.45);
+  --kw-vermilion:   #B43D2F;
+  --kw-vermilion-soft: rgba(180, 61, 47, 0.14);
 
   /* ---- Motif: 松並木 (pine grove) ---- */
   --kw-pine:        #3D5A3E;
@@ -22,6 +24,10 @@
   /* ---- Motif: 富士の遠景 (Fuji distant view) ---- */
   --kw-fuji:        #6E8BAD;
   --kw-fuji-faint:  rgba(110, 139, 173, 0.08);
+
+  /* ---- Motif: 道筋 (Tokaido route) ---- */
+  --kw-road:        #385D7E;
+  --kw-road-soft:   rgba(56, 93, 126, 0.22);
 
   --kw-ink:         #0B1B33;
   --kw-ink-dim:     #4A5874;
@@ -44,8 +50,10 @@
   --kw-fg-link:      var(--kw-blue);
   --kw-fg-on-navy:   var(--kw-paper);
 
-  --kw-accent:       var(--kw-sand);
-  --kw-accent-soft:  var(--kw-sand-soft);
+  --kw-accent:        var(--kw-sand);
+  --kw-accent-soft:   var(--kw-sand-soft);
+  --kw-accent-strong: var(--kw-vermilion);
+  --kw-accent-strong-soft: var(--kw-vermilion-soft);
 
   /* Button surfaces */
   --kw-btn-primary-bg:    var(--kw-navy);
@@ -62,6 +70,11 @@
   --kw-status-archived-fg: var(--kw-ink-dim);
   --kw-status-archived-bg: rgba(74, 88, 116, 0.10);
 
+  /* Seal */
+  --kw-seal-bg:     var(--kw-vermilion);
+  --kw-seal-fg:     #FFF8EF;
+  --kw-seal-border: rgba(180, 61, 47, 0.35);
+
   color-scheme: light;
 }
 
@@ -73,6 +86,8 @@
   --kw-paper-card:  #122548;
   --kw-sand:        #D9B382;
   --kw-sand-soft:   rgba(217, 179, 130, 0.30);
+  --kw-vermilion:   #E07A66;
+  --kw-vermilion-soft: rgba(224, 122, 102, 0.16);
 
   /* ---- Motif: 松並木 ---- */
   --kw-pine:        #7A9B7B;
@@ -81,6 +96,10 @@
   /* ---- Motif: 富士の遠景 ---- */
   --kw-fuji:        #8BA5C2;
   --kw-fuji-faint:  rgba(139, 165, 194, 0.10);
+
+  /* ---- Motif: 道筋 ---- */
+  --kw-road:        #A0B7D0;
+  --kw-road-soft:   rgba(160, 183, 208, 0.24);
 
   --kw-ink:         #E8EDF6;
   --kw-ink-dim:     #9AA6BD;
@@ -102,8 +121,10 @@
   --kw-fg-link:      var(--kw-blue);
   --kw-fg-on-navy:   var(--kw-paper);
 
-  --kw-accent:       var(--kw-sand);
-  --kw-accent-soft:  var(--kw-sand-soft);
+  --kw-accent:        var(--kw-sand);
+  --kw-accent-soft:   var(--kw-sand-soft);
+  --kw-accent-strong: var(--kw-vermilion);
+  --kw-accent-strong-soft: var(--kw-vermilion-soft);
 
   --kw-btn-primary-bg:    var(--kw-blue);
   --kw-btn-primary-fg:    var(--kw-paper);
@@ -118,13 +139,17 @@
   --kw-status-archived-fg: var(--kw-ink-dim);
   --kw-status-archived-bg: rgba(232, 237, 246, 0.06);
 
+  --kw-seal-bg:     #D75C4D;
+  --kw-seal-fg:     #FFF8EF;
+  --kw-seal-border: rgba(224, 122, 102, 0.42);
+
   color-scheme: dark;
 }
 
 :root {
   /* ---- Typography ---- */
   --kw-font-display: 'Shippori Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'Noto Serif JP', serif;
-  --kw-font-body:    var(--kw-font-display);
+  --kw-font-body:    'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'YuGothic', 'Noto Sans JP', sans-serif;
   --kw-font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --kw-fs-display-xl: 96px;
@@ -155,12 +180,12 @@
   --kw-lh-relaxed: 1.85;
   --kw-lh-prose:   1.9;
 
-  --kw-ls-display:    -0.02em;
-  --kw-ls-body:       -0.01em;
+  --kw-ls-display:    0;
+  --kw-ls-body:       0;
   --kw-ls-mono:       0;
-  --kw-ls-eyebrow:    0.3em;
-  --kw-ls-eyebrow-lg: 0.4em;
-  --kw-ls-button:     0.1em;
+  --kw-ls-eyebrow:    0;
+  --kw-ls-eyebrow-lg: 0;
+  --kw-ls-button:     0;
 
   /* ---- Spacing ---- */
   --kw-space-1:  4px;
@@ -186,8 +211,8 @@
 
   /* ---- Elevation ---- */
   --kw-shadow-none: none;
-  --kw-shadow-card: 0 1px 0 0 rgba(0, 51, 102, 0.06);
-  --kw-shadow-pop:  0 4px 16px rgba(0, 51, 102, 0.12), 0 1px 2px rgba(0, 51, 102, 0.08);
+  --kw-shadow-card: 0 10px 30px rgba(0, 51, 102, 0.08), 0 1px 0 rgba(0, 51, 102, 0.08);
+  --kw-shadow-pop:  0 18px 48px rgba(0, 51, 102, 0.16), 0 3px 10px rgba(0, 51, 102, 0.10);
 
   /* ---- Borders ---- */
   --kw-border-hair:   1px solid var(--kw-rule);

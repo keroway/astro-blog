@@ -158,10 +158,10 @@ Provide `width` and `height` props for static analysis. Hero images on blog card
 ## Styling Approach
 
 - **CSS Variables:** Defined in `global.css` (--accent, --black, --gray, --surface, etc.)
-- **Typography:** Zen Maru Gothic font (Japanese-optimized), fluid sizing with `clamp()`
+- **Typography:** BIZ UDPGothic for body text, Shippori Mincho for headings/signatures, JetBrains Mono for labels/code
 - **Component Scoping:** Most styles are component-scoped in `.astro` files
 - **Responsive:** Grid-based layouts with auto-fit columns, breakpoints at 900px, 720px, 640px
-- **Cards:** Hover effects with `translateY(-4px)` and shadow elevation
+- **Cards:** Paper-like cards and motif panels using `--kw-*` tokens; hover motion is subtle and must respect reduced-motion
 
 No CSS-in-JS framework; pure CSS only.
 
@@ -243,7 +243,7 @@ Issue の状態は GitHub ラベルで可視化する。複数の作業者 (人�
 3. Follow kebab-case naming for URL consistency
 
 **Updating global styles:**
-- Edit `src/styles/global.css` for CSS variables and base styles
+- Edit `src/styles/tokens.css` for design tokens and `src/styles/global.css` for base styles
 - Component-specific styles go in `.astro` component files
 
 **Suggesting frontmatter for a blog post (Claude Code login required):**

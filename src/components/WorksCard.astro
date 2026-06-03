@@ -2,6 +2,7 @@
 import type { WorksEntry } from "../types/content";
 import { encodeSlugId } from "../lib/slug";
 import { resolveWorksDate } from "../lib/content";
+import MotifPanel from "./MotifPanel.astro";
 
 interface Props {
   work: WorksEntry;
@@ -25,9 +26,11 @@ const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
   month: "short",
   day: "numeric",
 });
+const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
 ---
 
 <article class:list={["work-card", `work-card--${variant}`]}>
+  <MotifPanel visualKey={visualKey} label={work.data.title} />
   <div class="work-card__body">
     <div class="work-card__meta">
       <span class:list={["kw-chip", status.className]}>{status.label}</span>
@@ -55,12 +58,17 @@ const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
   .work-card {
     background: var(--kw-bg-card);
     border: 1px solid var(--kw-rule);
-    border-radius: var(--kw-radius-md);
+    border-radius: var(--kw-radius-lg);
     min-height: 100%;
-    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+    overflow: hidden;
+    box-shadow: var(--kw-shadow-card);
+    transition:
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      transform var(--kw-duration-fast) var(--kw-easing);
   }
   .work-card:is(:hover, :focus-within) {
     border-color: var(--kw-rule-strong);
+    transform: translateY(-2px);
   }
   .work-card:is(:hover, :focus-within) .work-card__title a {
     color: var(--kw-fg-link);
@@ -103,7 +111,7 @@ const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
     margin: 0;
     color: var(--kw-fg-muted);
     font-size: var(--kw-fs-body-sm);
-    line-height: var(--kw-lh-normal);
+    line-height: var(--kw-lh-relaxed);
   }
 
   .work-card__tags {
@@ -137,7 +145,8 @@ const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
     transition: border-color var(--kw-duration-fast) var(--kw-easing);
   }
   .work-card__external:hover {
-    border-bottom-color: var(--kw-fg-link);
+    color: var(--kw-accent-strong);
+    border-bottom-color: var(--kw-accent-strong);
   }
 
   .work-card--featured .work-card__body {
