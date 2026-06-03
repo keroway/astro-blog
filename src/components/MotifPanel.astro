@@ -1,0 +1,128 @@
+---
+interface Props {
+  visualKey: string;
+  label?: string;
+}
+
+const { visualKey, label = visualKey } = Astro.props;
+const visual = visualKey.toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+---
+
+<div class="motif-panel" data-visual={visual} aria-hidden="true">
+  <svg viewBox="0 0 420 220" preserveAspectRatio="none" focusable="false" class="motif-panel__svg">
+    <path class="motif-panel__road motif-panel__road--wide" d="M -30 170 C 78 78, 164 158, 278 70 S 424 54, 454 16" />
+    <path class="motif-panel__road" d="M -30 170 C 78 78, 164 158, 278 70 S 424 54, 454 16" />
+    <g class="motif-panel__nodes">
+      <circle cx="70" cy="100" r="6" />
+      <circle cx="172" cy="133" r="6" />
+      <circle cx="278" cy="70" r="6" />
+      <circle cx="360" cy="48" r="6" />
+    </g>
+    <path class="motif-panel__fuji" d="M 0 220 L 118 220 L 170 118 L 206 166 L 248 88 L 336 220 L 420 220 Z" />
+    <g class="motif-panel__circuit">
+      <path d="M 34 44 H 128 V 84 H 192" />
+      <path d="M 266 154 H 334 V 118 H 388" />
+      <circle cx="128" cy="44" r="4" />
+      <circle cx="192" cy="84" r="4" />
+      <circle cx="334" cy="154" r="4" />
+    </g>
+    <g class="motif-panel__water">
+      <line x1="0" y1="188" x2="420" y2="188" />
+      <line x1="0" y1="204" x2="420" y2="204" />
+    </g>
+  </svg>
+  <span class="motif-panel__label">{label}</span>
+</div>
+
+<style>
+  .motif-panel {
+    position: relative;
+    min-block-size: 132px;
+    overflow: hidden;
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    background:
+      radial-gradient(circle at 82% 18%, var(--kw-accent-strong-soft), transparent 28%),
+      linear-gradient(135deg, var(--kw-bg-card), var(--kw-bg-alt));
+  }
+  .motif-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--kw-rule-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--kw-rule-soft) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(135deg, black, transparent 76%);
+    opacity: 0.7;
+  }
+  .motif-panel__svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .motif-panel__road {
+    fill: none;
+    stroke: var(--kw-road);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.68;
+    vector-effect: non-scaling-stroke;
+  }
+  .motif-panel__road--wide {
+    stroke: var(--kw-road-soft);
+    stroke-width: 16;
+    opacity: 1;
+  }
+  .motif-panel__nodes circle {
+    fill: var(--kw-accent-strong);
+    opacity: 0.76;
+  }
+  .motif-panel__fuji {
+    fill: var(--kw-fuji);
+    opacity: 0.12;
+  }
+  .motif-panel__circuit {
+    fill: none;
+    stroke: var(--kw-rule-strong);
+    stroke-width: 1;
+    opacity: 0.58;
+    vector-effect: non-scaling-stroke;
+  }
+  .motif-panel__circuit circle {
+    fill: var(--kw-bg-card);
+  }
+  .motif-panel__water line {
+    stroke: var(--kw-rule-soft);
+    vector-effect: non-scaling-stroke;
+  }
+  .motif-panel__label {
+    position: absolute;
+    inset-block-end: var(--kw-space-3);
+    inset-inline-start: var(--kw-space-3);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--kw-fg-muted);
+  }
+  .motif-panel[data-visual*='web'] .motif-panel__fuji {
+    opacity: 0.05;
+  }
+  .motif-panel[data-visual*='web'] .motif-panel__circuit {
+    stroke: var(--kw-blue);
+    opacity: 0.52;
+  }
+  .motif-panel[data-visual*='cloud'] .motif-panel__road--wide {
+    stroke: var(--kw-fuji-faint);
+  }
+  .motif-panel[data-visual*='embedded'] .motif-panel__water,
+  .motif-panel[data-visual*='iot'] .motif-panel__water {
+    opacity: 0.25;
+  }
+  .motif-panel[data-visual*='embedded'] .motif-panel__circuit,
+  .motif-panel[data-visual*='iot'] .motif-panel__circuit {
+    opacity: 0.86;
+  }
+</style>

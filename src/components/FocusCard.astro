@@ -1,16 +1,19 @@
 ---
+import MotifPanel from './MotifPanel.astro';
+
 interface Props {
   index: number;
   key: string;
   title: string;
   description: string;
+  visualKey?: string;
 }
-const { index, key, title, description } = Astro.props;
+const { index, key, title, description, visualKey = key } = Astro.props;
 const num = (index + 1).toString().padStart(2, '0');
 ---
 
 <article class="focus-card">
-  <div class="kw-placeholder focus-card__thumb" aria-hidden="true">[ {key} ]</div>
+  <MotifPanel visualKey={visualKey} label={key} />
   <div class="focus-card__eyebrow kw-eyebrow">
     <span class="focus-card__num kw-tabular">{num}<span class="focus-card__slash">/</span></span>
     <span>{key}</span>
@@ -23,12 +26,6 @@ const num = (index + 1).toString().padStart(2, '0');
   .focus-card {
     display: grid;
     gap: var(--kw-space-3);
-  }
-  .focus-card__thumb {
-    height: 120px;
-    border-radius: var(--kw-radius-md);
-    font-size: var(--kw-fs-mono-xs);
-    margin-bottom: var(--kw-space-1);
   }
   .focus-card__eyebrow {
     display: flex;
@@ -49,7 +46,7 @@ const num = (index + 1).toString().padStart(2, '0');
     font-size: var(--kw-fs-h3);
     font-weight: var(--kw-fw-medium);
     color: var(--kw-fg-display);
-    letter-spacing: -0.01em;
+    letter-spacing: var(--kw-ls-display);
     margin: 0 0 var(--kw-space-2);
     line-height: var(--kw-lh-snug);
   }

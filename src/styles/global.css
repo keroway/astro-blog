@@ -14,8 +14,21 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 10% 6%,
+      color-mix(in srgb, var(--kw-accent-strong-soft) 30%, transparent),
+      transparent 10rem
+    ),
+    radial-gradient(circle at 88% 0%, var(--kw-fuji-faint), transparent 26rem),
+    var(--kw-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -48,18 +61,18 @@ a:hover {
   border-bottom-color: var(--kw-fg-link);
 }
 a:focus-visible {
-  outline: 2px solid var(--kw-blue);
+  outline: 2px solid var(--kw-accent-strong);
   outline-offset: 3px;
   border-radius: var(--kw-radius-xs);
 }
 button:focus-visible {
-  outline: 2px solid var(--kw-blue);
+  outline: 2px solid var(--kw-accent-strong);
   outline-offset: 3px;
   border-radius: var(--kw-radius-xs);
 }
 
 ::selection {
-  background: var(--kw-sand-soft);
+  background: var(--kw-accent-strong-soft);
   color: var(--kw-ink);
 }
 
@@ -148,7 +161,7 @@ input    { font-size: 16px; }
   background: var(--kw-btn-primary-hover);
   border-bottom-color: transparent;
 }
-.kw-button .kw-button-arrow { color: var(--kw-accent); }
+.kw-button .kw-button-arrow { color: var(--kw-accent-strong); }
 
 /* Ghost button — !important な border override を含むため CSS に残す */
 .kw-button--ghost {
@@ -157,7 +170,7 @@ input    { font-size: 16px; }
   border: 1px solid var(--kw-btn-ghost-border) !important;
 }
 .kw-button--ghost:hover {
-  background: var(--kw-rule-soft);
+  background: var(--kw-accent-strong-soft);
   border-bottom-color: var(--kw-btn-ghost-border) !important;
 }
 
@@ -179,43 +192,51 @@ input    { font-size: 16px; }
   font-family: var(--kw-font-display);
   font-size: var(--kw-fs-mono);
   line-height: 2.2;
-  letter-spacing: 0.15em;
+  letter-spacing: 0;
   color: var(--kw-fg-faint);
   user-select: none;
 }
 
-/* Wave motif — CSS only, footer use only */
+/* Coastal route motif — CSS only, footer/signature use only */
 .kw-wave {
-  width: 140px;
-  height: 12px;
+  position: relative;
+  width: 148px;
+  height: 18px;
   background-image:
-    radial-gradient(circle at  14px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
-    radial-gradient(circle at  42px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
-    radial-gradient(circle at  70px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
-    radial-gradient(circle at  98px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px),
-    radial-gradient(circle at 126px 12px, transparent 9px, currentColor 9px, currentColor 10px, transparent 11px);
-  color: var(--kw-fg-link);
-  opacity: 0.85;
+    linear-gradient(currentColor 0 0),
+    linear-gradient(currentColor 0 0),
+    linear-gradient(currentColor 0 0);
+  background-size: 92px 1px, 120px 1px, 72px 1px;
+  background-position: 0 3px, 28px 9px, 8px 15px;
+  background-repeat: no-repeat;
+  color: var(--kw-road);
+  opacity: 0.58;
+}
+.kw-wave::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 18px 9px, currentColor 0 2px, transparent 2.5px),
+    radial-gradient(circle at 118px 9px, currentColor 0 2px, transparent 2.5px);
+  opacity: 0.72;
 }
 
-/* Pine grove divider — 松並木ディバイダ、conic-gradient で三角形シルエットを繰り返す */
+/* Route divider — HERO 下の道筋ディバイダ。記号列ではなく線と点でつなぐ */
 .kw-divider-pine {
   width: 100%;
-  height: 20px;
+  height: 18px;
   background-image:
-    conic-gradient(
-      from -20deg at 50% 100%,
-      var(--kw-pine-soft) 0deg,
-      var(--kw-pine-soft) 40deg,
-      transparent 40deg
-    ),
-    linear-gradient(var(--kw-pine) 0, var(--kw-pine) 100%);
-  background-size: 24px 17px, 100% 1px;
-  background-position: 0 2px, 0 100%;
+    radial-gradient(circle, var(--kw-pine) 0 2px, transparent 2.5px),
+    linear-gradient(90deg, transparent, var(--kw-road-soft) 14%, var(--kw-road-soft) 86%, transparent),
+    linear-gradient(90deg, transparent, var(--kw-rule-soft), transparent);
+  background-size: 92px 18px, 100% 7px, 100% 1px;
+  background-position: 8px 0, 0 4px, 0 9px;
   background-repeat: repeat-x, no-repeat;
+  opacity: 0.64;
 }
 
-/* 富士遠景ウォーターマークは HeroBackdrop.astro のインライン SVG に統合（道筋・地点・水面と同一座標系） */
+/* HERO 背景の海岸線・道筋・地点・水面は HeroBackdrop.astro のインライン SVG に集約 */
 
 /* Placeholder imagery */
 .kw-placeholder {
@@ -237,7 +258,7 @@ input    { font-size: 16px; }
   font-family: var(--kw-font-mono);
   font-size: var(--kw-fs-mono-sm);
   text-transform: lowercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
 }
 
 /* Prose content area */

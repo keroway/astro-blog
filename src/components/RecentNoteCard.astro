@@ -1,0 +1,167 @@
+---
+import type { BlogEntry } from '../types/content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+  post: BlogEntry;
+  href: string;
+  num?: string;
+}
+
+const { post, href, num = '01' } = Astro.props;
+const heroImage = post.data.heroImage;
+---
+
+<article class="recent-note">
+  <a class="recent-note__link" href={href}>
+    <div class="recent-note__media" aria-hidden="true">
+      {heroImage ? (
+        <img src={heroImage} alt="" loading="lazy" />
+      ) : (
+        <svg viewBox="0 0 560 320" preserveAspectRatio="none" focusable="false">
+          <path class="recent-note__fallback-road" d="M -20 230 C 150 106, 256 236, 424 88 C 480 40, 520 42, 592 20" />
+          <path class="recent-note__fallback-fuji" d="M 0 320 L 142 320 L 238 126 L 276 176 L 330 84 L 464 320 L 560 320 Z" />
+          <line x1="0" y1="274" x2="560" y2="274" />
+          <line x1="0" y1="294" x2="560" y2="294" />
+        </svg>
+      )}
+      <span class="recent-note__stamp">field note</span>
+    </div>
+    <div class="recent-note__body">
+      <p class="kw-eyebrow recent-note__meta no-indent">
+        <span class="recent-note__num">{num}</span>
+        <FormattedDate date={post.data.pubDate} />
+        {post.data.category && <span>· {post.data.category}</span>}
+      </p>
+      <h3 class="recent-note__title">{post.data.title}</h3>
+      {post.data.description && <p class="recent-note__desc no-indent">{post.data.description.trim()}</p>}
+      <span class="recent-note__cta">read note <span aria-hidden="true">→</span></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .recent-note {
+    min-width: 0;
+    background: var(--kw-bg-card);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-lg);
+    box-shadow: var(--kw-shadow-card);
+    overflow: hidden;
+  }
+  .recent-note__link {
+    display: grid;
+    grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1fr);
+    min-height: 100%;
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 0;
+  }
+  .recent-note__link:hover {
+    border-bottom: 0;
+  }
+  .recent-note__link:hover .recent-note__title {
+    color: var(--kw-fg-link);
+  }
+  .recent-note__media {
+    position: relative;
+    min-height: 260px;
+    background:
+      radial-gradient(circle at 80% 12%, var(--kw-accent-strong-soft), transparent 32%),
+      linear-gradient(135deg, var(--kw-bg-alt), var(--kw-bg-card));
+    overflow: hidden;
+  }
+  .recent-note__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    object-fit: cover;
+    filter: saturate(0.78) contrast(0.96);
+    mix-blend-mode: multiply;
+  }
+  [data-theme="dark"] .recent-note__media img {
+    mix-blend-mode: normal;
+    opacity: 0.72;
+  }
+  .recent-note__media svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .recent-note__fallback-road {
+    fill: none;
+    stroke: var(--kw-road);
+    stroke-width: 18;
+    stroke-linecap: round;
+    opacity: 0.25;
+  }
+  .recent-note__fallback-fuji {
+    fill: var(--kw-fuji);
+    opacity: 0.12;
+  }
+  .recent-note__media line {
+    stroke: var(--kw-rule-soft);
+  }
+  .recent-note__stamp {
+    position: absolute;
+    inset-block-start: var(--kw-space-4);
+    inset-inline-start: var(--kw-space-4);
+    padding: 6px 10px;
+    background: var(--kw-seal-bg);
+    color: var(--kw-seal-fg);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+  .recent-note__body {
+    display: grid;
+    align-content: center;
+    gap: var(--kw-space-4);
+    padding: clamp(var(--kw-space-6), 4vw, var(--kw-space-10));
+  }
+  .recent-note__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-2);
+    color: var(--kw-fg-muted);
+    margin: 0;
+  }
+  .recent-note__num {
+    color: var(--kw-accent-strong);
+    font-variant-numeric: tabular-nums;
+  }
+  .recent-note__title {
+    font-family: var(--kw-font-display);
+    font-size: clamp(var(--kw-fs-h2), 4vw, var(--kw-fs-display-md));
+    font-weight: var(--kw-fw-medium);
+    line-height: var(--kw-lh-snug);
+    letter-spacing: var(--kw-ls-display);
+    margin: 0;
+    color: var(--kw-fg-display);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .recent-note__desc {
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-normal);
+    margin: 0;
+  }
+  .recent-note__cta {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    letter-spacing: 0;
+    text-transform: uppercase;
+    color: var(--kw-fg-link);
+  }
+  @media (max-width: 760px) {
+    .recent-note__link {
+      grid-template-columns: 1fr;
+    }
+    .recent-note__media,
+    .recent-note__media img {
+      min-height: 180px;
+    }
+  }
+</style>
