@@ -18,6 +18,7 @@
 | 0008 | 記事作成補助の自動化 (Agent SDK) | [0008-agent-sdk-authoring-assist.md](./0008-agent-sdk-authoring-assist.md) | Accepted |
 | 0009 | 本文 content フィールドの format (Markdoc) | [0009-content-authoring-format.md](./0009-content-authoring-format.md) | Accepted |
 | 0010 | blog slug の ASCII 正規化 + 旧 URL リダイレクト | [0010-blog-slug-normalization.md](./0010-blog-slug-normalization.md) | Accepted |
+| 0011 | モチーフ語彙に「道筋」を追加 | [0011-motif-road-path.md](./0011-motif-road-path.md) | Accepted |
 
 ## ADR の書き方
 
