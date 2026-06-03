@@ -18,6 +18,8 @@ export default defineConfig({
     // ---- Eyebrow — mono uppercase label ----
     "kw-eyebrow":
       "font-[var(--kw-font-mono)] text-[var(--kw-fs-mono-xs)] uppercase tracking-[var(--kw-ls-eyebrow)] text-kw-fg-muted",
+    // ---- Eyebrow (Japanese) — 字間を抑えた変種。CJK ラベルで 0.3em は開きすぎるため ----
+    "kw-eyebrow-ja": "kw-eyebrow tracking-[var(--kw-ls-eyebrow-ja)]",
 
     // ---- Button — primary base ----
     // border-bottom:0!important / transition / :hover / .kw-button-arrow は global.css に残す

@@ -15,7 +15,7 @@ const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
   <nav class="post-nav" aria-label="前後の記事">
     {prevPost ? (
       <a class="post-nav__item post-nav__item--prev" href={postHref(prevPost)}>
-        <span class="kw-eyebrow post-nav__dir no-indent">← 前の記事</span>
+        <span class="kw-eyebrow-ja post-nav__dir no-indent">← 前の記事</span>
         <span class="post-nav__title">{prevPost.data.title}</span>
       </a>
     ) : (
@@ -23,7 +23,7 @@ const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
     )}
     {nextPost ? (
       <a class="post-nav__item post-nav__item--next" href={postHref(nextPost)}>
-        <span class="kw-eyebrow post-nav__dir no-indent">次の記事 →</span>
+        <span class="kw-eyebrow-ja post-nav__dir no-indent">次の記事 →</span>
         <span class="post-nav__title">{nextPost.data.title}</span>
       </a>
     ) : (
