@@ -157,7 +157,7 @@ Provide `width` and `height` props for static analysis. Hero images on blog card
 
 ## Styling Approach
 
-- **CSS Variables:** Defined in `global.css` (--accent, --black, --gray, --surface, etc.)
+- **Design tokens:** Defined in `src/styles/tokens.css` under the `--kw-*` namespace (e.g. `--kw-accent`, `--kw-bg`, `--kw-fg`); base element styles live in `global.css`. Full spec in `docs/design-system.md`.
 - **Typography:** BIZ UDPGothic for body text, Shippori Mincho for headings/signatures, JetBrains Mono for labels/code
 - **Component Scoping:** Most styles are component-scoped in `.astro` files
 - **Responsive:** Grid-based layouts with auto-fit columns, breakpoints at 900px, 720px, 640px
@@ -264,4 +264,4 @@ pnpm run suggest-frontmatter src/content/blog/<filename>.md
 - **Default language:** Japanese (`ja`)
 - **OGP locale:** Auto-set to `ja_JP` in BaseHead.astro
 - **Accessibility:** ARIA labels on navigation, `rel` attributes on external links, `prefers-reduced-motion` support
-- **Font preloading:** Zen Maru Gothic for Japanese text optimization
+- **Web fonts:** Shippori Mincho + BIZ UDPGothic + JetBrains Mono via Google Fonts (`display=swap` + `preconnect` in `BaseHead.astro`). Zen Maru Gothic is used only for OG image generation (satori), not for page text.

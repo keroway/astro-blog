@@ -170,6 +170,10 @@ Keystatic は `keystatic/<slug>` ブランチへ commit し、main へは必ず 
 - [0006 — CMS リポジトリ構成](./docs/adr/0006-repo-structure.md)（Accepted）
 - [0007 — モチーフ語彙の拡張](./docs/adr/0007-motif-vocabulary-expansion.md)（Accepted）
 - [0008 — 記事作成補助の自動化（Agent SDK）](./docs/adr/0008-agent-sdk-authoring-assist.md)（Accepted）
+- [0009 — コンテンツ著作フォーマット](./docs/adr/0009-content-authoring-format.md)（Accepted）
+- [0010 — ブログ slug 正規化](./docs/adr/0010-blog-slug-normalization.md)（Accepted）
+- [0011 — モチーフ語彙に道筋を追加](./docs/adr/0011-motif-road-path.md)（Accepted）
+- [0012 — Tokaido Field Notes 刷新](./docs/adr/0012-tokaido-field-notes-refresh.md)（Accepted）
 
 CMS 運用フローの詳細は [docs/cms-flow.md](./docs/cms-flow.md)、デザイントークンは [docs/design-system.md](./docs/design-system.md) を参照してください。
 

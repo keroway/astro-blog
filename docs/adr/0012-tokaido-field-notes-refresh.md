@@ -3,13 +3,13 @@
 - **ステータス**: Accepted
 - **決定日**: 2026-06-03
 - **決定者**: @keroway
-- **前提資料**: [desgin-advise.md](../../desgin-advise.md), [ADR 0007](./0007-motif-vocabulary-expansion.md), [ADR 0011](./0011-motif-road-path.md), [docs/design-system.md](../design-system.md)
+- **前提資料**: [design-advice.md](../design-advice.md), [ADR 0007](./0007-motif-vocabulary-expansion.md), [ADR 0011](./0011-motif-road-path.md), [docs/design-system.md](../design-system.md)
 
 ---
 
 ## コンテキスト
 
-ホーム HERO には ADR 0011 に基づく道筋モチーフが実装済みだが、表現はごく薄いウォーターマークに留まっている。`desgin-advise.md` が指摘する「東海道・戸塚・横浜・技術手控え」を視覚言語として強めるには、背景だけでなくタイポグラフィ、カード、署名アクセントまで一体で更新する必要がある。
+ホーム HERO には ADR 0011 に基づく道筋モチーフが実装済みだが、表現はごく薄いウォーターマークに留まっている。`design-advice.md` が指摘する「東海道・戸塚・横浜・技術手控え」を視覚言語として強めるには、背景だけでなくタイポグラフィ、カード、署名アクセントまで一体で更新する必要がある。
 
 一方で ADR 0011 は、道筋追加時の安全な最小変更として「新色なし」「朱アクセント非採用」を固定している。これは当時のスコープ管理としては妥当だが、今回の「より大胆に変更する」目的には制約が強すぎる。
 
