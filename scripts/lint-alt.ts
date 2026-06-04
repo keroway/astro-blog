@@ -22,11 +22,7 @@ function collectFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { recursive: true, withFileTypes: true });
   return entries
     .filter(
-      (e) =>
-        e.isFile() &&
-        (e.name.endsWith(".md") ||
-          e.name.endsWith(".mdx") ||
-          e.name.endsWith(".mdoc"))
+      (e) => e.isFile() && (e.name.endsWith(".md") || e.name.endsWith(".mdoc"))
     )
     .map((e) =>
       path.join(e.parentPath ?? (e as { path?: string }).path ?? dir, e.name)
