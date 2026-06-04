@@ -116,7 +116,7 @@ flowchart TD
 
 ## 管理（CMS）: Keystatic
 
-コンテンツは [Keystatic](https://keystatic.com/)（Git ベース CMS）で編集できます。記事の正本は `src/content/{blog,works}/*.mdoc`（Keystatic の content フィールドは Markdoc 形式）に Git で管理され、Keystatic はそのファイルを admin UI 上で読み書きするレイヤーです。コレクション定義は `keystatic.config.ts` にあります。
+コンテンツは [Keystatic](https://keystatic.com/)（Git ベース CMS）で編集できます。記事の正本は `src/content/{blog,works}/` に Git で管理され（loader は `.md` / `.mdoc` 両対応。現状の記事は Keystatic の Markdoc 形式 `.mdoc` に統一）、Keystatic はそのファイルを admin UI 上で読み書きするレイヤーです。コレクション定義は `keystatic.config.ts` にあります。
 
 ### 対象コレクション
 
@@ -154,7 +154,7 @@ Keystatic は `keystatic/<slug>` ブランチへ commit し、main へは必ず 
 
 | スクリプト | 実行コマンド | 役割 |
 |------------|-------------|------|
-| frontmatter 補完提案 | `pnpm run suggest-frontmatter src/content/blog/<file>.md` | `description` / `tags` / `category` の候補を提示（ファイルは書き換えない） |
+| frontmatter 補完提案 | `pnpm run suggest-frontmatter src/content/blog/<file>.mdoc` | `description` / `tags` / `category` の候補を提示（ファイルは書き換えない） |
 | alt テキスト lint | `pnpm run lint:alt` | `src/content/{blog,works}` の markdown 画像で alt が空/4 文字未満の箇所を検出（CI の lint ジョブでも実行） |
 | ブログ監査 | `node --experimental-strip-types scripts/audit-blog.ts` | 記事の frontmatter を集計し `docs/content-audit.md` を生成 |
 | readingTime backfill | `node --experimental-strip-types scripts/backfill-frontmatter.ts` | 本文文字数から `readingTime` を算出し未設定記事へ補完 |
