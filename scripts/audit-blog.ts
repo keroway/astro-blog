@@ -58,7 +58,7 @@ function assess(fm: Frontmatter): string {
 
 const files = fs
   .readdirSync(BLOG_DIR)
-  .filter((f) => f.endsWith(".md") || f.endsWith(".mdx"))
+  .filter((f) => f.endsWith(".md") || f.endsWith(".mdoc"))
   .sort();
 
 const rows: Array<{
@@ -73,7 +73,7 @@ const rows: Array<{
 for (const file of files) {
   const content = fs.readFileSync(path.join(BLOG_DIR, file), "utf8");
   const fm = parseFrontmatter(content);
-  const slug = file.replace(/\.(md|mdx)$/, "");
+  const slug = file.replace(/\.(md|mdoc)$/, "");
   rows.push({
     slug,
     title: fm.title ?? "（タイトル未設定）",
