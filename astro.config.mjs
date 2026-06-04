@@ -1,5 +1,4 @@
 import markdoc from "@astrojs/markdoc";
-import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
@@ -36,7 +35,7 @@ if (
 // local dev (VERCEL_ENV 未定義) → 有効 (local mode で従来通り動作)
 // markdoc は Keystatic content フィールド (.mdoc) の描画に必須。書き込みを伴わないため
 // Preview でも有効でよい (mount を絞るのは keystatic 統合のみ)。設定は markdoc.config.mjs。
-const baseIntegrations = [UnoCSS(), mdx(), markdoc(), sitemap()];
+const baseIntegrations = [UnoCSS(), markdoc(), sitemap()];
 const integrations = isVercelPreview
   ? baseIntegrations
   : [...baseIntegrations, react(), keystatic()];
