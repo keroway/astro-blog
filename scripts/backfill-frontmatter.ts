@@ -21,7 +21,7 @@ function insertAfterPubDate(content: string, minutes: number): string {
 
 const files = fs
   .readdirSync(BLOG_DIR)
-  .filter((f) => f.endsWith(".md") || f.endsWith(".mdx"))
+  .filter((f) => f.endsWith(".md") || f.endsWith(".mdoc"))
   .sort();
 
 let updated = 0;
