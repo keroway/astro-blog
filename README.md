@@ -16,7 +16,7 @@
 - Works（制作物紹介）と Blog（技術記事）を統合したポートフォリオ構成
 - 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
 - 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示とホバーインタラクション
-- Astro Content Collections による Markdown/MDX 記事管理と型チェック
+- Astro Content Collections による Markdown/Markdoc 記事管理と型チェック
 - [Keystatic](https://keystatic.com/) による Git ベースの管理（CMS）UI（ローカル / GitHub ブランチモード）
 - RSS フィードとサイトマップを自動生成
 - `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
@@ -27,7 +27,7 @@
 | 領域 | 採用技術 |
 |------|---------|
 | フレームワーク | [Astro 6](https://astro.build/) + TypeScript（strict モード有効） |
-| コンテンツ | Astro Content Collections（Markdown/MDX）、[@astrojs/mdx](https://docs.astro.build/en/guides/integrations-guide/mdx/) |
+| コンテンツ | Astro Content Collections（Markdown/Markdoc）、[@astrojs/markdoc](https://docs.astro.build/en/guides/integrations-guide/markdoc/) |
 | CMS | [Keystatic](https://keystatic.com/)（`@keystatic/astro` + `@keystatic/core`、admin UI は React で hydrate） |
 | スタイル | [UnoCSS](https://unocss.dev/) + コンポーネントスコープの純 CSS |
 | 配信補助 | [@astrojs/rss](https://docs.astro.build/en/guides/rss/)（RSS）、[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)（XML サイトマップ） |
@@ -57,11 +57,11 @@ pnpm run dev
 
 ### コンテンツパイプライン
 
-Markdown/MDX を正本とし、Content Collections のスキーマで型検証したうえで静的出力します。RSS・サイトマップはビルド時に併せて生成されます。
+Markdown/Markdoc を正本とし、Content Collections のスキーマで型検証したうえで静的出力します。RSS・サイトマップはビルド時に併せて生成されます。
 
 ```mermaid
 flowchart LR
-    A["Markdown / MDX<br/>src/content/{blog,works}"] --> B["Content Collections<br/>Zod スキーマで型チェック"]
+    A["Markdown / Markdoc<br/>src/content/{blog,works}"] --> B["Content Collections<br/>Zod スキーマで型チェック"]
     B --> C["astro build"]
     C --> D["静的 HTML（SSG）"]
     C --> E["RSS feed<br/>/rss.xml"]
@@ -94,14 +94,14 @@ flowchart TD
 ├── src/
 │   ├── components/       # Header や日付フォーマッタなどの再利用コンポーネント（aria 属性や rel=... を付与済み）
 │   ├── content/
-│   │   ├── blog/         # Markdown/MDX の記事本体
-│   │   └── works/        # 制作物紹介の Markdown/MDX
+│   │   ├── blog/         # Markdown/Markdoc の記事本体
+│   │   └── works/        # 制作物紹介の Markdown/Markdoc
 │   ├── content.config.ts # Content Collections スキーマ（blog / works）
 │   ├── layouts/          # ページレイアウト（SiteLayout, BlogPost など）
 │   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
 ├── scripts/              # 運用 CLI（frontmatter 補助・alt lint・監査・OG 生成など）
 ├── docs/                 # ADR・CMS フロー・デザインシステムなどの設計ドキュメント
-├── astro.config.mjs      # Astro 設定（UnoCSS・MDX・sitemap・Keystatic・Vercel adapter を統合）
+├── astro.config.mjs      # Astro 設定（UnoCSS・Markdoc・sitemap・Keystatic・Vercel adapter を統合）
 ├── keystatic.config.ts   # Keystatic（CMS）のコレクション定義
 ├── pnpm-lock.yaml        # 依存関係ロック
 └── tsconfig.json
