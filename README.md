@@ -116,7 +116,7 @@ flowchart TD
 
 ## 管理（CMS）: Keystatic
 
-コンテンツは [Keystatic](https://keystatic.com/)（Git ベース CMS）で編集できます。記事の正本は `src/content/{blog,works}/*.md(x)` に Git で管理され、Keystatic はそのファイルを admin UI 上で読み書きするレイヤーです。コレクション定義は `keystatic.config.ts` にあります。
+コンテンツは [Keystatic](https://keystatic.com/)（Git ベース CMS）で編集できます。記事の正本は `src/content/{blog,works}/*.mdoc`（Keystatic の content フィールドは Markdoc 形式）に Git で管理され、Keystatic はそのファイルを admin UI 上で読み書きするレイヤーです。コレクション定義は `keystatic.config.ts` にあります。
 
 ### 対象コレクション
 
