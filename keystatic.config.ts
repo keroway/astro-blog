@@ -1,4 +1,5 @@
 import { collection, config, fields } from "@keystatic/core";
+import { createElement } from "react";
 
 // このファイルは Keystatic Admin UI の hydration でブラウザにもバンドルされる。
 // `process.env` を直接参照するとブラウザで `ReferenceError: process is not defined`
@@ -11,6 +12,38 @@ import { collection, config, fields } from "@keystatic/core";
 //   PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
 // 本番フェイルファストは astro.config.mjs (サーバー専用) 側で担保する。
 // セットアップ手順は docs/cms-flow.md を参照。
+// Keystatic admin UI ブランドマーク。colorScheme に応じて navy / paper-white で反転。
+// CSS 変数は Keystatic admin DOM では利用できないため design-system.md の実値を直参照。
+function KeroMark({ colorScheme }: { colorScheme: "light" | "dark" }) {
+  const bg = colorScheme === "dark" ? "#9CB4DA" : "#003366";
+  const fg = colorScheme === "dark" ? "#0B1B33" : "#F3F1EC";
+  return createElement(
+    "svg",
+    {
+      xmlns: "http://www.w3.org/2000/svg",
+      viewBox: "0 0 24 24",
+      width: 24,
+      height: 24,
+      "aria-hidden": true,
+    },
+    createElement("rect", { width: 24, height: 24, rx: 5, fill: bg }),
+    createElement(
+      "text",
+      {
+        x: 12,
+        y: 12,
+        dominantBaseline: "central",
+        textAnchor: "middle",
+        fontFamily: "Georgia, serif",
+        fontSize: 15,
+        fontWeight: 700,
+        fill: fg,
+      },
+      "K"
+    )
+  );
+}
+
 const storage =
   import.meta.env.PUBLIC_KEYSTATIC_STORAGE_KIND === "github"
     ? ({
@@ -22,6 +55,13 @@ const storage =
 
 export default config({
   storage,
+
+  ui: {
+    brand: {
+      name: "keroway",
+      mark: KeroMark,
+    },
+  },
 
   collections: {
     blog: collection({
