@@ -70,8 +70,8 @@ importers:
         specifier: ^6.4.4
         version: 6.4.4(@types/node@24.12.4)(@vercel/functions@3.6.1)(idb-keyval@6.2.2)(jiti@2.7.0)(rollup@4.61.1)(yaml@2.9.0)
       portless:
-        specifier: ^0.13.1
-        version: 0.13.1
+        specifier: ^0.14.0
+        version: 0.14.0
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3647,8 +3647,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  portless@0.13.1:
-    resolution: {integrity: sha512-1B+8Xd4tB1gOIkRHOUEi/LCOp8PIxUsL3ACBX5G2UkKw25TSRNUqAlQcBGxweJgdXb9DPQFX5utKLRUzPFhMnA==}
+  portless@0.14.0:
+    resolution: {integrity: sha512-kKxmxB1DQ9gI8t+V13VhuwTXu31io5nbFubvZAE82AxzXBsvcJV7qQJbmomrQUpbVxo2UVHqs14iX4YK0BClmQ==}
     engines: {node: '>=24'}
     os: [darwin, linux, win32]
     hasBin: true
@@ -8740,7 +8740,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
-  portless@0.13.1: {}
+  portless@0.14.0: {}
 
   postcss-value-parser@4.2.0: {}
 
