@@ -15,6 +15,8 @@ const isActive = (href: string) => {
 };
 ---
 
+<a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
+
 <header class="kw-header" role="banner">
   <a href="/" class="kw-header__brand" aria-label="keroway.com">
     <span class="kw-header__brand-mark" aria-hidden="true">✦</span>
@@ -78,6 +80,35 @@ const isActive = (href: string) => {
 </script>
 
 <style>
+  .skip-link {
+    position: absolute;
+    top: var(--kw-space-3);
+    left: var(--kw-space-3);
+    padding: var(--kw-space-2) var(--kw-space-4);
+    background: var(--kw-bg);
+    color: var(--kw-fg-display);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    text-decoration: none;
+    border: 1px solid var(--kw-rule-strong);
+    border-radius: var(--kw-radius-sm);
+    z-index: 9999;
+    transform: translateY(-200%);
+    transition: transform var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+    outline: 2px solid var(--kw-accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .skip-link {
+      transition: none;
+    }
+  }
+
   .kw-header {
     display: flex;
     align-items: center;

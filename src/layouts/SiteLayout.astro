@@ -45,7 +45,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
       </div>
       <div class="kw-page__main">
         <Header />
-        <main class:list={['site-main', mainClass]} transition:animate="fade" transition:name="site-main">
+        <main id="main-content" class:list={['site-main', mainClass]} transition:animate="fade" transition:name="site-main">
           <slot />
         </main>
         <Footer />
