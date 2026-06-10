@@ -14,18 +14,18 @@ const heroImage = post.data.heroImage;
 
 <article class="recent-note">
   <a class="recent-note__link" href={href}>
-    <div class="recent-note__media" aria-hidden="true">
+    <div class="recent-note__media">
       {heroImage ? (
-        <img src={heroImage} alt="" loading="lazy" />
+        <img src={heroImage} alt={post.data.title} loading="lazy" />
       ) : (
-        <svg viewBox="0 0 560 320" preserveAspectRatio="none" focusable="false">
+        <svg viewBox="0 0 560 320" preserveAspectRatio="none" focusable="false" aria-hidden="true">
           <path class="recent-note__fallback-road" d="M -20 230 C 150 106, 256 236, 424 88 C 480 40, 520 42, 592 20" />
           <path class="recent-note__fallback-fuji" d="M 0 320 L 142 320 L 238 126 L 276 176 L 330 84 L 464 320 L 560 320 Z" />
           <line x1="0" y1="274" x2="560" y2="274" />
           <line x1="0" y1="294" x2="560" y2="294" />
         </svg>
       )}
-      <span class="recent-note__stamp">field note</span>
+      <span class="recent-note__stamp" aria-hidden="true">field note</span>
     </div>
     <div class="recent-note__body">
       <p class="kw-eyebrow recent-note__meta no-indent">

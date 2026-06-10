@@ -72,7 +72,7 @@ if (heroImageAbsolute) {
     <article class="post">
       {heroImage && (
         <figure class="post__hero">
-          <img src={heroImage} alt="" loading="lazy" transition:name={`hero-${title}`} />
+          <img src={heroImage} alt={title} loading="lazy" transition:name={`hero-${title}`} />
         </figure>
       )}
       <header class="post__header">
