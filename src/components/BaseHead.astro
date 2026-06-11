@@ -8,7 +8,7 @@ import "../styles/global.css";
 interface Props {
 	title: string;
 	description: string;
-	image?: string;
+	image?: string | null;
 	locale?: string;
 	canonicalUrl?: string;
 	articleSchema?: Record<string, unknown>;
@@ -16,6 +16,8 @@ interface Props {
 
 const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl, articleSchema } = Astro.props;
 const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = image ? new URL(image, Astro.url).toString() : null;
+const ogImageAlt = title || SITE_TITLE;
 
 const siteUrl = Astro.site ? new URL("/", Astro.site).toString() : `${Astro.url.origin}/`;
 const websiteSchema = {
@@ -65,15 +67,27 @@ const websiteSchema = {
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
 <meta property="og:locale" content={locale} />
+{ogImageUrl && (
+	<>
+		<meta property="og:image" content={ogImageUrl} />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content={ogImageAlt} />
+	</>
+)}
 
 <!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={Astro.url} />
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
-<meta property="twitter:image" content={new URL(image, Astro.url)} />
+{ogImageUrl && (
+	<>
+		<meta property="twitter:image" content={ogImageUrl} />
+		<meta property="twitter:image:alt" content={ogImageAlt} />
+	</>
+)}
 
 <!-- Structured data (JSON-LD) -->
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />

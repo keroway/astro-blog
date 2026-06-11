@@ -39,6 +39,31 @@ test.describe("URL compatibility check", () => {
     expect(res.status(), "/rss.xml should return 200").toBe(200);
   });
 
+  test("og:image meta tags include width/height/alt", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(
+      page.locator('head > meta[property="og:image"]'),
+      "og:image should be present on the homepage"
+    ).toHaveCount(1);
+    await expect(
+      page.locator('head > meta[property="og:image:width"]')
+    ).toHaveAttribute("content", "1200");
+    await expect(
+      page.locator('head > meta[property="og:image:height"]')
+    ).toHaveAttribute("content", "630");
+
+    const ogAlt = await page
+      .locator('head > meta[property="og:image:alt"]')
+      .getAttribute("content");
+    expect(ogAlt, "og:image:alt should be non-empty").toBeTruthy();
+
+    const twAlt = await page
+      .locator('head > meta[property="twitter:image:alt"]')
+      .getAttribute("content");
+    expect(twAlt, "twitter:image:alt should be non-empty").toBeTruthy();
+  });
+
   // sitemap-index.xml is generated only at build time (astro build),
   // not served by the dev server. Verify the build artifact exists instead.
   // ADR 0005 (Vercel adapter 導入) 以降は SSG 静的アセットが dist/client/ に出力される。
