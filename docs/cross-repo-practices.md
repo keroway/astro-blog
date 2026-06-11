@@ -22,14 +22,14 @@
 | repo | 言語 / 種別 | Dependabot | CI 構成 | branch 保護 | E2E / テスト | docs / ADR | .claude/ | デプロイ |
 |---|---|---|---|---|---|---|---|---|
 | **astro-blog** | Astro 6 / ブログ | npm + actions, グループ化, major block | 4 並列 (lint / typecheck / build / E2E) | ruleset (4 checks 必須, 削除 / FF 禁止) | Playwright + lint:alt | docs/ 充実, ADR 体系化は弱い | フル装備 (rules / hooks / commands / agent-memory) | Vercel |
-| **timeline-dsl** | Rust / DSL コンパイラ (public) | cargo + actions, lockstep 抑止 | 6+ ジョブ, multi-OS, coverage | **なし (public repo なのに未設定)** | unit + E2E smoke + snapshot + Windows | docs/ 最充実 (en/ja), ADR 2 本, CHANGELOG / CONTRIBUTING / SECURITY | フル装備 (agents / skills) | GitHub Pages + crates.io/npm OIDC + Homebrew 自動更新 |
-| **timeline-dsl-lp** | Astro + Starlight / docs サイト | npm (/site) + actions, minimal | 多数 (lint / format / unit / build / bundle-size / smoke 5 種 / Lighthouse) | 未確認 | Playwright + axe-core + vitest | Starlight 統合 | CLAUDE.md のみ | Cloudflare Pages |
+| **timeline-dsl** | Rust / DSL コンパイラ (public) | cargo + actions, lockstep 抑止 | 6+ ジョブ, multi-OS, coverage | ruleset `main-protection` (2026-05-06 ~): 削除禁止 / FF 禁止 / PR 必須 / required checks (`test-and-smoke` / `Test (Windows)` / `Build WebUI`) | unit + E2E smoke + snapshot + Windows | docs/ 最充実 (en/ja), ADR 2 本, CHANGELOG / CONTRIBUTING / SECURITY | フル装備 (agents / skills) | GitHub Pages + crates.io/npm OIDC + Homebrew 自動更新 |
+| **timeline-dsl-lp** | Astro + Starlight / docs サイト | npm (/site) + actions, minimal | 多数 (lint / format / unit / build / bundle-size / smoke 5 種 / Lighthouse) | ruleset あり (id: 16918007, active) | Playwright + axe-core + vitest | Starlight 統合 | CLAUDE.md のみ | Cloudflare Pages |
 | **code-tactics** | Rust + Svelte / ゲーム | cargo + npm + actions, グループ化 (最良) | Rust / WASM (size budget 256 KiB) / server / Web | branch protection (3 checks, enforce_admins) | 決定論 golden test + vitest + Playwright | ADR 7 本 + template, glossary | settings のみ | GitHub Pages + Tauri |
-| **code-tactics-lp** | Astro / LP | npm + actions, グループ化 | 2 ジョブ (verify / linkcheck = lychee) | 未確認 | なし (lychee で補完) | decisions / tech-stack 等 4 doc | CLAUDE.md のみ | GitHub Pages (サブパス) |
-| **reflectorbit** | Zig / ゲーム | actions のみ | build + wasm (zig cache) | なし | physics unit test | docs/ 8 doc, CHANGELOG なし | フル装備 (3 agents + memory + rules) | emscripten Web + native release |
-| **reflectorbit-lp** | Astro / LP | npm + actions, グループ化 + Vite override | 2 ジョブ (lint / build) | 未確認 | なし | copy / design / assets | CLAUDE.md のみ | Cloudflare Pages |
+| **code-tactics-lp** | Astro / LP | npm + actions, グループ化 | 2 ジョブ (verify / linkcheck = lychee) | force push 禁止 / 削除禁止 / linear history 必須 (required status checks は未設定) | なし (lychee で補完) | decisions / tech-stack 等 4 doc | CLAUDE.md のみ | GitHub Pages (サブパス) |
+| **reflectorbit** | Zig / ゲーム | actions のみ | build + wasm (zig cache) | ruleset `main protection` (2026-05-27 ~) | physics unit test | docs/ 8 doc, CHANGELOG なし | フル装備 (3 agents + memory + rules) | emscripten Web + native release |
+| **reflectorbit-lp** | Astro / LP | npm + actions, グループ化 + Vite override | 2 ジョブ (lint / build) | 保護なし (確認済み) | なし | copy / design / assets | CLAUDE.md のみ | Cloudflare Pages |
 | **obsidian-clipper** | TS + Hono / CF Worker | npm (prod/dev 分割) + actions, コメント付き | typecheck (Bun) + gitleaks 3 層 | ruleset (typecheck + gitleaks 必須, squash-only) | なし (HANDOFF.md で vitest 予告) | README 42 KB, HANDOFF.md, ADR なし | CLAUDE.md (不変条件方式) | wrangler deploy |
-| **obsidian-tdsl** | TS / Obsidian プラグイン | **なし (完全欠落)** | ほぼ空 | なし | なし | README ja/en, CHANGELOG | **なし** | — |
+| **obsidian-tdsl** | TS / Obsidian プラグイン | **なし (完全欠落)** | ほぼ空 | 保護なし (確認済み) | なし | README ja/en, CHANGELOG | **なし** | — |
 | **homebrew-tap** | Ruby / tap (public) | actions のみ | brew test-bot (multi-OS) + pr-pull publish | ruleset (削除 / FF 禁止のみ) | test-bot | README ja/en | CLAUDE.md のみ | bottle 配布 |
 | **project-hail-mary** | Astro / ガイドサイト (public) | npm + actions, cooldown 5 日 | 1 ジョブ (check + build + preview) | ruleset (PR 必須) | なし | README のみ | フル装備 (symlink CLAUDE.md + agent-memory) | Cloudflare Pages (非 ASCII commit 対応) |
 
@@ -53,9 +53,9 @@
 | 項目 | 内容 |
 |---|---|
 | **ドナー** | astro-blog, code-tactics, obsidian-clipper |
-| **受け手** | **timeline-dsl** (public repo なのに未設定 — 最優先), reflectorbit, obsidian-tdsl |
+| **受け手** | reflectorbit-lp (確認済み保護なし), obsidian-tdsl (確認済み保護なし) |
 | **参照ファイル** | `gh api repos/keroway/astro-blog/rulesets` で構成を確認 |
-| **要点** | 最小構成は「削除禁止 + force-push 禁止」のみでも有効。required checks は CI が安定してから追加する |
+| **要点** | 最小構成は「削除禁止 + force-push 禁止」のみでも有効。required checks は CI が安定してから追加する。timeline-dsl / reflectorbit は 2026-05 に ruleset 設定済み ([timeline-dsl#455](https://github.com/keroway/timeline-dsl/issues/455)) |
 
 ### 2.3 Dependabot グループ化 + major block + cooldown
 
