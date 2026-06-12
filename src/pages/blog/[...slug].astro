@@ -3,7 +3,7 @@ import { render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 import type { BlogEntry } from '../../types/content';
 import { encodeSlugId } from '../../lib/slug';
-import { getPublishedPosts, getRelatedPosts } from '../../lib/content';
+import { calculateReadingTime, getPublishedPosts, getRelatedPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
 	const sorted = await getPublishedPosts();
@@ -31,10 +31,12 @@ const { post, prevPost, nextPost, relatedPosts } = Astro.props as Props;
 const { Content, headings } = await render(post);
 
 const ogImage = `/og/${encodeSlugId(post.id)}.png`;
+const readingTime = post.data.readingTime ?? calculateReadingTime(post.body ?? '');
 ---
 
 <BlogPost
 	{...post.data}
+	readingTime={readingTime}
 	ogImage={ogImage}
 	headings={headings}
 	prevPost={prevPost}

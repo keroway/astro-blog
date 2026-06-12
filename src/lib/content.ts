@@ -1,6 +1,18 @@
 import { getCollection } from "astro:content";
 import type { BlogEntry, WorksEntry } from "../types/content";
 
+const READING_SPEED_CHARS_PER_MIN = 400;
+
+/**
+ * 本文の文字数から読了時間 (分) を概算する。
+ * scripts/backfill-frontmatter.ts の計算式と一致させる (400 文字/分・最小 1 分)。
+ * frontmatter に readingTime が無い記事のフォールバック用。
+ */
+export function calculateReadingTime(body: string): number {
+  const text = body.replace(/^---[\s\S]*?---/, "").trim();
+  return Math.max(1, Math.ceil(text.length / READING_SPEED_CHARS_PER_MIN));
+}
+
 /**
  * 公開済み (draft でなく pubDate が now 以前) の blog を pubDate 降順で返す。
  * index / blog/index / blog/[...slug] / rss / og で共通利用する。
