@@ -89,7 +89,7 @@ memory: project
 
 # Persistent Agent Memory
 
-You have a persistent, file-based memory system at `/Users/y.kurokawa/dev/src/github/keroway/astro-blog/.claude/agent-memory/literary-tech-editor/`. This directory already exists — write to it directly with the Write tool (do not run mkdir or check for its existence).
+You have a persistent, file-based memory system at `${CLAUDE_PROJECT_DIR}/.claude/agent-memory/literary-tech-editor/`. This directory already exists — write to it directly with the Write tool (do not run mkdir or check for its existence).
 
 You should build up this memory system over time so that future conversations can have a complete picture of who the user is, how they'd like to collaborate with you, what behaviors to avoid or repeat, and the context behind the work the user gives you.
 
