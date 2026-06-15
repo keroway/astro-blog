@@ -24,6 +24,7 @@
     "@astrojs/react": "^5.0.7",
     "@astrojs/rss": "^4.0.18",
     "@astrojs/sitemap": "^3.7.3",
+    "@axe-core/playwright": "^4.11.3",
     "@biomejs/biome": "^2.5.0",
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@keystatic/astro": "^5.0.6",
