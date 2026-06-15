@@ -217,7 +217,7 @@ flowchart TD
 
 ### 脆弱性監査
 
-社内ミラー (`.npmrc` の `registry`) は `audit` エンドポイント非対応のため、監査時のみ公式レジストリへ向ける必要があります。
+個人環境のミラー設定 (`.npmrc` の `registry`) は `audit` エンドポイント非対応のため、監査時のみ公式レジストリへ向ける必要があります。
 
 ```bash
 pnpm audit --registry=https://registry.npmjs.org/
