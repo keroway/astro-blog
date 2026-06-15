@@ -28,6 +28,10 @@ overrides:
   "picomatch@<2.3.2": ">=2.3.2"
   "yaml@>=2.0.0 <2.8.3": ">=2.8.3"
   "postcss@<8.5.10": ">=8.5.10"
+  # GHSA-g7r4-m6w7-qqqr / GHSA-dhv9 (esbuild <0.28.1)
+  "esbuild@<0.28.1": ">=0.28.1"
+  # GHSA-9wv6-86v2-598j (path-to-regexp 6.x <6.3.0)
+  "path-to-regexp@>=6.0.0 <6.3.0": ">=6.3.0"
 
 peerDependencyRules:
   allowedVersions:
