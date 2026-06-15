@@ -73,6 +73,7 @@ export default config({
       slugField: "title",
       path: "src/content/blog/*",
       columns: ["title", "pubDate", "category", "draft"],
+      previewUrl: "/blog/{slug}/",
       // works と同様に本文を content フィールド (markdoc → .mdoc) に束ねる。
       // Keystatic は collection 単位で format を決めるため全エントリを .mdoc に揃える。詳細は ADR 0009。
       format: { contentField: "content" },
@@ -145,6 +146,7 @@ export default config({
       slugField: "title",
       path: "src/content/works/*",
       columns: ["title", "status", "featured"],
+      previewUrl: "/works/{slug}/",
       // 本文を content フィールド (markdoc → .mdoc) に束ねる。Keystatic は collection 単位で
       // format を決めるため、works の全エントリを .mdoc に揃える。blog は別途 #218 で移行。詳細は ADR 0009。
       format: { contentField: "content" },
