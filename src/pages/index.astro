@@ -11,6 +11,7 @@ import PostRow from '../components/PostRow.astro';
 import RecentNoteCard from '../components/RecentNoteCard.astro';
 import { encodeSlugId } from '../lib/slug';
 import { getPublishedPosts, getSortedWorks, pickFeaturedWorks } from '../lib/content';
+import { getFocusAreas } from '../data/focus-areas';
 
 const posts = await getPublishedPosts();
 const recentPosts = posts.slice(0, 4);
@@ -20,11 +21,7 @@ const secondaryPosts = recentPosts.slice(1);
 const allWorks = await getSortedWorks();
 const displayWorks = pickFeaturedWorks(allWorks, 3);
 
-const focusAreas = [
-  { key: 'cloud_devops', title: 'クラウド & DevOps',  description: '開発と運用をつなぐ仕組みづくり。継続的デリバリ、可観測性、コスト設計など、サービスを健全に動かし続けるための判断と落とし穴の記録。' },
-  { key: 'web_frontend', title: 'Web フロントエンド', description: '読みやすさ・速さ・支援技術での到達しやすさを揃えるための実装メモ。コンポーネント設計、レンダリング戦略、タイポグラフィの細部。' },
-  { key: 'embedded_iot', title: '組み込み・IoT',      description: 'センサーとマイコンから、ネットワーク越しのクラウドまで。ハードの制約とソフトの抽象が交わる地点で起きることを書きます。' },
-];
+const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot']);
 ---
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
