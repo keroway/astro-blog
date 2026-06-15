@@ -108,6 +108,32 @@ test.describe("SEO: canonical URL", () => {
   });
 });
 
+test.describe("Tag pages", () => {
+  test("tag page renders post listing and breadcrumb to blog", async ({
+    page,
+  }) => {
+    await page.goto("/blog/tags/%E8%AA%AD%E6%9B%B8/");
+
+    await expect(page).toHaveTitle(/読書/);
+    const posts = page.locator("div.posts-list > article.post-row");
+    await expect(posts.first()).toBeVisible();
+    expect(await posts.count()).toBeGreaterThanOrEqual(1);
+  });
+
+  test("blog post page shows tag links that navigate to tag page", async ({
+    page,
+  }) => {
+    await page.goto("/blog/book-pragmatic-programmer/");
+
+    const tagLink = page.locator(".post__tags a").first();
+    await expect(tagLink).toBeVisible();
+    await tagLink.click();
+    await expect(page).toHaveURL(/\/blog\/tags\//);
+    const posts = page.locator("div.posts-list > article.post-row");
+    await expect(posts.first()).toBeVisible();
+  });
+});
+
 test.describe("Basic site functionality", () => {
   test("home page renders navigation and intro text", async ({ page }) => {
     await page.goto("/");

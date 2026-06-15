@@ -20,6 +20,7 @@ interface Props extends BlogData {
   prevPost?: BlogEntry | null;
   nextPost?: BlogEntry | null;
   relatedPosts?: BlogEntry[];
+  tags?: string[];
 }
 
 const post = Astro.props as Props;
@@ -37,6 +38,7 @@ const {
   prevPost = null,
   nextPost = null,
   relatedPosts = [],
+  tags = [],
 } = post;
 const heroImageSrc = heroImage ?? '/blog-placeholder-100.png';
 const tocItems = headings.filter((h) => h.depth === 2 || h.depth === 3);
@@ -94,6 +96,15 @@ if (heroImageAbsolute) {
         </div>
         <h1 class="post__title">{title}</h1>
         <hr />
+        {tags.length > 0 && (
+          <ul class="post__tags" aria-label="タグ">
+            {tags.map((tag) => (
+              <li>
+                <a href={`/blog/tags/${encodeURIComponent(tag)}/`} class="post__tag">#{tag}</a>
+              </li>
+            ))}
+          </ul>
+        )}
       </header>
       {tocItems.length > 0 && (
         <div class="toc-mobile">
@@ -169,6 +180,30 @@ if (heroImageAbsolute) {
     font-family: var(--kw-font-mono);
   }
   .post__meta-update { font-style: italic; }
+
+  .post__tags {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-2);
+    padding: 0;
+    margin: 0;
+  }
+  .post__tag {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    text-decoration: none;
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    padding: var(--kw-space-1) var(--kw-space-3);
+    transition: border-color var(--kw-duration-fast) var(--kw-easing),
+                color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post__tag:hover {
+    border-color: var(--kw-accent);
+    color: var(--kw-accent);
+  }
 
   .post__title {
     font-family: var(--kw-font-display);
