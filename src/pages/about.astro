@@ -5,39 +5,15 @@ import SectionHead from '../components/SectionHead.astro';
 import FocusCard from '../components/FocusCard.astro';
 import TimelineRow from '../components/TimelineRow.astro';
 import { SITE_VOLUME } from '../consts';
+import { getFocusAreas } from '../data/focus-areas';
+
+const focusAreas = getFocusAreas(['embedded_iot', 'web_frontend', 'mobile_app', 'cloud_devops']);
 
 const skills = {
   languages: ['C', 'C++', 'Python', 'TypeScript', 'Go', 'Dart'],
-  domains: ['組み込み / IoT', 'Web Frontend', 'クラウドインフラ', 'モバイルアプリ'],
+  domains: focusAreas.map((a) => a.title),
   tools: ['GCP', 'Arduino', 'Astro', 'Flutter', 'Docker', 'GitHub Actions'],
 };
-
-const focusAreas = [
-  {
-    key: 'embedded_iot',
-    title: '組み込み・IoT',
-    description:
-      '物理に触れる回路と、ネットワークの向こうにあるデータ。両者をつなぐ細い導線を設計し、書く仕事に長く関わってきました。',
-  },
-  {
-    key: 'web_frontend',
-    title: 'Web フロントエンド',
-    description:
-      '読み込みの速さ、支援技術での到達しやすさ、コードの型安全性。三方を同時に下げない設計に関心があります。',
-  },
-  {
-    key: 'mobile_app',
-    title: 'モバイルアプリ',
-    description:
-      '単一コードベースから iOS / Android の両側に届けるクロスプラットフォーム開発。ネイティブ実装とのブリッジや、近接無線デバイスとの連携も含めて手を動かしてきました。',
-  },
-  {
-    key: 'cloud_infra',
-    title: 'クラウド・インフラ',
-    description:
-      '本番に届けたコードを、夜の間も静かに走らせ続ける仕組み。クラウド、オンプレ、その境界を渡る経路まで、長く担当してきた裏方の領域です。',
-  },
-];
 
 const strata = [
   { layer: '物理層', note: '回路、センサー、マイコンの上で動く制御コードを書く。最初に長く居た場所。' },
