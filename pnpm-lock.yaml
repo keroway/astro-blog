@@ -9,7 +9,7 @@ overrides:
   picomatch@<2.3.2: '>=2.3.2'
   yaml@>=2.0.0 <2.8.3: '>=2.8.3'
   postcss@<8.5.10: '>=8.5.10'
-  esbuild@<0.28.1: '>=0.28.1'
+  esbuild@<0.28.1: ^0.28.1
   path-to-regexp@>=6.0.0 <6.3.0: ^6.3.0
 
 importers:
