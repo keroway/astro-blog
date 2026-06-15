@@ -125,10 +125,10 @@ jobs:
       - name: Build
         run: pnpm exec astro build
 
-      # Only chromium is configured in playwright.config.ts, so install just
-      # that browser (with OS-level deps) to keep the job fast.
+      # chromium / firefox / mobile-chromium (Pixel 5) are configured in
+      # playwright.config.ts. Install chromium and firefox with OS-level deps.
       - name: Install Playwright browsers
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium firefox
 
       - name: Run Playwright tests
         run: pnpm exec playwright test
