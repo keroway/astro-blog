@@ -57,6 +57,20 @@ export function pickFeaturedWorks(
 }
 
 /**
+ * 公開済み記事から全タグを収集し、ソートして重複排除した配列を返す。
+ */
+export async function getAllTags(now: Date = new Date()): Promise<string[]> {
+  const posts = await getPublishedPosts(now);
+  const tagSet = new Set<string>();
+  for (const post of posts) {
+    for (const tag of post.data.tags ?? []) {
+      tagSet.add(tag);
+    }
+  }
+  return [...tagSet].sort((a, b) => a.localeCompare(b, "ja"));
+}
+
+/**
  * category 一致 +2 / tag 一致 +1 でスコアリングし、関連度の高い記事を上位 limit 件返す。
  * 同点は pubDate 降順。自分自身とスコア 0 は除外する。
  * limit 件に満たない場合は pubDate 降順の最新記事で補完する。

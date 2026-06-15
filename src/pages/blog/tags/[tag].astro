@@ -1,0 +1,77 @@
+---
+import SiteLayout from '../../../layouts/SiteLayout.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import PostRow from '../../../components/PostRow.astro';
+import { encodeSlugId } from '../../../lib/slug';
+import { getAllTags, getPublishedPosts } from '../../../lib/content';
+import { SITE_TITLE } from '../../../consts';
+
+export async function getStaticPaths() {
+  const tags = await getAllTags();
+  const posts = await getPublishedPosts();
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((p) => (p.data.tags ?? []).includes(tag)) },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+
+const canonicalUrl = new URL(
+  `/blog/tags/${encodeURIComponent(tag)}/`,
+  Astro.site
+).toString();
+---
+
+<SiteLayout
+  title={`タグ: ${tag} | ${SITE_TITLE}`}
+  description={`「${tag}」タグの記事一覧 (${posts.length} 件)`}
+  canonicalUrl={canonicalUrl}
+  mainClass="tag-index"
+>
+  <SectionHead jp={`# ${tag}`} en="tag archive" />
+
+  <p class="tag-count kw-mono no-indent">{posts.length} 件</p>
+
+  <div class="posts-list">
+    {posts.map((post, i) => (
+      <PostRow
+        num={String(i + 1).padStart(2, '0')}
+        href={`/blog/${encodeSlugId(post.id)}/`}
+        titleTag="h2"
+        title={post.data.title}
+        description={post.data.description?.trim()}
+        pubDate={post.data.pubDate}
+        category={post.data.category}
+      />
+    ))}
+  </div>
+
+  {posts.length === 0 && (
+    <p class="empty-message no-indent">このタグの記事はまだありません。</p>
+  )}
+</SiteLayout>
+
+<style>
+  .tag-index {
+    width: min(var(--kw-content-max), 100%);
+  }
+
+  .tag-count {
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    margin-bottom: var(--kw-space-6);
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .empty-message {
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-muted);
+    padding: var(--kw-space-10) 0;
+    text-align: center;
+  }
+</style>
