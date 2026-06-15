@@ -64,26 +64,28 @@ if (repoUrl) {
         </div>
       </div>
       <aside class="work-facts" aria-label="project facts">
-        <div class="work-facts__row">
-          <dt class="kw-eyebrow">Started</dt>
-          <dd class="kw-mono">{createdAt.toLocaleDateString("ja-JP")}</dd>
-        </div>
-        {updatedAt && (
+        <dl class="work-facts__dl">
           <div class="work-facts__row">
-            <dt class="kw-eyebrow">Updated</dt>
-            <dd class="kw-mono">{updatedAt.toLocaleDateString("ja-JP")}</dd>
+            <dt class="kw-eyebrow">Started</dt>
+            <dd class="kw-mono">{createdAt.toLocaleDateString("ja-JP")}</dd>
           </div>
-        )}
-        <div class="work-facts__row">
-          <dt class="kw-eyebrow">Stack</dt>
-          <dd>
-            <ul class="work-facts__tags">
-              {tags.map((tag) => (
-                <li><span class="kw-chip">{tag}</span></li>
-              ))}
-            </ul>
-          </dd>
-        </div>
+          {updatedAt && (
+            <div class="work-facts__row">
+              <dt class="kw-eyebrow">Updated</dt>
+              <dd class="kw-mono">{updatedAt.toLocaleDateString("ja-JP")}</dd>
+            </div>
+          )}
+          <div class="work-facts__row">
+            <dt class="kw-eyebrow">Stack</dt>
+            <dd>
+              <ul class="work-facts__tags">
+                {tags.map((tag) => (
+                  <li><span class="kw-chip">{tag}</span></li>
+                ))}
+              </ul>
+            </dd>
+          </div>
+        </dl>
       </aside>
     </header>
 
@@ -183,8 +185,12 @@ if (repoUrl) {
   /* Facts sidebar */
   .work-facts {
     padding: var(--kw-space-6);
+  }
+  .work-facts__dl {
     display: grid;
     gap: var(--kw-space-5);
+    margin: 0;
+    padding: 0;
   }
   .work-facts__row {
     display: grid;

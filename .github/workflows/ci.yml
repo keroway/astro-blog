@@ -142,3 +142,38 @@ jobs:
           name: playwright-report
           path: playwright-report
           retention-days: 7
+
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Build the static output. Vercel adapter emits static pages to dist/client/.
+      # The `typecheck` job covers `astro check`, so we skip it here.
+      - name: Build
+        run: pnpm exec astro build
+
+      # lhci autorun uses staticDistDir (dist/client) and spins up its own server.
+      # numberOfRuns: 3 and per-category assertions are in lighthouserc.cjs.
+      - name: Run Lighthouse CI
+        run: npx --yes @lhci/cli@0.14 autorun
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lhci-reports
+          path: lhci-reports
+          retention-days: 7

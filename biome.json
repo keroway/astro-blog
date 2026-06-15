@@ -12,7 +12,9 @@
       "!.astro",
       "!.claude",
       "!.vercel",
-      "!test-results"
+      "!test-results",
+      "!lhci-reports",
+      "!.lighthouseci"
     ]
   },
   "formatter": {

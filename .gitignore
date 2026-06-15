@@ -35,3 +35,6 @@ pnpm-debug.log*
 test-results/
 .playwright-mcp/
 .pnpm-store/
+# Lighthouse CI artifacts
+lhci-reports/
+.lighthouseci/
