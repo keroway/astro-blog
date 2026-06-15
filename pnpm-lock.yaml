@@ -10,7 +10,7 @@ overrides:
   yaml@>=2.0.0 <2.8.3: '>=2.8.3'
   postcss@<8.5.10: '>=8.5.10'
   esbuild@<0.28.1: '>=0.28.1'
-  path-to-regexp@>=6.0.0 <6.3.0: '>=6.3.0'
+  path-to-regexp@>=6.0.0 <6.3.0: ^6.3.0
 
 importers:
 
@@ -6945,7 +6945,7 @@ snapshots:
 
   '@vercel/routing-utils@5.3.3':
     dependencies:
-      path-to-regexp: 8.4.2
+      path-to-regexp: 6.3.0
       path-to-regexp-updated: path-to-regexp@6.3.0
     optionalDependencies:
       ajv: 6.15.0
