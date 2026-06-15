@@ -64,6 +64,30 @@ test.describe("URL compatibility check", () => {
     expect(twAlt, "twitter:image:alt should be non-empty").toBeTruthy();
   });
 
+  test("works detail page has JSON-LD with SoftwareApplication schema", async ({
+    page,
+  }) => {
+    await page.goto("/works/timeline-dsl/");
+
+    const allJsonLd = await page
+      .locator('script[type="application/ld+json"]')
+      .allTextContents();
+
+    const softwareSchema = allJsonLd
+      .map((text) => JSON.parse(text))
+      .find((s) => s["@type"] === "SoftwareApplication");
+
+    expect(
+      softwareSchema,
+      "SoftwareApplication JSON-LD should be present on works page"
+    ).toBeTruthy();
+
+    expect(softwareSchema.name).toBeTruthy();
+    expect(softwareSchema.description).toBeTruthy();
+    expect(softwareSchema.dateCreated).toBeTruthy();
+    expect(softwareSchema.url).toBeTruthy();
+  });
+
   // sitemap-index.xml is generated only at build time (astro build),
   // not served by the dev server. Verify the build artifact exists instead.
   // ADR 0005 (Vercel adapter 導入) 以降は SSG 静的アセットが dist/client/ に出力される。

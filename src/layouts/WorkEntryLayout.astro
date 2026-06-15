@@ -18,6 +18,22 @@ const statusMeta = statusMap[status];
 const ctaDescription = repoUrl
   ? "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP / リポジトリ側に集約しています。"
   : "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP 側に集約しています。";
+
+const workUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const workSchema: Record<string, unknown> = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: title,
+  description,
+  dateCreated: createdAt.toISOString(),
+  url: workUrl,
+};
+if (updatedAt) {
+  workSchema.dateModified = updatedAt.toISOString();
+}
+if (repoUrl) {
+  workSchema.codeRepository = repoUrl;
+}
 ---
 
 <SiteLayout
@@ -25,6 +41,7 @@ const ctaDescription = repoUrl
   description={description}
   image={heroImage ?? "/blog-placeholder-100.png"}
   mainClass="work-layout"
+  articleSchema={workSchema}
 >
   <article class="work-entry">
     <header class="work-hero">
