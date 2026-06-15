@@ -233,6 +233,11 @@ pnpm audit --registry=https://registry.npmjs.org/
 
 テーマのスタイリングは [Bear Blog](https://github.com/HermanMartinus/bearblog/) を参考にしています。
 
+## ライセンス
+
+- **ソースコード**（`src/`・設定ファイル・スクリプト）: [MIT License](./LICENSE)
+- **コンテンツ**（`src/content/blog/`・`src/content/works/` 以下のブログ記事・works 本文）: All Rights Reserved. Copyright (c) 2024 keroway — 著作権者の許可なく転載・再利用を禁じます。
+
 ## サイト URL
 
 https://keroway.com
