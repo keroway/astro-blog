@@ -1,0 +1,125 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import HeroBackdrop from '../components/HeroBackdrop.astro';
+---
+
+<SiteLayout
+  title="404 — ページが見つかりません | keroway.com"
+  description="お探しのページは見つかりませんでした。道に迷ったかもしれません。"
+>
+  <div class="notfound">
+    <section class="notfound__hero" aria-labelledby="notfound-heading">
+      <HeroBackdrop />
+      <div class="notfound__copy">
+        <p class="kw-eyebrow notfound__eyebrow">404 · not found · 道に迷う</p>
+        <h1 id="notfound-heading" class="notfound__title">
+          道を<br /><span class="notfound__title-alt">見失った</span>
+        </h1>
+        <p class="notfound__lead no-indent">
+          お探しのページは存在しないか、移動した可能性があります。<br />
+          記事スラッグの変更 (<a href="/blog">blog 一覧</a>) や URL のタイプミスをご確認ください。
+        </p>
+        <nav class="notfound__actions" aria-label="迷子からの導線">
+          <a class="kw-button" href="/">ホームへ戻る <span class="kw-button-arrow">→</span></a>
+          <a class="kw-button kw-button--ghost" href="/blog">記事一覧</a>
+          <a class="kw-button kw-button--ghost" href="/works">Works</a>
+        </nav>
+      </div>
+      <div class="notfound__code" aria-hidden="true">404</div>
+    </section>
+  </div>
+</SiteLayout>
+
+<style>
+  .notfound {
+    width: min(var(--kw-content-max), 100%);
+    margin: 0 auto;
+  }
+
+  .notfound__hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--kw-space-8);
+    min-block-size: 420px;
+    padding: var(--kw-space-16) 0;
+    overflow: hidden;
+  }
+
+  .notfound__copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .notfound__eyebrow {
+    margin-bottom: var(--kw-space-4);
+  }
+
+  .notfound__title {
+    font-family: var(--kw-font-display);
+    font-size: clamp(var(--kw-fs-display-md), 8vw, var(--kw-fs-display-lg));
+    font-weight: var(--kw-fw-medium);
+    line-height: var(--kw-lh-snug);
+    letter-spacing: var(--kw-ls-display);
+    color: var(--kw-fg-display);
+    margin: 0 0 var(--kw-space-6);
+  }
+
+  .notfound__title-alt {
+    color: var(--kw-accent-strong);
+  }
+
+  .notfound__lead {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-body-lg);
+    max-width: 46ch;
+    line-height: var(--kw-lh-prose);
+    margin: 0 0 var(--kw-space-8);
+  }
+
+  .notfound__lead a {
+    color: var(--kw-accent-strong);
+    text-underline-offset: 0.2em;
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-4);
+  }
+
+  .notfound__code {
+    position: relative;
+    z-index: 1;
+    font-family: var(--kw-font-mono);
+    font-size: clamp(6rem, 14vw, 10rem);
+    font-weight: 700;
+    color: var(--kw-rule);
+    line-height: 1;
+    letter-spacing: -0.04em;
+    user-select: none;
+  }
+
+  @media (max-width: 720px) {
+    .notfound__hero {
+      grid-template-columns: 1fr;
+    }
+    .notfound__code {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .notfound__hero {
+      padding: var(--kw-space-10) 0;
+      min-block-size: 320px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .notfound__hero {
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
