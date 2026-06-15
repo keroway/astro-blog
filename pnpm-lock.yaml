@@ -64,8 +64,8 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.17)
       '@unocss/astro':
-        specifier: ^66.6.8
-        version: 66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
+        specifier: ^66.7.2
+        version: 66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
       astro:
         specifier: ^6.4.6
         version: 6.4.6(@types/node@24.12.4)(@vercel/functions@3.6.1)(idb-keyval@6.2.2)(jiti@2.7.0)(rollup@4.62.0)(yaml@2.9.0)
@@ -86,7 +86,7 @@ importers:
         version: 6.0.3
       unocss:
         specifier: ^66.7.2
-        version: 66.7.2(@unocss/astro@66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)))(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
+        version: 66.7.2(@unocss/astro@66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)))(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
 
 packages:
 
@@ -2103,8 +2103,8 @@ packages:
   '@ungap/structured-clone@1.3.1':
     resolution: {integrity: sha512-mUFwbeTqrVgDQxFveS+df2yfap6iuP20NAKAsBt5jDEoOTDew+zwLAOilHCeQJOVSvmgCX4ogqIrA0mnyr08yQ==}
 
-  '@unocss/astro@66.7.0':
-    resolution: {integrity: sha512-/A/sSvrsPMJv/sVfy1dtDmSeU+eBjlp/wrMItMXZXFfvGa3eoTLCq1WTUVfl7ueVb6A/da4A/zQtsaY0LhvtCg==}
+  '@unocss/astro@66.7.2':
+    resolution: {integrity: sha512-YYWrybeT3LzBQRPXk2DyUmWxQtg6TjZZx6EbL+lPvSY+cSdKx5VAVgPQvLbaE6P26gH3oCLgBOgntduonM55mg==}
     peerDependencies:
       vite: ^5.0.0-0 || ^6.0.0-0 || ^7.0.0-0 || ^8.0.0-0
     peerDependenciesMeta:
@@ -2115,23 +2115,14 @@ packages:
     resolution: {integrity: sha512-50vBptZyiyYzm5CBNSVs1WYIFX+7IKYFwLNrm6pVCOjHfrBmmpfvyCznPMzUcGEFKvP2VsyB2hf3k57GBCSS9Q==}
     hasBin: true
 
-  '@unocss/config@66.7.0':
-    resolution: {integrity: sha512-C6waL+xzqAPzz5n47qnrs4GbyAtlusNYYmcV6DKYh1MgUP4EFhMnEMyuR2mw3M3tsBpyGuehLdRK5+ECF5yLkA==}
-
   '@unocss/config@66.7.2':
     resolution: {integrity: sha512-m8LZUZOFHBesViFOnC1MzMMQ1ovYbZ/F2ntkKSIWzLO/VvEYo2/HK8qhBhtI/FyL27+gvePL4sZ6a5ZChyl0Ug==}
-
-  '@unocss/core@66.7.0':
-    resolution: {integrity: sha512-j6MFMx5C3iIwW4T4hVbh+30fKWgSGkmS3bCcdjlfqM88lRT+dHFBN9nkfNOBJT6e6IHN9415nexuzcQvTjJXxw==}
 
   '@unocss/core@66.7.2':
     resolution: {integrity: sha512-NNnhm9IVPEZ34drwztREP+mq1rio0L4Tp0u247qBKxJJWYec1+I+FTRsw7EvtukZKvr56YAxFA1qbBV+LjyV+Q==}
 
   '@unocss/extractor-arbitrary-variants@66.7.2':
     resolution: {integrity: sha512-1R+ntws4zhi9gCsyovYeNCiAYGSceN6Rsy/4kyaw3npr1UBWhBJdQZtacxvqOssPfbbqq2vpatcuQ4rfZZYWFQ==}
-
-  '@unocss/inspector@66.7.0':
-    resolution: {integrity: sha512-W1MOO2d/1ZHwFR8+mrUUW6KW3MgJ6FdrSWfWeQ1+fgb0TVj8CweNzeSh46sTEXEcpvlui5mnGYFxanpLMoyOtA==}
 
   '@unocss/inspector@66.7.2':
     resolution: {integrity: sha512-fvZ8w9dTnu61ZwbXjVMQopxxrQOnFOBN2I6KVPJtoUSMsatrpEYyJHDA9pfLes1a3C4eEJZaSADURHKkON09CA==}
@@ -2166,11 +2157,8 @@ packages:
   '@unocss/preset-wind@66.7.2':
     resolution: {integrity: sha512-porNxph4xfr67e0LpFis813rKk9+psUJMw0nPL4sZoHovhmR/hA5XlWb6fLCl7t4Lls20I/n8F8KKgkqkxnk8Q==}
 
-  '@unocss/reset@66.7.0':
-    resolution: {integrity: sha512-auMYYTWXrE1n7lPoT1TFyGhmrBlgMdn9GgvypBSxtdi9Jg6Rz4qdNngEbJeSnqnjfRawx247TJJdNKiigSZ29g==}
-
-  '@unocss/rule-utils@66.7.0':
-    resolution: {integrity: sha512-DMJIiey/m+xr0hpSbxFhSbKlC3e7QsuwdAEdgMmIM7pEcu/AEMl7oH198QYX9880P2X0hy5iFE6UCWx9CwGAXQ==}
+  '@unocss/reset@66.7.2':
+    resolution: {integrity: sha512-dKRbpBicfchatvqK2wqfX8gtNTCf+2pFdXBNDC0Cl2PZ8QCVMtCaHTOTSyruM0Pw7aqST4SlPkF5f8x7aZZL0w==}
 
   '@unocss/rule-utils@66.7.2':
     resolution: {integrity: sha512-EGi2m9I87hluz2zgjVpXM4PWFn996RInNcx4PGF6Qw9Z0W78ROXEto0SM1IltpJ4R7+at4EhssU0IbHiT0snEw==}
@@ -2186,11 +2174,6 @@ packages:
 
   '@unocss/transformer-variant-group@66.7.2':
     resolution: {integrity: sha512-CO0CoYRn96wLm+cIICuNrv96cfzEkBHc/OmTYcHzlheyZRfGWPWlPpazMr2rlm5bve986akAxe2HSBqdaRf04w==}
-
-  '@unocss/vite@66.7.0':
-    resolution: {integrity: sha512-7J8Mk9M1j55S3bXL87/yHOspnuAaftQWbc3HjCH0/sXNLZJZnlpmUue3EtT5Ez+PE01T3DK1D9Xxn/MvtdvXtA==}
-    peerDependencies:
-      vite: ^5.0.0-0 || ^6.0.0-0 || ^7.0.0-0 || ^8.0.0-0
 
   '@unocss/vite@66.7.2':
     resolution: {integrity: sha512-KZL8LFNcoOjAaF8AKSUJznxrjcmuQKPSAmwvndL5RjEWtbyunV66YvOuoBPN3F0tR7MhY5NWKJjwmaYyetcM1Q==}
@@ -6781,11 +6764,11 @@ snapshots:
 
   '@ungap/structured-clone@1.3.1': {}
 
-  '@unocss/astro@66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))':
+  '@unocss/astro@66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
-      '@unocss/core': 66.7.0
-      '@unocss/reset': 66.7.0
-      '@unocss/vite': 66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
+      '@unocss/core': 66.7.2
+      '@unocss/reset': 66.7.2
+      '@unocss/vite': 66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
     optionalDependencies:
       vite: 7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)
 
@@ -6807,13 +6790,6 @@ snapshots:
       tinyglobby: 0.2.17
       unplugin-utils: 0.3.1
 
-  '@unocss/config@66.7.0':
-    dependencies:
-      '@unocss/core': 66.7.0
-      colorette: 2.0.20
-      consola: 3.4.2
-      unconfig: 7.5.0
-
   '@unocss/config@66.7.2':
     dependencies:
       '@unocss/core': 66.7.2
@@ -6821,21 +6797,11 @@ snapshots:
       consola: 3.4.2
       unconfig: 7.5.0
 
-  '@unocss/core@66.7.0': {}
-
   '@unocss/core@66.7.2': {}
 
   '@unocss/extractor-arbitrary-variants@66.7.2':
     dependencies:
       '@unocss/core': 66.7.2
-
-  '@unocss/inspector@66.7.0':
-    dependencies:
-      '@unocss/core': 66.7.0
-      '@unocss/rule-utils': 66.7.0
-      colorette: 2.0.20
-      gzip-size: 6.0.0
-      sirv: 3.0.2
 
   '@unocss/inspector@66.7.2':
     dependencies:
@@ -6897,12 +6863,7 @@ snapshots:
       '@unocss/core': 66.7.2
       '@unocss/preset-wind3': 66.7.2
 
-  '@unocss/reset@66.7.0': {}
-
-  '@unocss/rule-utils@66.7.0':
-    dependencies:
-      '@unocss/core': 66.7.0
-      magic-string: 0.30.21
+  '@unocss/reset@66.7.2': {}
 
   '@unocss/rule-utils@66.7.2':
     dependencies:
@@ -6928,19 +6889,6 @@ snapshots:
   '@unocss/transformer-variant-group@66.7.2':
     dependencies:
       '@unocss/core': 66.7.2
-
-  '@unocss/vite@66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))':
-    dependencies:
-      '@jridgewell/remapping': 2.3.5
-      '@unocss/config': 66.7.0
-      '@unocss/core': 66.7.0
-      '@unocss/inspector': 66.7.0
-      chokidar: 5.0.0
-      magic-string: 0.30.21
-      pathe: 2.0.3
-      tinyglobby: 0.2.17
-      unplugin-utils: 0.3.1
-      vite: 7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)
 
   '@unocss/vite@66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))':
     dependencies:
@@ -9508,7 +9456,7 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
-  unocss@66.7.2(@unocss/astro@66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)))(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)):
+  unocss@66.7.2(@unocss/astro@66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)))(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0)):
     dependencies:
       '@unocss/cli': 66.7.2
       '@unocss/core': 66.7.2
@@ -9528,7 +9476,7 @@ snapshots:
       '@unocss/transformer-variant-group': 66.7.2
       '@unocss/vite': 66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
     optionalDependencies:
-      '@unocss/astro': 66.7.0(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
+      '@unocss/astro': 66.7.2(vite@7.3.5(@types/node@24.12.4)(jiti@2.7.0)(yaml@2.9.0))
     transitivePeerDependencies:
       - vite
 
