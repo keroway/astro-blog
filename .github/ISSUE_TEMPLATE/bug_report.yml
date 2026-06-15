@@ -1,0 +1,52 @@
+name: Bug report
+description: バグを報告する
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        バグ報告ありがとうございます。できるだけ詳しく記入してください。
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: バグを再現するための手順を記入してください。
+      placeholder: |
+        1. ～ページを開く
+        2. ～をクリックする
+        3. ～が起きる
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する動作
+      description: 本来どう動作すべきかを説明してください。
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の動作
+      description: 実際に起きていること・エラーメッセージを記入してください。
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境
+      description: OS・ブラウザ・Node.js バージョンなど
+      placeholder: |
+        - OS: macOS 15.x
+        - ブラウザ: Chrome 130
+        - Node.js: v22.x
+    validations:
+      required: false
+  - type: textarea
+    id: additional
+    attributes:
+      label: 補足
+      description: スクリーンショットや関連 Issue など
+    validations:
+      required: false
