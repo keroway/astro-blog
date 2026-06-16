@@ -21,6 +21,8 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+# Windows NTFS Alternate Data Streams (accidentally committed via cross-platform tools)
+*:Zone.Identifier
 
 # local tooling / test artifacts。
 # settings.json / agents / commands / rules / hooks はチーム共有する Claude Code 設定としてトラッキング。
