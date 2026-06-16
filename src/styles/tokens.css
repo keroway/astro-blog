@@ -148,9 +148,10 @@
 
 :root {
   /* ---- Typography ---- */
-  --kw-font-display: 'Shippori Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'Noto Serif JP', serif;
-  --kw-font-body:    'BIZ UDPGothic', 'Hiragino Sans', 'Yu Gothic', 'YuGothic', 'Noto Sans JP', sans-serif;
-  --kw-font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* --font-* は astro.config.mjs の fonts[] が生成する CSS 変数 (ADR 0013) */
+  --kw-font-display: var(--font-display);
+  --kw-font-body:    var(--font-body);
+  --kw-font-mono:    var(--font-mono);
 
   --kw-fs-display-xl: 96px;
   --kw-fs-display-lg: 72px;

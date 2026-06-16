@@ -3,7 +3,7 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 import keystatic from "@keystatic/astro";
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import UnoCSS from "unocss/astro";
 
 const siteUrl = process.env.SITE_URL ?? "https://keroway.com";
@@ -49,4 +49,51 @@ export default defineConfig({
   output: "static",
   adapter: vercel(),
   integrations,
+  fonts: [
+    {
+      name: "Shippori Mincho",
+      cssVariable: "--font-display",
+      provider: fontProviders.fontsource(),
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
+      subsets: ["japanese", "latin"],
+      fallbacks: [
+        "YuMincho",
+        "游明朝",
+        "Hiragino Mincho ProN",
+        "Noto Serif JP",
+        "serif",
+      ],
+    },
+    {
+      name: "BIZ UDPGothic",
+      cssVariable: "--font-body",
+      provider: fontProviders.fontsource(),
+      weights: [400, 700],
+      styles: ["normal"],
+      subsets: ["japanese", "latin"],
+      fallbacks: [
+        "Hiragino Sans",
+        "Yu Gothic",
+        "YuGothic",
+        "Noto Sans JP",
+        "sans-serif",
+      ],
+    },
+    {
+      name: "JetBrains Mono",
+      cssVariable: "--font-mono",
+      provider: fontProviders.fontsource(),
+      weights: [400, 500, 700],
+      styles: ["normal"],
+      subsets: ["latin"],
+      fallbacks: [
+        "ui-monospace",
+        "SFMono-Regular",
+        "Menlo",
+        "Consolas",
+        "monospace",
+      ],
+    },
+  ],
 });
