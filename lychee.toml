@@ -36,30 +36,4 @@ exclude = [
     # パスになるが、Vercel は 404 を 404.html ファイルとして配信するため `/404/` は存在しない。
     # 404 ページの canonical は SEO 的にも意味を持たないので除外。
     "/404/?$",
-
-    # --- 以下は legacy blog posts (2017-2018 頃の記事) の dead link。
-    # follow-up issue で当該記事の retire / 書き換えを扱う (PR 本文で番号を提示する)。
-    # 一括除外で網を広げないよう、URL は具体的に列挙する。
-
-    # ADR 0010 で slug を ASCII 化したが本文の相互リンクは旧 slug のまま残っているもの。
-    "/blog/nerodia[123](/|$)",
-    "/blog/mastodon-on-docker2(/|$)",
-    "/blog/scratch30(/|$)",
-    "/blog/beautifulsoup41(/|$)",
-    "/blog/raspberry-pievent(/|$)",
-    "/blog/unity_sample(/|$)",
-
-    # 日本語 slug 時代の内部リンク (現在は ASCII slug に変換済みだが本文は古い参照のまま)
-    "%E3%83%AC%E3%83%BC%E3%82%B6%E3%83%BC%E6%B8%AC%E8%B7%9D%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%ABvl53l0x",
-    "raspberrypi3-%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97",
-    "%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%A8%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91",
-    "%E6%8A%80%E8%A1%93%E7%B3%BB%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D%E5%9B%BD%E5%86%85",
-    "%E8%AA%AD%E6%9B%B8100%E4%BA%BA%E3%81%AE%E3%83%97%E3%83%AD%E3%81%8C%E9%81%B8%E3%82%93%E3%81%A0%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E9%96%8B%E7%99%BA%E3%81%AE%E5%90%8D%E8%91%97",
-    "%E6%9C%AC%E9%9F%B3%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AF",
-
-    # 外部リンク腐敗: GitHub org rename (tootsuite -> mastodon), 商品ページ移動など。
-    # 旧記事の参考リンクなので強引に書き換えるより note 追記が望ましい。
-    "^https://github\\.com/tootsuite/documentation/",
-    "^http://akizukidenshi\\.com/catalog/top\\.aspx",
-    "^http://translate\\.google\\.com/toolkit",
 ]
