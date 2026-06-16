@@ -129,7 +129,7 @@ jobs:
       # built output without running their own astro build and hammering the
       # jsDelivr CDN for font files again.
       - name: Upload dist artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
@@ -138,6 +138,7 @@ jobs:
   test:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v6
 
@@ -151,6 +152,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # Download dist/ so dist/client/sitemap-index.xml exists for the sitemap
+      # filesystem check in url-check.spec.ts. The webServer (astro dev) serves
+      # pages live and does not use dist/.
+      - name: Download dist artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
 
       # chromium / firefox / mobile-chromium (Pixel 5) are configured in
       # playwright.config.ts. Install chromium and firefox with OS-level deps.
@@ -180,7 +190,7 @@ jobs:
       # Re-use the built output from the build job — lhci only needs
       # dist/client/ (staticDistDir) and does not require pnpm or Node.
       - name: Download dist artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist/
@@ -209,7 +219,7 @@ jobs:
       # that would hammer the jsDelivr CDN for font files a second time and risk
       # transient CannotFetchFontFile errors.
       - name: Download dist artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: dist
           path: dist/
