@@ -147,8 +147,7 @@ ${bodyPreview}
         schema: SCHEMA,
       },
       allowedTools: [],
-      permissionMode: "bypassPermissions",
-      allowDangerouslySkipPermissions: true,
+      permissionMode: "dontAsk",
       settingSources: ["project"],
     },
   })) {
