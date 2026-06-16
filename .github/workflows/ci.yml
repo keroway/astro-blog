@@ -6,6 +6,18 @@
 # parallel and surface failures faster on PRs. The minor duplication is
 # acceptable for the latency win.
 #
+# Artifact sharing: The `build` job runs `astro build` once and uploads the
+# resulting dist/ as an artifact. Downstream jobs (lighthouse, linkcheck) that
+# only need the built output download this artifact instead of rebuilding.
+# This avoids parallel CDN hammering of the jsDelivr Fontsource endpoint for
+# the same font files, which causes intermittent CannotFetchFontFile errors.
+# The E2E job uses `astro dev` (lenient about font fetch errors) and does not
+# need the built output.
+#
+# Font cache: .astro/fonts/ is persisted via actions/cache keyed on
+# astro.config.mjs, so subsequent runs reuse already-downloaded woff2 files
+# instead of re-fetching them from the CDN.
+#
 # pnpm install path: we use `pnpm/action-setup@v6` (the path pnpm officially
 # recommends for GitHub Actions) instead of the corepack route used in
 # `vercel.json`. Reasons: corepack is no longer bundled with Node.js >=25,
@@ -98,14 +110,35 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Cache .astro/fonts/ so woff2 files downloaded from jsDelivr on a
+      # previous run are reused instead of re-fetched. Cache key is tied to
+      # astro.config.mjs because that file controls which fonts are requested.
+      - name: Restore Astro font cache
+        uses: actions/cache@v4
+        with:
+          path: .astro/fonts
+          key: astro-fonts-${{ hashFiles('astro.config.mjs') }}
+          restore-keys: astro-fonts-
+
       # Skip `astro check` here -- the `typecheck` job covers it. We invoke
       # `astro build` directly instead of `pnpm run build` to avoid duplication.
       - name: Build
         run: pnpm exec astro build
 
+      # Upload dist/ so downstream jobs (lighthouse, linkcheck) can use the
+      # built output without running their own astro build and hammering the
+      # jsDelivr CDN for font files again.
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
   test:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v6
 
@@ -120,10 +153,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Build the site so dist/sitemap-index.xml exists for the sitemap test.
-      # The `typecheck` job covers `astro check`, so we skip it here.
-      - name: Build
-        run: pnpm exec astro build
+      # Download dist/ so dist/client/sitemap-index.xml exists for the sitemap
+      # filesystem check in url-check.spec.ts. The webServer (astro dev) serves
+      # pages live and does not use dist/.
+      - name: Download dist artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: dist
+          path: dist/
 
       # chromium / firefox / mobile-chromium (Pixel 5) are configured in
       # playwright.config.ts. Install chromium and firefox with OS-level deps.
@@ -146,24 +183,17 @@ jobs:
   lighthouse:
     name: Lighthouse CI
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      # Re-use the built output from the build job — lhci only needs
+      # dist/client/ (staticDistDir) and does not require pnpm or Node.
+      - name: Download dist artifact
+        uses: actions/download-artifact@v7
         with:
-          node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Build the static output. Vercel adapter emits static pages to dist/client/.
-      # The `typecheck` job covers `astro check`, so we skip it here.
-      - name: Build
-        run: pnpm exec astro build
+          name: dist
+          path: dist/
 
       # lhci autorun uses staticDistDir (dist/client) and spins up its own server.
       # numberOfRuns: 3 and per-category assertions are in lighthouserc.cjs.
@@ -181,24 +211,18 @@ jobs:
   linkcheck:
     name: Link check (lychee)
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      # Re-use the dist/ artifact from the build job to avoid a redundant build
+      # that would hammer the jsDelivr CDN for font files a second time and risk
+      # transient CannotFetchFontFile errors.
+      - name: Download dist artifact
+        uses: actions/download-artifact@v7
         with:
-          node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Build the static output (dist/client). The `typecheck` job covers
-      # `astro check`, so we skip it here for parity with the other build jobs.
-      - name: Build
-        run: pnpm exec astro build
+          name: dist
+          path: dist/
 
       # Restore lychee's request cache between runs so external URLs are not
       # re-fetched needlessly. max_cache_age in lychee.toml controls staleness.
