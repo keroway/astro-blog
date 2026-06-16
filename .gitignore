@@ -38,3 +38,5 @@ test-results/
 # Lighthouse CI artifacts
 lhci-reports/
 .lighthouseci/
+# lychee link checker on-disk cache (regenerated each run)
+.lycheecache

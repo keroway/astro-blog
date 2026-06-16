@@ -1,0 +1,64 @@
+# lychee リンク切れ検査の共通設定。
+# 関連: .github/workflows/ci.yml の `linkcheck` ジョブ、
+#       scripts/serve-static-with-redirects.mjs (vercel.json redirect 再現用のローカル static server)
+# 参考: keroway/code-tactics-lp の lychee.toml
+
+# 一時的な外部障害・レート制限による誤検知を抑える。
+max_retries = 3
+retry_wait_time = 2
+timeout = 20
+
+# 同一 URL の重複検査を避け CI 実行時間を短縮する。
+cache = true
+max_cache_age = "2d"
+cache_exclude_status = "500.."
+
+# 許容ステータスコード。
+# - 200..=299: 当然 OK
+# - 403: 外部サービスの bot ブロック (Kickstarter 等) を許容。ユーザーがブラウザで開けば
+#   到達できるリンクを CI で恒久的に落とす意味がない。
+# - 429: レート制限の flaky 回避。受け入れ条件「外部 URL の一時的なレート制限で CI が
+#   不安定にならない」を満たすため。
+accept = ["200..=299", "403", "429"]
+
+# 内部アンカー (#section) も含めて検証する (受け入れ条件)。
+include_fragments = "full"
+
+# 除外パターン (正規表現)。F2 (検査の骨抜き禁止) を守り、各パターンには「なぜ除外しているか」
+# をコメントで明示する。プロトコル/ホストに依らずパス断片でマッチさせるのは、ローカル file:// と
+# HTTP server (http://localhost:...) どちらのスキャンモードでも同じパターンで通すため。
+exclude = [
+    # mailto: は SMTP MX を引くだけで実 inbox は分からない。到達確認の意味がない。
+    "^mailto:",
+
+    # SiteLayout が 404.html に出力する canonical URL は `<site>/404/` というディレクトリ形
+    # パスになるが、Vercel は 404 を 404.html ファイルとして配信するため `/404/` は存在しない。
+    # 404 ページの canonical は SEO 的にも意味を持たないので除外。
+    "/404/?$",
+
+    # --- 以下は legacy blog posts (2017-2018 頃の記事) の dead link。
+    # follow-up issue で当該記事の retire / 書き換えを扱う (PR 本文で番号を提示する)。
+    # 一括除外で網を広げないよう、URL は具体的に列挙する。
+
+    # ADR 0010 で slug を ASCII 化したが本文の相互リンクは旧 slug のまま残っているもの。
+    "/blog/nerodia[123](/|$)",
+    "/blog/mastodon-on-docker2(/|$)",
+    "/blog/scratch30(/|$)",
+    "/blog/beautifulsoup41(/|$)",
+    "/blog/raspberry-pievent(/|$)",
+    "/blog/unity_sample(/|$)",
+
+    # 日本語 slug 時代の内部リンク (現在は ASCII slug に変換済みだが本文は古い参照のまま)
+    "%E3%83%AC%E3%83%BC%E3%82%B6%E3%83%BC%E6%B8%AC%E8%B7%9D%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%ABvl53l0x",
+    "raspberrypi3-%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97",
+    "%E8%B2%B7%E3%81%84%E7%89%A9%E3%81%A8%E5%8D%8A%E7%94%B0%E4%BB%98%E3%81%91",
+    "%E6%8A%80%E8%A1%93%E7%B3%BB%E9%9B%BB%E5%AD%90%E6%9B%B8%E7%B1%8D%E5%9B%BD%E5%86%85",
+    "%E8%AA%AD%E6%9B%B8100%E4%BA%BA%E3%81%AE%E3%83%97%E3%83%AD%E3%81%8C%E9%81%B8%E3%82%93%E3%81%A0%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E9%96%8B%E7%99%BA%E3%81%AE%E5%90%8D%E8%91%97",
+    "%E6%9C%AC%E9%9F%B3%E3%81%A8%E3%81%97%E3%81%A6%E3%81%AF",
+
+    # 外部リンク腐敗: GitHub org rename (tootsuite -> mastodon), 商品ページ移動など。
+    # 旧記事の参考リンクなので強引に書き換えるより note 追記が望ましい。
+    "^https://github\\.com/tootsuite/documentation/",
+    "^http://akizukidenshi\\.com/catalog/top\\.aspx",
+    "^http://translate\\.google\\.com/toolkit",
+]
