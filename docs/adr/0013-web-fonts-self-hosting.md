@@ -43,8 +43,17 @@
 
 `astro.config.mjs` に 3 フォントを定義し、`BaseHead.astro` の Google Fonts 行を `<Font />` コンポーネントで置き換える。`src/styles/tokens.css` の `--kw-font-*` 変数の先頭に Astro が生成する CSS 変数 (`var(--font-*)`) を差し込む。
 
+## 既知の限界
+
+`@keystatic/core` (v0.5.50 時点) はパッケージ内部の管理 UI に Inter を Google Fonts から読み込む `<link>` をハードコードしている。このコードはビルド成果物の `_astro/keystatic-page.*.js` に含まれ、`/keystatic` 管理画面アクセス時に Google Fonts リクエストが発生する。
+
+この参照は `keystatic.config.ts` 等のプロジェクト設定では制御できない。サイト訪問者（ブログ読者）が閲覧するコンテンツページ（`/`・`/blog/`・`/about`・`/works/` 等）での Google Fonts リクエストはゼロであり、本 ADR の主旨（コンテンツページの配信最適化）は達成している。
+
+Keystatic の Google Fonts 参照を解消する場合は upstream への報告または Content Security Policy の適用を別途検討する。
+
 ## Revisit When
 
 - Astro が Fonts API を breaking change で改訂したとき
 - `@fontsource` のパッケージが非推奨・更新停止になったとき
 - 日本語フォントファイルサイズが Vercel のビルド上限に近づいたとき
+- `@keystatic/core` が Google Fonts 依存を廃止したとき
