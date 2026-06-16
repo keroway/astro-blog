@@ -146,6 +146,7 @@ ${bodyPreview}
         type: "json_schema",
         schema: SCHEMA,
       },
+      tools: [],
       allowedTools: [],
       permissionMode: "dontAsk",
       settingSources: ["project"],
