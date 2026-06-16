@@ -103,6 +103,15 @@ jobs:
       - name: Build
         run: pnpm exec astro build
 
+      # Upload dist/ so downstream jobs (linkcheck, etc.) can skip rebuilding.
+      # Avoids repeated CDN hits for font files in parallel jobs.
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
   test:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
@@ -181,24 +190,18 @@ jobs:
   linkcheck:
     name: Link check (lychee)
     runs-on: ubuntu-latest
+    needs: [build]
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v6
+      # Re-use the dist/ artifact from the build job to avoid a redundant build
+      # that would hammer the jsDelivr CDN for font files a second time and risk
+      # transient CannotFetchFontFile errors.
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
         with:
-          node-version: '22'
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # Build the static output (dist/client). The `typecheck` job covers
-      # `astro check`, so we skip it here for parity with the other build jobs.
-      - name: Build
-        run: pnpm exec astro build
+          name: dist
+          path: dist/
 
       # Restore lychee's request cache between runs so external URLs are not
       # re-fetched needlessly. max_cache_age in lychee.toml controls staleness.
