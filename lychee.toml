@@ -22,7 +22,8 @@ cache_exclude_status = "500.."
 accept = ["200..=299", "403", "429"]
 
 # 内部アンカー (#section) も含めて検証する (受け入れ条件)。
-include_fragments = "full"
+# lychee-action 同梱の v0.23 と v0.24+ で toml 構文が非互換 (bool vs string variant) のため、
+# CLI 側 (--include-fragments) で渡す。
 
 # 除外パターン (正規表現)。F2 (検査の骨抜き禁止) を守り、各パターンには「なぜ除外しているか」
 # をコメントで明示する。プロトコル/ホストに依らずパス断片でマッチさせるのは、ローカル file:// と

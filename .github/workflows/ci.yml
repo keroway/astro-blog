@@ -218,11 +218,14 @@ jobs:
       - name: Link check (lychee)
         uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
-          # Pin to v0.24.2: include_fragments is a string ("full") in 0.24+
-          # but a boolean in 0.23 (lychee-action's default); incompatible.
-          lycheeVersion: v0.24.2
+          # `--include-fragments` is passed on the CLI rather than in lychee.toml
+          # because the toml syntax for that key is incompatible between lychee
+          # v0.23 (boolean) and v0.24+ (string variant). On the CLI the flag form
+          # without a value works for both: v0.23 treats it as true, v0.24+ as
+          # the default "full" variant.
           args: >-
             --no-progress
+            --include-fragments
             --root-dir ${{ github.workspace }}/dist/client
             --fallback-extensions html
             'dist/client/**/*.html'
