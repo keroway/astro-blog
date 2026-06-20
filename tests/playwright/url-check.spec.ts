@@ -39,6 +39,28 @@ test.describe("URL compatibility check", () => {
     expect(res.status(), "/rss.xml should return 200").toBe(200);
   });
 
+  test("/works/rss.xml returns 200", async ({ request }) => {
+    const res = await request.get("/works/rss.xml");
+    expect(res.status(), "/works/rss.xml should return 200").toBe(200);
+  });
+
+  test("/api/trigger-build returns 401 when CRON_SECRET is set and token is wrong", async ({
+    request,
+  }) => {
+    // CRON_SECRET が設定されている場合のみ認証チェックが走る。
+    // ローカル dev / CI では CRON_SECRET が未設定なため、このテストは
+    // 「CRON_SECRET が設定されたときに不正トークンで 401 が返る」動作を
+    // 条件付きで確認する。CI で有効化するには test ジョブに
+    // CRON_SECRET を渡す (plans/003 Maintenance notes 参照)。
+    const cronSecret = process.env.CRON_SECRET;
+    test.skip(!cronSecret, "CRON_SECRET not set — skipping auth check");
+
+    const res = await request.get("/api/trigger-build", {
+      headers: { Authorization: "Bearer wrongtoken" },
+    });
+    expect(res.status(), "wrong token should return 401").toBe(401);
+  });
+
   test("og:image meta tags include width/height/alt", async ({ page }) => {
     await page.goto("/");
 
