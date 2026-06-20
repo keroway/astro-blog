@@ -44,6 +44,25 @@ test.describe("URL compatibility check", () => {
     expect(res.status(), "/works/rss.xml should return 200").toBe(200);
   });
 
+  test("OG image endpoint returns a valid PNG for a known post", async ({
+    request,
+  }) => {
+    // book-pragmatic-programmer は ASCII スラグの記事
+    // src/content/blog/book-pragmatic-programmer.mdoc が存在する前提
+    const slug = "book-pragmatic-programmer";
+    const res = await request.get(`/og/${slug}.png`);
+    expect(res.status(), `/og/${slug}.png should return 200`).toBe(200);
+    expect(
+      res.headers()["content-type"],
+      "response should be image/png"
+    ).toContain("image/png");
+    const body = await res.body();
+    expect(
+      body.length,
+      "PNG body should have meaningful content (> 1KB)"
+    ).toBeGreaterThan(1000);
+  });
+
   test("/api/trigger-build returns 401 when CRON_SECRET is set and token is wrong", async ({
     request,
   }) => {
