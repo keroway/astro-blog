@@ -3,11 +3,19 @@ import type { APIRoute } from "astro";
 export const prerender = false;
 
 export const GET: APIRoute = async ({ request }) => {
-  const authHeader = request.headers.get("authorization");
   const cronSecret = import.meta.env.CRON_SECRET;
 
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return new Response("Unauthorized", { status: 401 });
+  if (!cronSecret) {
+    if (import.meta.env.PROD) {
+      // 本番で CRON_SECRET が設定されていない = 設定ミス。fail-fast する。
+      return new Response("CRON_SECRET is not configured", { status: 500 });
+    }
+    // ローカル dev は認証をスキップ（.env.example 参照）
+  } else {
+    const authHeader = request.headers.get("authorization");
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return new Response("Unauthorized", { status: 401 });
+    }
   }
 
   const deployHookUrl = import.meta.env.VERCEL_DEPLOY_HOOK_URL;
