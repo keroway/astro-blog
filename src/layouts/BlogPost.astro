@@ -94,7 +94,7 @@ if (heroImageAbsolute) {
             </span>
           )}
         </div>
-        <h1 class="post__title">{title}</h1>
+        <h1 class="post__title" data-pagefind-meta="title">{title}</h1>
         <hr />
         {tags.length > 0 && (
           <ul class="post__tags" aria-label="タグ">
@@ -111,7 +111,7 @@ if (heroImageAbsolute) {
           <TableOfContents headings={headings} />
         </div>
       )}
-      <div class="post__content">
+      <div class="post__content" data-pagefind-body>
         <slot />
       </div>
 
