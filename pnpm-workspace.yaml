@@ -36,3 +36,6 @@ overrides:
 peerDependencyRules:
   allowedVersions:
     "@keystatic/astro>astro": "6"
+
+patchedDependencies:
+  '@keystatic/core': patches/@keystatic__core.patch

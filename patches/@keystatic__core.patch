@@ -1,0 +1,16 @@
+diff --git a/dist/keystatic-core-ui.js b/dist/keystatic-core-ui.js
+index 24d47136e7317bab8f460a8eab537a5bbd0072c0..d9a9e6cc1acdf405fab47318f776163e5e21fa54 100644
+--- a/dist/keystatic-core-ui.js
++++ b/dist/keystatic-core-ui.js
+@@ -1809,10 +1809,7 @@ function Provider(t0) {
+     t5 = /*#__PURE__*/jsx(ClientSideOnlyDocumentElement, {
+       bodyBackground: "surface"
+     });
+-    t6 = /*#__PURE__*/jsx("link", {
+-      href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+-      rel: "stylesheet"
+-    });
++    t6 = null; // keystatic-google-fonts-removal (#343): Google Fonts <link> 注入を除去
+     $[3] = t5;
+     $[4] = t6;
+   } else {
