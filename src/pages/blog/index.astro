@@ -3,6 +3,7 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
 import SectionHead from '../../components/SectionHead.astro';
 import PostRow from '../../components/PostRow.astro';
+import BlogSearch from '../../components/BlogSearch.astro';
 import { encodeSlugId } from '../../lib/slug';
 import { getPublishedPosts } from '../../lib/content';
 
@@ -20,6 +21,8 @@ const showYearFilter = years.length >= 2;
     action="RSS →"
     actionHref="/rss.xml"
   />
+
+  <BlogSearch />
 
   <div class="filter-bar">
     <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">

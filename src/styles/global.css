@@ -18,6 +18,12 @@ html {
   box-sizing: border-box;
 }
 
+/* HTML の hidden 属性は display 指定 (例: display:flex) に負けるため、確実に隠す。
+ * /blog の検索モード切替 (.filter-bar / #posts-list の hidden トグル) が依存する。 */
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
