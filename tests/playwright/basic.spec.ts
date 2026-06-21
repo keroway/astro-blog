@@ -140,7 +140,7 @@ test.describe("Basic site functionality", () => {
 
     await expect(page).toHaveTitle(/keroway\.com/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "横に渡って"
+      "手を動かし"
     );
   });
 
