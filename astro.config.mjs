@@ -102,4 +102,13 @@ export default defineConfig({
       ],
     },
   ],
+  vite: {
+    build: {
+      rollupOptions: {
+        // Pagefind の検索 API (/pagefind/pagefind.js) はビルド後に astro-pagefind が
+        // 生成するため、ビルド時点では存在しない。Rollup の静的解決対象から外す (#341)。
+        external: ["/pagefind/pagefind.js"],
+      },
+    },
+  },
 });

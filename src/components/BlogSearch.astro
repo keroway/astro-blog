@@ -1,0 +1,367 @@
+---
+/**
+ * #341 /blog 全文検索 UI。
+ *
+ * Pagefind (ADR 0015 / #340 で生成済みの dist/client/pagefind/) の JS API を使い、
+ * 記事タイトル・本文をリアルタイム検索する。既存のカテゴリ/年フィルタ (initFilter) と
+ * 共存し、検索クエリ入力中は静的一覧 + フィルタを隠して検索結果を表示する。
+ *
+ * プログレッシブエンハンスメント:
+ *   - 入力欄は初期状態 `disabled`。JS が Pagefind の初期化に成功して初めて有効化する。
+ *   - JS 無効環境では検索欄が無効のまま隠れ、既存の一覧表示・フィルタは一切壊れない。
+ *
+ * ダークモードは `<html data-theme>` 連動のトークンで自動追従するため個別対応は不要。
+ */
+---
+
+<div class="blog-search" data-blog-search hidden>
+  <label class="blog-search__label" for="blog-search-input">記事を検索</label>
+  <div class="blog-search__field">
+    <svg
+      class="blog-search__icon"
+      aria-hidden="true"
+      viewBox="0 0 20 20"
+      width="18"
+      height="18"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+    >
+      <circle cx="8.5" cy="8.5" r="5.5"></circle>
+      <line x1="12.6" y1="12.6" x2="17" y2="17" stroke-linecap="round"></line>
+    </svg>
+    <input
+      type="search"
+      id="blog-search-input"
+      class="blog-search__input"
+      placeholder="キーワードでタイトル・本文を検索"
+      autocomplete="off"
+      enterkeyhint="search"
+      disabled
+      aria-controls="blog-search-results"
+      aria-describedby="blog-search-status"
+    />
+    <button type="button" class="blog-search__clear" aria-label="検索をクリア" hidden>
+      ×
+    </button>
+  </div>
+  <p
+    class="blog-search__status no-indent"
+    id="blog-search-status"
+    role="status"
+    aria-live="polite"
+    hidden
+  >
+  </p>
+  <div
+    class="blog-search__results"
+    id="blog-search-results"
+    role="list"
+    hidden
+  >
+  </div>
+</div>
+
+<script>
+  type PagefindSubResult = { excerpt: string; url: string };
+  type PagefindResultData = {
+    url: string;
+    meta: { title?: string };
+    excerpt: string;
+    sub_results?: PagefindSubResult[];
+  };
+  type PagefindResult = { id: string; data: () => Promise<PagefindResultData> };
+  type PagefindApi = {
+    init: () => Promise<void>;
+    debouncedSearch: (
+      term: string,
+      options?: unknown,
+      delay?: number,
+    ) => Promise<{ results: PagefindResult[] } | null>;
+  };
+
+  function initBlogSearch() {
+    const root = document.querySelector<HTMLElement>("[data-blog-search]");
+    if (!root || root.dataset.searchReady === "1") return;
+
+    const input = root.querySelector<HTMLInputElement>(".blog-search__input");
+    const clearBtn = root.querySelector<HTMLButtonElement>(".blog-search__clear");
+    const statusEl = root.querySelector<HTMLElement>(".blog-search__status");
+    const resultsEl = root.querySelector<HTMLElement>(".blog-search__results");
+    // 既存の静的一覧 + フィルタ。検索モード中は隠す。
+    const filterBar = document.querySelector<HTMLElement>(".filter-bar");
+    const filterCount = document.getElementById("filter-count");
+    const postsList = document.getElementById("posts-list");
+    const emptyMessage = document.getElementById("empty-message");
+
+    if (!input || !resultsEl || !statusEl) return;
+    // 以降のクロージャで non-null narrowing を確実に効かせるため const に束ね直す。
+    const searchInput = input;
+    const results = resultsEl;
+    const status = statusEl;
+
+    let pagefind: PagefindApi | null = null;
+    let initFailed = false;
+
+    async function ensurePagefind(): Promise<PagefindApi | null> {
+      if (pagefind || initFailed) return pagefind;
+      try {
+        // Pagefind は dist/client/pagefind/ に出力される (#340)。dev でも astro-pagefind が serve する。
+        // パスを変数に逃がして Vite の静的解析による解決を回避する (ビルド時はまだ pagefind.js が
+        // 存在しないため)。あわせて astro.config.mjs で external 指定済み。
+        const pagefindPath = "/pagefind/pagefind.js";
+        const mod = (await import(
+          /* @vite-ignore */ pagefindPath
+        )) as unknown as PagefindApi;
+        await mod.init();
+        pagefind = mod;
+        return pagefind;
+      } catch {
+        initFailed = true;
+        return null;
+      }
+    }
+
+    // JS が動き Pagefind を読み込める環境でのみ検索 UI を表に出す。
+    root.hidden = false;
+
+    function setSearchMode(active: boolean) {
+      if (filterBar) filterBar.hidden = active;
+      if (postsList) postsList.hidden = active;
+      if (active) {
+        if (filterCount) filterCount.hidden = true;
+        if (emptyMessage) emptyMessage.hidden = true;
+      }
+      if (clearBtn) clearBtn.hidden = !active;
+      results.hidden = !active;
+    }
+
+    function escapeHtml(s: string): string {
+      return s
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    async function render(term: string) {
+      const trimmed = term.trim();
+      if (trimmed === "") {
+        setSearchMode(false);
+        status.hidden = true;
+        results.innerHTML = "";
+        return;
+      }
+
+      const pf = await ensurePagefind();
+      if (!pf) {
+        // 初期化失敗時は検索モードに入らず静的一覧を維持する (フェイルセーフ)。
+        status.hidden = false;
+        status.textContent = "検索を利用できません";
+        return;
+      }
+
+      setSearchMode(true);
+      const search = await pf.debouncedSearch(trimmed, undefined, 200);
+      // debounce により後発クエリへ置き換わった場合は null。描画しない。
+      if (search === null) return;
+
+      const top = search.results.slice(0, 20);
+      const datas = await Promise.all(top.map((r) => r.data()));
+
+      status.hidden = false;
+      status.textContent = `「${trimmed}」の検索結果: ${search.results.length} 件`;
+
+      if (datas.length === 0) {
+        results.innerHTML = "";
+        return;
+      }
+
+      results.innerHTML = datas
+        .map((d, i) => {
+          const title = escapeHtml(d.meta.title ?? d.url);
+          const excerpt = d.sub_results?.[0]?.excerpt ?? d.excerpt ?? "";
+          const num = String(i + 1).padStart(2, "0");
+          return `
+            <article class="blog-search__result" role="listitem">
+              <a href="${escapeHtml(d.url)}" class="blog-search__result-link">
+                <span class="blog-search__result-num kw-numeral kw-tabular">${num}</span>
+                <span class="blog-search__result-body">
+                  <span class="blog-search__result-title">${title}</span>
+                  <span class="blog-search__result-excerpt">${excerpt}</span>
+                </span>
+              </a>
+            </article>`;
+        })
+        .join("");
+    }
+
+    searchInput.disabled = false;
+    searchInput.addEventListener("input", () => {
+      if (clearBtn) clearBtn.hidden = searchInput.value.trim() === "";
+      void render(searchInput.value);
+    });
+    clearBtn?.addEventListener("click", () => {
+      searchInput.value = "";
+      searchInput.focus();
+      void render("");
+    });
+
+    root.dataset.searchReady = "1";
+  }
+
+  initBlogSearch();
+  document.addEventListener("astro:after-swap", initBlogSearch);
+</script>
+
+<style>
+  .blog-search {
+    margin-bottom: var(--kw-space-6);
+  }
+
+  .blog-search__label {
+    display: block;
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    margin-bottom: var(--kw-space-2);
+  }
+
+  .blog-search__field {
+    display: flex;
+    align-items: center;
+    gap: var(--kw-space-2);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    padding: var(--kw-space-2) var(--kw-space-3);
+    background: transparent;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .blog-search__field:focus-within {
+    border-color: var(--kw-accent);
+  }
+
+  .blog-search__icon {
+    flex: none;
+    color: var(--kw-fg-muted);
+  }
+
+  .blog-search__input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: var(--kw-fg);
+    font-family: var(--kw-font-body);
+    font-size: var(--kw-fs-body-sm);
+    padding: var(--kw-space-1) 0;
+  }
+
+  .blog-search__input::placeholder {
+    color: var(--kw-fg-muted);
+  }
+
+  .blog-search__input:focus-visible {
+    outline: none;
+  }
+
+  .blog-search__clear {
+    flex: none;
+    border: none;
+    background: transparent;
+    color: var(--kw-fg-muted);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0 var(--kw-space-1);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .blog-search__clear:hover {
+    color: var(--kw-fg);
+  }
+
+  .blog-search__clear:focus-visible {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 2px;
+    border-radius: var(--kw-radius-sm);
+  }
+
+  .blog-search__status {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    margin: var(--kw-space-4) 0 0;
+  }
+
+  .blog-search__results {
+    display: flex;
+    flex-direction: column;
+    margin-top: var(--kw-space-2);
+  }
+
+  .blog-search__result-link {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: var(--kw-space-4);
+    align-items: baseline;
+    padding: var(--kw-space-5) 0;
+    border-bottom: 1px solid var(--kw-rule-soft);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .blog-search__result-link:hover {
+    border-bottom-color: var(--kw-rule);
+  }
+
+  .blog-search__result-link:hover .blog-search__result-title {
+    color: var(--kw-fg-link);
+  }
+
+  .blog-search__result-num {
+    font-size: 18px;
+    color: var(--kw-accent);
+  }
+
+  .blog-search__result-body {
+    display: block;
+    min-width: 0;
+  }
+
+  .blog-search__result-title {
+    display: block;
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-h3);
+    font-weight: var(--kw-fw-medium);
+    color: var(--kw-fg-display);
+    line-height: var(--kw-lh-snug);
+    margin-bottom: var(--kw-space-1);
+    transition: color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .blog-search__result-excerpt {
+    display: block;
+    font-size: var(--kw-fs-body-sm);
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-normal);
+    max-width: 60ch;
+  }
+
+  /* Pagefind が付与するハイライト */
+  .blog-search__result-excerpt :global(mark) {
+    background: color-mix(in srgb, var(--kw-accent) 28%, transparent);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  @media (max-width: 640px) {
+    .blog-search__result-link {
+      grid-template-columns: 32px 1fr;
+      gap: var(--kw-space-3);
+    }
+  }
+</style>
