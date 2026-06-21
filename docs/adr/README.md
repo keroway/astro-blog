@@ -22,6 +22,7 @@
 | 0012 | Tokaido Field Notes の視覚刷新 | [0012-tokaido-field-notes-refresh.md](./0012-tokaido-field-notes-refresh.md) | Accepted |
 | 0013 | Web フォント自己ホスト化 | [0013-web-fonts-self-hosting.md](./0013-web-fonts-self-hosting.md) | Accepted |
 | 0014 | Keystatic 管理 UI の Google Fonts 参照除去 | [0014-keystatic-google-fonts-removal.md](./0014-keystatic-google-fonts-removal.md) | Accepted |
+| 0015 | 全文検索基盤 (Pagefind) | [0015-pagefind-search-platform.md](./0015-pagefind-search-platform.md) | Proposed |
 
 ## ADR の書き方
 
