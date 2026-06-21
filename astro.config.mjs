@@ -4,6 +4,7 @@ import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 import keystatic from "@keystatic/astro";
 import { defineConfig, fontProviders } from "astro/config";
+import pagefind from "astro-pagefind";
 import UnoCSS from "unocss/astro";
 
 const siteUrl = process.env.SITE_URL ?? "https://keroway.com";
@@ -35,7 +36,12 @@ if (
 // local dev (VERCEL_ENV 未定義) → 有効 (local mode で従来通り動作)
 // markdoc は Keystatic content フィールド (.mdoc) の描画に必須。書き込みを伴わないため
 // Preview でも有効でよい (mount を絞るのは keystatic 統合のみ)。設定は markdoc.config.mjs。
-const baseIntegrations = [UnoCSS(), markdoc(), sitemap()];
+//
+// pagefind は astro build の astro:build:done フックで dist/ をクロールし dist/pagefind/ に
+// 静的全文検索インデックスを生成する (ADR 0015)。CI (`astro build` 直叩き) と Vercel
+// (`pnpm run build`) の両ビルド経路で astro build を通るため、別途 postbuild ステップは不要。
+// dev モードでは直前の build 成果物のインデックスを serve する。検索基盤なので全環境で有効。
+const baseIntegrations = [UnoCSS(), markdoc(), sitemap(), pagefind()];
 const integrations = isVercelPreview
   ? baseIntegrations
   : [...baseIntegrations, react(), keystatic()];
