@@ -49,7 +49,7 @@
 
 この参照は `keystatic.config.ts` 等のプロジェクト設定では制御できない。サイト訪問者（ブログ読者）が閲覧するコンテンツページ（`/`・`/blog/`・`/about`・`/works/` 等）での Google Fonts リクエストはゼロであり、本 ADR の主旨（コンテンツページの配信最適化）は達成している。
 
-Keystatic の Google Fonts 参照を解消する場合は upstream への報告または Content Security Policy の適用を別途検討する。
+Keystatic の Google Fonts 参照を解消する手段は [ADR 0014](./0014-keystatic-google-fonts-removal.md) で `pnpm patch` による除去と確定した。
 
 ## Revisit When
 
