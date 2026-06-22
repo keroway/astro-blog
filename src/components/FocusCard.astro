@@ -12,7 +12,7 @@ const { index, key, title, description, visualKey = key } = Astro.props;
 const num = (index + 1).toString().padStart(2, '0');
 ---
 
-<article class="focus-card">
+<article class="focus-card kw-lift" data-reveal>
   <MotifPanel visualKey={visualKey} label={key} />
   <div class="focus-card__eyebrow kw-eyebrow">
     <span class="focus-card__num kw-tabular">{num}<span class="focus-card__slash">/</span></span>

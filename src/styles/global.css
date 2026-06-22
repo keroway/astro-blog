@@ -306,3 +306,36 @@ html.reduce-motion {
   --kw-motion-distance: 0px;
   --kw-motion-duration: 0.01ms;
 }
+
+/* -------------------------------------------------------------
+ * Scroll reveal (issue #377)
+ *
+ * 初期非表示は html.kw-anim でゲートする。kw-anim は BaseHead の
+ * head inline が「モーション許可時のみ」初回描画前に付与する。
+ * よって JS 無効 / モーション低減時は kw-anim が付かず、
+ * コンテンツは常に表示される (チラつき・非表示を回避)。
+ * ------------------------------------------------------------- */
+html.kw-anim [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--kw-motion-distance));
+  transition:
+    opacity var(--kw-motion-duration) var(--kw-motion-easing),
+    transform var(--kw-motion-duration) var(--kw-motion-easing);
+}
+html.kw-anim [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hover lift — ポインタデバイスのみ (issue #377) */
+.kw-lift {
+  transition:
+    transform var(--kw-duration-fast) var(--kw-easing),
+    box-shadow var(--kw-duration-fast) var(--kw-easing);
+}
+@media (hover: hover) {
+  .kw-lift:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--kw-shadow-pop);
+  }
+}
