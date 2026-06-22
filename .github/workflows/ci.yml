@@ -52,7 +52,7 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # pnpm version is resolved from the `packageManager` field in package.json.
       - uses: pnpm/action-setup@v6
@@ -78,7 +78,7 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # pnpm version is resolved from the `packageManager` field in package.json.
       - uses: pnpm/action-setup@v6
@@ -99,7 +99,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
 
@@ -143,7 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v6
 
@@ -188,7 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Re-use the built output from the build job — lhci only needs
       # dist/client/ (staticDistDir) and does not require pnpm or Node.
@@ -216,7 +216,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Re-use the dist/ artifact from the build job to avoid a redundant build
       # that would hammer the jsDelivr CDN for font files a second time and risk
