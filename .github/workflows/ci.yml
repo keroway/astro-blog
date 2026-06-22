@@ -160,7 +160,7 @@ jobs:
       # filesystem check in url-check.spec.ts. The webServer (astro dev) serves
       # pages live and does not use dist/.
       - name: Download dist artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
@@ -193,7 +193,7 @@ jobs:
       # Re-use the built output from the build job — lhci only needs
       # dist/client/ (staticDistDir) and does not require pnpm or Node.
       - name: Download dist artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
@@ -222,7 +222,7 @@ jobs:
       # that would hammer the jsDelivr CDN for font files a second time and risk
       # transient CannotFetchFontFile errors.
       - name: Download dist artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: dist
           path: dist/
