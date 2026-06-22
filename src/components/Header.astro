@@ -44,6 +44,16 @@ const isActive = (href: string) => {
 </header>
 
 <script>
+  // localStorage → OS設定 の順で解決する。BaseHead.astro の FOUC 防止
+  // インラインスクリプトと同一ロジック (inline は import 不可のため重複は許容)。
+  function resolveTheme() {
+    try {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'dark' || stored === 'light') return stored;
+    } catch (e) {}
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
   function initThemeToggle() {
     const btn = document.getElementById('theme-toggle');
     if (!btn) return;
@@ -69,12 +79,9 @@ const isActive = (href: string) => {
   initThemeToggle();
 
   document.addEventListener('astro:after-swap', () => {
-    try {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'dark' || stored === 'light') {
-        document.documentElement.dataset.theme = stored;
-      }
-    } catch (e) {}
+    // View Transitions の swap で <html data-theme> が失われるため再付与する。
+    // localStorage 未設定 (OS ダーク依存) でもフォールバックでダークを維持する。
+    document.documentElement.dataset.theme = resolveTheme();
     initThemeToggle();
   });
 </script>
