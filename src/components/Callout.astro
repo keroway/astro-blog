@@ -1,0 +1,100 @@
+---
+/**
+ * Callout — コールアウト（注記）ボックス。
+ * Markdoc content component として使用する。
+ * keystatic.config.ts / markdoc.config.mjs と連動する。
+ *
+ * type: info (default) / tip / warning / danger
+ */
+interface Props {
+  type?: "info" | "tip" | "warning" | "danger";
+  title?: string;
+}
+
+const { type = "info", title } = Astro.props;
+
+const icons: Record<string, string> = {
+  info: "ℹ",
+  tip: "✦",
+  warning: "⚠",
+  danger: "✖",
+};
+const icon = icons[type] ?? icons.info;
+---
+
+<aside class={`kw-callout kw-callout--${type}`} role="note">
+  <p class="kw-callout__header">
+    <span class="kw-callout__icon" aria-hidden="true">{icon}</span>
+    {title && <span class="kw-callout__title">{title}</span>}
+  </p>
+  <div class="kw-callout__body">
+    <slot />
+  </div>
+</aside>
+
+<style>
+  .kw-callout {
+    border-radius: 4px;
+    border-inline-start: 3px solid;
+    margin-block: 1.5rem;
+    padding: 0.875rem 1rem;
+    background: var(--kw-bg-alt);
+  }
+
+  .kw-callout--info {
+    border-color: var(--kw-blue, #1e50a2);
+  }
+  .kw-callout--tip {
+    border-color: var(--kw-sand, #d9b382);
+  }
+  .kw-callout--warning {
+    border-color: var(--kw-vermilion, #b43d2f);
+  }
+  .kw-callout--danger {
+    border-color: var(--kw-vermilion, #b43d2f);
+    background: var(--kw-accent-strong-soft, rgba(180, 61, 47, 0.08));
+  }
+
+  .kw-callout__header {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .kw-callout__icon {
+    font-style: normal;
+    line-height: 1;
+  }
+
+  .kw-callout--info .kw-callout__icon {
+    color: var(--kw-blue, #1e50a2);
+  }
+  .kw-callout--tip .kw-callout__icon {
+    color: var(--kw-sand, #d9b382);
+  }
+  .kw-callout--warning .kw-callout__icon,
+  .kw-callout--danger .kw-callout__icon {
+    color: var(--kw-vermilion, #b43d2f);
+  }
+
+  .kw-callout__title {
+    color: var(--kw-fg, currentcolor);
+  }
+
+  .kw-callout__body {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--kw-fg-muted, currentcolor);
+  }
+
+  /* 子要素の最初/最後のマージン調整 */
+  .kw-callout__body :global(p:first-child) {
+    margin-top: 0;
+  }
+  .kw-callout__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

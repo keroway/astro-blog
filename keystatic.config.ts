@@ -1,5 +1,48 @@
 import { collection, config, fields } from "@keystatic/core";
+import { block, wrapper } from "@keystatic/core/content-components";
 import { createElement } from "react";
+
+// content components (#365): blog/works 共通のカスタムコンポーネント定義。
+// markdoc タグ名は markdoc.config.mjs の tags キーと一致させる。
+const contentComponents = {
+  callout: wrapper({
+    label: "コールアウト",
+    description: "注記・補足ボックス。type で色とアイコンを切り替えられます。",
+    schema: {
+      type: fields.select({
+        label: "タイプ",
+        options: [
+          { label: "情報 (info)", value: "info" },
+          { label: "ヒント (tip)", value: "tip" },
+          { label: "注意 (warning)", value: "warning" },
+          { label: "危険 (danger)", value: "danger" },
+        ],
+        defaultValue: "info",
+      }),
+      title: fields.text({
+        label: "タイトル（任意）",
+        validation: { isRequired: false },
+      }),
+    },
+  }),
+  "link-card": block({
+    label: "リンクカード",
+    description: "外部リンクをカード形式で表示します。",
+    schema: {
+      href: fields.url({
+        label: "URL（必須）",
+      }),
+      title: fields.text({
+        label: "タイトル（必須）",
+      }),
+      description: fields.text({
+        label: "説明（任意）",
+        multiline: false,
+        validation: { isRequired: false },
+      }),
+    },
+  }),
+};
 
 // このファイルは Keystatic Admin UI の hydration でブラウザにもバンドルされる。
 // `process.env` を直接参照するとブラウザで `ReferenceError: process is not defined`
@@ -14,9 +57,12 @@ import { createElement } from "react";
 // セットアップ手順は docs/cms-flow.md を参照。
 // Keystatic admin UI ブランドマーク。colorScheme に応じて navy / paper-white で反転。
 // CSS 変数は Keystatic admin DOM では利用できないため design-system.md の実値を直参照。
+// light: 紺碧地(#003366) + 紙白文字(#F3F1EC) + 砂金アクセント帯(#D9B382)
+// dark : 薄紺地(#9CB4DA) + 深紺文字(#0B1B33) + 砂金アクセント帯(#D9B382)
 function KeroMark({ colorScheme }: { colorScheme: "light" | "dark" }) {
   const bg = colorScheme === "dark" ? "#9CB4DA" : "#003366";
   const fg = colorScheme === "dark" ? "#0B1B33" : "#F3F1EC";
+  const accent = "#D9B382"; // 砂金 — 両モード共通
   return createElement(
     "svg",
     {
@@ -26,17 +72,40 @@ function KeroMark({ colorScheme }: { colorScheme: "light" | "dark" }) {
       height: 24,
       "aria-hidden": true,
     },
+    // 背景
     createElement("rect", { width: 24, height: 24, rx: 5, fill: bg }),
+    // 砂金アクセント帯（下端）
+    createElement("rect", {
+      x: 0,
+      y: 20,
+      width: 24,
+      height: 4,
+      rx: 0,
+      fill: accent,
+      opacity: 0.85,
+    }),
+    // 角丸の下端を背景色でマスク（rounded cornerを維持するため）
+    createElement("rect", {
+      x: 0,
+      y: 20,
+      width: 24,
+      height: 4,
+      rx: 5,
+      fill: accent,
+      opacity: 0.85,
+    }),
+    // モノグラム「K」
     createElement(
       "text",
       {
         x: 12,
-        y: 12,
+        y: 11,
         dominantBaseline: "central",
         textAnchor: "middle",
-        fontFamily: "Georgia, serif",
-        fontSize: 15,
+        fontFamily: "Georgia, 'Times New Roman', serif",
+        fontSize: 14,
         fontWeight: 700,
+        letterSpacing: "0.02em",
         fill: fg,
       },
       "K"
@@ -152,6 +221,7 @@ export default config({
         }),
         content: fields.markdoc({
           label: "本文",
+          components: contentComponents,
           options: {
             // 本文中に挿入する画像の保存先。heroImage と同じ規約に揃える (#356)。
             image: {
@@ -243,6 +313,7 @@ export default config({
         }),
         content: fields.markdoc({
           label: "本文",
+          components: contentComponents,
           options: {
             // 本文中に挿入する画像の保存先。works 専用 dir に heroImage と揃える (#363)。
             image: {
