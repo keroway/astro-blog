@@ -19,7 +19,7 @@
     "new-post": "node --experimental-strip-types scripts/new-post.ts"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.3.177",
+    "@anthropic-ai/claude-agent-sdk": "^0.3.185",
     "@astrojs/check": "^0.9.9",
     "@astrojs/markdoc": "1.0.6",
     "@astrojs/react": "^5.0.7",
