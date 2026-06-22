@@ -1,0 +1,111 @@
+---
+/**
+ * LinkCard — リンクカード。
+ * Markdoc content component として使用する。
+ * keystatic.config.ts / markdoc.config.mjs と連動する。
+ */
+interface Props {
+  href: string;
+  title: string;
+  description?: string;
+}
+
+const { href, title, description } = Astro.props;
+
+let domain = "";
+try {
+  domain = new URL(href).hostname.replace(/^www\./, "");
+} catch {
+  domain = href;
+}
+---
+
+<a
+  class="kw-link-card"
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={`外部リンク: ${title}`}
+>
+  <span class="kw-link-card__body">
+    <span class="kw-link-card__title">{title}</span>
+    {
+      description && (
+        <span class="kw-link-card__desc">{description}</span>
+      )
+    }
+    <span class="kw-link-card__domain">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="12"
+        height="12"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+        <polyline points="15 3 21 3 21 9"></polyline>
+        <line x1="10" y1="14" x2="21" y2="3"></line>
+      </svg>
+      {domain}
+    </span>
+  </span>
+</a>
+
+<style>
+  .kw-link-card {
+    display: block;
+    border: 1px solid var(--kw-rule, rgba(0, 51, 102, 0.16));
+    border-radius: 6px;
+    padding: 0.875rem 1.125rem;
+    margin-block: 1.25rem;
+    text-decoration: none;
+    color: inherit;
+    background: var(--kw-bg-card, #fffdf8);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+
+  .kw-link-card:hover {
+    border-color: var(--kw-blue, #1e50a2);
+    box-shadow: 0 2px 8px var(--kw-rule, rgba(0, 51, 102, 0.12));
+  }
+
+  .kw-link-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .kw-link-card__title {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--kw-fg-link, #1e50a2);
+    line-height: 1.4;
+  }
+
+  .kw-link-card:hover .kw-link-card__title {
+    text-decoration: underline;
+  }
+
+  .kw-link-card__desc {
+    font-size: 0.875rem;
+    color: var(--kw-fg-muted, #4a5874);
+    line-height: 1.5;
+  }
+
+  .kw-link-card__domain {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--kw-fg-faint, #8290ac);
+    margin-top: 0.125rem;
+    font-family: var(--kw-font-mono, monospace);
+  }
+</style>
