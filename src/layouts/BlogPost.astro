@@ -16,6 +16,7 @@ interface Heading {
 
 interface Props extends BlogData {
   ogImage?: string;
+  readingTime?: number;
   headings?: Heading[];
   prevPost?: BlogEntry | null;
   nextPost?: BlogEntry | null;

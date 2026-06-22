@@ -1,6 +1,7 @@
 # CMS 編集 → プレビュー → 本番反映フロー
 
 - **関連 ADR**: [0002 — CMS: Keystatic 採用](./adr/0002-cms.md)、[0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)
+- **関連ドキュメント**: [Keystatic 執筆ガイド](./keystatic-authoring.md)
 - **関連 Issue**: [#34 プレビュー機能とデプロイフローの設計](https://github.com/keroway/astro-blog/issues/34)
 - **作成日**: 2026-05-18
 
@@ -241,7 +242,7 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 
 1. **ローカルで GitHub App セットアップを起動する**
    - `.env` に `PUBLIC_KEYSTATIC_STORAGE_KIND=github` を設定 (リポジトリ owner / name は `keystatic.config.ts` でハードコード済み)。
-   - `pnpm run dev` で http://127.0.0.1:4321/keystatic を開き、「GitHub App をセットアップ」のフローに従う。
+   - `pnpm run dev` で <http://127.0.0.1:4321/keystatic> を開き、「GitHub App をセットアップ」のフローに従う。
    - Keystatic が自動で GitHub App を作成し、生成された Client ID / Client Secret / `KEYSTATIC_SECRET` / App slug を `.env` に書き込む。
 2. **GitHub App の権限を確認する**
    - Permissions: Contents `Read & Write`、Pull requests `Read & Write`、Metadata `Read`
@@ -249,14 +250,17 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
 3. **本番ドメインの Callback URL を GitHub App に追加する**（重要・見落としやすい）
    - 手順 1 のウィザードはローカル（`http://127.0.0.1:4321`）で走るため、自動生成された GitHub App の **Callback URL はローカル分しか登録されない**。この状態で `https://keroway.com/keystatic` から GitHub 認証すると、Keystatic が送る `redirect_uri`（`https://keroway.com/api/keystatic/github/oauth/callback`）が App 未登録のため **`The redirect_uri is not associated with this application.`** で失敗する。
    - GitHub → Settings → Developer settings → GitHub Apps → 対象アプリ（slug = `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`）の **Edit** → **Callback URL** に本番分を追加する（GitHub App は複数行で複数登録できるので、ローカル分も残す）:
+
      ```
      https://keroway.com/api/keystatic/github/oauth/callback
      https://keroway.localhost/api/keystatic/github/oauth/callback
      http://127.0.0.1:4321/api/keystatic/github/oauth/callback
      ```
+
    - `redirect_uri` は完全一致でなければならない。スキーム / ホスト / パスのいずれかがずれても同じエラーになる。
 4. **Vercel 側に環境変数を登録する**
    - Vercel ダッシュボード → Project → Settings → Environment Variables から、Production 環境向けに以下を登録:
+
      ```
      PUBLIC_KEYSTATIC_STORAGE_KIND=github
      KEYSTATIC_GITHUB_CLIENT_ID=...
@@ -264,6 +268,7 @@ ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway
      KEYSTATIC_SECRET=...                 (Encrypted)
      PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=keroway-keystatic
      ```
+
    - **Preview 環境では Keystatic 自体を無効化する**（環境変数を増やす必要なし）。`astro.config.mjs` が `VERCEL_ENV=preview` のとき Keystatic 統合を mount しないため、Preview URL の `/keystatic` は 404 になる。Preview の Vercel Function も ephemeral filesystem なので、もし local モードで起動すると "保存できた" と誤認させてデータロストになるため、編集は禁止する設計。Preview は記事ページのプレビューにのみ使う。
    - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `PUBLIC_KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では PUBLIC_KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
 5. **デプロイ後に手動検証する**

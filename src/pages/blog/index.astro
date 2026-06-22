@@ -1,6 +1,6 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, categoryLabel } from '../../consts';
 import SectionHead from '../../components/SectionHead.astro';
 import PostRow from '../../components/PostRow.astro';
 import BlogSearch from '../../components/BlogSearch.astro';
@@ -38,7 +38,7 @@ const showYearFilter = years.length >= 2;
           data-filter-type="category"
           data-filter-value={cat}
           aria-pressed="false"
-        >{cat}</button>
+        >{categoryLabel(cat)}</button>
       ))}
     </div>
     {showYearFilter && (
@@ -71,7 +71,7 @@ const showYearFilter = years.length >= 2;
         title={post.data.title}
         description={post.data.description?.trim()}
         pubDate={post.data.pubDate}
-        category={post.data.category}
+        category={categoryLabel(post.data.category)}
         accentNum={true}
         dataYear={String(post.data.pubDate.getFullYear())}
         dataCategory={post.data.category}

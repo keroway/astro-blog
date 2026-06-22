@@ -42,3 +42,5 @@ lhci-reports/
 .lighthouseci/
 # lychee link checker on-disk cache (regenerated each run)
 .lycheecache
+# pi coding agent (remote-pi) のセッションデータ
+.pi/

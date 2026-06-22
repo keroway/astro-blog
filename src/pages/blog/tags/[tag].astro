@@ -4,7 +4,7 @@ import SectionHead from '../../../components/SectionHead.astro';
 import PostRow from '../../../components/PostRow.astro';
 import { encodeSlugId } from '../../../lib/slug';
 import { getAllTags, getPublishedPosts } from '../../../lib/content';
-import { SITE_TITLE } from '../../../consts';
+import { SITE_TITLE, categoryLabel } from '../../../consts';
 
 export async function getStaticPaths() {
   const tags = await getAllTags();
@@ -42,7 +42,7 @@ const canonicalUrl = new URL(
         title={post.data.title}
         description={post.data.description?.trim()}
         pubDate={post.data.pubDate}
-        category={post.data.category}
+        category={categoryLabel(post.data.category)}
       />
     ))}
   </div>

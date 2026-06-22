@@ -2,6 +2,7 @@
 import FormattedDate from "./FormattedDate.astro";
 import type { BlogEntry } from "../types/content";
 import { encodeSlugId } from "../lib/slug";
+import { categoryLabel } from "../consts";
 
 interface Props {
   posts: BlogEntry[];
@@ -20,7 +21,7 @@ const postHref = (entry: BlogEntry) => `/blog/${encodeSlugId(entry.id)}/`;
           <a class="post-related__link" href={postHref(entry)}>
             <span class="kw-mono post-related__meta">
               <FormattedDate date={entry.data.pubDate} />
-              {entry.data.category && <span> · {entry.data.category}</span>}
+              {entry.data.category && <span> · {categoryLabel(entry.data.category)}</span>}
             </span>
             <span class="post-related__title">{entry.data.title}</span>
             <span class="post-related__arrow" aria-hidden="true">→</span>

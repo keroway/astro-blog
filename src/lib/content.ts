@@ -4,9 +4,8 @@ import type { BlogEntry, WorksEntry } from "../types/content";
 const READING_SPEED_CHARS_PER_MIN = 400;
 
 /**
- * 本文の文字数から読了時間 (分) を概算する。
- * scripts/backfill-frontmatter.ts の計算式と一致させる (400 文字/分・最小 1 分)。
- * frontmatter に readingTime が無い記事のフォールバック用。
+ * 本文の文字数から読了時間 (分) を概算する（400 文字/分・最小 1 分）。
+ * readingTime は frontmatter では持たず、ビルド時に本文から常に算出する (#361)。
  */
 export function calculateReadingTime(body: string): number {
   const text = body.replace(/^---[\s\S]*?---/, "").trim();
