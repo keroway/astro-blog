@@ -1,6 +1,6 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_VOLUME, categoryLabel } from '../consts';
 import Monogram from '../components/Monogram.astro';
 import HeroBackdrop from '../components/HeroBackdrop.astro';
 import KSeal from '../components/KSeal.astro';
@@ -75,7 +75,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
             title={post.data.title}
             description={post.data.description?.trim()}
             pubDate={post.data.pubDate}
-            category={post.data.category}
+            category={categoryLabel(post.data.category)}
           />
         ))}
       </div>

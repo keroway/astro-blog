@@ -30,8 +30,10 @@ type Props = {
 const { post, prevPost, nextPost, relatedPosts } = Astro.props as Props;
 const { Content, headings } = await render(post);
 
-const ogImage = `/og/${encodeSlugId(post.id)}.png`;
-const readingTime = post.data.readingTime ?? calculateReadingTime(post.body ?? '');
+// ogImage が指定されていればカスタム OG 画像として優先、未指定なら自動生成 (#362)。
+const ogImage = post.data.ogImage ?? `/og/${encodeSlugId(post.id)}.png`;
+// 読了時間は本文から常に自動算出する (#361)。
+const readingTime = calculateReadingTime(post.body ?? '');
 ---
 
 <BlogPost

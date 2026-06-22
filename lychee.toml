@@ -32,6 +32,12 @@ exclude = [
     # mailto: は SMTP MX を引くだけで実 inbox は分からない。到達確認の意味がない。
     "^mailto:",
 
+    # dist 内の canonical / og:url / twitter:url は Astro.site により本番同一オリジンの
+    # 絶対 URL (`https://keroway.com/...`) として出力される。PR で新規追加されたページは
+    # 本番未反映なので外部 HTTP 検査すると 404 になる一方、内部リンク自体は --root-dir で
+    # `/...` パスとしてローカル dist に対して検証済み。重複検査による false positive を避ける。
+    "^https://keroway\\.com/",
+
     # SiteLayout が 404.html に出力する canonical URL は `<site>/404/` というディレクトリ形
     # パスになるが、Vercel は 404 を 404.html ファイルとして配信するため `/404/` は存在しない。
     # 404 ページの canonical は SEO 的にも意味を持たないので除外。

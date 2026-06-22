@@ -1,6 +1,7 @@
 ---
 import type { BlogEntry } from '../types/content';
 import FormattedDate from './FormattedDate.astro';
+import { categoryLabel } from '../consts';
 
 interface Props {
   post: BlogEntry;
@@ -31,7 +32,7 @@ const heroImage = post.data.heroImage;
       <p class="kw-eyebrow recent-note__meta no-indent">
         <span class="recent-note__num">{num}</span>
         <FormattedDate date={post.data.pubDate} />
-        {post.data.category && <span>· {post.data.category}</span>}
+        {post.data.category && <span>· {categoryLabel(post.data.category)}</span>}
       </p>
       <h3 class="recent-note__title">{post.data.title}</h3>
       {post.data.description && <p class="recent-note__desc no-indent">{post.data.description.trim()}</p>}

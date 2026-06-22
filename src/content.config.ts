@@ -10,13 +10,14 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     heroImage: z.string().optional(),
-    category: z.string().optional(),
+    category: z
+      .enum(["dev", "hardware", "tools", "reading", "event"])
+      .optional(),
     tags: z.array(z.string()).optional(),
     draft: z.boolean().default(false),
     ogImage: z.string().optional(),
     author: z.string().optional(),
-    canonicalUrl: z.string().optional(),
-    readingTime: z.number().optional(),
+    canonicalUrl: z.url().optional(),
   }),
 });
 

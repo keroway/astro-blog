@@ -78,7 +78,14 @@ export default config({
       // Keystatic は collection 単位で format を決めるため全エントリを .mdoc に揃える。詳細は ADR 0009。
       format: { contentField: "content" },
       schema: {
-        title: fields.slug({ name: { label: "タイトル" } }),
+        title: fields.slug({
+          name: { label: "タイトル" },
+          slug: {
+            label: "URL slug（英数・必須）",
+            description:
+              "公開 URL（/blog/<slug>/）になります。日本語は使わず英数とハイフンで入力してください。",
+          },
+        }),
         description: fields.text({
           label: "概要（必須）",
           multiline: true,
@@ -101,14 +108,23 @@ export default config({
           publicPath: "/images/blog/",
           validation: { isRequired: false },
         }),
-        category: fields.text({
-          label: "カテゴリ（任意）",
-          description: "例: Cloud & DevOps / AI / 日記",
-          validation: { isRequired: false },
+        category: fields.select({
+          label: "カテゴリ（大分類）",
+          description:
+            "記事の大分類。細かいトピックは tags で表現してください。",
+          options: [
+            { label: "開発・プログラミング", value: "dev" },
+            { label: "ハードウェア・電子工作", value: "hardware" },
+            { label: "ツール・インフラ", value: "tools" },
+            { label: "読書", value: "reading" },
+            { label: "イベント・参加記", value: "event" },
+          ],
+          defaultValue: "dev",
         }),
         tags: fields.array(fields.text({ label: "タグ" }), {
           label: "タグ一覧（任意）",
-          description: "検索・フィルターに使うキーワードを追加してください。",
+          description:
+            "検索・関連記事判定に使うキーワード。既存タグの再利用を優先してください（docs/keystatic-authoring.md）。",
           itemLabel: (props) => props.value || "タグ",
         }),
         draft: fields.checkbox({
@@ -116,10 +132,12 @@ export default config({
           description: "チェック時は本番公開されません。",
           defaultValue: false,
         }),
-        ogImage: fields.text({
-          label: "OG 画像 URL（任意）",
+        ogImage: fields.image({
+          label: "OG 画像（任意）",
           description:
-            "SNS シェア時のサムネイル URL。省略時は heroImage が使用されます。",
+            "SNS シェア時のサムネイル。省略時はタイトルから自動生成されます（1200×630 推奨）。",
+          directory: "public/images/blog",
+          publicPath: "/images/blog/",
           validation: { isRequired: false },
         }),
         author: fields.text({
@@ -127,17 +145,21 @@ export default config({
           description: "省略時はサイトデフォルトの著者名が使用されます。",
           validation: { isRequired: false },
         }),
-        canonicalUrl: fields.text({
+        canonicalUrl: fields.url({
           label: "Canonical URL（任意）",
           description: "外部掲載など正規 URL が別にある場合のみ設定します。",
           validation: { isRequired: false },
         }),
-        readingTime: fields.number({
-          label: "読了時間（分）（任意）",
-          description: "記事の推定読了時間。自動計算されない場合に手動設定。",
-          validation: { isRequired: false, min: 0 },
+        content: fields.markdoc({
+          label: "本文",
+          options: {
+            // 本文中に挿入する画像の保存先。heroImage と同じ規約に揃える (#356)。
+            image: {
+              directory: "public/images/blog",
+              publicPath: "/images/blog/",
+            },
+          },
         }),
-        content: fields.markdoc({ label: "本文" }),
       },
     }),
 
@@ -151,7 +173,14 @@ export default config({
       // format を決めるため、works の全エントリを .mdoc に揃える。blog は別途 #218 で移行。詳細は ADR 0009。
       format: { contentField: "content" },
       schema: {
-        title: fields.slug({ name: { label: "プロジェクト名" } }),
+        title: fields.slug({
+          name: { label: "プロジェクト名" },
+          slug: {
+            label: "URL slug（英数・必須）",
+            description:
+              "公開 URL（/works/<slug>/）になります。日本語は使わず英数とハイフンで入力してください。",
+          },
+        }),
         description: fields.text({
           label: "概要（必須）",
           multiline: true,
@@ -169,16 +198,16 @@ export default config({
           ],
           defaultValue: "active",
         }),
-        repoUrl: fields.text({
+        repoUrl: fields.url({
           label: "リポジトリ URL（任意）",
           description: "GitHub など実装の主参照リポジトリ URL。",
           validation: { isRequired: false },
         }),
-        lpUrl: fields.text({
+        lpUrl: fields.url({
           label: "ランディングページ URL（必須）",
           description: "機能紹介・外部紹介ページなどの URL。",
         }),
-        demoUrl: fields.text({
+        demoUrl: fields.url({
           label: "デモ URL（任意）",
           description: "動作するデモが公開されている場合のみ設定します。",
           validation: { isRequired: false },
@@ -186,7 +215,7 @@ export default config({
         tags: fields.array(fields.text({ label: "タグ" }), {
           label: "タグ一覧（必須）",
           description:
-            "技術スタック・カテゴリなどのキーワードを追加してください。",
+            "技術スタック・カテゴリなどのキーワード。既存タグの再利用を優先してください。",
           itemLabel: (props) => props.value || "タグ",
         }),
         createdAt: fields.date({
@@ -202,8 +231,8 @@ export default config({
           label: "ヒーロー画像（任意）",
           description:
             "プロジェクトカードのサムネイル。16:9 の画像を推奨します。",
-          directory: "public/images/blog",
-          publicPath: "/images/blog/",
+          directory: "public/images/works",
+          publicPath: "/images/works/",
           validation: { isRequired: false },
         }),
         featured: fields.checkbox({
@@ -212,7 +241,16 @@ export default config({
             "チェック時はトップページの注目プロジェクトセクションに表示されます。",
           defaultValue: false,
         }),
-        content: fields.markdoc({ label: "本文" }),
+        content: fields.markdoc({
+          label: "本文",
+          options: {
+            // 本文中に挿入する画像の保存先。works 専用 dir に heroImage と揃える (#363)。
+            image: {
+              directory: "public/images/works",
+              publicPath: "/images/works/",
+            },
+          },
+        }),
       },
     }),
   },

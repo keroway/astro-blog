@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute } from "astro";
 import satori from "satori";
+import { categoryLabel } from "../../consts";
 import { getPublishedPosts } from "../../lib/content";
 import type { BlogEntry } from "../../types/content";
 
@@ -51,7 +52,7 @@ export const GET: APIRoute = async ({ props }) => {
   const { title, category } = post.data;
   const fonts = loadFonts();
 
-  const svg = await satori(buildElement(title, category), {
+  const svg = await satori(buildElement(title, categoryLabel(category)), {
     width: WIDTH,
     height: HEIGHT,
     fonts: [
