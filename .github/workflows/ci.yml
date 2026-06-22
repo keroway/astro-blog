@@ -117,7 +117,7 @@ jobs:
       # astro.config.mjs because that file controls which fonts are requested.
       # (This is the build-time cache; the dev-server cache lives in .astro/fonts/.)
       - name: Restore Astro font cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: node_modules/.astro/fonts
           key: astro-fonts-${{ hashFiles('astro.config.mjs') }}
@@ -230,7 +230,7 @@ jobs:
       # Restore lychee's request cache between runs so external URLs are not
       # re-fetched needlessly. max_cache_age in lychee.toml controls staleness.
       - name: Restore lychee cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .lycheecache
           key: lychee-cache-${{ github.run_id }}
