@@ -31,7 +31,7 @@ const websiteSchema = {
 };
 ---
 
-<!-- Theme: FOUC prevention — must run before first paint -->
+<!-- Theme & reduced-motion: FOUC prevention — must run before first paint -->
 <script is:inline>
   (function () {
     try {
@@ -39,6 +39,13 @@ const websiteSchema = {
       var t = s === 'dark' || s === 'light' ? s
         : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.dataset.theme = t;
+    } catch (e) {}
+    // モーション低減の手動設定 (OS 設定は CSS の @media が別途担当)。
+    // キー 'reduce-motion' は src/scripts/reduce-motion.ts と一致させること。
+    try {
+      if (localStorage.getItem('reduce-motion') === 'true') {
+        document.documentElement.classList.add('reduce-motion');
+      }
     } catch (e) {}
   })();
 </script>

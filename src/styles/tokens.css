@@ -227,6 +227,12 @@
   --kw-duration-normal: 220ms;
   --kw-easing:          cubic-bezier(0.4, 0, 0.2, 1);
 
+  /* Reveal / scroll 演出プリミティブ (issue #379)。
+   * モーション低減時は global.css が distance=0 / duration≒0 に倒す。 */
+  --kw-motion-distance: 16px;
+  --kw-motion-duration: var(--kw-duration-normal);
+  --kw-motion-easing:   var(--kw-easing);
+
   /* ---- Layout ---- */
   --kw-rail-width:  64px;
   --kw-content-max: 1100px;

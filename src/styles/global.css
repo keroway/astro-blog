@@ -272,6 +272,15 @@ input    { font-size: 16px; }
   margin-bottom: 2em;
 }
 
+/* -------------------------------------------------------------
+ * Reduced motion — single source of truth (issue #379)
+ *
+ * 低減は 2 経路で発火し、どちらも同一のルールを適用する:
+ *   1. OS 設定         → @media (prefers-reduced-motion: reduce)  … JS 不要
+ *   2. ユーザー手動設定 → html.reduce-motion (localStorage, BaseHead head inline で付与)
+ * JS 側の演出可否は src/scripts/reduce-motion.ts の
+ * prefersReducedMotion() が両者を OR で判定する (判定ロジックを一元化)。
+ * ------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -279,4 +288,21 @@ input    { font-size: 16px; }
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  :root {
+    --kw-motion-distance: 0px;
+    --kw-motion-duration: 0.01ms;
+  }
+}
+
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+html.reduce-motion {
+  --kw-motion-distance: 0px;
+  --kw-motion-duration: 0.01ms;
 }
