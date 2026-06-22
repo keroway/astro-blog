@@ -8,7 +8,7 @@ interface Props {
 const { num, layer, note } = Astro.props;
 ---
 
-<div class="timeline-row">
+<div class="timeline-row" data-reveal>
   <span class="timeline-row__num kw-numeral kw-tabular">{num}</span>
   <div class="timeline-row__body">
     <p class="kw-eyebrow-ja timeline-row__year no-indent">{layer}</p>

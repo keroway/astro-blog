@@ -40,13 +40,19 @@ const websiteSchema = {
         : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       document.documentElement.dataset.theme = t;
     } catch (e) {}
-    // モーション低減の手動設定 (OS 設定は CSS の @media が別途担当)。
+    // モーション低減の判定 (手動設定 OR OS 設定)。
     // キー 'reduce-motion' は src/scripts/reduce-motion.ts と一致させること。
+    var reduced = false;
+    try { reduced = localStorage.getItem('reduce-motion') === 'true'; } catch (e) {}
+    if (reduced) document.documentElement.classList.add('reduce-motion');
     try {
-      if (localStorage.getItem('reduce-motion') === 'true') {
-        document.documentElement.classList.add('reduce-motion');
+      if (!reduced && window.matchMedia) {
+        reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       }
     } catch (e) {}
+    // スクロール演出 (issue #377) の初期非表示は kw-anim でゲートする。
+    // モーション許可時のみ初回描画前に付与し、チラつきを避ける。
+    if (!reduced) document.documentElement.classList.add('kw-anim');
   })();
 </script>
 

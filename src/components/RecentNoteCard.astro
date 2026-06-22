@@ -13,7 +13,7 @@ const { post, href, num = '01' } = Astro.props;
 const heroImage = post.data.heroImage;
 ---
 
-<article class="recent-note">
+<article class="recent-note" data-reveal>
   <a class="recent-note__link" href={href}>
     <div class="recent-note__media">
       {heroImage ? (
