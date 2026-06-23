@@ -47,6 +47,9 @@ const isActive = (href: string) => {
 </header>
 
 <script>
+  import { applyFontSizePreference } from '../scripts/font-size';
+  import { applyMotionPreferences } from '../scripts/reduce-motion';
+
   // localStorage → OS設定 の順で解決する。BaseHead.astro の FOUC 防止
   // インラインスクリプトと同一ロジック (inline は import 不可のため重複は許容)。
   function resolveTheme() {
@@ -82,9 +85,11 @@ const isActive = (href: string) => {
   initThemeToggle();
 
   document.addEventListener('astro:after-swap', () => {
-    // View Transitions の swap で <html data-theme> が失われるため再付与する。
+    // View Transitions の swap で <html> の属性/class が失われるため再付与する。
     // localStorage 未設定 (OS ダーク依存) でもフォールバックでダークを維持する。
     document.documentElement.dataset.theme = resolveTheme();
+    applyMotionPreferences();
+    applyFontSizePreference();
     initThemeToggle();
   });
 </script>
@@ -199,13 +204,15 @@ const isActive = (href: string) => {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
     background: none;
     border: none;
     cursor: pointer;
     color: var(--kw-fg-muted);
-    font-size: var(--kw-fs-body-sm);
+    font-size: var(--kw-fs-body);
     line-height: 1;
-    padding: var(--kw-space-1) var(--kw-space-2);
+    padding: var(--kw-space-2);
     border-radius: var(--kw-radius-sm);
     transition: color var(--kw-duration-fast) var(--kw-easing);
   }

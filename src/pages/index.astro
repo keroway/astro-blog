@@ -26,7 +26,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <!-- Hero -->
-  <section class="hero" aria-labelledby="hero-heading">
+  <section class="hero" aria-labelledby="hero-heading" data-reveal>
     <HeroBackdrop />
     <div class="hero__copy">
       <p class="kw-eyebrow hero__eyebrow">vol. {SITE_VOLUME.toLowerCase()} · software · yokohama</p>
@@ -51,7 +51,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
   <div class="kw-divider-pine" aria-hidden="true" role="presentation"></div>
 
   <!-- Recent posts -->
-  <section class="section" aria-labelledby="recent-posts-heading">
+  <section class="section" aria-labelledby="recent-posts-heading" data-reveal>
     <SectionHead
       jp="最近の記録"
       en="recent posts"
@@ -84,7 +84,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
 
   <!-- Works -->
   {displayWorks.length > 0 && (
-    <section class="section" aria-labelledby="works-heading">
+    <section class="section" aria-labelledby="works-heading" data-reveal>
       <SectionHead
         jp="制作物"
         en="works"
@@ -103,7 +103,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
   )}
 
   <!-- Focus areas -->
-  <section class="section" aria-labelledby="focus-areas-heading">
+  <section class="section" aria-labelledby="focus-areas-heading" data-reveal>
     <SectionHead jp="専門分野" en="focus areas" id="focus-areas-heading" />
     <div class="focus-grid">
       {focusAreas.map((area, i) => (
@@ -262,69 +262,4 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
     }
   }
 
-  /* Scroll-in animation */
-  .scroll-hidden {
-    opacity: 0;
-    transform: translateY(8px);
-    transition:
-      opacity 350ms var(--kw-easing, ease-out),
-      transform 350ms var(--kw-easing, ease-out);
-  }
-  .scroll-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-hidden {
-      opacity: 1;
-      transform: none;
-      transition: none;
-    }
-  }
 </style>
-
-<script>
-  function initScrollAnimation(): void {
-    // prefers-reduced-motion チェック
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // アニメーション対象: hero + .section
-    const targets = document.querySelectorAll<HTMLElement>('.hero, .section');
-
-    if (prefersReduced) {
-      // モーション無効時は即表示（クラスを付けない）
-      targets.forEach((el) => {
-        el.classList.remove('scroll-hidden', 'scroll-visible');
-      });
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('scroll-visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -40px 0px',
-      }
-    );
-
-    targets.forEach((el) => {
-      el.classList.add('scroll-hidden');
-      observer.observe(el);
-    });
-  }
-
-  // 初回ロード
-  initScrollAnimation();
-
-  // Astro View Transitions での再初期化
-  document.addEventListener('astro:page-load', () => {
-    initScrollAnimation();
-  });
-</script>

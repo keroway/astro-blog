@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Project Hail Mary</title>
+  <desc id="desc">Science guide</desc>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16213e"/>
+      <stop offset="1" stop-color="#05070a"/>
+    </linearGradient>
+    <radialGradient id="r" cx="78%" cy="22%" r="55%">
+      <stop offset="0" stop-color="#f7b955" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#f7b955" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#g)"/>
+  <rect width="1200" height="675" fill="url(#r)"/>
+  <g fill="none" stroke="#f7b955" stroke-opacity="0.26" stroke-width="2">
+    <path d="M80 535 C260 410 360 590 540 430 S820 260 1120 390"/>
+    <path d="M80 160 H1120 M80 260 H1120 M80 360 H1120 M80 460 H1120"/>
+    <path d="M220 95 V580 M420 95 V580 M620 95 V580 M820 95 V580 M1020 95 V580"/>
+  </g>
+  <g transform="translate(92 92)">
+    <rect x="0" y="0" width="1016" height="491" rx="36" fill="#ffffff" fill-opacity="0.045" stroke="#ffffff" stroke-opacity="0.14"/>
+    <text x="56" y="190" fill="#f5f1e8" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="76" font-weight="700" letter-spacing="-2">Project Hail Mary</text>
+    <text x="60" y="270" fill="#f7b955" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="34" letter-spacing="2">Science guide</text>
+    <circle cx="900" cy="120" r="54" fill="#f7b955" fill-opacity="0.9"/>
+    <circle cx="820" cy="322" r="26" fill="#f5f1e8" fill-opacity="0.82"/>
+    <path d="M120 360 H590" stroke="#f7b955" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>

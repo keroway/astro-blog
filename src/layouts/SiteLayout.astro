@@ -63,18 +63,23 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
   // 初期非表示は html.kw-anim + [data-reveal] (global.css) で表現され、
   // ビューポート進入時に is-visible を付与してフェードインさせる。
   // モーション可否は reduce-motion.ts の prefersReducedMotion() で一元判定。
-  import { prefersReducedMotion } from '../scripts/reduce-motion';
+  import {
+    applyMotionPreferences,
+    prefersReducedMotion,
+    watchReducedMotion,
+  } from '../scripts/reduce-motion';
 
   let observer: IntersectionObserver | null = null;
 
   function init() {
+    applyMotionPreferences();
     const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
-    // 低減時 / IO 未対応は隐さず即表示 (kw-anim も付いていない)。
+    observer?.disconnect();
+    // 低減時 / IO 未対応は隠さず即表示 (kw-anim も付いていない)。
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
       for (const el of targets) el.classList.add('is-visible');
       return;
     }
-    observer?.disconnect();
     observer = new IntersectionObserver(
       (entries, obs) => {
         for (const entry of entries) {
@@ -93,6 +98,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
 
   // 初回ロードと View Transitions (ClientRouter) の遷移後の両方で発火する。
   document.addEventListener('astro:page-load', init);
+  watchReducedMotion(() => init());
 </script>
 
 <style>

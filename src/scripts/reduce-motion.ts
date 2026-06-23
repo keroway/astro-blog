@@ -38,6 +38,28 @@ export function prefersReducedMotion(): boolean {
 }
 
 /**
+ * 現在の永続化状態・OS 設定に合わせて html class を再同期する。
+ * View Transitions の swap で <html> class が失われるため、ページ遷移後にも呼ぶ。
+ */
+export function applyMotionPreferences(): void {
+  if (typeof document === "undefined") return;
+
+  let manuallyReduced = false;
+  try {
+    manuallyReduced = localStorage.getItem(REDUCE_MOTION_KEY) === "true";
+  } catch {
+    /* localStorage 不可環境では class の現在値にフォールバック */
+    manuallyReduced = manualReduceMotion();
+  }
+
+  document.documentElement.classList.toggle("reduce-motion", manuallyReduced);
+  document.documentElement.classList.toggle(
+    "kw-anim",
+    !osPrefersReducedMotion() && !manuallyReduced
+  );
+}
+
+/**
  * 手動のモーション低減設定を切り替えて永続化する (issue #378 の a11y メニュー用)。
  * @param state "on"=低減を強制 / "off"=手動設定を解除 (OS 設定には従う)
  */
@@ -50,6 +72,7 @@ export function setReduceMotion(state: "on" | "off"): void {
   } catch {
     /* localStorage 不可環境では永続化を諦める (動作は継続) */
   }
+  applyMotionPreferences();
 }
 
 /**
@@ -64,7 +87,10 @@ export function watchReducedMotion(
   if (typeof window === "undefined") return () => {};
 
   const mql = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-  const onMqlChange = () => callback(prefersReducedMotion());
+  const onMqlChange = () => {
+    applyMotionPreferences();
+    callback(prefersReducedMotion());
+  };
   mql?.addEventListener?.("change", onMqlChange);
 
   const observer = new MutationObserver(() => callback(prefersReducedMotion()));
