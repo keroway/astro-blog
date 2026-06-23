@@ -30,7 +30,18 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
 ---
 
 <article class:list={["work-card", `work-card--${variant}`]}>
-  <MotifPanel visualKey={visualKey} label={work.data.title} />
+  {work.data.heroImage ? (
+    <figure class="work-card__visual">
+      <img
+        src={work.data.heroImage}
+        alt={`${work.data.title} のスクリーンショット`}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  ) : (
+    <MotifPanel visualKey={visualKey} label={work.data.title} />
+  )}
   <div class="work-card__body">
     <div class="work-card__meta">
       <span class:list={["kw-chip", status.className]}>{status.label}</span>
@@ -72,6 +83,20 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
   }
   .work-card:is(:hover, :focus-within) .work-card__title a {
     color: var(--kw-fg-link);
+  }
+
+  .work-card__visual {
+    aspect-ratio: 16 / 9;
+    margin: 0;
+    overflow: hidden;
+    background: var(--kw-bg-soft);
+    border-bottom: 1px solid var(--kw-rule-soft);
+  }
+  .work-card__visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .work-card__body {

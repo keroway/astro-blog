@@ -31,7 +31,7 @@ const strata = [
   {/* UnoCSS 動作検証用サンプル（非表示） */}
   <span class="text-red-500 hidden" aria-hidden="true"></span>
   <!-- Masthead -->
-  <section class="masthead" aria-labelledby="profile-heading">
+  <section class="masthead" aria-labelledby="profile-heading" data-reveal>
     <div class="masthead__copy">
       <p class="kw-eyebrow masthead__eyebrow">colophon · author</p>
       <h1 id="profile-heading" class="masthead__title">keroway</h1>
@@ -47,7 +47,7 @@ const strata = [
   </section>
 
   <!-- Strata of interest -->
-  <section class="section" aria-labelledby="strata-heading">
+  <section class="section" aria-labelledby="strata-heading" data-reveal>
     <SectionHead jp="関心の地層" en="strata of interest" id="strata-heading" />
     <div class="timeline">
       {strata.map((item, i) => (
@@ -61,7 +61,7 @@ const strata = [
   </section>
 
   <!-- Focus areas -->
-  <section class="section" aria-labelledby="focus-areas-heading">
+  <section class="section" aria-labelledby="focus-areas-heading" data-reveal>
     <SectionHead jp="得意分野" en="focus areas" id="focus-areas-heading" />
     <div class="focus-grid">
       {focusAreas.map((area, i) => (
@@ -71,7 +71,7 @@ const strata = [
   </section>
 
   <!-- Stack -->
-  <section class="section" aria-labelledby="stack-heading">
+  <section class="section" aria-labelledby="stack-heading" data-reveal>
     <SectionHead jp="スタック" en="stack" id="stack-heading" />
     <div class="stack-groups">
       {Object.entries({ '言語': skills.languages, '領域': skills.domains, 'ツール・インフラ': skills.tools }).map(([label, items]) => (

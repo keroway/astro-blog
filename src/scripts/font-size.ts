@@ -19,6 +19,18 @@ export function getFontSize(): FontSize {
     : "normal";
 }
 
+/** 永続化された文字サイズ設定を html class に再適用する。 */
+export function applyFontSizePreference(): void {
+  if (typeof document === "undefined") return;
+  let large = false;
+  try {
+    large = localStorage.getItem(FONT_SIZE_KEY) === "large";
+  } catch {
+    large = getFontSize() === "large";
+  }
+  document.documentElement.classList.toggle("fs-large", large);
+}
+
 /** 文字サイズを切り替えて永続化する。 */
 export function setFontSize(size: FontSize): void {
   if (typeof document === "undefined") return;

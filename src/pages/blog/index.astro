@@ -15,16 +15,17 @@ const showYearFilter = years.length >= 2;
 ---
 
 <SiteLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} mainClass="blog-index">
-  <SectionHead
-    jp="記事一覧"
-    en="all posts"
-    action="RSS →"
-    actionHref="/rss.xml"
-  />
+  <div data-reveal>
+    <SectionHead
+      jp="記事一覧"
+      en="all posts"
+      action="RSS →"
+      actionHref="/rss.xml"
+    />
 
-  <BlogSearch />
+    <BlogSearch />
 
-  <div class="filter-bar">
+    <div class="filter-bar">
     <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">
       <button
         class="filter-btn filter-btn--active"
@@ -59,11 +60,12 @@ const showYearFilter = years.length >= 2;
         ))}
       </div>
     )}
+    </div>
   </div>
 
   <p class="filter-count no-indent" id="filter-count" hidden></p>
 
-  <div class="posts-list" id="posts-list">
+  <div class="posts-list" id="posts-list" data-reveal>
     {posts.map((post) => (
       <PostRow
         href={`/blog/${encodeSlugId(post.id)}/`}
