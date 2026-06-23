@@ -153,22 +153,26 @@
   --kw-font-body:    var(--font-body);
   --kw-font-mono:    var(--font-mono);
 
-  --kw-fs-display-xl: 96px;
-  --kw-fs-display-lg: 72px;
-  --kw-fs-display-md: 40px;
-  --kw-fs-display-sm: 32px;
+  /* 文字サイズスケール (issue #378)。a11y メニューが html.fs-large で上書きし、
+   * 全 fs トークンを比例拡大する。既定 1 = 従来の px 値と同一。 */
+  --kw-fs-scale: 1;
 
-  --kw-fs-h1: 56px;
-  --kw-fs-h2: 32px;
-  --kw-fs-h3: 22px;
-  --kw-fs-h4: 18px;
+  --kw-fs-display-xl: calc(96px * var(--kw-fs-scale));
+  --kw-fs-display-lg: calc(72px * var(--kw-fs-scale));
+  --kw-fs-display-md: calc(40px * var(--kw-fs-scale));
+  --kw-fs-display-sm: calc(32px * var(--kw-fs-scale));
 
-  --kw-fs-body-lg: 17px;
-  --kw-fs-body:    16px;
-  --kw-fs-body-sm: 14px;
-  --kw-fs-mono:    13px;
-  --kw-fs-mono-sm: 12px;
-  --kw-fs-mono-xs: 10px;
+  --kw-fs-h1: calc(56px * var(--kw-fs-scale));
+  --kw-fs-h2: calc(32px * var(--kw-fs-scale));
+  --kw-fs-h3: calc(22px * var(--kw-fs-scale));
+  --kw-fs-h4: calc(18px * var(--kw-fs-scale));
+
+  --kw-fs-body-lg: calc(17px * var(--kw-fs-scale));
+  --kw-fs-body:    calc(16px * var(--kw-fs-scale));
+  --kw-fs-body-sm: calc(14px * var(--kw-fs-scale));
+  --kw-fs-mono:    calc(13px * var(--kw-fs-scale));
+  --kw-fs-mono-sm: calc(12px * var(--kw-fs-scale));
+  --kw-fs-mono-xs: calc(10px * var(--kw-fs-scale));
 
   --kw-fw-regular:  400;
   --kw-fw-medium:   500;
