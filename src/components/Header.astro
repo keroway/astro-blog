@@ -1,4 +1,6 @@
 ---
+import A11yMenu from './A11yMenu.astro';
+
 const links = [
   { id: 'home',  label: 'home',  href: '/'      },
   { id: 'works', label: 'works', href: '/works'  },
@@ -37,6 +39,7 @@ const isActive = (href: string) => {
   </nav>
 
   <div class="kw-header__actions">
+    <A11yMenu />
     <button id="theme-toggle" class="kw-header__theme-btn" type="button" aria-label="ダークモードに切り替える">
       <span aria-hidden="true">☽</span>
     </button>

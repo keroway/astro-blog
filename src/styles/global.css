@@ -327,6 +327,11 @@ html.kw-anim [data-reveal].is-visible {
   transform: none;
 }
 
+/* 文字サイズ: 大 (issue #378)。fs トークンを一括で拡大。 */
+html.fs-large {
+  --kw-fs-scale: 1.125;
+}
+
 /* Hover lift — ポインタデバイスのみ (issue #377) */
 .kw-lift {
   transition:
