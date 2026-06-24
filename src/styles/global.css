@@ -66,6 +66,12 @@ a {
 a:hover {
   border-bottom-color: var(--kw-fg-link);
 }
+html.underline-links :where(.prose, main) a:not(.kw-header__brand):not(.kw-header__link) {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  border-bottom-color: transparent;
+}
 a:focus-visible {
   outline: 2px solid var(--kw-accent-strong);
   outline-offset: 3px;
@@ -327,9 +333,20 @@ html.kw-anim [data-reveal].is-visible {
   transform: none;
 }
 
-/* 文字サイズ: 大 (issue #378)。fs トークンを一括で拡大。 */
+/* 文字サイズ: 大 / 特大 (issue #390)。fs トークンを一括で拡大。 */
 html.fs-large {
   --kw-fs-scale: 1.125;
+}
+html.fs-x-large {
+  --kw-fs-scale: 1.25;
+}
+
+/* テキスト間隔: WCAG 1.4.12 に寄せて読書用の行間・字間を緩める。 */
+html.text-spacing {
+  --kw-lh-normal: 1.75;
+  --kw-lh-relaxed: 2;
+  --kw-lh-prose: 2.05;
+  --kw-ls-body: 0.04em;
 }
 
 /* Hover lift — ポインタデバイスのみ (issue #377) */

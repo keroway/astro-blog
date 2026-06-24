@@ -1,6 +1,6 @@
 ---
-// a11y 表示設定メニュー (issue #378)
-// モーション低減トグルと文字サイズ切替を提供する。設定は localStorage に永続化し、
+// a11y 表示設定メニュー (issue #390)
+// モーション低減・文字サイズ・読書補助を提供する。設定は localStorage に永続化し、
 // FOUC 防止の初期適用は BaseHead.astro の head inline が担う。
 ---
 
@@ -27,13 +27,16 @@
   >
     <p class="a11y-menu__title">表示設定</p>
 
-    <label class="a11y-menu__row">
-      <input id="a11y-reduce-motion" type="checkbox" />
-      <span>モーションを減らす</span>
-    </label>
+    <fieldset class="a11y-menu__fieldset">
+      <legend class="a11y-menu__legend">動き</legend>
+      <label class="a11y-menu__row">
+        <input id="a11y-reduce-motion" type="checkbox" />
+        <span>モーションを減らす</span>
+      </label>
+    </fieldset>
 
     <fieldset class="a11y-menu__fieldset">
-      <legend class="a11y-menu__legend">文字サイズ</legend>
+      <legend class="a11y-menu__legend">読みやすさ</legend>
       <div class="a11y-menu__segment" role="radiogroup" aria-label="文字サイズ">
         <label class="a11y-menu__radio">
           <input type="radio" name="a11y-font-size" value="normal" />
@@ -43,14 +46,50 @@
           <input type="radio" name="a11y-font-size" value="large" />
           <span>大</span>
         </label>
+        <label class="a11y-menu__radio">
+          <input type="radio" name="a11y-font-size" value="x-large" />
+          <span>特大</span>
+        </label>
       </div>
+      <label class="a11y-menu__row">
+        <input id="a11y-text-spacing" type="checkbox" />
+        <span>行間・字間を広げる</span>
+      </label>
+      <label class="a11y-menu__row">
+        <input id="a11y-underline-links" type="checkbox" />
+        <span>リンクに常時下線</span>
+      </label>
     </fieldset>
+
+    <button id="a11y-reset" class="a11y-menu__reset" type="button">初期設定に戻す</button>
   </div>
 </div>
 
 <script>
-  import { manualReduceMotion, setReduceMotion } from '../scripts/reduce-motion';
-  import { getFontSize, setFontSize } from '../scripts/font-size';
+  import {
+    REDUCE_MOTION_KEY,
+    applyMotionPreferences,
+    manualReduceMotion,
+    setReduceMotion,
+  } from '../scripts/reduce-motion';
+  import {
+    FONT_SIZE_KEY,
+    getFontSize,
+    setFontSize,
+    type FontSize,
+  } from '../scripts/font-size';
+  import {
+    TEXT_SPACING_KEY,
+    applyTextSpacingPreference,
+    getTextSpacing,
+    setTextSpacing,
+  } from '../scripts/text-spacing';
+  import {
+    UNDERLINE_LINKS_KEY,
+    applyUnderlineLinksPreference,
+    getUnderlineLinks,
+    setUnderlineLinks,
+  } from '../scripts/underline-links';
 
   function panel() {
     return document.getElementById('a11y-panel');
@@ -100,6 +139,18 @@
       r.checked = r.value === current;
     }
 
+    const spacingInput = document.getElementById(
+      'a11y-text-spacing'
+    ) as HTMLInputElement | null;
+    if (spacingInput) spacingInput.checked = getTextSpacing();
+
+    const underlineInput = document.getElementById(
+      'a11y-underline-links'
+    ) as HTMLInputElement | null;
+    if (underlineInput) underlineInput.checked = getUnderlineLinks();
+
+    const resetButton = document.getElementById('a11y-reset');
+
     // トリガー開閉
     t.addEventListener('click', () => {
       isOpen() ? close() : open();
@@ -113,9 +164,35 @@
       'input[name="a11y-font-size"]'
     )) {
       r.addEventListener('change', () => {
-        if (r.checked) setFontSize(r.value === 'large' ? 'large' : 'normal');
+        if (r.checked) setFontSize(r.value as FontSize);
       });
     }
+    spacingInput?.addEventListener('change', () => {
+      setTextSpacing(spacingInput.checked);
+    });
+    underlineInput?.addEventListener('change', () => {
+      setUnderlineLinks(underlineInput.checked);
+    });
+    resetButton?.addEventListener('click', () => {
+      try {
+        localStorage.removeItem(REDUCE_MOTION_KEY);
+        localStorage.removeItem(FONT_SIZE_KEY);
+        localStorage.removeItem(TEXT_SPACING_KEY);
+        localStorage.removeItem(UNDERLINE_LINKS_KEY);
+      } catch (e) {}
+      applyMotionPreferences();
+      document.documentElement.classList.remove('fs-large', 'fs-x-large');
+      applyTextSpacingPreference();
+      applyUnderlineLinksPreference();
+      if (reduceInput) reduceInput.checked = manualReduceMotion();
+      for (const r of p.querySelectorAll<HTMLInputElement>(
+        'input[name="a11y-font-size"]'
+      )) {
+        r.checked = r.value === 'normal';
+      }
+      if (spacingInput) spacingInput.checked = false;
+      if (underlineInput) underlineInput.checked = false;
+    });
   }
 
   // Esc で閉じる / 外側クリックで閉じる (document に一度だけ登録)
@@ -168,7 +245,9 @@
     top: calc(100% + var(--kw-space-3));
     right: 0;
     z-index: 60;
-    min-width: 220px;
+    min-width: 260px;
+    max-height: min(70vh, 520px);
+    overflow-y: auto;
     padding: var(--kw-space-4);
     background: var(--kw-bg-card);
     border: 1px solid var(--kw-rule-strong);
@@ -199,17 +278,22 @@
 
   .a11y-menu__fieldset {
     margin: 0;
-    padding: 0;
+    padding: 0 0 var(--kw-space-3);
     border: 0;
+    border-bottom: 1px solid var(--kw-rule);
+    display: grid;
+    gap: var(--kw-space-3);
   }
   .a11y-menu__legend {
     padding: 0;
     margin-bottom: var(--kw-space-2);
-    font-size: var(--kw-fs-body-sm);
-    color: var(--kw-fg);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-faint);
   }
   .a11y-menu__segment {
     display: flex;
+    flex-wrap: wrap;
     gap: var(--kw-space-4);
   }
   .a11y-menu__radio {
@@ -221,7 +305,24 @@
     cursor: pointer;
   }
 
-  .a11y-menu input:focus-visible {
+  .a11y-menu__reset {
+    align-self: flex-start;
+    padding: var(--kw-space-2) var(--kw-space-3);
+    border: 1px solid var(--kw-rule-strong);
+    border-radius: var(--kw-radius-sm);
+    background: transparent;
+    color: var(--kw-fg);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    cursor: pointer;
+  }
+  .a11y-menu__reset:hover {
+    border-color: var(--kw-accent-strong);
+    color: var(--kw-fg-display);
+  }
+
+  .a11y-menu input:focus-visible,
+  .a11y-menu__reset:focus-visible {
     outline: 2px solid var(--kw-accent);
     outline-offset: 2px;
   }
