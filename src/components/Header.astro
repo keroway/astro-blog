@@ -49,6 +49,8 @@ const isActive = (href: string) => {
 <script>
   import { applyFontSizePreference } from '../scripts/font-size';
   import { applyMotionPreferences } from '../scripts/reduce-motion';
+  import { applyTextSpacingPreference } from '../scripts/text-spacing';
+  import { applyUnderlineLinksPreference } from '../scripts/underline-links';
 
   // localStorage → OS設定 の順で解決する。BaseHead.astro の FOUC 防止
   // インラインスクリプトと同一ロジック (inline は import 不可のため重複は許容)。
@@ -90,6 +92,8 @@ const isActive = (href: string) => {
     document.documentElement.dataset.theme = resolveTheme();
     applyMotionPreferences();
     applyFontSizePreference();
+    applyTextSpacingPreference();
+    applyUnderlineLinksPreference();
     initThemeToggle();
   });
 </script>
