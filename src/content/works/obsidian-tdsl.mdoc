@@ -1,0 +1,46 @@
+---
+title: "obsidian-tdsl"
+description: "Timeline DSL の Obsidian プラグイン。tdsl コードブロックをノート内で SVG 年表としてプレビューできます。"
+heroImage: "/images/works/timeline-dsl.png"
+status: "active"
+repoUrl: "https://github.com/keroway/obsidian-tdsl"
+lpUrl: "https://github.com/keroway/obsidian-tdsl"
+demoUrl: "https://keroway.github.io/timeline-dsl/"
+tags:
+  - "Obsidian"
+  - "TypeScript"
+  - "WebAssembly"
+  - "SVG"
+  - "Timeline DSL"
+createdAt: 2026-06-23
+updatedAt: 2026-06-23
+---
+
+## 制作経緯
+
+Timeline DSL は、調査メモと一緒に使ってこそ価値が出るツールです。歴史上の人物や出来事を調べながら年表を組むとき、別アプリに移動してプレビューするより、普段のメモ環境の中でそのまま確認できるほうが自然だと考えました。
+
+Obsidian は Markdown ベースで調査メモを積み上げやすく、コードブロックを拡張しやすいエコシステムもあります。そこで `tdsl` コードブロックをノート内で年表として描画するプラグインとして obsidian-tdsl を作りました。
+
+## 概要
+
+obsidian-tdsl は、Obsidian のプレビューで `tdsl` コードブロックを SVG 年表として描画するプラグインです。Timeline DSL の構文をそのままノートに書き、プレビュー時に `@keroway/tdsl-wasm` 経由でコンパイルして表示します。ダークモードにも対応し、Obsidian のテーマに馴染む表示を目指しています。
+
+Timeline DSL 本体とは独立した public repository として管理していますが、コンパイラ部分は共通の WASM パッケージを利用します。年表を単体ファイルとして作るだけでなく、調査メモの一部として扱えるようにするための関連プロダクトです。
+
+## 技術選定
+
+- **Obsidian Plugin API** — Markdown のコードブロックレンダリングを拡張し、`tdsl` ブロックだけを年表プレビューに差し替える。
+- **TypeScript** — Obsidian のプラグイン実装と設定 UI を型安全に管理する。
+- **`@keroway/tdsl-wasm`** — Timeline DSL 本体の Rust コンパイラをブラウザ / Electron 環境から呼び出すための共通 facade。
+- **SVG レンダリング** — ノート内に埋め込んでも扱いやすく、ダークモード対応やテーマ調整もしやすい形式として採用。
+
+## 学び
+
+- **共通 WASM パッケージの価値が見えた。** WebUI と Obsidian プラグインが同じコンパイラを使えるため、構文やレンダリングの改善を複数の入口へ展開しやすくなりました。
+- **メモ環境では失敗表示が重要。** コンパイルエラー時に何も表示されないとノートの文脈が途切れるため、エラーメッセージをわかりやすく出すことが WebUI 以上に大切でした。
+- **関連プロダクトは本体の使い方を広げる。** CLI / WebUI だけでは届かない「調査しながら書く」ユースケースが明確になりました。
+
+## 今後の方向性
+
+Obsidian Community Plugin としての配布導線、設定 UI、サンプル Vault、エラー表示の改善を検討しています。Timeline DSL 本体の LSP / WebUI 改善と並行して、ノート内での年表制作体験を育てていきます。
