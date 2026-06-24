@@ -26,6 +26,15 @@ const num = (index + 1).toString().padStart(2, '0');
   .focus-card {
     display: grid;
     gap: var(--kw-space-3);
+    padding: var(--kw-space-6);
+    background: var(--kw-bg-card);
+    border-radius: var(--kw-radius-lg);
+  }
+
+  @media (max-width: 640px) {
+    .focus-card {
+      padding: var(--kw-space-5);
+    }
   }
   .focus-card__eyebrow {
     display: flex;
