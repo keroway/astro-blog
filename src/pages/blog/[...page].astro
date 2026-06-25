@@ -7,14 +7,60 @@ import BlogSearch from '../../components/BlogSearch.astro';
 import { encodeSlugId } from '../../lib/slug';
 import { getPublishedPosts } from '../../lib/content';
 
-const posts = await getPublishedPosts();
+export const PAGE_SIZE = 20;
 
-const categories = [...new Set(posts.map((p) => p.data.category).filter(Boolean))].sort() as string[];
-const years = [...new Set(posts.map((p) => p.data.pubDate.getFullYear()))].sort((a, b) => b - a);
-const showYearFilter = years.length >= 2;
+export async function getStaticPaths({ paginate }: { paginate: Function }) {
+  const allPosts = await getPublishedPosts();
+
+  // フィルタ UI は全ページで一貫したカテゴリ / 年を表示するため、全記事から収集する。
+  const allCategories = [
+    ...new Set(allPosts.map((p) => p.data.category).filter(Boolean)),
+  ].sort() as string[];
+  const allYears = [
+    ...new Set(allPosts.map((p) => p.data.pubDate.getFullYear())),
+  ].sort((a, b) => b - a);
+
+  return paginate(allPosts, {
+    pageSize: PAGE_SIZE,
+    props: { allCategories, allYears },
+  });
+}
+
+const { page, allCategories, allYears } = Astro.props as {
+  page: {
+    data: Awaited<ReturnType<typeof getPublishedPosts>>;
+    currentPage: number;
+    lastPage: number;
+    url: { prev?: string; next?: string; current: string };
+    total: number;
+    start: number;
+    end: number;
+  };
+  allCategories: string[];
+  allYears: number[];
+};
+
+const posts = page.data;
+const showYearFilter = allYears.length >= 2;
+
+const title = page.currentPage === 1
+  ? `Blog | ${SITE_TITLE}`
+  : `Blog (${page.currentPage}/${page.lastPage}ページ) | ${SITE_TITLE}`;
+
+// SEO: ページ 2 以降は noindex にして正規ページ (/blog/) へ向ける
+const isFirstPage = page.currentPage === 1;
 ---
 
-<SiteLayout title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} mainClass="blog-index">
+<SiteLayout title={title} description={SITE_DESCRIPTION} mainClass="blog-index">
+  {!isFirstPage && (
+    <Fragment slot="head">
+      <meta name="robots" content="noindex, follow" />
+      <link rel="canonical" href={new URL('/blog/', Astro.site).href} />
+    </Fragment>
+  )}
+  {page.url.prev && <link rel="prev" href={page.url.prev} slot="head" />}
+  {page.url.next && <link rel="next" href={page.url.next} slot="head" />}
+
   <div data-reveal>
     <SectionHead
       jp="記事一覧"
@@ -26,40 +72,40 @@ const showYearFilter = years.length >= 2;
     <BlogSearch />
 
     <div class="filter-bar">
-    <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">
-      <button
-        class="filter-btn filter-btn--active"
-        data-filter-type="category"
-        data-filter-value=""
-        aria-pressed="true"
-      >すべて</button>
-      {categories.map((cat) => (
-        <button
-          class="filter-btn"
-          data-filter-type="category"
-          data-filter-value={cat}
-          aria-pressed="false"
-        >{categoryLabel(cat)}</button>
-      ))}
-    </div>
-    {showYearFilter && (
-      <div class="filter-group filter-group--year" role="group" aria-label="年で絞り込む">
+      <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">
         <button
           class="filter-btn filter-btn--active"
-          data-filter-type="year"
+          data-filter-type="category"
           data-filter-value=""
           aria-pressed="true"
-        >全年</button>
-        {years.map((year) => (
+        >すべて</button>
+        {allCategories.map((cat) => (
           <button
             class="filter-btn"
-            data-filter-type="year"
-            data-filter-value={String(year)}
+            data-filter-type="category"
+            data-filter-value={cat}
             aria-pressed="false"
-          >{year}</button>
+          >{categoryLabel(cat)}</button>
         ))}
       </div>
-    )}
+      {showYearFilter && (
+        <div class="filter-group filter-group--year" role="group" aria-label="年で絞り込む">
+          <button
+            class="filter-btn filter-btn--active"
+            data-filter-type="year"
+            data-filter-value=""
+            aria-pressed="true"
+          >全年</button>
+          {allYears.map((year) => (
+            <button
+              class="filter-btn"
+              data-filter-type="year"
+              data-filter-value={String(year)}
+              aria-pressed="false"
+            >{year}</button>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 
@@ -81,7 +127,39 @@ const showYearFilter = years.length >= 2;
     ))}
   </div>
 
-  <p class="empty-message no-indent" id="empty-message" hidden>該当する記事がありません</p>
+  <p class="empty-message no-indent" id="empty-message" hidden>
+    このページに該当する記事がありません。
+    <a href="#blog-search-input">全文検索</a>で横断検索するか、他のページもご確認ください。
+  </p>
+
+  {page.lastPage > 1 && (
+    <nav class="pagination" aria-label="ページナビゲーション">
+      <div class="pagination__info">
+        <span class="kw-mono pagination__count">
+          {page.start + 1}–{page.end + 1} / {page.total} 件
+        </span>
+        <span class="kw-mono pagination__page">
+          {page.currentPage} / {page.lastPage} ページ
+        </span>
+      </div>
+      <div class="pagination__links">
+        {page.url.prev ? (
+          <a href={page.url.prev} class="kw-button kw-button--ghost pagination__btn">
+            ← 新しい記事
+          </a>
+        ) : (
+          <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">← 新しい記事</span>
+        )}
+        {page.url.next ? (
+          <a href={page.url.next} class="kw-button kw-button--ghost pagination__btn">
+            古い記事 →
+          </a>
+        ) : (
+          <span class="pagination__btn pagination__btn--disabled" aria-disabled="true">古い記事 →</span>
+        )}
+      </div>
+    </nav>
+  )}
 </SiteLayout>
 
 <script>
@@ -232,5 +310,55 @@ const showYearFilter = years.length >= 2;
   .posts-list {
     display: flex;
     flex-direction: column;
+  }
+
+  /* ページネーション */
+  .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kw-space-4);
+    margin-top: var(--kw-space-10);
+    padding-top: var(--kw-space-8);
+    border-top: 1px solid var(--kw-rule);
+  }
+
+  .pagination__info {
+    display: flex;
+    gap: var(--kw-space-4);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
+  }
+
+  .pagination__links {
+    display: flex;
+    gap: var(--kw-space-3);
+  }
+
+  .pagination__btn {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    padding: var(--kw-space-2) var(--kw-space-4);
+  }
+
+  .pagination__btn--disabled {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--kw-space-2) var(--kw-space-4);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    color: var(--kw-fg-faint);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    cursor: default;
+    user-select: none;
+  }
+
+  @media (max-width: 640px) {
+    .pagination {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 </style>
