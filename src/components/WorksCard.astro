@@ -7,9 +7,11 @@ import MotifPanel from "./MotifPanel.astro";
 interface Props {
   work: WorksEntry;
   variant?: "grid" | "featured";
+  /** true のとき画像を eager + fetchpriority="high" で読み込む（リスト先頭など LCP 候補用） */
+  priority?: boolean;
 }
 
-const { work, variant = "grid" } = Astro.props;
+const { work, variant = "grid", priority = false } = Astro.props;
 
 const statusMap = {
   active:   { label: "Active",   className: "kw-chip--status-active"   },
@@ -35,7 +37,8 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
       <img
         src={work.data.heroImage}
         alt={`${work.data.title} のスクリーンショット`}
-        loading="lazy"
+        loading={priority ? "eager" : "lazy"}
+        fetchpriority={priority ? "high" : "auto"}
         decoding="async"
       />
     </figure>

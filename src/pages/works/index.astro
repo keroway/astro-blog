@@ -43,9 +43,9 @@ const works = await getSortedWorks();
       actionHref="/works/rss.xml"
     />
     <ul class="works-grid">
-      {works.map((work) => (
+      {works.map((work, i) => (
         <li>
-          <WorksCard work={work} />
+          <WorksCard work={work} priority={i < 2} />
         </li>
       ))}
     </ul>

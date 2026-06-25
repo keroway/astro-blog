@@ -91,7 +91,8 @@ if (repoUrl) {
 
     {heroImage && (
       <figure class="work-entry__hero">
-        <img src={heroImage} alt={title} loading="lazy" />
+        {/* hero は LCP 候補。eager + fetchpriority="high" (#396) */}
+        <img src={heroImage} alt={title} loading="eager" fetchpriority="high" decoding="async" />
       </figure>
     )}
 
@@ -224,6 +225,8 @@ if (repoUrl) {
   .work-entry__hero img {
     display: block;
     width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
   }
 
   /* Content */
