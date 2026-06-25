@@ -14,7 +14,8 @@
       "!.vercel",
       "!test-results",
       "!lhci-reports",
-      "!.lighthouseci"
+      "!.lighthouseci",
+      "!.pi"
     ]
   },
   "formatter": {

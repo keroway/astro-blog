@@ -47,8 +47,7 @@ const baseIntegrations = [
   sitemap({
     // /keystatic (管理UI) はクロール対象から除外 (robots.txt と合わせて二重に防衛)。
     // on-demand ルートなので静的ページとして生成されないが、念のためフィルタを掛ける。
-    filter: (page) =>
-      !/^https?:\/\/[^/]+\/(keystatic|api)(\/|$)/.test(page),
+    filter: (page) => !/^https?:\/\/[^/]+\/(keystatic|api)(\/|$)/.test(page),
   }),
   pagefind(),
 ];
