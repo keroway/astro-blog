@@ -9,6 +9,11 @@
   ],
   "redirects": [
     {
+      "source": "/keystatic/:path*",
+      "destination": "/admin",
+      "permanent": true
+    },
+    {
       "source": "/blog/0.96%E3%82%A4%E3%83%B3%E3%83%81%E6%9C%89%E6%A9%9FEL%E3%83%87%E3%82%A3%E3%82%B9%E3%83%97%E3%83%AC%E3%82%A4(SSD1306)/",
       "destination": "/blog/oled-display-ssd1306/",
       "permanent": true
@@ -491,12 +496,22 @@
   ],
   "headers": [
     {
-      "source": "/keystatic/:path*",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "source": "/admin/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     },
     {
       "source": "/api/:path*",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        }
+      ]
     },
     {
       "source": "/(.*)",
