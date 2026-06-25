@@ -7,9 +7,11 @@ interface Props {
   post: BlogEntry;
   href: string;
   num?: string;
+  /** true のとき画像を eager + fetchpriority="high" で読み込む（リスト先頭など LCP 候補用） */
+  priority?: boolean;
 }
 
-const { post, href, num = '01' } = Astro.props;
+const { post, href, num = '01', priority = false } = Astro.props;
 const heroImage = post.data.heroImage;
 ---
 
@@ -17,7 +19,13 @@ const heroImage = post.data.heroImage;
   <a class="recent-note__link" href={href}>
     <div class="recent-note__media">
       {heroImage ? (
-        <img src={heroImage} alt={post.data.title} loading="lazy" />
+        <img
+          src={heroImage}
+          alt={post.data.title}
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : 'auto'}
+          decoding="async"
+        />
       ) : (
         <svg viewBox="0 0 560 320" preserveAspectRatio="none" focusable="false" aria-hidden="true">
           <path class="recent-note__fallback-road" d="M -20 230 C 150 106, 256 236, 424 88 C 480 40, 520 42, 592 20" />

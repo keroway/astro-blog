@@ -65,6 +65,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
           post={featuredPost}
           href={`/blog/${encodeSlugId(featuredPost.id)}/`}
           num="01"
+          priority={true}
         />
       )}
       <div class="posts-list">
@@ -93,9 +94,9 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
         actionHref="/works"
       />
       <ul class="works-grid">
-        {displayWorks.map((work) => (
+        {displayWorks.map((work, i) => (
           <li>
-            <WorksCard work={work} />
+            <WorksCard work={work} priority={i === 0} />
           </li>
         ))}
       </ul>

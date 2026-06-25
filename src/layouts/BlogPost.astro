@@ -76,7 +76,8 @@ if (heroImageAbsolute) {
     <article class="post">
       {heroImage && (
         <figure class="post__hero">
-          <img src={heroImage} alt={title} loading="lazy" transition:name={`hero-${title}`} />
+          {/* hero は LCP 候補。eager + fetchpriority="high" で優先読み込みする (#396) */}
+          <img src={heroImage} alt={title} loading="eager" fetchpriority="high" decoding="async" transition:name={`hero-${title}`} />
         </figure>
       )}
       <header class="post__header">
