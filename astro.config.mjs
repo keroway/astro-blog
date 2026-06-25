@@ -41,7 +41,17 @@ if (
 // 静的全文検索インデックスを生成する (ADR 0015)。CI (`astro build` 直叩き) と Vercel
 // (`pnpm run build`) の両ビルド経路で astro build を通るため、別途 postbuild ステップは不要。
 // dev モードでは直前の build 成果物のインデックスを serve する。検索基盤なので全環境で有効。
-const baseIntegrations = [UnoCSS(), markdoc(), sitemap(), pagefind()];
+const baseIntegrations = [
+  UnoCSS(),
+  markdoc(),
+  sitemap({
+    // /keystatic (管理UI) はクロール対象から除外 (robots.txt と合わせて二重に防衛)。
+    // on-demand ルートなので静的ページとして生成されないが、念のためフィルタを掛ける。
+    filter: (page) =>
+      !/^https?:\/\/[^/]+\/(keystatic|api)(\/|$)/.test(page),
+  }),
+  pagefind(),
+];
 const integrations = isVercelPreview
   ? baseIntegrations
   : [...baseIntegrations, react(), keystatic()];
