@@ -4,24 +4,42 @@ import { expect, test } from "@playwright/test";
 
 test.describe("URL compatibility check", () => {
   test("all blog post URLs return 200", async ({ request, page }) => {
-    test.setTimeout(120_000);
-    await page.goto("/blog");
+    test.setTimeout(180_000);
 
-    const hrefs = await page
-      .locator("a.post-row__link")
-      .evaluateAll<string[]>((els: Element[]) =>
-        els
-          .map((el) => el.getAttribute("href"))
-          .filter((h): h is string => h !== null)
-      );
+    // ページネーション対応のため、全ページの記事 URL を収集する
+    const allHrefs: string[] = [];
+    let nextUrl: string | null = "/blog";
+    let pageCount = 0;
+    while (nextUrl) {
+      await page.goto(nextUrl);
+      const pageHrefs = await page
+        .locator("a.post-row__link")
+        .evaluateAll<string[]>((els: Element[]) =>
+          els
+            .map((el) => el.getAttribute("href"))
+            .filter((h): h is string => h !== null)
+        );
+      allHrefs.push(...pageHrefs);
+      pageCount++;
+
+      // 次のページへのリンクを探す (「古い記事 →」ボタン)
+      const nextLink = page
+        .locator('.pagination a:has-text("古い記事")')
+        .first();
+      if (await nextLink.isVisible()) {
+        nextUrl = await nextLink.getAttribute("href");
+      } else {
+        nextUrl = null;
+      }
+    }
 
     expect(
-      hrefs.length,
-      "blog listing should show 50+ posts"
+      allHrefs.length,
+      `blog listing (${pageCount} ページ) should show 50+ posts total`
     ).toBeGreaterThanOrEqual(50);
 
     const results = await Promise.all(
-      hrefs.map(async (href: string) => {
+      allHrefs.map(async (href: string) => {
         const res = await request.get(href);
         return { href, status: res.status() };
       })
