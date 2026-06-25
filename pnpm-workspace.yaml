@@ -32,6 +32,12 @@ overrides:
   "esbuild@<0.28.1": "^0.28.1"
   # GHSA-9wv6-86v2-598j (path-to-regexp 6.x <6.3.0) — ^6.3.0 で 6.x に固定 (>=6.3.0 は 8.x も含んでしまうため)
   "path-to-regexp@>=6.0.0 <6.3.0": "^6.3.0"
+  # tar <7.5.16 (PAX size override による file smuggling) — @astrojs/vercel>@vercel/nft>@mapbox/node-pre-gyp 経由。
+  # 7.x 内に固定。upstream が修正版を取り込んだら削除する。
+  "tar@<7.5.16": ">=7.5.16 <8"
+  # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core 経由。
+  # 4.x 内に固定。upstream が修正版を取り込んだら削除する。
+  "js-yaml@>=4.0.0 <4.2.0": ">=4.2.0 <5"
 
 peerDependencyRules:
   allowedVersions:
