@@ -75,6 +75,12 @@ const websiteSchema = {
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<!-- theme-color: ライト/ダークでブラウザ chrome をデザイントークンに合わせる -->
+<meta name="theme-color" content="#F3F1EC" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0B1B33" media="(prefers-color-scheme: dark)" />
 <meta name="generator" content={Astro.generator} />
 
 <!-- Web fonts — self-hosted via Astro Fonts API + Fontsource (ADR 0013) -->
