@@ -1,6 +1,6 @@
 # 0005 — Keystatic admin ランタイム: Vercel adapter + on-demand 出力で本番有効化
 
-- **ステータス**: Proposed
+- **ステータス**: Deprecated — Superseded by [ADR 0016](./0016-cms-keystatic-to-sveltia.md)
 - **決定日**: 2026-05-21
 - **決定者**: @keroway
 - **関連 Issue**: [#144 Keystatic 本番有効化](https://github.com/keroway/astro-blog/issues/144)

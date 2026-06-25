@@ -1,16 +1,16 @@
 # CMS 編集 → プレビュー → 本番反映フロー
 
-- **関連 ADR**: [0002 — CMS: Keystatic 採用](./adr/0002-cms.md)、[0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)
-- **関連ドキュメント**: [Keystatic 執筆ガイド](./keystatic-authoring.md)
-- **関連 Issue**: [#34 プレビュー機能とデプロイフローの設計](https://github.com/keroway/astro-blog/issues/34)
-- **作成日**: 2026-05-18
+- **関連 ADR**: [0016 — CMS: Sveltia CMS 移行](./adr/0016-cms-keystatic-to-sveltia.md)
+- **関連ドキュメント**: [CMS 執筆ガイド](./cms-authoring.md)
+- **更新日**: 2026-06-25 (Keystatic → Sveltia CMS 移行 #412)
 
 ---
 
 ## 概要
 
-keroway.com は **Keystatic（Git ベース CMS）+ Vercel SSG** の構成を採用します。
-記事の正本は `src/content/blog/*.md` に Git で管理され、CMS はそのファイルを UI 上で読み書きするレイヤーです。
+keroway.com は **Sveltia CMS（Git ベース CMS）+ Vercel SSG** の構成を採用しています。  
+Sveltia は CDN 配信の静的 SPA（`public/admin/`）で、**Astro バージョンに依存しません**。  
+コンテンツの正本は `src/content/{blog,works}/*.mdoc` に Git で管理され、CMS はそのファイルを UI 上で読み書きするレイヤーです。
 
 ---
 
@@ -18,7 +18,7 @@ keroway.com は **Keystatic（Git ベース CMS）+ Vercel SSG** の構成を採
 
 ```mermaid
 flowchart TD
-    A([編集者]) -->|Keystatic UI で記事を作成・編集| B[Keystatic がブランチを作成\ne.g. keystatic/my-article-title]
+    A([編集者]) -->|Sveltia UI で記事を作成・編集| B[Sveltia がブランチを作成\ne.g. cms/blog/my-article-title]
     B -->|ブランチへコミット| C[GitHub: feature branch]
     C -->|PR を作成| D[GitHub Pull Request]
     D -->|Vercel が自動検知| E[Vercel Preview Deployment\npreview-xxx.vercel.app]
@@ -31,266 +31,106 @@ flowchart TD
 
 ### ポイント
 
-- Keystatic のブランチモード（`KEYSTATIC_GITHUB_APP_*` 環境変数設定後）では、UI の「保存」でブランチへのコミットが自動実行される
+- Sveltia の Editorial Workflow では、UI の「保存」でブランチへのコミットが自動実行される
 - Vercel は GitHub と連携しており、PR 作成時に自動でプレビュービルドをトリガーする
 - SSG のため、本番反映はマージ後のビルド完了まで数分かかる（通常 1〜3 分）
-
-### Keystatic の Preview リンクについて
-
-`keystatic.config.ts` の `previewUrl` オプション（`/blog/{slug}/`、`/works/{slug}/`）により、各エントリの編集画面に「Preview」リンクが表示される。
-
-**重要な制約**: `previewUrl` は**保存済みエントリのみ**を実ページで開く。未保存の下書き変更はリンク先に反映されない（保存ボタンを押してからリンクを開くこと）。Astro SSG では未保存内容のライブプレビュー（split-pane リアルタイム表示）は構造上不可。
 
 ---
 
 ## ローカル編集フロー（開発者向け）
 
+Sveltia はローカル開発で **File System Access API** を使い、OAuth サーバー不要で動作します。
+
 ```mermaid
 flowchart LR
-    A([開発者]) -->|pnpm run dev| B[Astro dev サーバー\nkeroway.localhost]
-    B -->|/keystatic にアクセス| C[Keystatic ローカル UI]
-    C -->|記事を編集・保存| D[ファイルへ直接書き込み\nsrc/content/blog/my-post.md]
-    D -->|git commit + push| E[GitHub: feature branch]
-    E -->|PR 作成 → レビュー → マージ| F([本番反映])
+    A([開発者]) -->|pnpm run dev:astro| B[Astro dev サーバー\nlocalhost:4321]
+    B -->|/admin にアクセス| C[Sveltia CMS ログイン画面]
+    C -->|「ローカルリポジトリを使う」を選択| D[ブラウザの File System Access API\nリポジトリ root ディレクトリを選択]
+    D -->|記事を編集・保存| E[ファイルへ直接書き込み\nsrc/content/blog/my-post.mdoc]
+    E -->|git commit + push| F[GitHub: feature branch]
+    F -->|PR 作成 → レビュー → マージ| G([本番反映])
 ```
 
-ローカルモードでは Keystatic UI が `localStorage` / ファイルシステムに直接書き込むため、GitHub 認証は不要です。
+**手順:**
+
+1. `pnpm run dev:astro` で Astro dev サーバーを起動
+2. `http://localhost:4321/admin` にアクセス
+3. ログイン画面で **「ローカルリポジトリを使う」** を選択
+4. ブラウザのファイル選択ダイアログでリポジトリのルートディレクトリを指定
+5. 「読み取りと書き込みを許可」の確認ダイアログで許可
+
+> **注意**: File System Access API は Chromium ベースのブラウザ（Chrome / Edge）が必要です。Safari / Firefox は非対応です。
 
 ---
 
-## ドラフト閲覧の方法
+## 本番認証セットアップ（OAuth プロキシ）
 
-`draft: true` を設定した記事は本番ビルドで除外されます。ドラフト状態の記事をレビュアーや本人が確認する方法は以下の 2 つです。
+本番環境での GitHub 認証には **OAuth Authorization Code フロー**が必要です。  
+Sveltia の GitHub backend は現在 PAT（個人アクセストークン）の簡易ログインを未実装のため（GitHub の client-side PKCE リリース待ち）、**OAuth プロキシ**を用意します。
 
-### オプション A: Vercel Preview Deployment URL（推奨）
+### 1. GitHub OAuth App を登録
 
-PR ブランチのビルドが成功すると Vercel が一意のプレビュー URL を発行します。
+1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
+2. 以下の値を設定:
+   - Application name: `keroway CMS`
+   - Homepage URL: `https://keroway.com`
+   - Authorization callback URL: `https://your-auth-proxy.workers.dev/callback`
+3. Client ID と Client Secret を記録する
 
-```
-https://astro-blog-git-<branch-name>-keroway.vercel.app/
-```
-
-- **メリット**: 追加設定不要。PR にコメントとして URL が自動投稿される
-- **デメリット**: URL を知っていれば誰でもアクセス可能（非公開コンテンツを共有しているわけではないが、URLが漏れると閲覧される）
-- **適用場面**: 個人ブログで公開前の確認のみなら十分
-
-### オプション B: Vercel Password Protection（要 Vercel Pro）
-
-Vercel Pro 以上のプランで、プレビュー URL にパスワードを設定できます。
-
-```
-# vercel.json に追加（Pro プランのみ）
-{
-  "passwordProtection": {
-    "deploymentType": "preview"
-  }
-}
-```
-
-- **メリット**: URL が漏れても認証なしでは閲覧不可
-- **デメリット**: Vercel Pro プランが必要（月額 $20〜）
-- **適用場面**: 複数人でのレビューや、機密度の高いコンテンツの確認
-
-### オプション C: ローカルプレビュー
+### 2. Cloudflare Workers に sveltia-cms-auth をデプロイ
 
 ```bash
-pnpm run dev
-# → https://keroway.localhost で確認できる（本番と同じフィルタが効くため draft / 未来日記事は表示されない）
+git clone https://github.com/sveltia/sveltia-cms-auth.git
+cd sveltia-cms-auth
+# wrangler.toml を設定してから:
+wrangler deploy
+# シークレットを登録:
+wrangler secret put GITHUB_CLIENT_ID
+wrangler secret put GITHUB_CLIENT_SECRET
 ```
 
-`getCollection` のフィルタが `!data.draft && data.pubDate <= now` のため、ローカルでも draft 記事・未来日記事は本番同様に除外されます。ローカルで確認したい場合は一時的に `draft: false` に変更（未来日記事なら `pubDate` を過去日に）するか、dev 環境用のフィルタ分岐を追加してください。
+詳細: [sveltia-cms-auth のドキュメント](https://github.com/sveltia/sveltia-cms-auth)
 
-**現在の実装（参考）:**
+### 3. config.yml に base_url を設定
 
-```typescript
-// src/pages/index.astro, src/pages/blog/index.astro, src/pages/blog/[...slug].astro
-const now = new Date();
-const posts = await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now);
-```
-
----
-
-## 公開予約（`pubDate` 未来日の扱い）
-
-SSG は**ビルド時点**でサイトを静的出力するため、未来日の記事を自動的に「その日時に公開する」機能はビルトインされていません。
-
-### 現状の挙動
-
-- 一覧・トップ・RSS・個別ページの `getCollection` フィルタが `!data.draft && data.pubDate <= now` のため、`pubDate` が未来日の記事は draft と同様に**ビルド時点で除外される**
-- ただし SSG はビルド時点でしか評価しないため、指定日時に自動公開されるわけではない。未来日記事を実際に出すにはその日付以降の再ビルドが必要（→ 後述の方法 2 の cron）
-
-### 公開予約を実現する方法
-
-#### 方法 1: 手動 draft 切り替え（現実的・推奨）
-
-```
-1. 記事を draft: true で作成・PR マージ（本番には出ない）
-2. 公開したい日に draft: false に変更してコミット
-3. Vercel が自動でリビルドして公開される
-```
-
-- シンプルで確実。個人ブログの規模なら十分
-
-#### 方法 2: Vercel Deploy Hook + 外部 cron（自動化）
-
-Vercel の Deploy Hook URL に対して定期的に POST することで、時刻ベースの自動リビルドが可能です。
-
-```mermaid
-sequenceDiagram
-    participant Cron as 外部 Cron<br/>(GitHub Actions / Vercel Cron)
-    participant Hook as Vercel Deploy Hook
-    participant Build as Vercel SSG Build
-    participant Site as keroway.com
-
-    Note over Cron: pubDate の日時（UTC）に発火
-    Cron->>Hook: POST /api/deploy/xxx
-    Hook->>Build: ビルドをトリガー
-    Build->>Build: astro build<br/>（pubDate <= now の記事のみ含む）
-    Build->>Site: 新バイナリをデプロイ
-```
-
-**実装例: GitHub Actions での定時ビルド**
+`public/admin/config.yml` の `backend` セクションを更新:
 
 ```yaml
-# .github/workflows/scheduled-publish.yml
-name: Scheduled Publish
-on:
-  schedule:
-    # 毎日 JST 9:00 (UTC 0:00) に実行
-    - cron: '0 0 * * *'
-  workflow_dispatch:
-
-jobs:
-  trigger-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger Vercel Deploy Hook
-        run: |
-          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}"
+backend:
+  name: github
+  repo: keroway/astro-blog
+  branch: main
+  base_url: https://your-auth-proxy.workers.dev  # Workers URL に差し替え
 ```
-
-**実装例: Vercel Cron Jobs（`vercel.json`）**
-
-```json
-{
-  "crons": [
-    {
-      "path": "/api/trigger-build",
-      "schedule": "0 0 * * *"
-    }
-  ]
-}
-```
-
-※ Vercel Cron は Vercel Functions エンドポイントを叩く形式のため、SSG のみでは使用不可。SSR adapter が必要。
-
-#### 方法 3: pubDate フィルタ（実装済み）
-
-一覧・トップ・RSS・個別ページの `getCollection` は既に以下のフィルタを適用しており、`pubDate` が未来日の記事はビルド時点で除外されます。
-
-```typescript
-// src/pages/index.astro / src/pages/blog/index.astro / src/pages/blog/[...slug].astro / src/pages/rss.xml.js
-const now = new Date();
-const posts = await getCollection('blog', ({ data }) => !data.draft && data.pubDate <= now);
-```
-
-これにより `draft: false` のまま `pubDate` を未来日に設定すれば予約投稿として機能します。ただし **ビルドしないと反映されない** ため、方法 2 の cron との組み合わせが前提です。
-
-### 推奨構成
-
-| 要件 | 推奨方法 |
-|------|---------|
-| 不定期・手動での公開 | 方法 1（draft 切り替え） |
-| 定時自動公開（毎日特定時刻） | 方法 3 + 方法 2（GitHub Actions cron） |
-| 複数記事の予約管理 | 方法 3 + 方法 2 |
 
 ---
 
-## 環境変数一覧（Keystatic ブランチモード）
+## URL
 
-> Preview Deployment の挙動・env・検証手順の詳細は [vercel-preview.md](./vercel-preview.md) を参照。
-
-Preview デプロイでは Keystatic 統合自体が mount されない (`astro.config.mjs` の `VERCEL_ENV === "preview"` 分岐) ため、Preview 列の env を設定しても無視される。Preview からの編集はそもそも不可。
-
-| 変数名 | 説明 | ローカル dev | Vercel Production | Vercel Preview |
-|--------|------|------------|------------------|---------------|
-| `PUBLIC_KEYSTATIC_STORAGE_KIND` | `local` / `github` の切替フラグ。`keystatic.config.ts` がブラウザにも bundle される都合上、`PUBLIC_` プレフィックスが必須 (`import.meta.env` 経由) | 通常未設定（= local） | `github`（必須・未設定なら build fail） | 設定不要（統合 mount しない） |
-| (リポジトリ owner / name) | `keystatic.config.ts` に `keroway/astro-blog` をハードコード | env 不要 | env 不要 | env 不要 |
-| `KEYSTATIC_GITHUB_CLIENT_ID` | Keystatic GitHub App の Client ID | `.env` | Vercel 環境変数 | 設定不要 |
-| `KEYSTATIC_GITHUB_CLIENT_SECRET` | Keystatic GitHub App の Client Secret | `.env` | Vercel 環境変数（暗号化） | 設定不要 |
-| `KEYSTATIC_SECRET` | セッション署名用の乱数文字列（`openssl rand -hex 32` 等で生成） | `.env` | Vercel 環境変数（暗号化） | 設定不要 |
-| `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` | Admin UI から GitHub App をインストールさせる際の遷移先 slug | `.env` | Vercel 環境変数 | 設定不要 |
-| `VERCEL_DEPLOY_HOOK_URL` | 公開予約 cron 用のフック URL | 不要 | GitHub Actions Secrets | 不要 |
-
-> **注意**: `KEYSTATIC_GITHUB_CLIENT_SECRET` と `KEYSTATIC_SECRET` は機密情報のため、`.env` には追加しても `.gitignore` 対象であることを確認してください。サンプルは `.env.example` を参照。
+| 環境 | URL |
+|------|-----|
+| 本番 CMS | <https://keroway.com/admin> |
+| ローカル CMS | <http://localhost:4321/admin> |
+| 旧 Keystatic URL → リダイレクト | <https://keroway.com/keystatic> → /admin |
 
 ---
 
-## 本番有効化セットアップ手順（Vercel + GitHub App + branch storage）
+## ファイルフォーマット
 
-> Preview 環境側の挙動・検証手順は [vercel-preview.md](./vercel-preview.md) を参照。本節は Production セットアップに特化。
+- 拡張子: `.mdoc`（Markdoc）
+- フォーマット: `yaml-frontmatter`（`---` で区切られた YAML + Markdown 本文）
+- Sveltia が書き込むファイルは Astro Content Collections の Zod スキーマで型検証される
 
-ADR 0005「Keystatic admin ランタイム」決定後、本番 `https://keroway.com/keystatic` で Keystatic Admin UI を運用するための手順です。
-
-### 前提
-
-- 本リポジトリの `astro.config.mjs` に `@astrojs/vercel` adapter が設定済み（`output: "static"` + on-demand な `/keystatic/*` 関数）
-- `keystatic.config.ts` の `storage` が `PUBLIC_KEYSTATIC_STORAGE_KIND` で `local` / `github` を切り替えられる構造になっている
-- main ブランチに保護設定（PR 必須・レビュー必須）が入っている
-
-### 手順
-
-1. **ローカルで GitHub App セットアップを起動する**
-   - `.env` に `PUBLIC_KEYSTATIC_STORAGE_KIND=github` を設定 (リポジトリ owner / name は `keystatic.config.ts` でハードコード済み)。
-   - `pnpm run dev` で <http://127.0.0.1:4321/keystatic> を開き、「GitHub App をセットアップ」のフローに従う。
-   - Keystatic が自動で GitHub App を作成し、生成された Client ID / Client Secret / `KEYSTATIC_SECRET` / App slug を `.env` に書き込む。
-2. **GitHub App の権限を確認する**
-   - Permissions: Contents `Read & Write`、Pull requests `Read & Write`、Metadata `Read`
-   - Install 対象は `keroway/astro-blog` のみ（個人 account scope 推奨）
-3. **本番ドメインの Callback URL を GitHub App に追加する**（重要・見落としやすい）
-   - 手順 1 のウィザードはローカル（`http://127.0.0.1:4321`）で走るため、自動生成された GitHub App の **Callback URL はローカル分しか登録されない**。この状態で `https://keroway.com/keystatic` から GitHub 認証すると、Keystatic が送る `redirect_uri`（`https://keroway.com/api/keystatic/github/oauth/callback`）が App 未登録のため **`The redirect_uri is not associated with this application.`** で失敗する。
-   - GitHub → Settings → Developer settings → GitHub Apps → 対象アプリ（slug = `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`）の **Edit** → **Callback URL** に本番分を追加する（GitHub App は複数行で複数登録できるので、ローカル分も残す）:
-
-     ```
-     https://keroway.com/api/keystatic/github/oauth/callback
-     https://keroway.localhost/api/keystatic/github/oauth/callback
-     http://127.0.0.1:4321/api/keystatic/github/oauth/callback
-     ```
-
-   - `redirect_uri` は完全一致でなければならない。スキーム / ホスト / パスのいずれかがずれても同じエラーになる。
-4. **Vercel 側に環境変数を登録する**
-   - Vercel ダッシュボード → Project → Settings → Environment Variables から、Production 環境向けに以下を登録:
-
-     ```
-     PUBLIC_KEYSTATIC_STORAGE_KIND=github
-     KEYSTATIC_GITHUB_CLIENT_ID=...
-     KEYSTATIC_GITHUB_CLIENT_SECRET=...  (Encrypted)
-     KEYSTATIC_SECRET=...                 (Encrypted)
-     PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=keroway-keystatic
-     ```
-
-   - **Preview 環境では Keystatic 自体を無効化する**（環境変数を増やす必要なし）。`astro.config.mjs` が `VERCEL_ENV=preview` のとき Keystatic 統合を mount しないため、Preview URL の `/keystatic` は 404 になる。Preview の Vercel Function も ephemeral filesystem なので、もし local モードで起動すると "保存できた" と誤認させてデータロストになるため、編集は禁止する設計。Preview は記事ページのプレビューにのみ使う。
-   - **fail-fast ガード**: Vercel Production (`VERCEL_ENV=production`) では `PUBLIC_KEYSTATIC_STORAGE_KIND=github` が**必須**。未設定や `local` 指定のままだと `astro.config.mjs` が build 時に `Error: Keystatic: VERCEL_ENV=production では PUBLIC_KEYSTATIC_STORAGE_KIND=github が必須です` で fail する。設定漏れのままデプロイされて Admin UI が機能不全のまま放置されるのを防ぐための意図的な挙動。
-5. **デプロイ後に手動検証する**
-   - `https://keroway.com/keystatic` にアクセス → GitHub 認証 → 編集 → 保存で `keystatic/<title>` ブランチへ commit → PR 作成までを確認する。
-   - **未認証ユーザーが書き込めないこと**: Keystatic GitHub mode は GitHub App 経由でトークンを発行するため、リポジトリへの write 権限を持たない GitHub アカウントでは PR 作成に失敗する仕様。Admin UI 自体は公開されているため、追加で公開を制限したい場合は Vercel Password Protection（Pro プラン）または Vercel Authentication（Preview のみ無料）を併用する。
-
-### 保護ブランチ運用との整合
-
-- Keystatic は `keystatic/<slug>` ブランチへ直接 commit し、main へは PR 経由でしかマージされない。
-- main ブランチの保護設定（PR 必須 / 1 レビュー / Required status checks）を有効化しておけば、Keystatic からの編集も他の PR と同じレビューフローに乗る。
-- Keystatic の "Draft" 機能で連続編集 → 1 PR にまとめる運用が可能。
-
+```mdoc
+---
+title: "記事タイトル"
+description: "概要"
+pubDate: 2026-06-25
+category: dev
+tags:
+  - Astro
+draft: false
 ---
 
-## 参考リンク
-
-- [Keystatic ドキュメント — GitHub mode](https://keystatic.com/docs/github-mode)
-- [Keystatic ドキュメント — Astro installation](https://keystatic.com/docs/installation-astro)
-- [Vercel — Deploy Hooks](https://vercel.com/docs/deployments/deploy-hooks)
-- [Vercel — Preview Deployments](https://vercel.com/docs/deployments/preview-deployments)
-- [Vercel — Password Protection](https://vercel.com/docs/security/deployment-protection/methods-to-protect-deployments/password-protection)
-- [ADR 0002 — CMS: Keystatic 採用](./adr/0002-cms.md)
-- [ADR 0003 — レンダリング戦略: SSG 継続](./adr/0003-rendering-strategy.md)（ADR 0005 で Superseded）
-- [ADR 0005 — Keystatic admin ランタイム: Vercel adapter + hybrid 出力](./adr/0005-keystatic-admin-runtime.md)
-- [docs/vercel-preview.md — Vercel Preview Deployment 運用ガイド](./vercel-preview.md)
+本文をここに書く。
+```

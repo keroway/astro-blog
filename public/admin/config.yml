@@ -1,0 +1,240 @@
+# Sveltia CMS 設定 (ADR 0016)
+# Decap CMS 互換フォーマット。Sveltia CMS は public/admin/index.html から
+# CDN ロードされる静的 SPA。Astro に依存しないためバージョンロックが発生しない。
+#
+# ────────────────────────────────────────
+# 認証 (本番)
+# ────────────────────────────────────────
+# GitHub backend は OAuth Authorization Code フローを使用する。
+# Cloudflare Workers 製 OAuth プロキシ (sveltia-cms-auth) と
+# GitHub OAuth App のセットアップが必要。
+# セットアップ手順: docs/cms-flow.md を参照。
+# 設定後、以下の base_url コメントを外してプロキシ URL を設定すること。
+#
+# ────────────────────────────────────────
+# 認証 (ローカル開発)
+# ────────────────────────────────────────
+# pnpm run dev:astro で起動後、https://localhost:4321/admin を開く。
+# ログイン画面の「ローカルリポジトリを使う」(File System Access API) を選択し、
+# リポジトリのルートディレクトリを指定する。OAuth プロキシは不要。
+
+backend:
+  name: github
+  repo: keroway/astro-blog
+  branch: main
+  # TODO: OAuth プロキシ構築後、コメントを外して URL を設定する (docs/cms-flow.md)
+  # base_url: https://your-sveltia-auth.workers.dev
+
+# Editorial Workflow: 保存 → ブランチ自動作成 → PR → CI → マージ
+# Keystatic と同等のレビューフローを維持する
+publish_mode: editorial_workflow
+
+# メディアファイルのデフォルト保存先 (各フィールドで上書き可)
+media_folder: public/images
+public_folder: /images
+
+# ──────────────────────────────────────────────────────
+# コレクション定義
+# extension: mdoc — 既存の .mdoc ファイルをそのまま利用
+# format: yaml-frontmatter — --- で区切られた YAML + Markdown 本文
+# ──────────────────────────────────────────────────────
+collections:
+  # ────────────────────────────────
+  # Blog
+  # ────────────────────────────────
+  - name: blog
+    label: ブログ記事
+    label_singular: 記事
+    folder: src/content/blog
+    extension: mdoc
+    format: yaml-frontmatter
+    create: true
+    identifier_field: title
+    preview_path: /blog/{{slug}}/
+    summary: "{{pubDate}} — {{title}}"
+    sortable_fields:
+      - pubDate
+      - title
+    view_groups:
+      - label: カテゴリ
+        field: category
+      - label: 年
+        field: pubDate
+        pattern: \d{4}
+    fields:
+      - label: タイトル
+        name: title
+        widget: string
+        hint: 日本語可。URL slug (ファイル名) とは別管理。
+
+      - label: 概要
+        name: description
+        widget: text
+        hint: カード・SNS シェア・SEO に使う要約文（1〜2 文）。
+
+      - label: 公開日
+        name: pubDate
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        hint: 記事一覧の並び順と公開可否判定に使用。
+
+      - label: 更新日
+        name: updatedDate
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        required: false
+        hint: 内容を大きく更新した場合のみ設定。
+
+      - label: ヒーロー画像
+        name: heroImage
+        widget: image
+        required: false
+        media_folder: /public/images/blog
+        public_folder: /images/blog
+        hint: カードサムネイル。16:9 の画像を推奨。
+
+      - label: カテゴリ
+        name: category
+        widget: select
+        required: false
+        options:
+          - { label: "開発・プログラミング", value: dev }
+          - { label: "ハードウェア・電子工作", value: hardware }
+          - { label: "ツール・インフラ", value: tools }
+          - { label: "読書", value: reading }
+          - { label: "イベント・参加記", value: event }
+
+      - label: タグ
+        name: tags
+        widget: list
+        required: false
+        hint: 検索・関連記事判定に使うキーワード。既存タグの再利用を優先。
+
+      - label: 下書き
+        name: draft
+        widget: boolean
+        default: false
+        hint: チェック時は本番公開されません。
+
+      - label: OG 画像
+        name: ogImage
+        widget: image
+        required: false
+        media_folder: /public/images/blog
+        public_folder: /images/blog
+        hint: SNS シェア時サムネイル。省略時はタイトルから自動生成 (1200×630)。
+
+      - label: 著者
+        name: author
+        widget: string
+        required: false
+        hint: 省略時はサイトデフォルトの著者名。
+
+      - label: Canonical URL
+        name: canonicalUrl
+        widget: string
+        required: false
+        hint: 外部掲載など正規 URL が別にある場合のみ設定。
+
+      - label: 本文
+        name: body
+        widget: markdown
+        media_folder: /public/images/blog
+        public_folder: /images/blog
+
+  # ────────────────────────────────
+  # Works
+  # ────────────────────────────────
+  - name: works
+    label: Works
+    label_singular: Works エントリ
+    folder: src/content/works
+    extension: mdoc
+    format: yaml-frontmatter
+    create: true
+    identifier_field: title
+    preview_path: /works/{{slug}}/
+    summary: "{{status}} — {{title}}"
+    sortable_fields:
+      - createdAt
+      - title
+    view_groups:
+      - label: ステータス
+        field: status
+    fields:
+      - label: プロジェクト名
+        name: title
+        widget: string
+
+      - label: 概要
+        name: description
+        widget: text
+        hint: プロジェクト一覧・SNS シェア・SEO に使う要約文（1〜2 文）。
+
+      - label: ステータス
+        name: status
+        widget: select
+        options:
+          - { label: "アクティブ (active)", value: active }
+          - { label: "アーカイブ (archived)", value: archived }
+          - { label: "作業中 (wip)", value: wip }
+        default: active
+
+      - label: リポジトリ URL
+        name: repoUrl
+        widget: string
+        required: false
+        hint: GitHub など実装の主参照リポジトリ URL。
+
+      - label: ランディングページ URL
+        name: lpUrl
+        widget: string
+        hint: 機能紹介・外部紹介ページ URL（必須）。
+
+      - label: デモ URL
+        name: demoUrl
+        widget: string
+        required: false
+        hint: 動作デモが公開されている場合のみ設定。
+
+      - label: タグ
+        name: tags
+        widget: list
+        hint: 技術スタック・カテゴリなどのキーワード。
+
+      - label: 作成日
+        name: createdAt
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        hint: プロジェクト開始日。
+
+      - label: 更新日
+        name: updatedAt
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        required: false
+        hint: 内容を大きく更新した場合のみ設定。
+
+      - label: ヒーロー画像
+        name: heroImage
+        widget: image
+        required: false
+        media_folder: /public/images/works
+        public_folder: /images/works
+        hint: プロジェクトカードサムネイル（16:9 推奨）。
+
+      - label: 注目プロジェクト
+        name: featured
+        widget: boolean
+        default: false
+        hint: チェック時はトップページの注目プロジェクト枠に表示。
+
+      - label: 本文
+        name: body
+        widget: markdown
+        media_folder: /public/images/works
+        public_folder: /images/works

@@ -3,13 +3,13 @@
 ![Astro](https://img.shields.io/badge/Astro-6-BC52EE?logo=astro&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![UnoCSS](https://img.shields.io/badge/UnoCSS-66x-333333?logo=unocss&logoColor=white)
-![Keystatic](https://img.shields.io/badge/Keystatic-Git%20CMS-FF6925?logo=keystatic&logoColor=white)
+![SveltiaCMS](https://img.shields.io/badge/Sveltia-Git%20CMS-4B3FCA?logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)
 ![pnpm](https://img.shields.io/badge/pnpm-11.1.3-F69220?logo=pnpm&logoColor=white)
 ![Node](https://img.shields.io/badge/Node-%E2%89%A522.12-339933?logo=nodedotjs&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-deploy-000000?logo=vercel&logoColor=white)
 
-エンジニア keroway のポートフォリオ・技術ブログです。Astro 6 をベースに、制作物紹介（Works）とブログ記事を一元管理するポートフォリオサイトを構築しています。コンテンツの編集は Git ベースの CMS（Keystatic）から行え、main への PR マージで Vercel に自動デプロイされます。
+エンジニア keroway のポートフォリオ・技術ブログです。Astro 6 をベースに、制作物紹介（Works）とブログ記事を一元管理するポートフォリオサイトを構築しています。コンテンツの編集は Git ベースの CMS（Sveltia CMS）から行え、main への PR マージで Vercel に自動デプロイされます。
 
 ## 主な特徴
 
@@ -17,7 +17,7 @@
 - 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
 - 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示とホバーインタラクション
 - Astro Content Collections による Markdown/Markdoc 記事管理と型チェック
-- [Keystatic](https://keystatic.com/) による Git ベースの管理（CMS）UI（ローカル / GitHub ブランチモード）
+- [Sveltia CMS](https://sveltiacms.app/) による Git ベースの管理（CMS）UI（CDN 配信の静的 SPA、Astro バージョンに非依存）
 - RSS フィードとサイトマップを自動生成
 - `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
 - UnoCSS + コンポーネントスコープの純 CSS で構成（CSS-in-JS 不使用）
@@ -28,7 +28,7 @@
 |------|---------|
 | フレームワーク | [Astro 6](https://astro.build/) + TypeScript（strict モード有効） |
 | コンテンツ | Astro Content Collections（Markdown/Markdoc）、[@astrojs/markdoc](https://docs.astro.build/en/guides/integrations-guide/markdoc/) |
-| CMS | [Keystatic](https://keystatic.com/)（`@keystatic/astro` + `@keystatic/core`、admin UI は React で hydrate） |
+| CMS | [Sveltia CMS](https://sveltiacms.app/)（`public/admin/` に配置される CDN 配信の静的 SPA、Astro 非依存 / ADR 0016） |
 | スタイル | [UnoCSS](https://unocss.dev/) + コンポーネントスコープの純 CSS |
 | 配信補助 | [@astrojs/rss](https://docs.astro.build/en/guides/rss/)（RSS）、[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)（XML サイトマップ） |
 | 画像最適化 | [astro:assets](https://docs.astro.build/en/guides/images/)（自動フォーマット変換・リサイズ） |
@@ -36,7 +36,7 @@
 | テスト / Lint | [Playwright](https://playwright.dev/)（E2E）、[Biome](https://biomejs.dev/)（lint / format） |
 | パッケージ管理 | pnpm 11.1.3（`package.json` の `packageManager` 参照、サプライチェーン保護有効化） |
 | ランタイム | Node.js >= 22.12.0（Astro 6 の要件、偶数 LTS） |
-| デプロイ | [Vercel](https://vercel.com/)（`@astrojs/vercel` adapter、静的生成 + `/keystatic` のみ on-demand） |
+| デプロイ | [Vercel](https://vercel.com/)（`@astrojs/vercel` adapter、静的生成 + `/api/trigger-build` のみ on-demand） |
 
 バージョンは常に `package.json` を一次ソースとします。
 
@@ -79,7 +79,8 @@ flowchart TD
     Root --> Public["public/<br/>静的アセット"]
     Root --> Docs["docs/<br/>ADR・設計メモ"]
     Root --> Scripts["scripts/<br/>運用 CLI"]
-    Root --> Cfg["astro.config.mjs / keystatic.config.ts"]
+    Root --> Cfg["astro.config.mjs"]
+    Root --> Admin["public/admin/<br/>Sveltia CMS"]
     Src --> Comp["components/<br/>再利用 UI"]
     Src --> Content["content/<br/>blog・works"]
     Src --> Layouts["layouts/<br/>SiteLayout・BlogPost"]
@@ -101,8 +102,8 @@ flowchart TD
 │   └── pages/            # ルーティングエントリ（一覧・個別ページなど）
 ├── scripts/              # 運用 CLI（frontmatter 補助・alt lint・監査・OG 生成など）
 ├── docs/                 # ADR・CMS フロー・デザインシステムなどの設計ドキュメント
-├── astro.config.mjs      # Astro 設定（UnoCSS・Markdoc・sitemap・Keystatic・Vercel adapter を統合）
-├── keystatic.config.ts   # Keystatic（CMS）のコレクション定義
+├── astro.config.mjs      # Astro 設定（UnoCSS・Markdoc・sitemap・Vercel adapter を統合）
+├── public/admin/         # Sveltia CMS （静的 SPA + config.yml）
 ├── pnpm-lock.yaml        # 依存関係ロック
 └── tsconfig.json
 ```
@@ -114,30 +115,30 @@ flowchart TD
 - 各ページは `SiteLayout` を経由して `<Head>` メタ情報とヘッダー／フッターを共有し、OGP `og:locale` を自動付与します。
 - 新しいコンテンツを追加した際は `pnpm run build` で型エラーを確認し、必要に応じて Vercel プレビューでクリック確認を行ってください。
 
-## 管理（CMS）: Keystatic
+## 管理（CMS）: Sveltia CMS
 
-コンテンツは [Keystatic](https://keystatic.com/)（Git ベース CMS）で編集できます。記事の正本は `src/content/{blog,works}/` に Git で管理され（loader は `.md` / `.mdoc` 両対応。現状の記事は Keystatic の Markdoc 形式 `.mdoc` に統一）、Keystatic はそのファイルを admin UI 上で読み書きするレイヤーです。コレクション定義は `keystatic.config.ts` にあります。
+コンテンツは [Sveltia CMS](https://sveltiacms.app/)（Git ベース CMS）で編集できます。CDN 配信の静的 SPA（`public/admin/`）で Astro バージョンに依存しないため、Astro メジャーアップを妨害しません（ADR 0016）。
 
 ### 対象コレクション
 
 | コレクション | パス | 主なフィールド |
 |--------------|------|---------------|
-| ブログ記事 | `src/content/blog/*` | `title`, `description`, `pubDate`, `updatedDate`, `heroImage`, `category`, `tags`, `draft`, `readingTime` ほか |
-| Works | `src/content/works/*` | `title`, `description`, `status`, `repoUrl`, `lpUrl`, `demoUrl`, `tags`, `createdAt`, `featured` ほか |
+| ブログ記事 | `src/content/blog/*.mdoc` | `title`, `description`, `pubDate`, `category`, `tags`, `draft` ほか |
+| Works | `src/content/works/*.mdoc` | `title`, `description`, `status`, `repoUrl`, `lpUrl`, `tags`, `createdAt` ほか |
 
 ### アクセス方法
 
-- **ローカル**: `pnpm run dev` を起動して `/keystatic`（例: <https://keroway.localhost/keystatic> ／ 素の dev では <http://localhost:4321/keystatic>）を開く。ローカルモードはファイルへ直接書き込むため GitHub 認証は不要です。
-- **本番**: https://keroway.com/keystatic から GitHub 認証して編集する（GitHub ブランチモード）。`@astrojs/vercel` adapter により `/keystatic` の admin / API ルートだけが on-demand な Vercel Function になり、コンテンツページは引き続き SSG で配信されます。
-- **Preview デプロイ**: Keystatic 統合を意図的に mount しないため `/keystatic` は 404 になります（記事ページのプレビュー専用）。
+- **ローカル**: `pnpm run dev:astro` で起動後、<http://localhost:4321/admin> を開く。「ローカルリポジトリを使う」を選択し File System Access API でローカル編集（Chromium 必須）。GitHub 認証不要。
+- **本番**: <https://keroway.com/admin> から OAuth 認証して編集。OAuth プロキシ（Cloudflare Workers `sveltia-cms-auth`）のセットアップが必要。
+- **旧 `/keystatic`**: `/admin` へ永続リダイレクト。
 
-> 本番（`VERCEL_ENV=production`）では `PUBLIC_KEYSTATIC_STORAGE_KIND=github` が必須で、未設定だと `astro.config.mjs` がビルド時に fail-fast します。GitHub App のセットアップ・環境変数・ドラフト閲覧・公開予約などの詳細は [docs/cms-flow.md](./docs/cms-flow.md) を参照してください。
+詳細は [docs/cms-flow.md](./docs/cms-flow.md) を参照してください。
 
 ### 編集 → 本番反映フロー
 
 ```mermaid
 flowchart LR
-    A["編集者"] -->|Keystatic UI で編集・保存| B["keystatic/* ブランチを自動作成"]
+    A["編集者"] -->|Sveltia UI で編集・保存| B["cms/* ブランチを自動作成"]
     B --> C["GitHub に自動 PR"]
     C --> D["Vercel Preview Deployment"]
     D -->|プレビュー URL で確認| E{"レビュー OK?"}
@@ -146,7 +147,7 @@ flowchart LR
     F --> G["Vercel 本番ビルド（SSG）→ 公開"]
 ```
 
-Keystatic は `keystatic/<slug>` ブランチへ commit し、main へは必ず PR 経由でマージされます。main はブランチ保護（PR 必須・CI 必須）が入っているため、CMS からの編集も他の PR と同じレビュー / CI フローに乗ります。
+Sveltia の Editorial Workflow では、保存のタイミングでブランチへ commit され、main へは必ず PR 経由でマージされます。
 
 ## 運用スクリプト
 
@@ -164,9 +165,10 @@ Keystatic は `keystatic/<slug>` ブランチへ commit し、main へは必ず 
 
 設計・技術選定の判断は [docs/adr/](./docs/adr/README.md) に MADR 形式で記録しています。主要なものは以下のとおりです。
 
-- [0002 — CMS: Keystatic 採用](./docs/adr/0002-cms.md)（Accepted）
+- [0002 — CMS: Keystatic 採用](./docs/adr/0002-cms.md)（Accepted / 0016 で移行検討中）
 - [0004 — メディア管理](./docs/adr/0004-media-storage.md)（Accepted）
-- [0005 — Keystatic admin ランタイム（Vercel adapter + hybrid 出力）](./docs/adr/0005-keystatic-admin-runtime.md)
+- [0005 — Keystatic admin ランタイム](./docs/adr/0005-keystatic-admin-runtime.md)（Deprecated / Superseded by 0016）
+- [0016 — CMS: Sveltia CMS 移行](./docs/adr/0016-cms-keystatic-to-sveltia.md)（Accepted）
 - [0006 — CMS リポジトリ構成](./docs/adr/0006-repo-structure.md)（Accepted）
 - [0007 — モチーフ語彙の拡張](./docs/adr/0007-motif-vocabulary-expansion.md)（Accepted）
 - [0008 — 記事作成補助の自動化（Agent SDK）](./docs/adr/0008-agent-sdk-authoring-assist.md)（Accepted）
@@ -240,4 +242,4 @@ pnpm audit --registry=https://registry.npmjs.org/
 
 ## サイト URL
 
-https://keroway.com
+<https://keroway.com>

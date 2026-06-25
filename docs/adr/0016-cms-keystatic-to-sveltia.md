@@ -1,10 +1,10 @@
 # 0016 — CMS を Keystatic から Sveltia CMS へ移行する
 
-- **ステータス**: Proposed
+- **ステータス**: Accepted
 - **決定日**: 2026-06-25
 - **決定者**: @keroway
 - **関連 Issue**: [#412 CMS を Keystatic から Sveltia CMS へ移行する（Astro バージョンロック解消）](https://github.com/keroway/astro-blog/issues/412)
-- **関連 PR**: （未着手）
+- **実装 PR**: feat/412-sveltia-migration
 - **関連 ADR**: 0002（CMS: Keystatic 採用 / 本 ADR が supersede 候補）、0005（Keystatic admin ランタイム）、0009（本文 content フォーマット）、0014（Keystatic Google Fonts 除去）、0015（Pagefind 検索基盤）
 
 ---
@@ -37,7 +37,7 @@
 
 ## 決定事項
 
-**CMS を Keystatic から Sveltia CMS へ移行する（Proposed）。** Sveltia は CDN 配信の静的 SPA で Astro に一切依存しないため、`public/admin/`（または `/keystatic` 廃止後の `/admin`）に admin HTML + `config.yml` を置く構成とする。本文 `.mdoc` ファイルは `extension: mdoc` / `format: yaml-frontmatter` 指定でそのまま読み書きし、コンテンツ・URL は無変更とする。認証は当面 **OAuth Authorization Code フロー**（Cloudflare Workers 製 `sveltia-cms-auth` 等の OAuth プロキシ + GitHub OAuth App）を用い、ローカル編集は File System Access API でプロキシなし運用とする。
+**CMS を Keystatic から Sveltia CMS へ移行する。** Sveltia は CDN 配信の静的 SPA で Astro に一切依存しないため、`public/admin/`（または `/keystatic` 廃止後の `/admin`）に admin HTML + `config.yml` を置く構成とする。本文 `.mdoc` ファイルは `extension: mdoc` / `format: yaml-frontmatter` 指定でそのまま読み書きし、コンテンツ・URL は無変更とする。認証は当面 **OAuth Authorization Code フロー**（Cloudflare Workers 製 `sveltia-cms-auth` 等の OAuth プロキシ + GitHub OAuth App）を用い、ローカル編集は File System Access API でプロキシなし運用とする。
 
 *Rationale:* Sveltia は Astro peer 依存を持たないため、**Astro バージョンロックの本命（CMS 側）を恒久的に解消**できる。同時に **React 依存ツリーを丸ごと削除**でき、`@keystatic/core` 由来の脆弱性 override・patch・peerDependencyRule も一掃される。本文が実質プレーン Markdown のため移行コストが低く、Astro 側の content loader / Zod スキーマも無改修で済む。Decap CMS 互換で Editorial Workflow（ブランチ→PR）も再現でき、既存のレビュー運用を維持できる。
 
