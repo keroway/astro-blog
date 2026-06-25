@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /keystatic/
+Disallow: /api/
+Disallow: /_vercel/
 
 Sitemap: https://keroway.com/sitemap-index.xml
