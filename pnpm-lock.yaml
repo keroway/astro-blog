@@ -11,6 +11,8 @@ overrides:
   postcss@<8.5.10: '>=8.5.10'
   esbuild@<0.28.1: ^0.28.1
   path-to-regexp@>=6.0.0 <6.3.0: ^6.3.0
+  tar@<7.5.16: '>=7.5.16 <8'
+  js-yaml@>=4.0.0 <4.2.0: '>=4.2.0 <5'
 
 patchedDependencies:
   '@keystatic/core': 2b6d41286d68b9bde218563986ae49805ccc50b2d623d74a2d99d9de0860aaca
@@ -3257,10 +3259,6 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.1.1:
-    resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
-    hasBin: true
-
   js-yaml@4.2.0:
     resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
     hasBin: true
@@ -4172,8 +4170,8 @@ packages:
   tabbable@6.4.0:
     resolution: {integrity: sha512-05PUHKSNE8ou2dwIxTngl4EzcnsCDZGJ/iCLtDflR/SHB/ny14rXc+qU5P4mG9JkusiV7EivzY9Mhm55AzAvCg==}
 
-  tar@7.5.15:
-    resolution: {integrity: sha512-dzGK0boVlC4W5QFuQN1EFSl3bIDYsk7Tj40U6eIBnK2k/8ml7TZ5agbI5j5+qnoVcAA+rNtBml8SEiLxZpNqRQ==}
+  tar@7.5.16:
+    resolution: {integrity: sha512-56adEpPMouktRlBLXiaYFFzZ/3+JXa8P9n7WbR+ibIjtviN55mEaOkiysCnPnWm+7kkui1Dn8J9l+g6zV8731w==}
     engines: {node: '>=18'}
 
   tiny-inflate@1.0.3:
@@ -5722,7 +5720,7 @@ snapshots:
       idb-keyval: 6.2.2
       ignore: 5.3.2
       is-hotkey: 0.2.0
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       lib0: 0.2.117
       lru-cache: 10.2.0
       match-sorter: 6.3.1
@@ -5771,7 +5769,7 @@ snapshots:
       node-fetch: 2.7.0
       nopt: 8.0.0
       semver: 7.8.5
-      tar: 7.5.15
+      tar: 7.5.16
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -8263,10 +8261,6 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
-  js-yaml@4.1.1:
-    dependencies:
-      argparse: 2.0.1
-
   js-yaml@4.2.0:
     dependencies:
       argparse: 2.0.1
@@ -9609,7 +9603,7 @@ snapshots:
 
   tabbable@6.4.0: {}
 
-  tar@7.5.15:
+  tar@7.5.16:
     dependencies:
       '@isaacs/fs-minipass': 4.0.1
       chownr: 3.0.0
