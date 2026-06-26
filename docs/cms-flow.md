@@ -149,7 +149,7 @@ backend:
 ## ファイルフォーマット
 
 - 拡張子: `.mdoc`（Markdoc）
-- フォーマット: `yaml-frontmatter`（`---` で区切られた YAML + Markdown 本文）
+- Sveltia 設定: `format: frontmatter` + `extension: mdoc`（`---` で区切られた YAML + Markdown 本文）
 - Sveltia が書き込むファイルは Astro Content Collections の Zod スキーマで型検証される
 
 ```mdoc

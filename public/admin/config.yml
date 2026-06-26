@@ -34,8 +34,7 @@ public_folder: /images
 
 # ──────────────────────────────────────────────────────
 # コレクション定義
-# extension: mdoc — 既存の .mdoc ファイルをそのまま利用
-# format: yaml-frontmatter — --- で区切られた YAML + Markdown 本文
+# format: frontmatter + extension: mdoc — 既存の .mdoc (YAML frontmatter + Markdown) をそのまま利用
 # ──────────────────────────────────────────────────────
 collections:
   # ────────────────────────────────
@@ -45,8 +44,8 @@ collections:
     label: ブログ記事
     label_singular: 記事
     folder: src/content/blog
+    format: frontmatter
     extension: mdoc
-    format: yaml-frontmatter
     create: true
     identifier_field: title
     preview_path: /blog/{{slug}}/
@@ -150,8 +149,8 @@ collections:
     label: Works
     label_singular: Works エントリ
     folder: src/content/works
+    format: frontmatter
     extension: mdoc
-    format: yaml-frontmatter
     create: true
     identifier_field: title
     preview_path: /works/{{slug}}/
