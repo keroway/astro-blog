@@ -61,9 +61,6 @@ importers:
       astro:
         specifier: ^6.4.8
         version: 6.4.8(@types/node@24.12.4)(@vercel/functions@3.6.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0)
-      astro-pagefind:
-        specifier: ^2.0.0
-        version: 2.0.0(astro@6.4.8(@types/node@24.12.4)(@vercel/functions@3.6.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0))
       pagefind:
         specifier: ^1.5.2
         version: 1.5.2
@@ -73,6 +70,9 @@ importers:
       satori:
         specifier: ^0.26.0
         version: 0.26.0
+      sirv:
+        specifier: ^3.0.0
+        version: 3.0.2
       typescript:
         specifier: ^6.0.0
         version: 6.0.3
@@ -859,9 +859,6 @@ packages:
   '@oxc-project/types@0.131.0':
     resolution: {integrity: sha512-PgnWDfV0h+b16XNKbXU7Daib/BFSt/J2mEzfYIBu6JB/wNdlU+kVYXCkGA1A9fWkTbOgbjh4e6NhPeQOYvFhEA==}
 
-  '@pagefind/component-ui@1.5.2':
-    resolution: {integrity: sha512-t8/aE0tan4JiKa6cyhhSt/5qrEVwAK/qlYBHFpnRoq+qaFFVrhmXFFMY+r6n4GJtVIFCN2A5nUpeLN68cYjEjw==}
-
   '@pagefind/darwin-arm64@1.5.2':
     resolution: {integrity: sha512-MXpI+7HsAdPkvJ0gk9xj9g541BCqBZOBbdwj9g6lB5LCj6kSV6nqDSjzcAJwvOsfu0fjwvC8hQU+ecfhp+MpiQ==}
     cpu: [arm64]
@@ -1425,10 +1422,6 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
-  adequate-little-templates@1.0.2:
-    resolution: {integrity: sha512-d0tFFG538l3Y4CElRKtticzrMr/OGohs32/nf3Ewn8rbTMBYwkVNe8mPdXWrDnMlz+ZVUFQjsTmsBD5zCtU4wg==}
-    engines: {node: '>=14'}
-
   agent-base@7.0.2:
     resolution: {integrity: sha512-k2/tQ1+8Zf50dEUJWklUP80LcE/+Ph+OJ6cf2Ff2fD/c/TtCe6ofnCoNMz9UnyxOQYlaAALZtEWETzn+1JjfHg==}
     engines: {node: '>= 14'}
@@ -1484,11 +1477,6 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
-  astro-pagefind@2.0.0:
-    resolution: {integrity: sha512-i270YlJ/8aX/eRkvtuAPANSk+WK1uyp9DEj/TuuWem4pA0xBUGQk7agNFdu71nRxtH0j7TZxee2qwQRlrfZa1g==}
-    peerDependencies:
-      astro: ^2.0.4 || ^3 || ^4 || ^5 || ^6
-
   astro@6.4.8:
     resolution: {integrity: sha512-KK5lX90uU9EeVaTjINyj3sy9/NFXVa59aowaqbWBDDKLXZh4rr7GwIaCFYVetE22MJtsCNFerQXn0vlCLmpP/Q==}
     engines: {node: '>=22.12.0', npm: '>=9.6.5', pnpm: '>=7.1.0'}
@@ -1515,9 +1503,6 @@ packages:
   base64-js@0.0.8:
     resolution: {integrity: sha512-3XSA2cR/h/73EzlXXdU6YNycmYI7+kicTxks4eJg2g39biHR84slg2+des+p7iHYhbRg/udIS4TD53WabcOUkw==}
     engines: {node: '>= 0.4'}
-
-  bcp-47@2.1.0:
-    resolution: {integrity: sha512-9IIS3UPrvIa1Ej+lVDdDwO7zLehjqsaByECw0bu2RRGP73jALm6FYbzI5gWbgHLvNdkvfXB5YrSbocZdOS0c0w==}
 
   bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
@@ -2068,15 +2053,6 @@ packages:
 
   iron-webcrypto@1.2.1:
     resolution: {integrity: sha512-feOM6FaSr6rEABp/eDfVseKyTMDt+KGpeB35SkVn9Tyn0CqvVsY3EwI0v5i8nMHyJnzCIQf7nsy3p41TPkJZhg==}
-
-  is-alphabetical@2.0.1:
-    resolution: {integrity: sha512-FWyyY60MeTNyeSRpkM2Iry0G9hpr7/9kD40mD/cGQEuilcZYS4okz8SN2Q6rLCJ8gbCt6fN+rC+6tMGS99LaxQ==}
-
-  is-alphanumerical@2.0.1:
-    resolution: {integrity: sha512-hmbYhX/9MUMF5uh7tOXyK/n0ZvWpad5caBA17GsC6vyuCqaWliRG5K1qS9inmUhEMaOBIW7/whAnSwveW/LtZw==}
-
-  is-decimal@2.0.1:
-    resolution: {integrity: sha512-AAB9hiomQs5DXWcRB1rqsxGUstbRroFOPPVAomNk/3XHR5JyEZChOyTWe2oayKnsSsr/kcGqF+z6yuH6HHpN0A==}
 
   is-docker@3.0.0:
     resolution: {integrity: sha512-eljcgEDlEns/7AXFosB5K/2nCM4P7FQPkGc/DWLy5rmFEWvZayGrik1d9/QIY5nJ4f9YsVvBkA6kJpHn9rISdQ==}
@@ -3935,11 +3911,6 @@ snapshots:
 
   '@oxc-project/types@0.131.0': {}
 
-  '@pagefind/component-ui@1.5.2':
-    dependencies:
-      adequate-little-templates: 1.0.2
-      bcp-47: 2.1.0
-
   '@pagefind/darwin-arm64@1.5.2':
     optional: true
 
@@ -4490,8 +4461,6 @@ snapshots:
 
   acorn@8.16.0: {}
 
-  adequate-little-templates@1.0.2: {}
-
   agent-base@7.0.2:
     dependencies:
       debug: 4.4.3
@@ -4541,13 +4510,6 @@ snapshots:
   array-iterate@2.0.1: {}
 
   assertion-error@2.0.1: {}
-
-  astro-pagefind@2.0.0(astro@6.4.8(@types/node@24.12.4)(@vercel/functions@3.6.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0)):
-    dependencies:
-      '@pagefind/component-ui': 1.5.2
-      astro: 6.4.8(@types/node@24.12.4)(@vercel/functions@3.6.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0)
-      pagefind: 1.5.2
-      sirv: 3.0.2
 
   astro@6.4.8(@types/node@24.12.4)(@vercel/functions@3.6.1)(jiti@2.7.0)(rollup@4.62.2)(yaml@2.9.0):
     dependencies:
@@ -4653,12 +4615,6 @@ snapshots:
   balanced-match@4.0.4: {}
 
   base64-js@0.0.8: {}
-
-  bcp-47@2.1.0:
-    dependencies:
-      is-alphabetical: 2.0.1
-      is-alphanumerical: 2.0.1
-      is-decimal: 2.0.1
 
   bindings@1.5.0:
     dependencies:
@@ -5266,15 +5222,6 @@ snapshots:
   ipaddr.js@1.9.1: {}
 
   iron-webcrypto@1.2.1: {}
-
-  is-alphabetical@2.0.1: {}
-
-  is-alphanumerical@2.0.1:
-    dependencies:
-      is-alphabetical: 2.0.1
-      is-decimal: 2.0.1
-
-  is-decimal@2.0.1: {}
 
   is-docker@3.0.0: {}
 

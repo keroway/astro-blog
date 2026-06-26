@@ -1,7 +1,8 @@
 # 0015 — 全文検索基盤に Pagefind を採用する
 
-- **ステータス**: Proposed
+- **ステータス**: Accepted
 - **決定日**: 2026-06-21
+- **更新日**: 2026-06-26 (Astro 統合内製化 → 後述「統合実装の変更履歴」参照)
 - **決定者**: @keroway
 - **関連 Issue**: [#280 Pagefind による全文検索を導入する](https://github.com/keroway/astro-blog/issues/280) / [#339 ADR: 検索基盤の選定判断を記録する](https://github.com/keroway/astro-blog/issues/339)
 - **関連 PR**: 後続の #340 (インデックス生成) / #341 (検索 UI) で参照する
@@ -52,6 +53,25 @@
 ### 候補 C: Google Programmable Search Engine / 外部埋め込み検索
 
 **却下理由:** 実装は容易だが広告・ブランディング・プライバシー (クエリの外部送信) の制約があり、`--kw-*` トークン準拠のデザイン統一やダークモード対応が困難。サイトの体験品質要件に合わない。
+
+---
+
+## 統合実装の変更履歴
+
+### 2026-06-26 — `astro-pagefind` ラッパーを廃止し Pagefind Node API を直接呼ぶ構成に変更
+
+**背景:** Astro 6 対応の調査過程で `astro-pagefind`（単一メンテナの薄いラッパー）が Astro のメジャー更新時にもっとも「追従待ち」でブロッカーになりやすい層だと判明。実際に `BlogSearch.astro` は `astro-pagefind` の UI コンポーネントを使わず生の Pagefind JS API (`/pagefind/pagefind.js`) を直接叩いているため、ラッパーを除去しても検索 UI・インデックス品質・CJK セグメンテーション・チャンク分割いずれも影響ゼロ。
+
+**変更内容:**
+
+- `astro-pagefind` を devDependencies から削除。
+- `sirv`（`astro-pagefind` の依存として間接的に利用していたが直接宣言がなかった）を devDependencies に昇格。
+- `astro.config.mjs` の `pagefindIntegration()` 関数として同等ロジック（約 50 行）をインライン化。
+  - `astro:build:done`: `createIndex` → `addDirectory` → `writeFiles` で `dist/pagefind/` を生成。
+  - `astro:server:setup`: `sirv` で dev 時に `/pagefind/` を配信。
+- `BlogSearch.astro`・`vite.build.rollupOptions.external` 設定は変更なし。
+
+**効果:** 第三者ラッパーへの依存ゼロ。以降は `pagefind` 本体だけを監視すればよく、Astro メジャー更新時のブロッカーリスクが消える。
 
 ---
 
