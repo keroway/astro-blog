@@ -130,7 +130,7 @@ flowchart TD
 ### アクセス方法
 
 - **ローカル**: `pnpm run dev:astro` で起動後、<http://localhost:4321/admin> を開く。「ローカルリポジトリを使う」を選択し File System Access API でローカル編集（Chromium 必須）。GitHub 認証不要。
-- **本番**: <https://keroway.com/admin> から OAuth 認証して編集。OAuth プロキシ（Cloudflare Workers `sveltia-cms-auth`）のセットアップが必要。
+- **本番**: <https://keroway.com/admin> から OAuth 認証して編集。OAuth プロキシ（Cloudflare Workers `sveltia-cms-auth`）設定済み。
 - **旧 `/keystatic`**: `/admin` へ永続リダイレクト。
 
 詳細は [docs/cms-flow.md](./docs/cms-flow.md) を参照してください。

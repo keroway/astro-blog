@@ -129,7 +129,7 @@ backend:
   name: github
   repo: keroway/astro-blog
   branch: main
-  base_url: https://sveltia-cms-auth.<subdomain>.workers.dev
+  base_url: https://sveltia-cms-auth.kurokawa-y.workers.dev
 ```
 
 この `base_url` 反映は secret を含まないため、URL を共有してもらえれば agent が実施できます。
