@@ -12,10 +12,62 @@
     <!-- robots: admin は検索インデックス不要 (vercel.json の X-Robots-Tag と二重防衛) -->
     <meta name="robots" content="noindex, nofollow" />
     <title>keroway CMS</title>
-    <script
-      src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"
-      type="module"
-    ></script>
+    <script type="module">
+      import CMS from "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs";
+      import YAML from "https://esm.sh/js-yaml@4.1.0";
+
+      const splitFrontmatter = (text) => {
+        const normalized = text.replace(/^\uFEFF/, "");
+
+        if (!normalized.startsWith("---\n")) {
+          return { frontmatter: {}, body: normalized };
+        }
+
+        const end = normalized.indexOf("\n---", 4);
+
+        if (end === -1) {
+          return { frontmatter: {}, body: normalized };
+        }
+
+        const frontmatterText = normalized.slice(4, end);
+        const bodyStart = normalized.startsWith("\n", end + 4) ? end + 5 : end + 4;
+
+        return {
+          frontmatter: YAML.load(frontmatterText) ?? {},
+          body: normalized.slice(bodyStart),
+        };
+      };
+
+      CMS.registerCustomFormat("mdoc", "mdoc", {
+        fromFile: (text) => {
+          const { frontmatter, body } = splitFrontmatter(text);
+
+          return { ...frontmatter, body };
+        },
+        toFile: (data) => {
+          const { body = "", ...frontmatter } = data ?? {};
+          const yaml = YAML.dump(frontmatter, {
+            lineWidth: 100,
+            noRefs: true,
+            sortKeys: false,
+          }).trim();
+
+          return `---\n${yaml}\n---\n\n${body}`;
+        },
+      });
+
+      const response = await fetch("/admin/config.yml");
+      const config = YAML.load(await response.text());
+
+      config.load_config_file = false;
+      config.collections = config.collections.map((collection) =>
+        ["blog", "works"].includes(collection.name)
+          ? { ...collection, format: "mdoc" }
+          : collection,
+      );
+
+      CMS.init({ config });
+    </script>
   </head>
   <body>
     <!-- 設定は public/admin/config.yml で管理。 -->
