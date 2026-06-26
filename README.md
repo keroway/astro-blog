@@ -28,7 +28,7 @@
 |------|---------|
 | フレームワーク | [Astro 6](https://astro.build/) + TypeScript（strict モード有効） |
 | コンテンツ | Astro Content Collections（Markdown/Markdoc）、[@astrojs/markdoc](https://docs.astro.build/en/guides/integrations-guide/markdoc/) |
-| CMS | [Sveltia CMS](https://sveltiacms.app/)（`public/admin/` に配置される CDN 配信の静的 SPA、Astro 非依存 / ADR 0016） |
+| CMS | [Sveltia CMS](https://sveltiacms.app/)（`src/pages/admin.astro` + `public/admin/config.yml` に配置される CDN 配信の静的 SPA、Astro 非依存 / ADR 0016） |
 | スタイル | [UnoCSS](https://unocss.dev/) + コンポーネントスコープの純 CSS |
 | 配信補助 | [@astrojs/rss](https://docs.astro.build/en/guides/rss/)（RSS）、[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)（XML サイトマップ） |
 | 画像最適化 | [astro:assets](https://docs.astro.build/en/guides/images/)（自動フォーマット変換・リサイズ） |
@@ -80,7 +80,7 @@ flowchart TD
     Root --> Docs["docs/<br/>ADR・設計メモ"]
     Root --> Scripts["scripts/<br/>運用 CLI"]
     Root --> Cfg["astro.config.mjs"]
-    Root --> Admin["public/admin/<br/>Sveltia CMS"]
+    Root --> Admin["src/pages/admin.astro<br/>Sveltia CMS"]
     Src --> Comp["components/<br/>再利用 UI"]
     Src --> Content["content/<br/>blog・works"]
     Src --> Layouts["layouts/<br/>SiteLayout・BlogPost"]
@@ -103,7 +103,8 @@ flowchart TD
 ├── scripts/              # 運用 CLI（frontmatter 補助・alt lint・監査・OG 生成など）
 ├── docs/                 # ADR・CMS フロー・デザインシステムなどの設計ドキュメント
 ├── astro.config.mjs      # Astro 設定（UnoCSS・Markdoc・sitemap・Vercel adapter を統合）
-├── public/admin/         # Sveltia CMS （静的 SPA + config.yml）
+├── public/admin/         # Sveltia CMS config.yml
+├── src/pages/admin.astro # Sveltia CMS 静的 admin ルート
 ├── pnpm-lock.yaml        # 依存関係ロック
 └── tsconfig.json
 ```
@@ -117,7 +118,7 @@ flowchart TD
 
 ## 管理（CMS）: Sveltia CMS
 
-コンテンツは [Sveltia CMS](https://sveltiacms.app/)（Git ベース CMS）で編集できます。CDN 配信の静的 SPA（`public/admin/`）で Astro バージョンに依存しないため、Astro メジャーアップを妨害しません（ADR 0016）。
+コンテンツは [Sveltia CMS](https://sveltiacms.app/)（Git ベース CMS）で編集できます。CDN 配信の静的 SPA（`src/pages/admin.astro` + `public/admin/config.yml`）で Astro バージョンに依存しないため、Astro メジャーアップを妨害しません（ADR 0016）。
 
 ### 対象コレクション
 

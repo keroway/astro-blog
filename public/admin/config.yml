@@ -1,5 +1,5 @@
 # Sveltia CMS 設定 (ADR 0016)
-# Decap CMS 互換フォーマット。Sveltia CMS は public/admin/index.html から
+# Decap CMS 互換フォーマット。Sveltia CMS は src/pages/admin.astro から
 # CDN ロードされる静的 SPA。Astro に依存しないためバージョンロックが発生しない。
 #
 # ────────────────────────────────────────
@@ -14,7 +14,7 @@
 # ────────────────────────────────────────
 # 認証 (ローカル開発)
 # ────────────────────────────────────────
-# pnpm run dev:astro で起動後、https://localhost:4321/admin を開く。
+# pnpm run dev:astro で起動後、http://localhost:4321/admin を開く。
 # ログイン画面の「ローカルリポジトリを使う」(File System Access API) を選択し、
 # リポジトリのルートディレクトリを指定する。OAuth プロキシは不要。
 

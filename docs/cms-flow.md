@@ -9,7 +9,7 @@
 ## 概要
 
 keroway.com は **Sveltia CMS（Git ベース CMS）+ Vercel SSG** の構成を採用しています。  
-Sveltia は CDN 配信の静的 SPA（`public/admin/`）で、**Astro バージョンに依存しません**。  
+Sveltia は CDN 配信の静的 SPA（`src/pages/admin.astro` + `public/admin/config.yml`）で、**Astro バージョンに依存しません**。  
 コンテンツの正本は `src/content/{blog,works}/*.mdoc` に Git で管理され、CMS はそのファイルを UI 上で読み書きするレイヤーです。
 
 ---
@@ -65,43 +65,74 @@ flowchart LR
 
 ## 本番認証セットアップ（OAuth プロキシ）
 
-本番環境での GitHub 認証には **OAuth Authorization Code フロー**が必要です。  
-Sveltia の GitHub backend は現在 PAT（個人アクセストークン）の簡易ログインを未実装のため（GitHub の client-side PKCE リリース待ち）、**OAuth プロキシ**を用意します。
+ここは **リポジトリオーナーの GitHub / Cloudflare 権限と secret 扱いが必要**なため、通常はサイト管理者が実施します。コード側の Sveltia CMS 本体・コレクション定義・`/admin` ルーティングはすでにリポジトリに入っています。
 
-### 1. GitHub OAuth App を登録
+本番環境で非技術者を含む編集者が使う場合は、Sveltia 公式の推奨どおり **OAuth Authorization Code フロー**を用意します。GitHub OAuth App の Client Secret をブラウザへ置かないため、Cloudflare Workers の `sveltia-cms-auth` を OAuth プロキシとして使います。
 
-1. GitHub → Settings → Developer settings → OAuth Apps → New OAuth App
-2. 以下の値を設定:
-   - Application name: `keroway CMS`
-   - Homepage URL: `https://keroway.com`
-   - Authorization callback URL: `https://your-auth-proxy.workers.dev/callback`
-3. Client ID と Client Secret を記録する
+> **補足**: Sveltia には GitHub access token でのログイン導線もありますが、複数人運用・非技術者運用では OAuth プロキシの方が UX / secret 管理の面で安全です。このサイトの本番運用手順は OAuth プロキシを標準とします。
 
-### 2. Cloudflare Workers に sveltia-cms-auth をデプロイ
+### 作業分担
+
+| 作業 | 実施者 | 理由 |
+|------|--------|------|
+| `src/pages/admin.astro` / `public/admin/config.yml` の Sveltia CMS 配置 | agent / 開発者 | コード変更のみ |
+| `config.yml` の collection 定義 | agent / 開発者 | コード変更のみ |
+| Cloudflare Workers の作成 / デプロイ | サイト管理者 | Cloudflare アカウント権限が必要 |
+| GitHub OAuth App の作成 | サイト管理者 | GitHub アカウント / organization 権限が必要 |
+| `GITHUB_CLIENT_SECRET` 登録 | サイト管理者 | secret を扱うため agent に渡さない |
+| `base_url` の実 URL 反映 | agent でも可 | Workers URL が分かれば通常のコード変更 |
+
+### 1. Cloudflare Workers に sveltia-cms-auth をデプロイ
+
+Cloudflare ダッシュボードの **Deploy to Cloudflare Workers** ボタンを使うか、ローカルの `wrangler` でデプロイします。
 
 ```bash
 git clone https://github.com/sveltia/sveltia-cms-auth.git
 cd sveltia-cms-auth
-# wrangler.toml を設定してから:
-wrangler deploy
-# シークレットを登録:
-wrangler secret put GITHUB_CLIENT_ID
-wrangler secret put GITHUB_CLIENT_SECRET
+pnpm install
+pnpm exec wrangler login
+pnpm exec wrangler deploy
 ```
 
-詳細: [sveltia-cms-auth のドキュメント](https://github.com/sveltia/sveltia-cms-auth)
+デプロイ後、Workers URL（例: `https://sveltia-cms-auth.<subdomain>.workers.dev`）を控えます。
 
-### 3. config.yml に base_url を設定
+### 2. GitHub OAuth App を登録
 
-`public/admin/config.yml` の `backend` セクションを更新:
+GitHub → Settings → Developer settings → OAuth Apps → New OAuth App で以下を設定します。
+
+| 項目 | 値 |
+|------|----|
+| Application name | `keroway CMS` |
+| Homepage URL | `https://keroway.com` |
+| Authorization callback URL | `<Workers URL>/callback` |
+
+登録後に **Client ID** と **Client Secret** を控えます。
+
+### 3. Worker に環境変数 / secret を設定
+
+Cloudflare ダッシュボード（Workers → Settings → Variables）または `wrangler secret put` で設定します。
+
+```bash
+pnpm exec wrangler secret put GITHUB_CLIENT_ID
+pnpm exec wrangler secret put GITHUB_CLIENT_SECRET
+pnpm exec wrangler secret put ALLOWED_DOMAINS
+```
+
+`ALLOWED_DOMAINS` には `keroway.com` を設定します。Preview 環境でも CMS を使う場合のみ、必要な preview hostname を追加します。
+
+### 4. config.yml に base_url を設定
+
+Workers URL が確定したら `public/admin/config.yml` の `backend` セクションを更新して PR 化します。
 
 ```yaml
 backend:
   name: github
   repo: keroway/astro-blog
   branch: main
-  base_url: https://your-auth-proxy.workers.dev  # Workers URL に差し替え
+  base_url: https://sveltia-cms-auth.<subdomain>.workers.dev
 ```
+
+この `base_url` 反映は secret を含まないため、URL を共有してもらえれば agent が実施できます。
 
 ---
 
