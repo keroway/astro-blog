@@ -24,9 +24,9 @@ backend:
   branch: main
   base_url: https://sveltia-cms-auth.kurokawa-y.workers.dev
 
-# Editorial Workflow: 保存 → ブランチ自動作成 → PR → CI → マージ
-# Keystatic と同等のレビューフローを維持する
-publish_mode: editorial_workflow
+# Sveltia CMS は Editorial Workflow 未対応。
+# 保存時は Simple Workflow として直接ブランチ/コミットを扱う。
+# main への反映は GitHub のブランチ保護・PR レビュー・CI で担保する。
 
 # メディアファイルのデフォルト保存先 (各フィールドで上書き可)
 media_folder: public/images
