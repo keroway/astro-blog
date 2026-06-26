@@ -16,6 +16,27 @@
       import CMS from "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs";
       import YAML from "https://esm.sh/js-yaml@4.1.0";
 
+      const normalizeDates = (value) => {
+        if (value instanceof Date) {
+          return value.toISOString().slice(0, 10);
+        }
+
+        if (Array.isArray(value)) {
+          return value.map(normalizeDates);
+        }
+
+        if (value && typeof value === "object") {
+          return Object.fromEntries(
+            Object.entries(value).map(([key, childValue]) => [
+              key,
+              normalizeDates(childValue),
+            ]),
+          );
+        }
+
+        return value;
+      };
+
       const splitFrontmatter = (text) => {
         const normalized = text.replace(/^\uFEFF/, "");
 
@@ -33,7 +54,7 @@
         const bodyStart = normalized.startsWith("\n", end + 4) ? end + 5 : end + 4;
 
         return {
-          frontmatter: YAML.load(frontmatterText) ?? {},
+          frontmatter: normalizeDates(YAML.load(frontmatterText) ?? {}),
           body: normalized.slice(bodyStart),
         };
       };
@@ -45,7 +66,7 @@
           return { ...frontmatter, body };
         },
         toFile: (data) => {
-          const { body = "", ...frontmatter } = data ?? {};
+          const { body = "", ...frontmatter } = normalizeDates(data ?? {});
           const yaml = YAML.dump(frontmatter, {
             lineWidth: 100,
             noRefs: true,
