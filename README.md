@@ -139,8 +139,8 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-    A["編集者"] -->|Sveltia UI で編集・保存| B["cms/* ブランチを自動作成"]
-    B --> C["GitHub に自動 PR"]
+    A["編集者"] -->|Sveltia UI で編集・保存| B["GitHub へ commit"]
+    B --> C["必要に応じて PR 作成"]
     C --> D["Vercel Preview Deployment"]
     D -->|プレビュー URL で確認| E{"レビュー OK?"}
     E -->|要修正| A
@@ -148,7 +148,7 @@ flowchart LR
     F --> G["Vercel 本番ビルド（SSG）→ 公開"]
 ```
 
-Sveltia の Editorial Workflow では、保存のタイミングでブランチへ commit され、main へは必ず PR 経由でマージされます。
+Sveltia CMS は Editorial Workflow 未対応のため、PR レビュー・CI・main 保護は GitHub 側のブランチ保護ルールで担保します。
 
 ## 運用スクリプト
 

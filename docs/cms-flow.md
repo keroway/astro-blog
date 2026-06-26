@@ -18,21 +18,17 @@ Sveltia は CDN 配信の静的 SPA（`src/pages/admin.astro` + `public/admin/co
 
 ```mermaid
 flowchart TD
-    A([編集者]) -->|Sveltia UI で記事を作成・編集| B[Sveltia がブランチを作成\ne.g. cms/blog/my-article-title]
-    B -->|ブランチへコミット| C[GitHub: feature branch]
-    C -->|PR を作成| D[GitHub Pull Request]
-    D -->|Vercel が自動検知| E[Vercel Preview Deployment\npreview-xxx.vercel.app]
-    E -->|プレビュー URL で確認| F{レビュー OK?}
-    F -->|修正が必要| A
-    F -->|OK| G[PR を main にマージ]
-    G -->|Vercel が main を自動検知| H[Vercel 本番ビルド\nSSG: astro build]
-    H -->|配信開始| I([keroway.com で公開])
+    A([編集者]) -->|Sveltia UI で記事を作成・編集| B[GitHub へコミット]
+    B -->|必要に応じてブランチ/PR を作成| C[GitHub Pull Request]
+    C -->|レビュー/CI| D[main へマージ]
+    D -->|Vercel が main を自動検知| E[Vercel 本番ビルド\nSSG: astro build]
+    E -->|配信開始| F([keroway.com で公開])
 ```
 
 ### ポイント
 
-- Sveltia の Editorial Workflow では、UI の「保存」でブランチへのコミットが自動実行される
-- Vercel は GitHub と連携しており、PR 作成時に自動でプレビュービルドをトリガーする
+- Sveltia CMS は Editorial Workflow 未対応のため、レビュー・CI・main 保護は GitHub 側のブランチ保護ルールで担保する
+- Vercel は GitHub と連携しており、main マージ時に自動で本番ビルドをトリガーする
 - SSG のため、本番反映はマージ後のビルド完了まで数分かかる（通常 1〜3 分）
 
 ---
