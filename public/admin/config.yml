@@ -9,7 +9,7 @@
 # Cloudflare Workers 製 OAuth プロキシ (sveltia-cms-auth) と
 # GitHub OAuth App のセットアップが必要。
 # セットアップ手順: docs/cms-flow.md を参照。
-# 設定後、以下の base_url コメントを外してプロキシ URL を設定すること。
+# base_url は Cloudflare Workers の sveltia-cms-auth URL。
 #
 # ────────────────────────────────────────
 # 認証 (ローカル開発)
@@ -22,8 +22,7 @@ backend:
   name: github
   repo: keroway/astro-blog
   branch: main
-  # TODO: OAuth プロキシ構築後、コメントを外して URL を設定する (docs/cms-flow.md)
-  # base_url: https://your-sveltia-auth.workers.dev
+  base_url: https://sveltia-cms-auth.kurokawa-y.workers.dev
 
 # Editorial Workflow: 保存 → ブランチ自動作成 → PR → CI → マージ
 # Keystatic と同等のレビューフローを維持する
