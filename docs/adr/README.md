@@ -24,6 +24,7 @@
 | 0014 | Keystatic 管理 UI の Google Fonts 参照除去 | [0014-keystatic-google-fonts-removal.md](./0014-keystatic-google-fonts-removal.md) | Accepted |
 | 0015 | 全文検索基盤 (Pagefind) | [0015-pagefind-search-platform.md](./0015-pagefind-search-platform.md) | Accepted |
 | 0016 | CMS を Keystatic から Sveltia へ移行 | [0016-cms-keystatic-to-sveltia.md](./0016-cms-keystatic-to-sveltia.md) | Accepted |
+| 0017 | Astro 7 へのメジャーアップグレード | [0017-astro-7-upgrade.md](./0017-astro-7-upgrade.md) | Proposed |
 
 ## ADR の書き方
 
