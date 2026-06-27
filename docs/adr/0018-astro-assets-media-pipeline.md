@@ -1,10 +1,10 @@
 # 0018 — コンテンツ画像を astro:assets パイプラインへ移行する
 
-- **ステータス**: Proposed
+- **ステータス**: Accepted
 - **決定日**: 2026-06-27
 - **決定者**: @keroway
 - **関連 Issue**: [#410 画像を astro:assets (Image/Picture) へ本格移行する（#396 フォローアップ）](https://github.com/keroway/astro-blog/issues/410)
-- **関連 PR**: 後続の実装 PR で参照する
+- **実装 PR**: #426
 - **関連 ADR**: 0004（メディア管理）、0016（Sveltia CMS）、0017（Astro 7 アップグレード）
 
 ---
@@ -144,6 +144,17 @@ Sveltia の `media_folder` はリポジトリ内保存先、`public_folder` は 
 ### 候補 D — Vercel Image Optimization を主軸にする
 
 **却下理由:** 本サイトは SSG であり、ビルド時最適化で十分。オンデマンド変換を主軸にするとプラットフォーム依存が増え、Phase 3 のホスティング移行余地が狭まる。
+
+---
+
+## 実装で判明した知見（2026-06-27）
+
+- **sharp は明示依存が必要**: `<Picture>` による AVIF/WebP 生成を有効にすると Astro が sharp を要求する。これまでは transitive に存在していても実変換していなかったため不要だったが、本移行では `sharp` を devDependencies に追加する。
+- **最適化出力**: build で 466 件の optimized image を生成。`dist/client/_astro` に AVIF/WebP が生成されることを確認。
+- **SVG passthrough**: Works の `obsidian-clipper.svg` は `<picture>` ではなく `<img>` として出力され、構造化データ / OG も絶対 URL 化される。
+- **OG / 構造化データ**: `heroImage` が `ImageMetadata` になったため、ラスタ画像は `getImage({ width: 1200, format: "png" })` から URL を導出し、SVG は `src` をそのまま絶対 URL 化する。
+- **E2E 安定化**: Vite 8 dev server の依存最適化 HMR reload が axe 分析中に起きうるため、a11y smoke の `page.goto()` は全対象で `waitUntil: "networkidle"` を使う。
+- **残す public 画像**: heroImage 参照中の画像は `src/assets/content/` へ移動した。Markdown 本文が旧 root URL で参照している 4 件（`/9OnF3a4.jpg`, `/04wfjnk.png`, `/FmugmCR.png`, `/GEsYkI0.png`）は本文画像段階移行まで `public/` にコピーを維持する。`public/images/works/*.svg` のうち本文/予備で残るものは今回スコープ外。
 
 ---
 

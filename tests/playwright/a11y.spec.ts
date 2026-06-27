@@ -13,6 +13,7 @@
  */
 
 import AxeBuilder from "@axe-core/playwright";
+import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
 const EXCLUDED_RULES = [
@@ -21,12 +22,16 @@ const EXCLUDED_RULES = [
   "page-has-heading-one",
 ];
 
+async function gotoStable(page: Page, path: string) {
+  // Astro 7 (Vite 8) triggers eager dependency optimization in dev mode,
+  // which fires a Vite HMR reload that can destroy the JS context mid-axe analysis.
+  // `networkidle` ensures the reload completes before analysis begins.
+  await page.goto(path, { waitUntil: "networkidle" });
+}
+
 test.describe("a11y smoke", () => {
   test("/ has no axe violations", async ({ page }) => {
-    // Astro 7 (Vite 8) triggers eager dependency optimization on first access to `/`,
-    // which fires a Vite HMR reload that destroys the JS context mid-axe analysis.
-    // `waitUntil: "networkidle"` ensures the reload completes before analysis begins.
-    await page.goto("/", { waitUntil: "networkidle" });
+    await gotoStable(page, "/");
     const results = await new AxeBuilder({ page })
       .disableRules(EXCLUDED_RULES)
       .analyze();
@@ -34,7 +39,7 @@ test.describe("a11y smoke", () => {
   });
 
   test("/blog has no axe violations", async ({ page }) => {
-    await page.goto("/blog");
+    await gotoStable(page, "/blog");
     const results = await new AxeBuilder({ page })
       .disableRules(EXCLUDED_RULES)
       .analyze();
@@ -42,7 +47,7 @@ test.describe("a11y smoke", () => {
   });
 
   test("blog post has no axe violations", async ({ page }) => {
-    await page.goto("/blog/book-pragmatic-programmer/");
+    await gotoStable(page, "/blog/book-pragmatic-programmer/");
     const results = await new AxeBuilder({ page })
       .disableRules(EXCLUDED_RULES)
       .analyze();
@@ -50,7 +55,7 @@ test.describe("a11y smoke", () => {
   });
 
   test("/about has no axe violations", async ({ page }) => {
-    await page.goto("/about");
+    await gotoStable(page, "/about");
     const results = await new AxeBuilder({ page })
       .disableRules(EXCLUDED_RULES)
       .analyze();

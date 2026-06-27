@@ -1,5 +1,6 @@
 ---
 import type { BlogEntry } from '../types/content';
+import ContentPicture from './ContentPicture.astro';
 import FormattedDate from './FormattedDate.astro';
 import { categoryLabel } from '../consts';
 
@@ -19,9 +20,11 @@ const heroImage = post.data.heroImage;
   <a class="recent-note__link" href={href}>
     <div class="recent-note__media">
       {heroImage ? (
-        <img
+        <ContentPicture
           src={heroImage}
           alt={post.data.title}
+          widths={[320, 560, 720, 960]}
+          sizes="(min-width: 761px) 45vw, 100vw"
           loading={priority ? 'eager' : 'lazy'}
           fetchpriority={priority ? 'high' : 'auto'}
           decoding="async"
