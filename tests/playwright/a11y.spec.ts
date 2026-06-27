@@ -23,7 +23,10 @@ const EXCLUDED_RULES = [
 
 test.describe("a11y smoke", () => {
   test("/ has no axe violations", async ({ page }) => {
-    await page.goto("/");
+    // Astro 7 (Vite 8) triggers eager dependency optimization on first access to `/`,
+    // which fires a Vite HMR reload that destroys the JS context mid-axe analysis.
+    // `waitUntil: "networkidle"` ensures the reload completes before analysis begins.
+    await page.goto("/", { waitUntil: "networkidle" });
     const results = await new AxeBuilder({ page })
       .disableRules(EXCLUDED_RULES)
       .analyze();

@@ -24,7 +24,8 @@ allowBuilds:
 # v11 では overrides / peerDependencyRules は pnpm-workspace.yaml に置く
 # (package.json#pnpm からの移動)。
 overrides:
-  "rollup@<4.59.0": ">=4.59.0"
+  # rollup@<4.59.0 override は Astro 7 (Vite 8) で削除 — Vite 8 は rollup を rolldown に置き換え、
+  # rollup は依存ツリーから消滅したため override が dead になった (2026-06-26)。
   "picomatch@<2.3.2": ">=2.3.2"
   "yaml@>=2.0.0 <2.8.3": ">=2.8.3"
   "postcss@<8.5.10": ">=8.5.10"
@@ -35,8 +36,8 @@ overrides:
   # tar <7.5.16 (PAX size override による file smuggling) — @astrojs/vercel>@vercel/nft>@mapbox/node-pre-gyp 経由。
   # 7.x 内に固定。upstream が修正版を取り込んだら削除する。
   "tar@<7.5.16": ">=7.5.16 <8"
-  # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core は削除済みだが念のため残す。
-  # upstream ツリーから消えたことを確認後に削除する。
+  # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core 由来分は削除済みだが、
+  # Astro 7 で @astrojs/internal-helpers 経由で引き続きツリーに存在するため維持。
   "js-yaml@>=4.0.0 <4.2.0": ">=4.2.0 <5"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
