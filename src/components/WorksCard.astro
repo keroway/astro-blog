@@ -1,6 +1,7 @@
 ---
 import type { WorksEntry } from "../types/content";
 import { encodeSlugId } from "../lib/slug";
+import ContentPicture from "./ContentPicture.astro";
 import { resolveWorksDate } from "../lib/content";
 import MotifPanel from "./MotifPanel.astro";
 
@@ -34,9 +35,11 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
 <article class:list={["work-card", `work-card--${variant}`]}>
   {work.data.heroImage ? (
     <figure class="work-card__visual">
-      <img
+      <ContentPicture
         src={work.data.heroImage}
         alt={`${work.data.title} のスクリーンショット`}
+        widths={[320, 560, 720, 960]}
+        sizes={variant === "featured" ? "(min-width: 901px) 50vw, 100vw" : "(min-width: 901px) 33vw, 100vw"}
         loading={priority ? "eager" : "lazy"}
         fetchpriority={priority ? "high" : "auto"}
         decoding="async"

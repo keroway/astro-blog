@@ -29,8 +29,8 @@ backend:
 # main への反映は GitHub のブランチ保護・PR レビュー・CI で担保する。
 
 # メディアファイルのデフォルト保存先 (各フィールドで上書き可)
-media_folder: public/images
-public_folder: /images
+media_folder: src/assets/content
+public_folder: /src/assets/content
 
 # ──────────────────────────────────────────────────────
 # コレクション定義
@@ -89,8 +89,8 @@ collections:
         name: heroImage
         widget: image
         required: false
-        media_folder: /public/images/blog
-        public_folder: /images/blog
+        media_folder: /src/assets/content/blog
+        public_folder: /src/assets/content/blog
         hint: カードサムネイル。16:9 の画像を推奨。
 
       - label: カテゴリ
@@ -120,8 +120,8 @@ collections:
         name: ogImage
         widget: image
         required: false
-        media_folder: /public/images/blog
-        public_folder: /images/blog
+        media_folder: /src/assets/content/blog
+        public_folder: /src/assets/content/blog
         hint: SNS シェア時サムネイル。省略時はタイトルから自動生成 (1200×630)。
 
       - label: 著者
@@ -139,8 +139,8 @@ collections:
       - label: 本文
         name: body
         widget: markdown
-        media_folder: /public/images/blog
-        public_folder: /images/blog
+        media_folder: /src/assets/content/blog
+        public_folder: /src/assets/content/blog
 
   # ────────────────────────────────
   # Works
@@ -220,8 +220,8 @@ collections:
         name: heroImage
         widget: image
         required: false
-        media_folder: /public/images/works
-        public_folder: /images/works
+        media_folder: /src/assets/content/works
+        public_folder: /src/assets/content/works
         hint: プロジェクトカードサムネイル（16:9 推奨）。
 
       - label: 注目プロジェクト
@@ -233,5 +233,5 @@ collections:
       - label: 本文
         name: body
         widget: markdown
-        media_folder: /public/images/works
-        public_folder: /images/works
+        media_folder: /src/assets/content/works
+        public_folder: /src/assets/content/works

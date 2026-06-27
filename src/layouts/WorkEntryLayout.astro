@@ -1,6 +1,8 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { getImage } from "astro:assets";
 import SiteLayout from "./SiteLayout.astro";
+import ContentPicture from "../components/ContentPicture.astro";
 
 type Props = CollectionEntry<"works">["data"];
 
@@ -31,15 +33,26 @@ const workSchema: Record<string, unknown> = {
 if (updatedAt) {
   workSchema.dateModified = updatedAt.toISOString();
 }
+const heroImageSrc = heroImage
+  ? heroImage.format === "svg"
+    ? heroImage.src
+    : (await getImage({ src: heroImage, width: 1200, format: "png" })).src
+  : undefined;
+const heroImageAbsolute = heroImageSrc
+  ? (Astro.site ? new URL(heroImageSrc, Astro.site).toString() : heroImageSrc)
+  : undefined;
 if (repoUrl) {
   workSchema.codeRepository = repoUrl;
+}
+if (heroImageAbsolute) {
+  workSchema.image = heroImageAbsolute;
 }
 ---
 
 <SiteLayout
   title={`${title} | Works`}
   description={description}
-  image={heroImage ?? "/blog-placeholder-100.png"}
+  image={heroImageSrc}
   mainClass="work-layout"
   articleSchema={workSchema}
 >
@@ -92,7 +105,15 @@ if (repoUrl) {
     {heroImage && (
       <figure class="work-entry__hero">
         {/* hero は LCP 候補。eager + fetchpriority="high" (#396) */}
-        <img src={heroImage} alt={title} loading="eager" fetchpriority="high" decoding="async" />
+        <ContentPicture
+          src={heroImage}
+          alt={title}
+          widths={[640, 960, 1280, 1600]}
+          sizes="(min-width: 901px) 1120px, 100vw"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
       </figure>
     )}
 

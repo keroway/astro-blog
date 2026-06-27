@@ -38,6 +38,7 @@
     "pagefind": "^1.5.2",
     "portless": "^0.14.0",
     "satori": "^0.26.0",
+    "sharp": "^0.35.2",
     "sirv": "^3.0.0",
     "typescript": "^6.0.0",
     "unocss": "^66.7.3",
