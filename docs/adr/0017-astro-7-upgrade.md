@@ -1,10 +1,10 @@
 # 0017 — Astro 7 へのメジャーアップグレード
 
-- **ステータス**: Proposed
+- **ステータス**: Accepted
 - **決定日**: 2026-06-26
 - **決定者**: @keroway
 - **関連 Issue**: [#408 Astro 7 へのメジャーアップグレードを実施する（ブロッカー解消済み）](https://github.com/keroway/astro-blog/issues/408)
-- **関連 PR**: 後続の実装 PR で参照する
+- **実装 PR**: #424
 - **関連 ADR**: 0015（Pagefind 検索基盤）、0016（CMS Sveltia 移行）、0003/0005（SSG レンダリング戦略）、0013（Web フォント自己ホスト）
 
 ---
@@ -83,6 +83,19 @@ Astro **7.0.3** が latest（現状 `astro@^6.4.8` / installed 6.4.8）。当初
 ### 候補 C — `--force` / override で Astro 7 を無理通しする
 
 **却下理由:** そもそもブロッカーが解消済みで無理通しは不要。かつ「破壊的変更を黙って進めない」方針（ADR 0016 でも踏襲）に反する。
+
+---
+
+## 実装で判明した知見（2026-06-26）
+
+- **Vite 8 は rolldown へ移行済み**: `rollup` は依存ツリーから消滅した。`pnpm-workspace.yaml` の `rollup@<4.59.0` override を削除。`rolldown@1.1.3` が bundles in 。
+- **`@astrojs/vercel` は devDependencies に移動**: `output: "static"` の SSG では adapter は build 時のみ使用。devDependencies のままで正しい動作を確認した。
+- **`@astrojs/markdown-remark` peer**: pnpm install で未解決 peer 警告なし。暗黙解決されている。
+- **`vite.build.rollupOptions.external`**: Vite 8 (rolldown) でも引き続き機能する。`/pagefind/pagefind.js` の external 設定は変更不要。
+- **pagefind インライン統合**: `astro:build:done` / `astro:server:setup` / `astro:config:setup` フックは Astro 7 でも引き続き動作。内補 インデックス 98 ページ。
+- **sitemap / rss / check**: 事前検証通り詳細ビルドで問題なし。
+- **Playwright E2E**: クローム系全件通過。Firefox はバイナリ未インストール（Astro アップグレード内容と無関係）。
+  - `/ has no axe violations` テストは Astro 7 (Vite 8) の依存最適化リロード競合が原因で退行。`page.goto("/", { waitUntil: "networkidle" })` で修正。
 
 ---
 
