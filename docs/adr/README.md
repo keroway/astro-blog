@@ -9,7 +9,7 @@
 | 番号 | カテゴリ | ファイル | ステータス |
 |------|----------|---------|-----------|
 | 0001 | CSS フレームワーク | [0001-css-framework.md](./0001-css-framework.md) | Proposed |
-| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Accepted (一部 0009 / 0010 で改定。0016 で移行検討中) |
+| 0002 | CMS / コンテンツ管理 | [0002-cms.md](./0002-cms.md) | Accepted (一部 0009 / 0010 で改定。CMS ツール選定は 0016 で Sveltia へ移行・supersede 済み) |
 | 0003 | レンダリング戦略 | [0003-rendering-strategy.md](./0003-rendering-strategy.md) | Superseded by 0005 |
 | 0004 | メディア管理 | [0004-media-storage.md](./0004-media-storage.md) | Accepted |
 | 0005 | Keystatic admin ランタイム | [0005-keystatic-admin-runtime.md](./0005-keystatic-admin-runtime.md) | Deprecated (Superseded by 0016) |
@@ -22,7 +22,7 @@
 | 0012 | Tokaido Field Notes の視覚刷新 | [0012-tokaido-field-notes-refresh.md](./0012-tokaido-field-notes-refresh.md) | Accepted |
 | 0013 | Web フォント自己ホスト化 | [0013-web-fonts-self-hosting.md](./0013-web-fonts-self-hosting.md) | Accepted |
 | 0014 | Keystatic 管理 UI の Google Fonts 参照除去 | [0014-keystatic-google-fonts-removal.md](./0014-keystatic-google-fonts-removal.md) | Accepted |
-| 0015 | 全文検索基盤 (Pagefind) | [0015-pagefind-search-platform.md](./0015-pagefind-search-platform.md) | Proposed |
+| 0015 | 全文検索基盤 (Pagefind) | [0015-pagefind-search-platform.md](./0015-pagefind-search-platform.md) | Accepted |
 | 0016 | CMS を Keystatic から Sveltia へ移行 | [0016-cms-keystatic-to-sveltia.md](./0016-cms-keystatic-to-sveltia.md) | Accepted |
 
 ## ADR の書き方
