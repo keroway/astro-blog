@@ -1,6 +1,6 @@
 # 0004 — メディア管理: リポジトリ管理（`public/images/`）継続
 
-- **ステータス**: Accepted
+- **ステータス**: Accepted（保存先の一部は #410 の決定で上書き予定 — 下記「2026-06-26 追記」参照）
 - **決定日**: 2026-05-18
 - **決定者**: @keroway
 - **関連 Issue**: [#97 画像配信戦略の比較表を作成し ADR を起票する](https://github.com/keroway/astro-blog/issues/97), [#33 画像・メディアストレージ戦略の決定](https://github.com/keroway/astro-blog/issues/33)
@@ -8,6 +8,15 @@
 - **後続 Issue**: [#98 既存 public/images/* の移行または維持を実行する](https://github.com/keroway/astro-blog/issues/98)
 
 ---
+
+> **2026-06-26 追記（方針 update）**:
+> 本 ADR の「`public/images/` に生ファイルをリポジトリ管理し `<img src>` で参照」という運用は、
+> **[#410](https://github.com/keroway/astro-blog/issues/410)（astro:assets 本格移行）の決定で一部上書き**される。
+> コンテンツ画像は `src/assets/` へ集約し `image()` ヘルパ + `<Image>`/`<Picture>` で配信し、
+> CMS（Sveltia / ADR 0016）の `media_folder` も `src/assets` 系へ向ける。
+> 本 ADR の「リポジトリ内保存・外部ストレージ不要」という根幹は維持（全体コスト・ベンダーロックイン回避）。
+> 変わるのは**保存場所（`public/` → `src/assets/`）と参照方式（`<img>` → astro:assets）のみ**。
+> 詳細・選定は #410 の新規 ADR で記録し、本 ADR はその時点で Superseded/改定とする。
 
 ## コンテキスト
 
