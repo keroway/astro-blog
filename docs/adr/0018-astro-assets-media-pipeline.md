@@ -158,6 +158,35 @@ Sveltia の `media_folder` はリポジトリ内保存先、`public_folder` は 
 
 ---
 
+## Markdown 本文画像の取り扱い（#427）
+
+**決定（2026-06-27）**: Markdown 本文中の画像 12 件（1.8 MB）は `public/` 維持とし、astro:assets 最適化の対象外とする。
+
+### 背景
+
+# 426 で hero / card の astro:assets 移行が完了した。一方、Markdown 本文中には `![](/9OnF3a4.jpg)` のような public URL 参照が 12 件残っている（`arduino-rgb-led.mdoc`, `cloud9-php.mdoc`, `dwitter.mdoc`, `go.mdoc`）。これらは本文図版であり、hero ほど重要度が高くない。
+
+Astro は `![](../../assets/xxx.png)` のような **相対パス** で `src/` 配下の画像を参照すれば自動最適化（WebP/AVIF、`srcset`）が効くが、本文画像を移行すると以下の問題がある:
+
+- 記事深さで相対パス階層が変わり、管理・レビューが複雑化する
+- Sveltia CMS の body 画像挿入設定が煩雑になる
+- colocated assets 方式は既存フラット構成への影響が大きく、#410 目的（hero/card 最適化）に対して過剰
+
+### 決定内容
+
+- **本文画像 12 件は `public/` に維持**: 最適化なしだが、本文画像は hero ほどの重要度・ファイルサイズを持たない。将来的に段階移行を検討するが、優先度は低い（priority:low）。
+- **orphan SVG 削除**: `public/images/works/` に残っていた SVG 4 件（`ramen-timer.svg`, `timeline-dsl.svg`, `reflectorbit.svg`, `project-hail-mary.svg`）は PNG 版に置き換え済みで本文・hero ともに参照なし。完全な orphan として削除する（#427）。
+- **将来的な移行**: Markdown 本文画像が増加し、重要度・ファイルサイズが hero に匹敵するようになった場合、相対パス方式または colocated assets 方式への移行を検討する。その際は新規 ADR または本 ADR の改訂で判断する。
+
+### 検証 (#427)
+
+- [x] 本文画像 12 件が `public/` に存在し、リンク切れがない
+- [x] orphan SVG 4 件が hero / 本文の両方で参照されていない
+- [x] orphan SVG 削除後も `pnpm run build` が green
+- [x] #427 を close し、本文画像は段階移行として残すことを記録
+
+---
+
 ## Revisit When
 
 - `src/assets/content/` 配下の画像が 100 MB を超え、Git clone / CI build の遅延が顕著になったとき。
