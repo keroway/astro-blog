@@ -12,11 +12,11 @@
     <!-- robots: admin は検索インデックス不要 (vercel.json の X-Robots-Tag と二重防衛) -->
     <meta name="robots" content="noindex, nofollow" />
     <title>keroway CMS</title>
-    <script type="module">
-      import CMS from "https://unpkg.com/@sveltia/cms/dist/sveltia-cms.mjs";
-      import YAML from "https://esm.sh/js-yaml@4.1.0";
+    <script>
+      import CMS from "@sveltia/cms";
+      import { parse, stringify } from "yaml";
 
-      const normalizeDates = (value) => {
+      const normalizeDates = (value: any): any => {
         if (value instanceof Date) {
           return value.toISOString().slice(0, 10);
         }
@@ -37,7 +37,7 @@
         return value;
       };
 
-      const splitFrontmatter = (text) => {
+      const splitFrontmatter = (text: string) => {
         const normalized = text.replace(/^\uFEFF/, "");
 
         if (!normalized.startsWith("---\n")) {
@@ -54,7 +54,7 @@
         const bodyStart = normalized.startsWith("\n", end + 4) ? end + 5 : end + 4;
 
         return {
-          frontmatter: normalizeDates(YAML.load(frontmatterText) ?? {}),
+          frontmatter: normalizeDates(parse(frontmatterText) ?? {}),
           body: normalized.slice(bodyStart),
         };
       };
@@ -67,10 +67,9 @@
         },
         toFile: (data) => {
           const { body = "", ...frontmatter } = normalizeDates(data ?? {});
-          const yaml = YAML.dump(frontmatter, {
+          const yaml = stringify(frontmatter, {
             lineWidth: 100,
-            noRefs: true,
-            sortKeys: false,
+            sortMapEntries: false,
           }).trim();
 
           return `---\n${yaml}\n---\n\n${body}`;
@@ -78,10 +77,10 @@
       });
 
       const response = await fetch("/admin/config.yml");
-      const config = YAML.load(await response.text());
+      const config = parse(await response.text());
 
       config.load_config_file = false;
-      config.collections = config.collections.map((collection) =>
+      config.collections = config.collections.map((collection: any) =>
         ["blog", "works"].includes(collection.name)
           ? { ...collection, format: "mdoc" }
           : collection,

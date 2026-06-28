@@ -53,6 +53,9 @@ importers:
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
+      '@sveltia/cms':
+        specifier: ^0.168.0
+        version: 0.168.0
       '@unocss/astro':
         specifier: ^66.7.3
         version: 66.7.3(vite@8.1.0(@types/node@24.12.4)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -83,6 +86,9 @@ importers:
       vitest:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@24.12.4)(vite@8.1.0(@types/node@24.12.4)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
+      yaml:
+        specifier: ^2.9.0
+        version: 2.9.0
 
 packages:
 
@@ -1417,6 +1423,9 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  '@sveltia/cms@0.168.0':
+    resolution: {integrity: sha512-8ADEu9dpveL403BibDWlxnkXzLbIUNAdktQ3aXZx+3l45g5KP0g//Q/udkQHlYnltXGuG3UUbwHJ5viLBd2lvA==}
 
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
@@ -4448,6 +4457,8 @@ snapshots:
   '@stablelib/base64@1.0.1': {}
 
   '@standard-schema/spec@1.1.0': {}
+
+  '@sveltia/cms@0.168.0': {}
 
   '@tybys/wasm-util@0.10.2':
     dependencies:
