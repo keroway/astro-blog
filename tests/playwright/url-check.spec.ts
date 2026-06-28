@@ -84,14 +84,9 @@ test.describe("URL compatibility check", () => {
   test("/api/trigger-build returns 401 when CRON_SECRET is set and token is wrong", async ({
     request,
   }) => {
-    // CRON_SECRET が設定されている場合のみ認証チェックが走る。
-    // ローカル dev / CI では CRON_SECRET が未設定なため、このテストは
-    // 「CRON_SECRET が設定されたときに不正トークンで 401 が返る」動作を
-    // 条件付きで確認する。CI で有効化するには test ジョブに
-    // CRON_SECRET を渡す (plans/003 Maintenance notes 参照)。
-    const cronSecret = process.env.CRON_SECRET;
-    test.skip(!cronSecret, "CRON_SECRET not set — skipping auth check");
-
+    // CI では CRON_SECRET が設定されているため、このテストが必ず走る。
+    // ローカル dev では CRON_SECRET が未設定なので、この spec だけ
+    // CI: CRON_SECRET=ci-test-secret で上書きして認証チェックを確認する。
     const res = await request.get("/api/trigger-build", {
       headers: { Authorization: "Bearer wrongtoken" },
     });
