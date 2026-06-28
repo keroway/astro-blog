@@ -49,13 +49,13 @@ const title = page.currentPage === 1
 
 // SEO: ページ 2 以降は noindex にして正規ページ (/blog/) へ向ける
 const isFirstPage = page.currentPage === 1;
+const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).href;
 ---
 
-<SiteLayout title={title} description={SITE_DESCRIPTION} mainClass="blog-index">
+<SiteLayout title={title} description={SITE_DESCRIPTION} mainClass="blog-index" canonicalUrl={canonicalUrl}>
   {!isFirstPage && (
     <Fragment slot="head">
       <meta name="robots" content="noindex, follow" />
-      <link rel="canonical" href={new URL('/blog/', Astro.site).href} />
     </Fragment>
   )}
   {page.url.prev && <link rel="prev" href={page.url.prev} slot="head" />}
