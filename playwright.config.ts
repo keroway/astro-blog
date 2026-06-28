@@ -12,7 +12,10 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: `npx astro dev --host ${HOST} --port ${PORT}`,
+    command:
+      `CRON_SECRET="${process.env.CRON_SECRET ?? ""}" ` +
+      `VERCEL_DEPLOY_HOOK_URL="${process.env.VERCEL_DEPLOY_HOOK_URL ?? "https://example.com/dummy-deploy-hook"}" ` +
+      `npx astro dev --host ${HOST} --port ${PORT}`,
     url: `http://${HOST}:${PORT}`,
     timeout: 120_000,
     reuseExistingServer: !process.env.CI,
