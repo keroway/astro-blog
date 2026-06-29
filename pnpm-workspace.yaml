@@ -38,6 +38,7 @@ overrides:
   "tar@<7.5.16": ">=7.5.16 <8"
   # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core 由来分は削除済みだが、
   # Astro 7 で @astrojs/internal-helpers 経由で引き続きツリーに存在するため維持。
+  # admin.astro は js-yaml を使わず yaml パッケージ (直接依存) を使用している。
   "js-yaml@>=4.0.0 <4.2.0": ">=4.2.0 <5"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
