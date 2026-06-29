@@ -191,10 +191,6 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium firefox
 
       - name: Run Playwright tests
-        # CRON_SECRET はダミー値。CI で /api/trigger-build の未認証パス (401) だけを検証する。
-        # 本番デプロイフック (VERCEL_DEPLOY_HOOK_URL) は呼び出さない。
-        env:
-          CRON_SECRET: ci-test-secret
         run: pnpm exec playwright test
         env:
           CRON_SECRET: ci-test-secret
