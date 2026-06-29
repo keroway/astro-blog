@@ -1,6 +1,6 @@
 # keroway.com
 
-![Astro](https://img.shields.io/badge/Astro-6-BC52EE?logo=astro&logoColor=white)
+![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
 ![UnoCSS](https://img.shields.io/badge/UnoCSS-66x-333333?logo=unocss&logoColor=white)
 ![SveltiaCMS](https://img.shields.io/badge/Sveltia-Git%20CMS-4B3FCA?logoColor=white)
@@ -9,7 +9,7 @@
 ![Node](https://img.shields.io/badge/Node-%E2%89%A522.12-339933?logo=nodedotjs&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-deploy-000000?logo=vercel&logoColor=white)
 
-エンジニア keroway のポートフォリオ・技術ブログです。Astro 6 をベースに、制作物紹介（Works）とブログ記事を一元管理するポートフォリオサイトを構築しています。コンテンツの編集は Git ベースの CMS（Sveltia CMS）から行え、main への PR マージで Vercel に自動デプロイされます。
+エンジニア keroway のポートフォリオ・技術ブログです。Astro 7 をベースに、制作物紹介（Works）とブログ記事を一元管理するポートフォリオサイトを構築しています。コンテンツの編集は Git ベースの CMS（Sveltia CMS）から行え、main への PR マージで Vercel に自動デプロイされます。
 
 ## 主な特徴
 
@@ -17,7 +17,7 @@
 - 日本語を含む記事スラッグを自動 URL エンコードして、Vercel などのホスティングでも安全に配信
 - 16:9 のサムネイル比率で統一したレスポンシブなカードグリッド表示とホバーインタラクション
 - Astro Content Collections による Markdown/Markdoc 記事管理と型チェック
-- [Sveltia CMS](https://sveltiacms.app/) による Git ベースの管理（CMS）UI（CDN 配信の静的 SPA、Astro バージョンに非依存）
+- [Sveltia CMS](https://sveltiacms.app/) による Git ベースの管理（CMS）UI（`@sveltia/cms` npm パッケージからバンドルしたクライアントサイド SPA）
 - RSS フィードとサイトマップを自動生成
 - `SiteLayout` レイアウトでページ共通のメタデータ・ナビゲーションを一元管理し、アクセシビリティと reduced motion を考慮した UI
 - UnoCSS + コンポーネントスコープの純 CSS で構成（CSS-in-JS 不使用）
@@ -26,9 +26,9 @@
 
 | 領域 | 採用技術 |
 |------|---------|
-| フレームワーク | [Astro 6](https://astro.build/) + TypeScript（strict モード有効） |
+| フレームワーク | [Astro 7](https://astro.build/) + TypeScript（strict モード有効） |
 | コンテンツ | Astro Content Collections（Markdown/Markdoc）、[@astrojs/markdoc](https://docs.astro.build/en/guides/integrations-guide/markdoc/) |
-| CMS | [Sveltia CMS](https://sveltiacms.app/)（`src/pages/admin.astro` + `public/admin/config.yml` に配置される CDN 配信の静的 SPA、Astro 非依存 / ADR 0016） |
+| CMS | [Sveltia CMS](https://sveltiacms.app/)（`src/pages/admin.astro` + `public/admin/config.yml` 。`@sveltia/cms` を npm からバンドルしたクライアントサイド SPA / ADR 0016） |
 | スタイル | [UnoCSS](https://unocss.dev/) + コンポーネントスコープの純 CSS |
 | 配信補助 | [@astrojs/rss](https://docs.astro.build/en/guides/rss/)（RSS）、[@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)（XML サイトマップ） |
 | 画像最適化 | [astro:assets](https://docs.astro.build/en/guides/images/)（自動フォーマット変換・リサイズ） |
@@ -118,7 +118,7 @@ flowchart TD
 
 ## 管理（CMS）: Sveltia CMS
 
-コンテンツは [Sveltia CMS](https://sveltiacms.app/)（Git ベース CMS）で編集できます。CDN 配信の静的 SPA（`src/pages/admin.astro` + `public/admin/config.yml`）で Astro バージョンに依存しないため、Astro メジャーアップを妨害しません（ADR 0016）。
+コンテンツは [Sveltia CMS](https://sveltiacms.app/)（Git ベース CMS）で編集できます。`@sveltia/cms` npm パッケージから Astro によってバンドルされるクライアントサイド SPA（`src/pages/admin.astro` + `public/admin/config.yml`）です（ADR 0016）。
 
 ### 対象コレクション
 
@@ -228,7 +228,7 @@ pnpm audit --registry=https://registry.npmjs.org/
 
 #### 現在の監査ステータス
 
-直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-05-08 時点)。Astro が transitive 依存に持つ `rollup` `picomatch` `yaml` `postcss` は `pnpm-workspace.yaml` の `overrides` でパッチ済みバージョンへ強制解決しています (pnpm 11 で `package.json#pnpm` から移設)。upstream で対応版がリリースされたら overrides を順次削除してください。
+直近の監査では HIGH 以上の脆弱性は **0 件** です (2026-06-29 時点)。Astro が transitive 依存に持つ `picomatch` `yaml` `postcss` `esbuild` `path-to-regexp` `tar` `js-yaml` は `pnpm-workspace.yaml` の `overrides` でパッチ済みバージョンへ強制解決しています（pnpm 11 で `package.json#pnpm` から移設）。upstream で対応版がリリースされたら overrides を順次削除してください。
 
 ## テンプレートについて
 
