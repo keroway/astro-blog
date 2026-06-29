@@ -91,6 +91,10 @@ test.describe("URL compatibility check", () => {
       headers: { Authorization: "Bearer wrongtoken" },
     });
     expect(res.status(), "wrong token should return 401").toBe(401);
+
+    // Bearer ヘッダーなし → 401
+    const missing = await request.get("/api/trigger-build");
+    expect(missing.status(), "missing token should return 401").toBe(401);
   });
 
   test("og:image meta tags include width/height/alt", async ({ page }) => {
