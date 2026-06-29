@@ -31,7 +31,7 @@
     "@biomejs/biome": "^2.5.0",
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@markdoc/markdoc": "0.5.7",
-    "@playwright/test": "^1.61.0",
+    "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",
     "@sveltia/cms": "^0.168.0",
     "@unocss/astro": "^66.7.3",
