@@ -1,6 +1,6 @@
 # Sveltia CMS 設定 (ADR 0016)
-# Decap CMS 互換フォーマット。Sveltia CMS は src/pages/admin.astro から
-# CDN ロードされる静的 SPA。Astro に依存しないためバージョンロックが発生しない。
+# Decap CMS 互換フォーマット。Sveltia CMS は src/pages/admin.astro で @sveltia/cms npm パッケージから
+# バンドルされる静的 SPA (ADR 0016 / Plan 001)。Astro に依存しないためバージョンロックが発生しない。
 #
 # ────────────────────────────────────────
 # 認証 (本番)
