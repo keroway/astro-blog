@@ -9,40 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
-
-// audit-blog.ts の正規カテゴリ集合 + 実際に使用されているカテゴリを統合
-const CANONICAL_CATEGORIES = [
-  "Arduino",
-  "BeautifulSoup",
-  "Clojure",
-  "Cloud",
-  "Elixir",
-  "GAE",
-  "Go",
-  "High Sierra",
-  "HumbleBundle",
-  "JavaScript",
-  "Kotlin",
-  "Maker Faire Tokyo",
-  "Markdown",
-  "Mastodon",
-  "Mozilla",
-  "PHP",
-  "Python",
-  "REPL",
-  "RaspberryPi",
-  "Rust",
-  "Scratch",
-  "Solr",
-  "StackEdit",
-  "Xamarin",
-  "nerodia",
-  "nginx",
-  "unity",
-  "半田",
-  "読書",
-  "電子書籍",
-] as const;
+import { BLOG_CATEGORIES } from "../src/lib/content-schema";
 
 type Frontmatter = {
   title?: string;
@@ -95,8 +62,9 @@ const SCHEMA = {
     },
     category: {
       type: "string",
-      enum: [...CANONICAL_CATEGORIES],
-      description: "正規カテゴリ集合から最も適切なもの",
+      enum: [...BLOG_CATEGORIES],
+      description:
+        "サイトのカテゴリ（dev / hardware / tools / reading / event）から最も適切なもの",
     },
     category_note: {
       type: "string",
@@ -153,8 +121,8 @@ ${bodyPreview}
 上記の記事について、frontmatter フィールドの改善候補を提案してください。
 ${missingFields.length > 0 ? `欠落フィールド（必須提案）: ${missingFields.join(", ")}` : "すべてのフィールドが設定済みです。より良い候補があれば提案してください。"}
 
-category は必ず以下の正規リストから選んでください:
-${CANONICAL_CATEGORIES.join(", ")}
+category は必ず以下のサイトカテゴリから選んでください:
+${BLOG_CATEGORIES.join(", ")}
 
 リストに完全に合うものがなければ最も近いものを選び、category_note でその旨を記してください。`;
 

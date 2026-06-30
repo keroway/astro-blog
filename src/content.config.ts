@@ -1,6 +1,7 @@
 import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
 import { z } from "astro/zod";
+import { BLOG_CATEGORIES, WORKS_STATUSES } from "./lib/content-schema";
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdoc}", base: "./src/content/blog" }),
@@ -11,9 +12,7 @@ const blog = defineCollection({
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: image().optional(),
-      category: z
-        .enum(["dev", "hardware", "tools", "reading", "event"])
-        .optional(),
+      category: z.enum(BLOG_CATEGORIES).optional(),
       tags: z.array(z.string()).optional(),
       draft: z.boolean().default(false),
       ogImage: z.string().optional(),
@@ -28,7 +27,7 @@ const works = defineCollection({
     z.object({
       title: z.string(),
       description: z.string(),
-      status: z.enum(["active", "archived", "wip"]),
+      status: z.enum(WORKS_STATUSES),
       heroImage: image().optional(),
       repoUrl: z.url().optional(),
       lpUrl: z.url(),
