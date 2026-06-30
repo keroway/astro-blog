@@ -35,7 +35,7 @@
 | ページ遷移 | [View Transitions](https://docs.astro.build/en/guides/view-transitions/) |
 | テスト / Lint | [Playwright](https://playwright.dev/)（E2E）、[Biome](https://biomejs.dev/)（lint / format） |
 | パッケージ管理 | pnpm 11.1.3（`package.json` の `packageManager` 参照、サプライチェーン保護有効化） |
-| ランタイム | Node.js >= 22.12.0（Astro 6 の要件、偶数 LTS） |
+| ランタイム | Node.js >= 22.12.0（Astro 7 の要件、偶数 LTS） |
 | デプロイ | [Vercel](https://vercel.com/)（`@astrojs/vercel` adapter、静的生成 + `/api/trigger-build` のみ on-demand） |
 
 バージョンは常に `package.json` を一次ソースとします。
