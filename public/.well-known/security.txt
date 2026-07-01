@@ -1,0 +1,5 @@
+Contact: https://github.com/keroway
+Contact: https://twitter.com/keroway21
+Expires: 2027-07-01T00:00:00.000Z
+Preferred-Languages: ja, en
+Canonical: https://keroway.com/.well-known/security.txt
