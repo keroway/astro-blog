@@ -4,7 +4,7 @@ import Monogram from './Monogram.astro';
 
 <footer class="kw-footer" role="contentinfo">
   <div class="kw-footer__left">
-    <p class="kw-footer__eyebrow">colophon</p>
+    <a href="/colophon" class="kw-footer__eyebrow kw-footer__eyebrow-link">colophon</a>
     <h2 class="kw-footer__head">
       <span class="kw-footer__head-alt">連絡</span>、待っています。
     </h2>
@@ -50,6 +50,7 @@ import Monogram from './Monogram.astro';
   }
 
   .kw-footer__eyebrow {
+    display: block;
     font-family: var(--kw-font-mono);
     font-size: var(--kw-fs-mono-xs);
     text-transform: uppercase;
@@ -57,6 +58,16 @@ import Monogram from './Monogram.astro';
     color: var(--kw-fg-link);
     margin: 0 0 var(--kw-space-3);
     text-indent: 0;
+  }
+  .kw-footer__eyebrow-link {
+    text-decoration: none;
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .kw-footer__eyebrow-link:hover,
+  .kw-footer__eyebrow-link:focus-visible {
+    border-bottom-color: var(--kw-fg-link);
   }
 
   .kw-footer__head {
