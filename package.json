@@ -17,6 +17,9 @@
     "suggest-frontmatter": "node --experimental-strip-types scripts/suggest-frontmatter.ts",
     "suggest-alt": "node --experimental-strip-types scripts/suggest-alt.ts",
     "new-post": "node --experimental-strip-types scripts/new-post.ts",
+    "test:e2e": "CRON_SECRET=ci-test-secret playwright test",
+    "test:lighthouse": "npx --yes @lhci/cli@0.14 autorun",
+    "test:links": "lychee --no-progress --include-fragments --root-dir dist/client --fallback-extensions html 'dist/client/**/*.html'",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest"
   },
