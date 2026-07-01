@@ -128,7 +128,7 @@ if (heroImageAbsolute) {
           <TableOfContents headings={headings} />
         </div>
       )}
-      <div class="post__content" data-pagefind-body>
+      <div class="post__content" data-pagefind-body id="post-content">
         <slot />
       </div>
 
@@ -145,6 +145,28 @@ if (heroImageAbsolute) {
     )}
   </div>
 </SiteLayout>
+
+<script>
+  // 見出しに permalink アンカーリンクを付与する (issue #446)。
+  // rehype-slug 等を導入せず、既存の headings (id 付与済み) を利用したプログレッシブエンハンスメント。
+  const addHeadingAnchors = () => {
+    const content = document.getElementById('post-content');
+    if (!content) return;
+    const headings = content.querySelectorAll<HTMLHeadingElement>('h2[id], h3[id], h4[id]');
+    headings.forEach((heading) => {
+      if (heading.querySelector('.heading-anchor')) return;
+      const anchor = document.createElement('a');
+      anchor.className = 'heading-anchor';
+      anchor.href = `#${heading.id}`;
+      anchor.setAttribute('aria-label', `「${heading.textContent ?? ''}」への直接リンク`);
+      anchor.textContent = '#';
+      heading.appendChild(anchor);
+    });
+  };
+
+  addHeadingAnchors();
+  document.addEventListener('astro:page-load', addHeadingAnchors);
+</script>
 
 <style>
   .post-layout {
@@ -256,6 +278,38 @@ if (heroImageAbsolute) {
   }
   .post__content :global(:where(* + *)) {
     margin-block-start: clamp(var(--kw-space-6), 3vw, var(--kw-space-10));
+  }
+  .post__content :global(h2),
+  .post__content :global(h3),
+  .post__content :global(h4) {
+    position: relative;
+  }
+  .post__content :global(.heading-anchor) {
+    position: absolute;
+    inset-inline-start: -1.2em;
+    color: var(--kw-fg-muted);
+    text-decoration: none;
+    font-family: var(--kw-font-mono);
+    opacity: 0;
+    transition: opacity var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post__content :global(h2:hover .heading-anchor),
+  .post__content :global(h3:hover .heading-anchor),
+  .post__content :global(h4:hover .heading-anchor),
+  .post__content :global(.heading-anchor:focus-visible) {
+    opacity: 1;
+  }
+  .post__content :global(.heading-anchor:focus-visible) {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 2px;
+  }
+  @media (max-width: 720px) {
+    .post__content :global(.heading-anchor) {
+      position: static;
+      display: inline-block;
+      margin-inline-start: var(--kw-space-2);
+      opacity: 1;
+    }
   }
 
   @media (min-width: 901px) {
