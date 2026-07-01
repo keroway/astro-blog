@@ -50,6 +50,7 @@ test.describe("SEO: JSON-LD structured data", () => {
     const types = parsed.map((p) => p["@type"]);
     expect(types).toContain("Person");
     expect(types).toContain("WebSite");
+    expect(types).toContain("BreadcrumbList");
     expect(types).toContain("BlogPosting");
     const post = parsed.find((p) => p["@type"] === "BlogPosting");
     expect(post.headline).toBeTruthy();
