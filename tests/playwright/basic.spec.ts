@@ -44,10 +44,11 @@ test.describe("SEO: JSON-LD structured data", () => {
     await page.goto(postHref);
 
     const ldJson = page.locator('script[type="application/ld+json"]');
-    await expect(ldJson).toHaveCount(2);
+    await expect(ldJson).toHaveCount(3);
     const payloads = await ldJson.allTextContents();
     const parsed = payloads.map((p) => JSON.parse(p));
     const types = parsed.map((p) => p["@type"]);
+    expect(types).toContain("Person");
     expect(types).toContain("WebSite");
     expect(types).toContain("BlogPosting");
     const post = parsed.find((p) => p["@type"] === "BlogPosting");
