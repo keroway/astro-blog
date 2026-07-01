@@ -47,6 +47,17 @@ if (repoUrl) {
 if (heroImageAbsolute) {
   workSchema.image = heroImageAbsolute;
 }
+
+const siteUrl = Astro.site ? new URL("/", Astro.site).toString() : `${Astro.url.origin}/`;
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+    { "@type": "ListItem", position: 2, name: "Works", item: new URL("/works/", siteUrl).toString() },
+    { "@type": "ListItem", position: 3, name: title, item: workUrl },
+  ],
+};
 ---
 
 <SiteLayout
@@ -55,6 +66,7 @@ if (heroImageAbsolute) {
   image={heroImageSrc}
   mainClass="work-layout"
   articleSchema={workSchema}
+  breadcrumbSchema={breadcrumbSchema}
 >
   <article class="work-entry">
     <header class="work-hero">
