@@ -15,6 +15,7 @@ interface Props {
   leftRail?: string;
   rightRail?: string;
   articleSchema?: Record<string, unknown>;
+  breadcrumbSchema?: Record<string, unknown>;
 }
 
 const {
@@ -28,6 +29,7 @@ const {
   leftRail = 'keroway.com · yokohama',
   rightRail = `Vol. ${SITE_VOLUME} · keroway portfolio`,
   articleSchema,
+  breadcrumbSchema,
 } = Astro.props;
 const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsWith('en') ? 'en_US' : lang.replace('-', '_'));
 ---
@@ -35,7 +37,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
 <!doctype html>
 <html lang={lang}>
   <head>
-    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} articleSchema={articleSchema} />
+    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema} />
     <slot name="head" />
   </head>
   <body>

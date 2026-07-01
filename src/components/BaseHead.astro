@@ -13,9 +13,10 @@ interface Props {
 	locale?: string;
 	canonicalUrl?: string;
 	articleSchema?: Record<string, unknown>;
+	breadcrumbSchema?: Record<string, unknown>;
 }
 
-const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl, articleSchema } = Astro.props;
+const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl, articleSchema, breadcrumbSchema } = Astro.props;
 const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pathname, Astro.site);
 const ogImageUrl = image ? new URL(image, Astro.url).toString() : null;
 const ogImageAlt = title || SITE_TITLE;
@@ -142,6 +143,9 @@ const websiteSchema = {
 <script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 {articleSchema && (
 	<script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+)}
+{breadcrumbSchema && (
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
 )}
 
 <!-- Vercel Web Analytics — cookie-less, injected via Vercel's edge path -->

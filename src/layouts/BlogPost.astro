@@ -75,9 +75,20 @@ if (updatedDate) {
 if (heroImageAbsolute) {
   articleSchema.image = heroImageAbsolute;
 }
+
+const siteUrl = Astro.site ? new URL("/", Astro.site).toString() : `${Astro.url.origin}/`;
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+    { "@type": "ListItem", position: 2, name: "Blog", item: new URL("/blog/", siteUrl).toString() },
+    { "@type": "ListItem", position: 3, name: title, item: postUrl },
+  ],
+};
 ---
 
-<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema}>
+<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema}>
   <div class="post-wrap">
     <article class="post">
       {heroImage && (
