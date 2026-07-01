@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
-import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
@@ -21,6 +21,14 @@ const ogImageUrl = image ? new URL(image, Astro.url).toString() : null;
 const ogImageAlt = title || SITE_TITLE;
 
 const siteUrl = Astro.site ? new URL("/", Astro.site).toString() : `${Astro.url.origin}/`;
+const personSchema = {
+	"@context": "https://schema.org",
+	"@type": "Person",
+	"@id": `${siteUrl}#person`,
+	name: SITE_AUTHOR,
+	url: siteUrl,
+	sameAs: ["https://twitter.com/keroway21", "https://github.com/keroway"],
+};
 const websiteSchema = {
 	"@context": "https://schema.org",
 	"@type": "WebSite",
@@ -28,6 +36,7 @@ const websiteSchema = {
 	description: SITE_DESCRIPTION,
 	url: siteUrl,
 	inLanguage: locale.replace("_", "-"),
+	author: { "@id": `${siteUrl}#person` },
 };
 ---
 
@@ -125,6 +134,7 @@ const websiteSchema = {
 )}
 
 <!-- Structured data (JSON-LD) -->
+<script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
 <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 {articleSchema && (
 	<script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
