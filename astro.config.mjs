@@ -147,6 +147,15 @@ export default defineConfig({
         // 生成するため、ビルド時点では存在しない。Rollup の静的解決対象から外す (#341)。
         external: ["/pagefind/pagefind.js"],
       },
+      // @sveltia/cms (src/pages/admin.astro) は単一の事前バンドル済み .mjs
+      // (node_modules/@sveltia/cms/dist/sveltia-cms.mjs, 未圧縮で約1.9MB) として
+      // 配布されており、Rollup が分割できるモジュール境界を持たない。/admin は
+      // noindex かつサイトマップ・robots.txt からも除外された管理画面専用ページで、
+      // 一般訪問者には配信されず Lighthouse 計測対象にも含まれないため、この1チャンクの
+      // みデフォルトの 500kB 警告閾値を超えることを許容する (#454)。
+      // 他ページのチャンクが肥大化した場合は引き続きこの閾値内で警告されるよう、
+      // 上限は現状のバンドルサイズ+余裕分に留める。
+      chunkSizeWarningLimit: 2200,
     },
   },
 });
