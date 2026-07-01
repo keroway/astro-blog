@@ -1,0 +1,100 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+
+// slashpages.net の /now 慣習に準拠した近況ページ。
+// 更新は手動。UPDATED_AT を更新のたびに書き換える (issue #450)。
+const UPDATED_AT = new Date('2026-07-01');
+
+const items = [
+  { label: '取り組み中', body: 'keroway.com のデザインシステム (北斎モチーフ配色) と a11y メニューの整備。' },
+  { label: '学習中', body: 'Astro 6 のビルド最適化とコード分割の実践。' },
+  { label: '興味', body: '組み込み〜クラウドを横断するプロダクト開発と、静的サイトのパフォーマンス改善。' },
+];
+---
+
+<SiteLayout
+  title="Now"
+  description="keroway が現在取り組んでいること、学習中のこと、興味のあることをまとめた近況ページ (/now)。"
+  mainClass="now-main"
+>
+  <section class="now-header" data-reveal>
+    <p class="kw-eyebrow now-header__eyebrow">now</p>
+    <h1 class="now-header__title">最近のこと</h1>
+    <p class="now-header__lead no-indent">
+      ブログよりも軽く、いま関心を持っていることをここに記録しています。
+      <a href="https://nownownow.com/about" target="_blank" rel="noopener noreferrer">/now ページ</a>
+      の慣習に沿った、不定期更新のページです。
+    </p>
+    <p class="kw-mono now-header__updated">
+      最終更新: <time datetime={UPDATED_AT.toISOString()}>{UPDATED_AT.toLocaleDateString('ja-JP')}</time>
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="now-list-heading" data-reveal>
+    <SectionHead jp="いま" en="currently" id="now-list-heading" />
+    <dl class="now-list">
+      {items.map((item) => (
+        <div class="now-list__row">
+          <dt class="kw-eyebrow-ja">{item.label}</dt>
+          <dd>{item.body}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+</SiteLayout>
+
+<style>
+  .now-main {
+    width: min(760px, 100%);
+  }
+  .now-header {
+    margin-bottom: var(--kw-space-16);
+    padding-bottom: var(--kw-space-8);
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .now-header__eyebrow {
+    margin-bottom: var(--kw-space-4);
+  }
+  .now-header__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-display-lg);
+    font-weight: var(--kw-fw-medium);
+    letter-spacing: var(--kw-ls-display);
+    color: var(--kw-fg-display);
+    margin: 0 0 var(--kw-space-4);
+  }
+  .now-header__lead {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-body-lg);
+    line-height: var(--kw-lh-prose);
+    max-width: 50ch;
+    margin: 0 0 var(--kw-space-4);
+  }
+  .now-header__updated {
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
+  }
+  .section {
+    margin-bottom: var(--kw-space-16);
+  }
+  .now-list {
+    display: grid;
+    gap: var(--kw-space-6);
+    margin: 0;
+  }
+  .now-list__row {
+    display: grid;
+    gap: var(--kw-space-2);
+    padding-block: var(--kw-space-4);
+    border-bottom: 1px solid var(--kw-rule-soft);
+  }
+  .now-list__row:last-child {
+    border-bottom: 0;
+  }
+  .now-list__row dd {
+    margin: 0;
+    color: var(--kw-fg);
+    line-height: var(--kw-lh-prose);
+  }
+</style>
