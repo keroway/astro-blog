@@ -1,0 +1,148 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import TimelineRow from '../components/TimelineRow.astro';
+
+// Footer の "colophon" eyebrow から遷移するページ (issue #449)。
+// デザイン意図・技術スタック・ビルド構成の背景を明文化する。
+
+const designNotes = [
+  { layer: '配色', note: '「神奈川デザインシステム」。北斎「神奈川沖浪裏」の藍・砂・朱を基調にした tokens.css のカラープリミティブ。' },
+  { layer: 'モチーフ', note: '松並木・富士の遠景・道筋 (東海道) など、拡張モチーフを CSS 変数として段階的に追加 (ADR 0007 / 0011 / 0012)。' },
+  { layer: 'タイポグラフィ', note: '見出しに Shippori Mincho、本文に BIZ UDPGothic、コードに JetBrains Mono。Astro Fonts API + Fontsource で自己ホスト (ADR 0013)。' },
+];
+
+const stack = [
+  { label: 'フレームワーク', value: 'Astro 6 (static output) + UnoCSS' },
+  { label: 'コンテンツ', value: 'Markdown / Markdoc, Astro Content Collections' },
+  { label: 'CMS', value: 'Sveltia CMS (CDN 配信の静的 SPA, ADR 0016)' },
+  { label: '検索', value: 'Pagefind (ビルド後に静的インデックスを生成)' },
+  { label: 'ホスティング', value: 'Vercel' },
+  { label: '静的解析 / Lint', value: 'Biome' },
+];
+
+const a11yNotes = [
+  '文字サイズ (標準 / 大 / 特大) の切り替え',
+  'テキスト間隔の拡張',
+  'リンクの下線常時表示',
+  'モーション低減 (OS 設定と手動設定の両方に対応)',
+];
+---
+
+<SiteLayout
+  title="Colophon"
+  description="keroway.com のデザインシステム、使用フォント、ビルド・ホスティング構成、a11y メニューの設計意図をまとめた colophon ページ。"
+  mainClass="colophon-main"
+>
+  <section class="colophon-header" data-reveal>
+    <p class="kw-eyebrow colophon-header__eyebrow">colophon</p>
+    <h1 class="colophon-header__title">このサイトについて</h1>
+    <p class="colophon-header__lead no-indent">
+      keroway.com のデザイン・技術的な背景をまとめています。差別化というより、
+      作り手としての判断の記録です。
+    </p>
+  </section>
+
+  <section class="section" aria-labelledby="design-heading" data-reveal>
+    <SectionHead jp="デザインの背景" en="design notes" id="design-heading" />
+    <div class="timeline">
+      {designNotes.map((item, i) => (
+        <TimelineRow
+          num={(i + 1).toString().padStart(2, '0')}
+          layer={item.layer}
+          note={item.note}
+        />
+      ))}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="stack-heading" data-reveal>
+    <SectionHead jp="ビルド・ホスティング構成" en="stack" id="stack-heading" />
+    <dl class="stack-list">
+      {stack.map((item) => (
+        <div class="stack-list__row">
+          <dt class="kw-eyebrow-ja">{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </section>
+
+  <section class="section" aria-labelledby="a11y-heading" data-reveal>
+    <SectionHead jp="アクセシビリティメニュー" en="a11y menu" id="a11y-heading" />
+    <p class="colophon-a11y-lead no-indent">
+      ヘッダーの a11y メニューから、以下を切り替えられます。設定は
+      <code>localStorage</code> に保存され、次回訪問時も維持されます。
+    </p>
+    <ul class="a11y-list">
+      {a11yNotes.map((note) => <li>{note}</li>)}
+    </ul>
+  </section>
+</SiteLayout>
+
+<style>
+  .colophon-main {
+    width: min(760px, 100%);
+  }
+  .colophon-header {
+    margin-bottom: var(--kw-space-16);
+    padding-bottom: var(--kw-space-8);
+    border-bottom: 1px solid var(--kw-rule);
+  }
+  .colophon-header__eyebrow {
+    margin-bottom: var(--kw-space-4);
+  }
+  .colophon-header__title {
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-display-lg);
+    font-weight: var(--kw-fw-medium);
+    letter-spacing: var(--kw-ls-display);
+    color: var(--kw-fg-display);
+    margin: 0 0 var(--kw-space-4);
+  }
+  .colophon-header__lead {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-body-lg);
+    line-height: var(--kw-lh-prose);
+    max-width: 50ch;
+    margin: 0;
+  }
+  .section {
+    margin-bottom: var(--kw-space-16);
+  }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+  }
+  .stack-list {
+    display: grid;
+    gap: var(--kw-space-5);
+    margin: 0;
+  }
+  .stack-list__row {
+    display: grid;
+    gap: var(--kw-space-1);
+    padding-block: var(--kw-space-3);
+    border-bottom: 1px solid var(--kw-rule-soft);
+  }
+  .stack-list__row:last-child {
+    border-bottom: 0;
+  }
+  .stack-list__row dd {
+    margin: 0;
+    color: var(--kw-fg);
+  }
+  .colophon-a11y-lead {
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-prose);
+    margin: 0 0 var(--kw-space-4);
+  }
+  .a11y-list {
+    display: grid;
+    gap: var(--kw-space-2);
+    margin: 0;
+    padding-inline-start: var(--kw-space-6);
+    color: var(--kw-fg);
+    line-height: var(--kw-lh-prose);
+  }
+</style>
