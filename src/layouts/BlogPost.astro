@@ -166,6 +166,56 @@ if (heroImageAbsolute) {
 
   addHeadingAnchors();
   document.addEventListener('astro:page-load', addHeadingAnchors);
+
+  // コードブロックにコピーボタンを付与する (issue #448)。JS 無効時はボタンは何も表示しないプログレッシブエンハンスメント。
+  const addCodeCopyButtons = () => {
+    const content = document.getElementById('post-content');
+    if (!content) return;
+    const blocks = content.querySelectorAll<HTMLPreElement>('pre');
+    blocks.forEach((pre) => {
+      if (pre.parentElement?.classList.contains('code-block')) return;
+      const code = pre.querySelector('code');
+      if (!code) return;
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block';
+      pre.replaceWith(wrapper);
+      wrapper.appendChild(pre);
+
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'code-block__copy';
+      button.setAttribute('aria-label', 'コードをコピー');
+      button.textContent = 'Copy';
+
+      const status = document.createElement('span');
+      status.className = 'code-block__status';
+      status.setAttribute('aria-live', 'polite');
+      status.setAttribute('role', 'status');
+
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code.textContent ?? '');
+        } catch {
+          return;
+        }
+        button.textContent = 'Copied';
+        status.textContent = 'コードをコピーしました';
+        button.disabled = true;
+        window.setTimeout(() => {
+          button.textContent = 'Copy';
+          status.textContent = '';
+          button.disabled = false;
+        }, 1500);
+      });
+
+      wrapper.appendChild(button);
+      wrapper.appendChild(status);
+    });
+  };
+
+  addCodeCopyButtons();
+  document.addEventListener('astro:page-load', addCodeCopyButtons);
 </script>
 
 <style>
@@ -270,6 +320,53 @@ if (heroImageAbsolute) {
   .post__content :global(pre) {
     overflow-x: auto;
     max-width: 100%;
+  }
+  .post__content :global(.code-block) {
+    position: relative;
+  }
+  .post__content :global(.code-block__copy) {
+    position: absolute;
+    top: var(--kw-space-2);
+    right: var(--kw-space-2);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    color: var(--kw-fg-muted);
+    background: var(--kw-bg-card);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-sm);
+    padding: var(--kw-space-1) var(--kw-space-3);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--kw-duration-fast) var(--kw-easing),
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      color var(--kw-duration-fast) var(--kw-easing);
+  }
+  .post__content :global(.code-block:hover .code-block__copy),
+  .post__content :global(.code-block__copy:focus-visible) {
+    opacity: 1;
+  }
+  .post__content :global(.code-block__copy:hover) {
+    border-color: var(--kw-fg-link);
+    color: var(--kw-fg-link);
+  }
+  .post__content :global(.code-block__copy:focus-visible) {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 2px;
+  }
+  .post__content :global(.code-block__copy:disabled) {
+    cursor: default;
+  }
+  .post__content :global(.code-block__status) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  @media (max-width: 720px) {
+    .post__content :global(.code-block__copy) {
+      opacity: 1;
+    }
   }
   .post__content :global(table) {
     display: block;
