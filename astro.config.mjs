@@ -83,6 +83,12 @@ export default defineConfig({
   site: siteUrl,
   output: "static",
   adapter: vercel(),
+  // ClientRouter 利用時のデフォルト挙動を明示する (#465)。
+  // saveData などのユーザー設定は Astro の prefetch ランタイム側で尊重される。
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
   integrations: [
     UnoCSS(),
     markdoc(),
