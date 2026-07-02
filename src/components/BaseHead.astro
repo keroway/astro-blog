@@ -102,6 +102,7 @@ const websiteSchema = {
 <link rel="canonical" href={canonicalURL} />
 
 <!-- RSS feed auto-discovery -->
+<link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} Feed`} href={new URL("/feed.xml", Astro.site)} />
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} Blog`} href={new URL("/rss.xml", Astro.site)} />
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} Works`} href={new URL("/works/rss.xml", Astro.site)} />
 <ClientRouter fallback="animate" />
