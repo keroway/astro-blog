@@ -2,6 +2,7 @@
 import type { CollectionEntry } from "astro:content";
 import { getImage } from "astro:assets";
 import SiteLayout from "./SiteLayout.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ContentPicture from "../components/ContentPicture.astro";
 
 type Props = CollectionEntry<"works">["data"];
@@ -68,6 +69,7 @@ const breadcrumbSchema = {
   articleSchema={workSchema}
   breadcrumbSchema={breadcrumbSchema}
 >
+  <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Works", href: "/works/" }, { label: title }]} />
   <article class="work-entry">
     <header class="work-hero">
       <div class="work-hero__intro">

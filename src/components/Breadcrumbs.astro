@@ -1,0 +1,78 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="パンくずリスト">
+  <ol class="breadcrumbs__list">
+    {items.map((item, index) => {
+      const isCurrent = index === items.length - 1 || !item.href;
+      return (
+        <li class="breadcrumbs__item">
+          {isCurrent ? (
+            <span class="breadcrumbs__current" aria-current="page">{item.label}</span>
+          ) : (
+            <a class="breadcrumbs__link" href={item.href}>{item.label}</a>
+          )}
+        </li>
+      );
+    })}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    margin-bottom: var(--kw-space-6);
+    color: var(--kw-fg-muted);
+  }
+
+  .breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kw-space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+  }
+
+  .breadcrumbs__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kw-space-2);
+    min-width: 0;
+  }
+
+  .breadcrumbs__item:not(:last-child)::after {
+    color: var(--kw-fg-faint);
+    content: "/";
+  }
+
+  .breadcrumbs__link {
+    color: var(--kw-fg-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .breadcrumbs__link:hover,
+  .breadcrumbs__link:focus-visible {
+    border-bottom-color: currentColor;
+  }
+
+  .breadcrumbs__current {
+    color: var(--kw-fg-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
