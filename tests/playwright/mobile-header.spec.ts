@@ -13,9 +13,9 @@ test.describe("mobile header", () => {
 
       const metrics = await header.evaluate((el) => {
         const rect = el.getBoundingClientRect();
-        const children = Array.from(el.children).map((child) =>
-          child.getBoundingClientRect()
-        );
+        const children = Array.from(el.children)
+          .map((child) => child.getBoundingClientRect())
+          .filter((rect) => rect.width > 0 && rect.height > 0);
         return {
           scrollWidth: el.scrollWidth,
           clientWidth: el.clientWidth,
