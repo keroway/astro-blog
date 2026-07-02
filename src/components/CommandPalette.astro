@@ -1,0 +1,226 @@
+<div class="command-palette" id="command-palette" hidden>
+  <div class="command-palette__backdrop" data-command-close></div>
+  <section
+    class="command-palette__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-label="コマンドパレット"
+  >
+    <label class="command-palette__label" for="command-palette-input">検索または移動</label>
+    <input
+      id="command-palette-input"
+      class="command-palette__input"
+      type="search"
+      placeholder="ページ名・記事タイトルで検索…"
+      autocomplete="off"
+    />
+    <div class="command-palette__body">
+      <p class="command-palette__hint no-indent">⌘K / Ctrl+K で開閉、Esc で閉じる</p>
+      <ul class="command-palette__list" id="command-palette-results"></ul>
+    </div>
+  </section>
+</div>
+
+<script>
+  interface CommandItem {
+    title: string;
+    url: string;
+    note?: string;
+  }
+
+  interface PagefindResult {
+    data: () => Promise<{ url: string; meta?: { title?: string }; excerpt?: string }>;
+  }
+
+  interface PagefindModule {
+    init?: () => Promise<void>;
+    search: (query: string) => Promise<{ results: PagefindResult[] }>;
+  }
+
+  const commands: CommandItem[] = [
+    { title: 'Home', url: '/', note: 'トップページへ移動' },
+    { title: 'Works', url: '/works/', note: '制作物一覧へ移動' },
+    { title: 'Blog', url: '/blog/', note: '記事一覧へ移動' },
+    { title: 'Tags', url: '/blog/tags/', note: 'タグ一覧へ移動' },
+    { title: 'About', url: '/about/', note: 'プロフィールへ移動' },
+    { title: 'Now', url: '/now/', note: '近況ページへ移動' },
+    { title: 'Colophon', url: '/colophon/', note: 'サイト情報へ移動' },
+  ];
+
+  let pagefind: PagefindModule | null = null;
+  let lastFocused: Element | null = null;
+
+  const getEls = () => ({
+    root: document.getElementById('command-palette'),
+    input: document.getElementById('command-palette-input') as HTMLInputElement | null,
+    results: document.getElementById('command-palette-results'),
+  });
+
+  const renderItems = (items: CommandItem[]) => {
+    const { results } = getEls();
+    if (!results) return;
+    results.innerHTML = '';
+    for (const item of items) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.className = 'command-palette__item';
+      a.href = item.url;
+      a.innerHTML = `<span>${item.title}</span><small>${item.note ?? item.url}</small>`;
+      a.addEventListener('click', closePalette);
+      li.append(a);
+      results.append(li);
+    }
+  };
+
+  const searchPagefind = async (query: string): Promise<CommandItem[]> => {
+    if (!query.trim()) return commands;
+    const navMatches = commands.filter((item) =>
+      `${item.title} ${item.note}`.toLowerCase().includes(query.toLowerCase())
+    );
+    try {
+      const pagefindPath = '/pagefind/pagefind.js';
+      pagefind ??= await import(/* @vite-ignore */ pagefindPath) as PagefindModule;
+      if ('init' in pagefind && typeof pagefind.init === 'function') await pagefind.init();
+      const search = await pagefind.search(query);
+      const pages = await Promise.all(search.results.slice(0, 6).map((result: PagefindResult) => result.data()));
+      return [
+        ...navMatches,
+        ...pages.map((page) => ({
+          title: page.meta?.title ?? page.url,
+          url: page.url,
+          note: page.excerpt?.replace(/<[^>]+>/g, '') ?? 'Pagefind result',
+        })),
+      ].slice(0, 8);
+    } catch {
+      return navMatches;
+    }
+  };
+
+  const openPalette = () => {
+    const { root, input } = getEls();
+    if (!root || !input) return;
+    lastFocused = document.activeElement;
+    root.hidden = false;
+    document.documentElement.classList.add('command-palette-open');
+    renderItems(commands);
+    window.setTimeout(() => input.focus(), 0);
+  };
+
+  function closePalette() {
+    const { root, input } = getEls();
+    if (!root) return;
+    root.hidden = true;
+    document.documentElement.classList.remove('command-palette-open');
+    if (input) input.value = '';
+    if (lastFocused instanceof HTMLElement) lastFocused.focus();
+  }
+
+  const initCommandPalette = () => {
+    const { root, input } = getEls();
+    if (!root || !input || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    document.querySelectorAll('[data-command-open]').forEach((button) => {
+      button.addEventListener('click', openPalette);
+    });
+    document.querySelectorAll('[data-command-close]').forEach((button) => {
+      button.addEventListener('click', closePalette);
+    });
+
+    input.addEventListener('input', async () => {
+      renderItems(await searchPagefind(input.value));
+    });
+
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closePalette();
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(root.querySelectorAll<HTMLElement>('input, a, button')).filter((el) => !el.hasAttribute('disabled'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        root.hidden ? openPalette() : closePalette();
+      }
+    });
+  };
+
+  initCommandPalette();
+  document.addEventListener('astro:page-load', initCommandPalette);
+</script>
+
+<style>
+  .command-palette[hidden] { display: none; }
+  .command-palette {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+  }
+  .command-palette__backdrop {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--kw-bg) 70%, transparent);
+    backdrop-filter: blur(4px);
+  }
+  .command-palette__dialog {
+    position: relative;
+    width: min(640px, calc(100vw - var(--kw-space-6)));
+    margin: 12vh auto 0;
+    padding: var(--kw-space-4);
+    border: 1px solid var(--kw-rule-strong);
+    border-radius: var(--kw-radius-lg);
+    background: var(--kw-bg-card);
+    box-shadow: var(--kw-shadow-pop);
+  }
+  .command-palette__label,
+  .command-palette__hint {
+    color: var(--kw-fg-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+  }
+  .command-palette__input {
+    width: 100%;
+    margin: var(--kw-space-2) 0 var(--kw-space-3);
+    padding: var(--kw-space-3);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    background: var(--kw-bg);
+    color: var(--kw-fg);
+    font: inherit;
+  }
+  .command-palette__list {
+    display: grid;
+    gap: var(--kw-space-2);
+    list-style: none;
+    margin: var(--kw-space-3) 0 0;
+    padding: 0;
+  }
+  .command-palette__item {
+    display: grid;
+    gap: var(--kw-space-1);
+    padding: var(--kw-space-3);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-md);
+    color: var(--kw-fg-display);
+    text-decoration: none;
+  }
+  .command-palette__item:hover,
+  .command-palette__item:focus-visible {
+    border-color: var(--kw-accent);
+  }
+  .command-palette__item small {
+    color: var(--kw-fg-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+  }
+</style>
