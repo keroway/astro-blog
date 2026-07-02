@@ -1,0 +1,108 @@
+---
+import SiteLayout from "../../../layouts/SiteLayout.astro";
+import SectionHead from "../../../components/SectionHead.astro";
+import { SITE_TITLE } from "../../../consts";
+import { getAllTags, getPublishedPosts } from "../../../lib/content";
+import { encodeSlugId } from "../../../lib/slug";
+
+const [tags, posts] = await Promise.all([getAllTags(), getPublishedPosts()]);
+const tagCounts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags ?? []) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const tagItems = tags.map((tag) => ({
+  tag,
+  count: tagCounts.get(tag) ?? 0,
+  href: `/blog/tags/${encodeSlugId(tag)}/`,
+}));
+---
+
+<SiteLayout
+  title={`Tags | ${SITE_TITLE}`}
+  description="ブログ記事で使っているタグの一覧"
+  canonicalUrl={new URL("/blog/tags/", Astro.site).toString()}
+  mainClass="tags-index"
+>
+  <SectionHead jp="タグ一覧" en="all tags" />
+
+  <p class="tags-lead no-indent">
+    記事につけているタグをまとめています。興味のあるキーワードから関連記事をたどれます。
+  </p>
+
+  <ul class="tag-grid" aria-label="タグ一覧">
+    {tagItems.map(({ tag, count, href }) => (
+      <li>
+        <a class="tag-card" href={href}>
+          <span class="tag-card__name">#{tag}</span>
+          <span class="tag-card__count kw-mono">{count} 件</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</SiteLayout>
+
+<style>
+  .tags-index {
+    width: min(var(--kw-content-max), 100%);
+  }
+
+  .tags-lead {
+    color: var(--kw-fg-muted);
+    margin-bottom: var(--kw-space-8);
+    max-width: 60ch;
+  }
+
+  .tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--kw-space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-card {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--kw-space-3);
+    min-height: 64px;
+    padding: var(--kw-space-4);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-md);
+    background: var(--kw-bg-card);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color var(--kw-duration-fast) var(--kw-easing),
+      transform var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .tag-card:hover,
+  .tag-card:focus-visible {
+    border-color: var(--kw-accent);
+    transform: translateY(-2px);
+  }
+
+  .tag-card__name {
+    color: var(--kw-fg-display);
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-body-lg);
+    line-height: var(--kw-lh-snug);
+  }
+
+  .tag-card__count {
+    color: var(--kw-fg-muted);
+    font-size: var(--kw-fs-mono-xs);
+    white-space: nowrap;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tag-card:hover,
+    .tag-card:focus-visible {
+      transform: none;
+    }
+  }
+</style>
