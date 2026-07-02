@@ -6,6 +6,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import PostShare from "../components/PostShare.astro";
+import PostSeriesNav from "../components/PostSeriesNav.astro";
 import PostNav from "../components/PostNav.astro";
 import PostRelated from "../components/PostRelated.astro";
 import { SITE_AUTHOR } from "../consts";
@@ -24,6 +25,13 @@ interface Props extends BlogData {
   prevPost?: BlogEntry | null;
   nextPost?: BlogEntry | null;
   relatedPosts?: BlogEntry[];
+  seriesNav?: {
+    name: string;
+    current: number;
+    total: number;
+    prev: BlogEntry | null;
+    next: BlogEntry | null;
+  } | null;
   tags?: string[];
 }
 
@@ -42,6 +50,7 @@ const {
   prevPost = null,
   nextPost = null,
   relatedPosts = [],
+  seriesNav = null,
   tags = [],
 } = post;
 const heroImageSrc = heroImage
@@ -146,6 +155,8 @@ const breadcrumbSchema = {
       </div>
 
       <PostShare title={title} url={shareUrl} />
+
+      <PostSeriesNav seriesNav={seriesNav} />
 
       <PostNav prevPost={prevPost} nextPost={nextPost} />
 

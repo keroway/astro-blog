@@ -12,10 +12,30 @@ export async function getStaticPaths() {
 		const prevPost = sorted[idx + 1] ?? null;
 		const nextPost = sorted[idx - 1] ?? null;
 		const relatedPosts = getRelatedPosts(post, sorted);
+		const series = post.data.series;
+		const seriesPosts = series
+			? sorted
+				.filter((p) => p.data.series === series)
+				.sort(
+					(a, b) =>
+						a.data.pubDate.valueOf() - b.data.pubDate.valueOf() ||
+						a.id.localeCompare(b.id)
+				)
+			: [];
+		const seriesIndex = seriesPosts.findIndex((p) => p.id === post.id);
+		const seriesNav = series && seriesPosts.length > 1 && seriesIndex >= 0
+			? {
+					name: series,
+					current: seriesIndex + 1,
+					total: seriesPosts.length,
+					prev: seriesPosts[seriesIndex - 1] ?? null,
+					next: seriesPosts[seriesIndex + 1] ?? null,
+				}
+			: null;
 
 		return {
 			params: { slug: post.id },
-			props: { post, prevPost, nextPost, relatedPosts },
+			props: { post, prevPost, nextPost, relatedPosts, seriesNav },
 		};
 	});
 }
@@ -25,9 +45,16 @@ type Props = {
 	prevPost: BlogEntry | null;
 	nextPost: BlogEntry | null;
 	relatedPosts: BlogEntry[];
+	seriesNav: {
+		name: string;
+		current: number;
+		total: number;
+		prev: BlogEntry | null;
+		next: BlogEntry | null;
+	} | null;
 };
 
-const { post, prevPost, nextPost, relatedPosts } = Astro.props as Props;
+const { post, prevPost, nextPost, relatedPosts, seriesNav } = Astro.props as Props;
 const { Content, headings } = await render(post);
 
 // ogImage が指定されていればカスタム OG 画像として優先、未指定なら自動生成 (#362)。
@@ -44,6 +71,7 @@ const readingTime = calculateReadingTime(post.body ?? '');
 	prevPost={prevPost}
 	nextPost={nextPost}
 	relatedPosts={relatedPosts}
+	seriesNav={seriesNav}
 >
 	<Content />
 </BlogPost>

@@ -1,0 +1,96 @@
+---
+import type { BlogEntry } from "../types/content";
+import { encodeSlugId } from "../lib/slug";
+
+interface SeriesNav {
+  name: string;
+  current: number;
+  total: number;
+  prev: BlogEntry | null;
+  next: BlogEntry | null;
+}
+
+interface Props {
+  seriesNav?: SeriesNav | null;
+}
+
+const { seriesNav } = Astro.props;
+---
+
+{seriesNav && (
+  <nav class="series-nav" aria-label={`${seriesNav.name} シリーズナビゲーション`}>
+    <p class="series-nav__eyebrow kw-eyebrow no-indent">Series</p>
+    <div class="series-nav__body">
+      <p class="series-nav__title no-indent">
+        <span>{seriesNav.name}</span>
+        <span class="series-nav__count kw-mono">{seriesNav.current} / {seriesNav.total}</span>
+      </p>
+      <div class="series-nav__links">
+        {seriesNav.prev ? (
+          <a href={`/blog/${encodeSlugId(seriesNav.prev.id)}/`}>← 前の回: {seriesNav.prev.data.title}</a>
+        ) : (
+          <span aria-disabled="true">← 前の回はありません</span>
+        )}
+        {seriesNav.next ? (
+          <a href={`/blog/${encodeSlugId(seriesNav.next.id)}/`}>次の回: {seriesNav.next.data.title} →</a>
+        ) : (
+          <span aria-disabled="true">次の回はありません →</span>
+        )}
+      </div>
+    </div>
+  </nav>
+)}
+
+<style>
+  .series-nav {
+    margin-top: var(--kw-space-10);
+    padding: var(--kw-space-5);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-md);
+    background: var(--kw-bg-card);
+  }
+
+  .series-nav__eyebrow {
+    margin-bottom: var(--kw-space-2);
+  }
+
+  .series-nav__title {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--kw-space-3);
+    margin: 0 0 var(--kw-space-4);
+    color: var(--kw-fg-display);
+    font-family: var(--kw-font-display);
+    font-size: var(--kw-fs-h3);
+    line-height: var(--kw-lh-snug);
+  }
+
+  .series-nav__count {
+    color: var(--kw-accent);
+    font-size: var(--kw-fs-mono-sm);
+  }
+
+  .series-nav__links {
+    display: grid;
+    gap: var(--kw-space-3);
+  }
+
+  .series-nav__links a,
+  .series-nav__links span {
+    color: var(--kw-fg-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+  }
+
+  .series-nav__links a {
+    color: var(--kw-fg-link);
+    text-decoration: none;
+    border-bottom: 0;
+  }
+
+  .series-nav__links a:hover,
+  .series-nav__links a:focus-visible {
+    color: var(--kw-accent-strong);
+  }
+</style>
