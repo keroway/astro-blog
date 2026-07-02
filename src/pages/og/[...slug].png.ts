@@ -16,6 +16,9 @@ const COLORS = {
   sand: "#D9B382", // --kw-sand accent
   ink: "#E8EDF6", // --kw-ink dark
   inkDim: "#9AA6BD", // --kw-ink-dim dark
+  road: "#6F8FA8", // --kw-road dark
+  roadSoft: "#213A55", // --kw-road-soft dark
+  seal: "#B43D2F", // --kw-accent-strong
 } as const;
 
 let fontCache: { regular: Buffer; bold: Buffer } | null = null;
@@ -136,6 +139,86 @@ function buildElement(title: string, category?: string): SatoriElement {
     "title"
   );
 
+  const motif = el(
+    "div",
+    {
+      display: "flex",
+      position: "absolute",
+      right: 72,
+      bottom: 120,
+      width: 520,
+      height: 150,
+      opacity: 0.82,
+    },
+    [
+      el(
+        "div",
+        {
+          position: "absolute",
+          left: 0,
+          top: 76,
+          width: 520,
+          height: 10,
+          backgroundColor: COLORS.roadSoft,
+          borderRadius: 999,
+        },
+        undefined,
+        "road-band"
+      ),
+      el(
+        "div",
+        {
+          position: "absolute",
+          left: 0,
+          top: 80,
+          width: 520,
+          height: 2,
+          backgroundColor: COLORS.road,
+        },
+        undefined,
+        "road-line"
+      ),
+      ...[72, 170, 278, 386, 492].map((left, index) =>
+        el(
+          "div",
+          {
+            position: "absolute",
+            left,
+            top: index % 2 === 0 ? 72 : 84,
+            width: 16,
+            height: 16,
+            borderRadius: 999,
+            backgroundColor: COLORS.sand,
+            border: `3px solid ${COLORS.bg}`,
+          },
+          undefined,
+          `station-${index}`
+        )
+      ),
+      el(
+        "div",
+        {
+          position: "absolute",
+          right: 8,
+          top: 6,
+          width: 92,
+          height: 92,
+          borderRadius: 999,
+          border: `4px solid ${COLORS.seal}`,
+          color: COLORS.seal,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 44,
+          fontWeight: 700,
+        },
+        "K",
+        "seal"
+      ),
+    ],
+    "motif"
+  );
+
   const siteLabel = el(
     "div",
     {
@@ -188,7 +271,9 @@ function buildElement(title: string, category?: string): SatoriElement {
       padding: "60px 80px",
       borderLeft: `8px solid ${COLORS.sand}`,
       boxSizing: "border-box",
+      position: "relative",
+      overflow: "hidden",
     },
-    [topSection, siteLabel]
+    [motif, topSection, siteLabel]
   );
 }
