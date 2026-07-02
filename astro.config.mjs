@@ -104,7 +104,8 @@ export default defineConfig({
       name: "Shippori Mincho",
       cssVariable: "--font-display",
       provider: fontProviders.fontsource(),
-      weights: [400, 500, 600, 700],
+      // 実使用は見出し・ロゴ系の medium のみ (#476)。本文の bold は --font-body が担う。
+      weights: [500],
       styles: ["normal"],
       subsets: ["japanese", "latin"],
       fallbacks: [
@@ -119,6 +120,7 @@ export default defineConfig({
       name: "BIZ UDPGothic",
       cssVariable: "--font-body",
       provider: fontProviders.fontsource(),
+      // 本文 regular と strong/bold 用。600 指定は近い 700 にフォールバックさせる (#476)。
       weights: [400, 700],
       styles: ["normal"],
       subsets: ["japanese", "latin"],
@@ -134,7 +136,8 @@ export default defineConfig({
       name: "JetBrains Mono",
       cssVariable: "--font-mono",
       provider: fontProviders.fontsource(),
-      weights: [400, 500, 700],
+      // regular と mono UI の medium のみ使用。700 は未使用のため削除 (#476)。
+      weights: [400, 500],
       styles: ["normal"],
       subsets: ["latin"],
       fallbacks: [
