@@ -5,6 +5,7 @@ import ContentPicture from "../components/ContentPicture.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import TableOfContents from "../components/TableOfContents.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import ReadingProgress from "../components/ReadingProgress.astro";
 import PostShare from "../components/PostShare.astro";
 import PostSeriesNav from "../components/PostSeriesNav.astro";
 import PostNav from "../components/PostNav.astro";
@@ -99,6 +100,7 @@ const breadcrumbSchema = {
 ---
 
 <SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema}>
+  <ReadingProgress />
   <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog/" }, { label: title }]} />
   <div class="post-wrap">
     <article class="post">
