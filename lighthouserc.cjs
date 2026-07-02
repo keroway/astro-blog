@@ -11,6 +11,8 @@ module.exports = {
         "http://localhost/",
         "http://localhost/blog/",
         "http://localhost/blog/book-pragmatic-programmer/",
+        // heroImage + 本文画像が多い詳細ページを継続監視する (#480)。
+        "http://localhost/blog/rust-on-codeanywhere/",
         "http://localhost/about/",
         "http://localhost/works/",
         "http://localhost/works/timeline-dsl/",
