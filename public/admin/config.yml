@@ -104,6 +104,12 @@ collections:
           - { label: "読書", value: reading }
           - { label: "イベント・参加記", value: event }
 
+      - label: シリーズ
+        name: series
+        widget: string
+        required: false
+        hint: 連作記事のシリーズ名。設定すると同じシリーズ内の前後ナビゲーションを表示します。
+
       - label: タグ
         name: tags
         widget: list

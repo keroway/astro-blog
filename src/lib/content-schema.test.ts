@@ -44,6 +44,16 @@ function getField(collectionName: string, fieldName: string) {
 }
 
 // ──────────────────────────────────────────────────────────────────
+// Blog series の必須性テスト
+// ──────────────────────────────────────────────────────────────────
+describe("CMS blog.series の必須性", () => {
+  it("series フィールドは required: false（Astro schema の optional() に対応）", () => {
+    const field = getField("blog", "series");
+    expect(field.required).toBe(false);
+  });
+});
+
+// ──────────────────────────────────────────────────────────────────
 // Blog カテゴリの同期テスト
 // ──────────────────────────────────────────────────────────────────
 describe("CMS blog.category と BLOG_CATEGORIES の同期", () => {
