@@ -26,6 +26,7 @@
 | 0016 | CMS を Keystatic から Sveltia へ移行 | [0016-cms-keystatic-to-sveltia.md](./0016-cms-keystatic-to-sveltia.md) | Accepted |
 | 0017 | Astro 7 へのメジャーアップグレード | [0017-astro-7-upgrade.md](./0017-astro-7-upgrade.md) | Accepted |
 | 0018 | コンテンツ画像の astro:assets パイプライン移行 | [0018-astro-assets-media-pipeline.md](./0018-astro-assets-media-pipeline.md) | Accepted |
+| 0019 | 記事フィードバックチャネル | [0019-feedback-channel.md](./0019-feedback-channel.md) | Accepted |
 
 ## ADR の書き方
 
