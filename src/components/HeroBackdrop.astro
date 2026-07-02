@@ -60,6 +60,21 @@
       <circle cx="1018" cy="272" r="5" />
     </g>
 
+    <!-- 隠し旅人: "tokaido" 入力で道筋を歩く -->
+    <g class="hero-backdrop__traveler" opacity="0">
+      <circle cx="0" cy="-12" r="7" />
+      <path d="M -12 -15 Q 0 -28 12 -15" />
+      <path d="M 0 -5 L 0 18 M -10 6 L 10 6 M -7 28 L 0 18 L 8 28 M 13 -10 L 21 22" />
+      <animateMotion
+        id="hero-backdrop-traveler-motion"
+        dur="6s"
+        begin="indefinite"
+        fill="freeze"
+        rotate="auto"
+        path="M 84 338 C 230 282, 330 306, 448 258 C 576 206, 660 172, 790 188 C 936 206, 1014 270, 1132 358"
+      />
+    </g>
+
     <!-- 水面の水平線: 横浜の海を示唆する薄い水平線 -->
     <g class="hero-backdrop__water">
       <line x1="0" y1="636" x2="1200" y2="636" />
@@ -67,6 +82,42 @@
     </g>
   </svg>
 </div>
+
+<script>
+  const initHeroBackdropTraveler = () => {
+    const root = document.querySelector<HTMLElement>('.hero-backdrop');
+    const traveler = document.querySelector<SVGGElement>('.hero-backdrop__traveler');
+    const motion = document.getElementById('hero-backdrop-traveler-motion') as SVGAnimateMotionElement | null;
+    if (!root || !traveler || !motion) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      document.documentElement.classList.contains('reduce-motion');
+    if (reduceMotion) return;
+
+    let buffer = '';
+    const trigger = 'tokaido';
+    const onKeydown = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.key.length !== 1) return;
+      buffer = (buffer + event.key.toLowerCase()).slice(-trigger.length);
+      if (buffer !== trigger) return;
+      traveler.classList.remove('is-walking');
+      // reflow で連続発火時も CSS アニメーションを再開する。
+      void traveler.getBoundingClientRect();
+      traveler.classList.add('is-walking');
+      motion.beginElement();
+      console.info('東海道の旅人が歩き出しました。');
+    };
+
+    window.addEventListener('keydown', onKeydown);
+    document.addEventListener('astro:before-swap', () => {
+      window.removeEventListener('keydown', onKeydown);
+    }, { once: true });
+  };
+
+  initHeroBackdropTraveler();
+  document.addEventListener('astro:page-load', initHeroBackdropTraveler);
+</script>
 
 <style>
   .hero-backdrop {
@@ -136,6 +187,23 @@
     stroke: var(--kw-bg);
     stroke-width: 1.5;
     vector-effect: non-scaling-stroke;
+  }
+
+  .hero-backdrop__traveler {
+    fill: var(--kw-accent);
+    stroke: var(--kw-ink);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .hero-backdrop__traveler.is-walking {
+    animation: hero-traveler-reveal 6s var(--kw-easing) both;
+  }
+
+  @keyframes hero-traveler-reveal {
+    0%, 100% { opacity: 0; }
+    8%, 92% { opacity: 0.9; }
   }
 
   /* 水面 — 既存の薄罫線トークンで水平線 */
