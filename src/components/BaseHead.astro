@@ -106,6 +106,23 @@ const websiteSchema = {
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} Blog`} href={new URL("/rss.xml", Astro.site)} />
 <link rel="alternate" type="application/rss+xml" title={`${SITE_TITLE} Works`} href={new URL("/works/rss.xml", Astro.site)} />
 <ClientRouter fallback="animate" />
+<!-- Speculation Rules: Chrome など対応ブラウザで同一サイト内遷移を prerender する (#474)。非対応ブラウザでは無視される。 -->
+<script is:inline type="speculationrules">
+  {
+    "prerender": [
+      {
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "/admin*" } },
+            { "not": { "href_matches": "/api*" } }
+          ]
+        },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script>
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
