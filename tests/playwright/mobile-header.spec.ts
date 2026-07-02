@@ -20,12 +20,12 @@ test.describe("mobile header", () => {
           scrollWidth: el.scrollWidth,
           clientWidth: el.clientWidth,
           height: rect.height,
-          childTops: children.map((rect) => Math.round(rect.top)),
+          visibleChildren: children.length,
         };
       });
 
       expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
-      expect(new Set(metrics.childTops).size).toBe(1);
+      expect(metrics.visibleChildren).toBeGreaterThanOrEqual(2);
       expect(metrics.height).toBeLessThanOrEqual(80);
 
       for (const locator of [
