@@ -2,6 +2,11 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import SectionHead from '../components/SectionHead.astro';
 import TimelineRow from '../components/TimelineRow.astro';
+import { getTokaidoProgress } from '../lib/content';
+
+const tokaido = await getTokaidoProgress();
+const riLabel = tokaido.riTraveled.toFixed(1);
+const progressPercent = Math.round(tokaido.progress * 1000) / 10;
 
 // Footer の "colophon" eyebrow から遷移するページ (issue #449)。
 // デザイン意図・技術スタック・ビルド構成の背景を明文化する。
@@ -68,6 +73,23 @@ const a11yNotes = [
     </dl>
   </section>
 
+  <section class="section" aria-labelledby="tokaido-heading" data-reveal>
+    <SectionHead jp="執筆の里程" en="tokaido volume" id="tokaido-heading" />
+    <p class="tokaido-lead no-indent">
+      これまでの公開記事の総文字数を、歩く速度の読了時間に換算して、
+      東海道全行程 (約123里 / 約492km) のどこまで進んだかになぞらえています。
+    </p>
+    <div class="tokaido-stat">
+      <p class="tokaido-stat__figure kw-numeral kw-tabular">
+        {tokaido.totalChars.toLocaleString('ja-JP')}<span class="tokaido-stat__unit">字</span>
+      </p>
+      <p class="tokaido-stat__ri kw-mono">≈ {riLabel} 里踏破 ({progressPercent}%)</p>
+    </div>
+    <div class="tokaido-bar" role="img" aria-label={`東海道全行程の${progressPercent}パーセントを踏破`}>
+      <div class="tokaido-bar__fill" style={`width: ${progressPercent}%`}></div>
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="a11y-heading" data-reveal>
     <SectionHead jp="アクセシビリティメニュー" en="a11y menu" id="a11y-heading" />
     <p class="colophon-a11y-lead no-indent">
@@ -132,6 +154,45 @@ const a11yNotes = [
     margin: 0;
     color: var(--kw-fg);
   }
+  .tokaido-lead {
+    color: var(--kw-fg-muted);
+    line-height: var(--kw-lh-prose);
+    margin: 0 0 var(--kw-space-5);
+    max-width: 60ch;
+  }
+  .tokaido-stat {
+    display: flex;
+    align-items: baseline;
+    gap: var(--kw-space-4);
+    margin-bottom: var(--kw-space-3);
+  }
+  .tokaido-stat__figure {
+    font-size: clamp(28px, 5vw, 44px);
+    color: var(--kw-fg-display);
+    margin: 0;
+  }
+  .tokaido-stat__unit {
+    font-size: var(--kw-fs-body);
+    color: var(--kw-fg-muted);
+    margin-left: var(--kw-space-1);
+  }
+  .tokaido-stat__ri {
+    color: var(--kw-accent);
+    font-size: var(--kw-fs-mono-sm);
+  }
+  .tokaido-bar {
+    height: 8px;
+    border-radius: var(--kw-radius-sm);
+    background: var(--kw-bg-soft);
+    overflow: hidden;
+    border: 1px solid var(--kw-rule-soft);
+  }
+  .tokaido-bar__fill {
+    height: 100%;
+    background: var(--kw-accent);
+    border-radius: var(--kw-radius-sm);
+  }
+
   .colophon-a11y-lead {
     color: var(--kw-fg-muted);
     line-height: var(--kw-lh-prose);
