@@ -312,6 +312,11 @@ const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).hre
     flex-direction: column;
   }
 
+  .posts-list :global(.post-row) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 180px;
+  }
+
   /* ページネーション */
   .pagination {
     display: flex;
