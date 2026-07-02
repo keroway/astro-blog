@@ -1,6 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
+import CommandPalette from '../components/CommandPalette.astro';
 import Footer from '../components/Footer.astro';
 import StampRally from '../components/StampRally.astro';
 import { SITE_VOLUME } from '../consts';
@@ -53,6 +54,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
         </main>
         <Footer />
         <StampRally />
+        <CommandPalette />
       </div>
       <div class="kw-rail kw-rail--right" role="presentation" aria-hidden="true">
         <div class="kw-rail__text">{rightRail}</div>
