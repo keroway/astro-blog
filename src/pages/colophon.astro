@@ -1,6 +1,7 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import SectionHead from '../components/SectionHead.astro';
+import StampRally from '../components/StampRally.astro';
 import TimelineRow from '../components/TimelineRow.astro';
 import { getTokaidoProgress } from '../lib/content';
 
@@ -47,6 +48,8 @@ const a11yNotes = [
       作り手としての判断の記録です。
     </p>
   </section>
+
+  <StampRally showBook />
 
   <section class="section" aria-labelledby="design-heading" data-reveal>
     <SectionHead jp="デザインの背景" en="design notes" id="design-heading" />

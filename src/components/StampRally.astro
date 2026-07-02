@@ -1,0 +1,154 @@
+---
+interface Props {
+  showBook?: boolean;
+}
+
+const { showBook = false } = Astro.props;
+const stations = [
+  { id: 'home', label: '日本橋', path: '/' },
+  { id: 'works', label: '品川', path: '/works/' },
+  { id: 'blog', label: '川崎', path: '/blog/' },
+  { id: 'about', label: '神奈川', path: '/about/' },
+  { id: 'now', label: '保土ヶ谷', path: '/now/' },
+  { id: 'colophon', label: '戸塚', path: '/colophon/' },
+];
+---
+
+{showBook && (
+  <section class="stamp-book" aria-labelledby="stamp-book-heading" data-reveal>
+    <h2 id="stamp-book-heading" class="stamp-book__title">あなたの御朱印帳</h2>
+    <p class="stamp-book__lead no-indent">
+      主要ページを訪れると、ブラウザ内に小さな朱印が保存されます。
+    </p>
+    <ul class="stamp-book__grid" aria-label="収集済み朱印">
+      {stations.map((station) => (
+        <li class="stamp-book__item" data-stamp-id={station.id}>
+          <span class="stamp-book__seal" aria-hidden="true">K</span>
+          <span class="stamp-book__label">{station.label}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="stamp-book__complete no-indent" data-stamp-complete hidden>
+      全宿場踏破。よい旅を。
+    </p>
+  </section>
+)}
+
+<script is:inline>
+  const STAMP_KEY = 'kw-stamp-rally:v1';
+  const STATIONS = [
+    { id: 'home', path: '/' },
+    { id: 'works', path: '/works/' },
+    { id: 'blog', path: '/blog/' },
+    { id: 'about', path: '/about/' },
+    { id: 'now', path: '/now/' },
+    { id: 'colophon', path: '/colophon/' },
+  ];
+
+  const readStamps = () => {
+    try {
+      return new Set(JSON.parse(localStorage.getItem(STAMP_KEY) ?? '[]'));
+    } catch {
+      return new Set();
+    }
+  };
+
+  const writeStamps = (stamps) => {
+    try {
+      localStorage.setItem(STAMP_KEY, JSON.stringify([...stamps]));
+    } catch {}
+  };
+
+  const normalizePath = (path) => path === '/' ? '/' : `${path.replace(/\/$/, '')}/`;
+
+  const initStampRally = () => {
+    const currentPath = normalizePath(window.location.pathname);
+    const stamps = readStamps();
+    const station = STATIONS.find((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path)));
+    if (station) {
+      stamps.add(station.id);
+      writeStamps(stamps);
+    }
+
+    document.querySelectorAll('[data-stamp-id]').forEach((el) => {
+      const id = el.getAttribute('data-stamp-id');
+      el.classList.toggle('is-collected', Boolean(id && stamps.has(id)));
+    });
+
+    const complete = document.querySelector('[data-stamp-complete]');
+    if (complete) {
+      complete.hidden = stamps.size < STATIONS.length;
+    }
+  };
+
+  initStampRally();
+  document.addEventListener('astro:page-load', initStampRally);
+</script>
+
+<style>
+  .stamp-book {
+    margin-bottom: var(--kw-space-16);
+    padding: var(--kw-space-6);
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-lg);
+    background: var(--kw-bg-card);
+  }
+
+  .stamp-book__title {
+    margin-bottom: var(--kw-space-2);
+  }
+
+  .stamp-book__lead {
+    color: var(--kw-fg-muted);
+    margin: 0 0 var(--kw-space-5);
+  }
+
+  .stamp-book__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: var(--kw-space-3);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stamp-book__item {
+    display: grid;
+    justify-items: center;
+    gap: var(--kw-space-2);
+    padding: var(--kw-space-3);
+    border: 1px dashed var(--kw-rule-soft);
+    border-radius: var(--kw-radius-md);
+    opacity: 0.45;
+  }
+
+  .stamp-book__item.is-collected {
+    opacity: 1;
+    border-color: var(--kw-accent);
+  }
+
+  .stamp-book__seal {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border: 2px solid var(--kw-accent);
+    border-radius: 999px;
+    color: var(--kw-accent);
+    font-family: var(--kw-font-display);
+    font-size: 28px;
+    line-height: 1;
+  }
+
+  .stamp-book__label,
+  .stamp-book__complete {
+    color: var(--kw-fg-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+  }
+
+  .stamp-book__complete {
+    margin: var(--kw-space-4) 0 0;
+    color: var(--kw-accent);
+  }
+</style>
