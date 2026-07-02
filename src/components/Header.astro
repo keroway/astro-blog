@@ -240,4 +240,34 @@ const isActive = (href: string) => {
       gap: var(--kw-space-4);
     }
   }
+
+  @media (max-width: 480px) {
+    .kw-header {
+      padding: var(--kw-space-3) var(--kw-space-3);
+      gap: var(--kw-space-2);
+    }
+    .kw-header__brand {
+      display: none;
+    }
+    .kw-header__nav {
+      gap: var(--kw-space-3);
+      min-width: 0;
+    }
+    .kw-header__actions {
+      gap: var(--kw-space-1);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .kw-header__nav {
+      gap: var(--kw-space-2);
+    }
+    .kw-header__link {
+      font-size: var(--kw-fs-mono-xs);
+      gap: 0;
+    }
+    .kw-header__link-num {
+      display: none;
+    }
+  }
 </style>
