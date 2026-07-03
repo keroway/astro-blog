@@ -235,6 +235,9 @@
   --kw-duration-fast:   140ms;
   --kw-duration-normal: 220ms;
   --kw-easing:          cubic-bezier(0.4, 0, 0.2, 1);
+  /* スプリング系イージング (issue #504)。linear() で減衰振動を近似し、
+   * 押印・ホバーの「クセ」を一段引き上げる (最大 overshoot ≈ 1.23)。 */
+  --kw-easing-spring:   linear(0, 0.0708, 0.246, 0.4723, 0.7048, 0.9105, 1.0695, 1.1739, 1.2251, 1.2315, 1.2051, 1.1587, 1.1042, 1.0513, 1.0067, 0.9739, 0.9539, 0.9458, 0.9473, 0.9555, 1);
 
   /* Reveal / scroll 演出プリミティブ (issue #379)。
    * モーション低減時は global.css が distance=0 / duration≒0 に倒す。 */

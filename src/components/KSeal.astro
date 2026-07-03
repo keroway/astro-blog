@@ -28,8 +28,15 @@ const { label = 'K', detail = '記', size = 'md' } = Astro.props;
     color: var(--kw-seal-fg);
     box-shadow: 0 10px 24px rgba(180, 61, 47, 0.18);
     transform: rotate(-4deg);
+    transition: transform var(--kw-duration-normal) var(--kw-easing-spring);
     user-select: none;
   }
+  @media (hover: hover) {
+    .k-seal:hover {
+      transform: rotate(-4deg) scale(1.06);
+    }
+  }
+
   .k-seal::after {
     content: '';
     position: absolute;

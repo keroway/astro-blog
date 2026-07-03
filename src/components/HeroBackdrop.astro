@@ -7,7 +7,8 @@
  * Tokaido Field Notes の気配を出す。
  *
  * - aria-hidden の純粋な装飾（情報を持たない）
- * - 静止（モーションなし）。CLS を出さない（absolute inset:0 で .hero に重なるだけ）
+ * - セッション初回のみ線描イントロを再生。CLS を出さない（absolute inset:0 で .hero に重なるだけ）
+ * - reduce-motion 時は完成状態を即時表示
  * - preserveAspectRatio="none" で .hero の比率に追従（既存 .kw-watermark-fuji と同じ振る舞い）
  * - ≤640px では細部を隠し、道筋の印象だけ残す
  */
@@ -28,6 +29,18 @@
       </filter>
     </defs>
 
+    <!-- 富士の遠景: 左右非対称の低い山容だけを淡く置く -->
+    <path
+      class="hero-backdrop__fuji-fill"
+      d="M 704 454 L 842 268 C 856 248, 870 248, 886 268 L 1034 454 Z"
+    />
+    <path
+      class="hero-backdrop__fuji-line"
+      d="M 704 454 L 842 268 C 856 248, 870 248, 886 268 L 1034 454"
+      fill="none"
+      pathLength="1"
+    />
+
     <!-- 海岸線: 川崎〜横浜〜江ノ島方面を抽象化した低い輪郭 -->
     <path
       class="hero-backdrop__coast-fill"
@@ -37,6 +50,7 @@
       class="hero-backdrop__coast-line"
       d="M 0 612 C 130 594, 222 540, 342 554 C 452 568, 506 522, 612 508 C 746 490, 812 526, 928 494 C 1038 464, 1114 430, 1200 444"
       fill="none"
+      pathLength="1"
     />
 
     <!-- 道筋: 旧東海道を思わせる抽象ルート。文字の前景を邪魔しないよう薄く扱う -->
@@ -84,15 +98,35 @@
 </div>
 
 <script>
+  const HERO_DRAW_KEY = 'kw:hero-backdrop-drawn';
+
+  const shouldReduceHeroMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    document.documentElement.classList.contains('reduce-motion');
+
+  const initHeroBackdropIntro = () => {
+    const root = document.querySelector<HTMLElement>('.hero-backdrop');
+    const state = window as Window & { __kwHeroBackdropDrawn?: boolean };
+    if (!root || shouldReduceHeroMotion() || state.__kwHeroBackdropDrawn) return;
+    try {
+      if (sessionStorage.getItem(HERO_DRAW_KEY) === '1') {
+        state.__kwHeroBackdropDrawn = true;
+        return;
+      }
+      sessionStorage.setItem(HERO_DRAW_KEY, '1');
+    } catch {
+      // Private browsing / storage denial: window フラグで Astro 遷移中の再生を避ける。
+    }
+    state.__kwHeroBackdropDrawn = true;
+    root.classList.add('is-drawing');
+  };
+
   const initHeroBackdropTraveler = () => {
     const root = document.querySelector<HTMLElement>('.hero-backdrop');
     const traveler = document.querySelector<SVGGElement>('.hero-backdrop__traveler');
     const motion = document.getElementById('hero-backdrop-traveler-motion') as SVGAnimateMotionElement | null;
     if (!root || !traveler || !motion) return;
 
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      document.documentElement.classList.contains('reduce-motion');
-    if (reduceMotion) return;
+    if (shouldReduceHeroMotion()) return;
 
     let buffer = '';
     const trigger = 'tokaido';
@@ -115,8 +149,12 @@
     }, { once: true });
   };
 
+  initHeroBackdropIntro();
   initHeroBackdropTraveler();
-  document.addEventListener('astro:page-load', initHeroBackdropTraveler);
+  document.addEventListener('astro:page-load', () => {
+    initHeroBackdropIntro();
+    initHeroBackdropTraveler();
+  });
 </script>
 
 <style>
@@ -149,6 +187,20 @@
     display: block;
   }
 
+  /* 富士 — 遠景として淡く、線描イントロの主役にしすぎない */
+  .hero-backdrop__fuji-fill {
+    fill: var(--kw-fuji-faint);
+    opacity: 0.62;
+  }
+  .hero-backdrop__fuji-line {
+    stroke: var(--kw-fuji);
+    stroke-width: 1.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.18;
+    vector-effect: non-scaling-stroke;
+  }
+
   /* 海岸線 — 低い位置に沈めて、前景コピーの可読性を優先する */
   .hero-backdrop__coast-fill {
     fill: var(--kw-fuji-faint);
@@ -160,6 +212,43 @@
     stroke-linecap: round;
     opacity: 0.22;
     vector-effect: non-scaling-stroke;
+  }
+
+  /* -------------------------------------------------------------
+   * 浮世絵線描イントロ (issue #504)
+   *
+   * @property で進捗値 --kw-draw-progress を <number> として型付き登録すると、
+   * CSS 変数自体が補間可能になり keyframes で 1→0 へ滞りなくアニメできる。
+   * その進捗値を stroke-dashoffset に流し、pathLength=1 の輪郭を筆で描くように見せる。
+   * 発火は .is-drawing (セッション初回のみ script が付与) でゲート。
+   * ------------------------------------------------------------- */
+  @property --kw-draw-progress {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  .hero-backdrop.is-drawing .hero-backdrop__coast-line,
+  .hero-backdrop.is-drawing .hero-backdrop__fuji-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: var(--kw-draw-progress);
+    animation: hero-draw 1.8s var(--kw-easing) both;
+  }
+  .hero-backdrop.is-drawing .hero-backdrop__fuji-line {
+    animation-delay: 0.16s;
+  }
+  .hero-backdrop.is-drawing .hero-backdrop__road,
+  .hero-backdrop.is-drawing .hero-backdrop__road-band,
+  .hero-backdrop.is-drawing .hero-backdrop__stations circle {
+    animation: hero-fade-in 1s var(--kw-easing) 1.2s both;
+  }
+
+  @keyframes hero-draw {
+    from { --kw-draw-progress: 1; }
+    to   { --kw-draw-progress: 0; }
+  }
+  @keyframes hero-fade-in {
+    from { opacity: 0; }
   }
 
   /* 道筋 — 地図の気配だけを残す薄いレイヤー */
@@ -211,6 +300,32 @@
     stroke: var(--kw-rule-soft);
     stroke-width: 1;
     vector-effect: non-scaling-stroke;
+  }
+
+  /* モーション低減時は描画演出を無効化し完成状態を即時表示。 */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-backdrop.is-drawing .hero-backdrop__coast-line,
+    .hero-backdrop.is-drawing .hero-backdrop__fuji-line {
+      animation: none;
+      stroke-dasharray: none;
+      stroke-dashoffset: 0;
+    }
+    .hero-backdrop.is-drawing .hero-backdrop__road,
+    .hero-backdrop.is-drawing .hero-backdrop__road-band,
+    .hero-backdrop.is-drawing .hero-backdrop__stations circle {
+      animation: none;
+    }
+  }
+  :global(html.reduce-motion) .hero-backdrop.is-drawing .hero-backdrop__coast-line,
+  :global(html.reduce-motion) .hero-backdrop.is-drawing .hero-backdrop__fuji-line {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+  :global(html.reduce-motion) .hero-backdrop.is-drawing .hero-backdrop__road,
+  :global(html.reduce-motion) .hero-backdrop.is-drawing .hero-backdrop__road-band,
+  :global(html.reduce-motion) .hero-backdrop.is-drawing .hero-backdrop__stations circle {
+    animation: none;
   }
 
   @media (max-width: 640px) {
