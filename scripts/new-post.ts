@@ -90,7 +90,7 @@ if (fs.existsSync(filePath)) {
 
 const today = getTodayIso();
 const frontmatter = `---
-title: "${title.replace(/"/g, '\\"')}"
+title: ${JSON.stringify(title)}
 description: ""
 pubDate: ${today}
 draft: true
