@@ -10,6 +10,7 @@ html {
   letter-spacing: var(--kw-ls-body);
   color: var(--kw-fg);
   background: var(--kw-bg);
+  text-spacing-trim: trim-start;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -43,6 +44,8 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--kw-fg-display);
   letter-spacing: var(--kw-ls-display);
   line-height: var(--kw-lh-tight);
+  text-wrap: balance;
+  word-break: auto-phrase;
   margin: 0 0 var(--kw-space-3) 0;
 }
 h1 { font-size: var(--kw-fs-h1); }
@@ -53,8 +56,21 @@ h4 { font-size: var(--kw-fs-h4); }
 p {
   margin: 0 0 var(--kw-space-4) 0;
   text-indent: 1em;
+  text-wrap: pretty;
 }
 p.no-indent { text-indent: 0; }
+
+/* Japanese typography progressive enhancements (issue #502).
+ * 未対応ブラウザでは各プロパティが無視されるだけなので、JS/BudouX なしで
+ * Chrome など対応環境の文節改行・約物詰めを底上げする。 */
+:where(.kw-balance, [class$="__title"], [class*="__title "], [class$="-title"], [class*="-title "]) {
+  text-wrap: balance;
+  word-break: auto-phrase;
+}
+:where(.kw-pretty, [class$="__lead"], [class*="__lead "], [class$="-lead"], [class*="-lead "]) {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
 
 a {
   color: var(--kw-fg-link);
@@ -274,7 +290,11 @@ input    { font-size: 16px; }
 }
 
 /* Prose content area */
-.prose p {
+:where(.prose, .post__content, .work-entry__content) {
+  text-wrap: pretty;
+  text-spacing-trim: trim-start;
+}
+:where(.prose, .post__content, .work-entry__content) p {
   margin-bottom: 2em;
 }
 
