@@ -17,6 +17,6 @@ const work = Astro.props;
 const { Content } = await render(work);
 ---
 
-<WorkEntryLayout {...work.data}>
+<WorkEntryLayout {...work.data} id={work.id}>
 	<Content />
 </WorkEntryLayout>

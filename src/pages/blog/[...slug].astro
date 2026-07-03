@@ -65,6 +65,7 @@ const readingTime = calculateReadingTime(post.body ?? '');
 
 <BlogPost
 	{...post.data}
+	id={post.id}
 	readingTime={readingTime}
 	ogImage={ogImage}
 	headings={headings}

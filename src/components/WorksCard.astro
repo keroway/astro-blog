@@ -1,6 +1,6 @@
 ---
 import type { WorksEntry } from "../types/content";
-import { encodeSlugId } from "../lib/slug";
+import { encodeSlugId, toTransitionName } from "../lib/slug";
 import ContentPicture from "./ContentPicture.astro";
 import { resolveWorksDate } from "../lib/content";
 import MotifPanel from "./MotifPanel.astro";
@@ -30,6 +30,8 @@ const releaseLabel = releaseDate.toLocaleDateString("ja-JP", {
   day: "numeric",
 });
 const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
+const heroTransitionName = toTransitionName("hero", work.id);
+const titleTransitionName = toTransitionName("title", work.id);
 ---
 
 <article class:list={["work-card", `work-card--${variant}`]}>
@@ -43,6 +45,7 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
         loading={priority ? "eager" : "lazy"}
         fetchpriority={priority ? "high" : "auto"}
         decoding="async"
+        transition:name={heroTransitionName}
       />
     </figure>
   ) : (
@@ -53,7 +56,7 @@ const visualKey = work.id.toLowerCase().replace(/[^a-z0-9_-]/g, "_");
       <span class:list={["kw-chip", status.className]}>{status.label}</span>
       <time class="kw-mono work-card__date" datetime={timestamp}>{releaseLabel}</time>
     </div>
-    <h3 class="work-card__title">
+    <h3 class="work-card__title" transition:name={titleTransitionName}>
       <a href={href}>{work.data.title}</a>
     </h3>
     <p class="work-card__description no-indent">{work.data.description}</p>

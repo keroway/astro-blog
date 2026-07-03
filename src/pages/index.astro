@@ -77,6 +77,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
             description={post.data.description?.trim()}
             pubDate={post.data.pubDate}
             category={categoryLabel(post.data.category)}
+            id={post.id}
           />
         ))}
       </div>

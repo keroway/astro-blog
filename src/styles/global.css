@@ -299,6 +299,22 @@ input    { font-size: 16px; }
 }
 
 /* -------------------------------------------------------------
+ * View Transitions morph (issue #500)
+ *
+ * PostRow / WorksCard の hero-* / title-* 名前付き要素を詳細ページとマッチさせ、
+ * 一覧→詳細で morph させる。持続時間・イージングは --kw-motion-* トークンに接続して
+ * 他のモーション演出と質感を揃える。reduce-motion 時は fade のみとし、
+ * ClientRouter の fallback="animate" と同様に現行を維持する。
+ * ------------------------------------------------------------- */
+::view-transition-group(*) {
+  animation-duration: var(--kw-motion-duration);
+  animation-timing-function: var(--kw-motion-easing);
+}
+::view-transition-group(site-main) {
+  animation-duration: var(--kw-duration-normal);
+}
+
+/* -------------------------------------------------------------
  * Reduced motion — single source of truth (issue #379)
  *
  * 低減は 2 経路で発火し、どちらも同一のルールを適用する:
@@ -318,6 +334,13 @@ input    { font-size: 16px; }
     --kw-motion-distance: 0px;
     --kw-motion-duration: 0.01ms;
   }
+  /* ユニバーサルセレクタ `*` は pseudo-element を拾えないため、
+   * ::view-transition-group は明示的に無効化して morph を抑止する (issue #500)。 */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
 html.reduce-motion *,
@@ -331,6 +354,11 @@ html.reduce-motion *::after {
 html.reduce-motion {
   --kw-motion-distance: 0px;
   --kw-motion-duration: 0.01ms;
+}
+html.reduce-motion::view-transition-group(*),
+html.reduce-motion::view-transition-old(*),
+html.reduce-motion::view-transition-new(*) {
+  animation: none !important;
 }
 
 /* -------------------------------------------------------------
