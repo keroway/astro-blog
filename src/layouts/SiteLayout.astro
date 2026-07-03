@@ -81,6 +81,10 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
     applyMotionPreferences();
     const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
     observer?.disconnect();
+    // animation-timeline: view() 対応ブラウザ (issue #499) では global.css の
+    // html.kw-scroll-timeline [data-reveal] が CSS だけで reveal を駆動するので、
+    // IntersectionObserver は不要 (二重発火を避ける)。is-visible も付与しない。
+    if (document.documentElement.classList.contains('kw-scroll-timeline')) return;
     // 低減時 / IO 未対応は隠さず即表示 (kw-anim も付いていない)。
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
       for (const el of targets) el.classList.add('is-visible');

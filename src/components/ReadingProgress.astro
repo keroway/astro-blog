@@ -13,6 +13,18 @@
 </div>
 
 <script>
+  // Scroll-Driven Animations (issue #499)。名前付き view-timeline 対応ブラウザは
+  // CSS (下記 <style> の @supports ブロック) だけで stroke-dashoffset を駆動し、
+  // このスクリプトは早期 return してメインスレッドの scroll ハンドラを増やさない。
+  // CSS 側と同じ機能 (animation-timeline) を検出する。
+  const supportsScrollTimeline = () => {
+    try {
+      return typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline: --x');
+    } catch {
+      return false;
+    }
+  };
+
   const initReadingProgress = () => {
     const root = document.querySelector<HTMLElement>('.reading-progress');
     const fill = document.querySelector<SVGPathElement>('.reading-progress__fill');
@@ -28,6 +40,14 @@
     }
 
     root.dataset.reducedMotion = 'false';
+
+    // CSS 側 (animation-timeline: scroll()) が駆動できるブラウザでは JS のスクロール
+    // ハンドラを一切登録しない。fill の初期値は CSS の @supports ブロックに委ねる。
+    if (supportsScrollTimeline()) {
+      root.dataset.cssTimeline = 'true';
+      return;
+    }
+
     let ticking = false;
 
     const update = () => {
@@ -92,6 +112,33 @@
     stroke: var(--kw-accent);
     stroke-dasharray: 100;
     stroke-dashoffset: 100;
+  }
+
+  /* -------------------------------------------------------------
+   * Scroll-Driven Animations (issue #499)
+   *
+   * 対応ブラウザでは BlogPost.astro の main.post-layout が定義する
+   * view-timeline-name: --kw-post-scroll を参照し、本文領域のスクロール進捗を
+   * メインスレッドなしで stroke-dashoffset に直接接続する。
+   * 非対応ブラウザ (Firefox 等) は上部 <script> の rAF フォールバックが担う。
+   *
+   * reduce-motion 時は即時表示 (現行仕様維持) のため、timeline アニメを適用しない。
+   * timeline 駆動アニメは wall-clock duration に依存しないため global.css の
+   * 一律 duration 0.01ms 上書きでは止まらない。OS 設定 (@media) と手動設定
+   * (html.reduce-motion / data-reduced-motion) の双方を明示的に除外する。
+   * ------------------------------------------------------------- */
+  @supports (animation-timeline: --x) {
+    @media (prefers-reduced-motion: no-preference) {
+      :global(html:not(.reduce-motion)) .reading-progress:not([data-reduced-motion='true']) .reading-progress__fill {
+        animation: kw-reading-progress-fill linear both;
+        animation-timeline: --kw-post-scroll;
+        animation-range: cover 0% cover 100%;
+      }
+    }
+  }
+  @keyframes kw-reading-progress-fill {
+    from { stroke-dashoffset: 100; }
+    to   { stroke-dashoffset: 0; }
   }
 
   .reading-progress__stations circle {

@@ -362,12 +362,16 @@ html.reduce-motion::view-transition-new(*) {
 }
 
 /* -------------------------------------------------------------
- * Scroll reveal (issue #377)
+ * Scroll reveal (issue #377 / Scroll-Driven Animations 化: issue #499)
  *
  * 初期非表示は html.kw-anim でゲートする。kw-anim は BaseHead の
  * head inline が「モーション許可時のみ」初回描画前に付与する。
  * よって JS 無効 / モーション低減時は kw-anim が付かず、
  * コンテンツは常に表示される (チラつき・非表示を回避)。
+ *
+ * html.kw-scroll-timeline (animation-timeline: view() 対応ブラウザで BaseHead が付与)
+ * では IntersectionObserver を使わず、CSS の view() タイムラインだけでメインスレッド
+ * 負荷ゼロの reveal を行う。非対応ブラウザ (Firefox 等) は SiteLayout の JS パスにフォールバックする。
  * ------------------------------------------------------------- */
 html.kw-anim [data-reveal] {
   opacity: 0;
@@ -379,6 +383,25 @@ html.kw-anim [data-reveal] {
 html.kw-anim [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+html.kw-anim.kw-scroll-timeline [data-reveal] {
+  animation: kw-reveal-in linear both;
+  animation-timeline: view();
+  animation-range: entry 0% entry 40%;
+  /* transition は IntersectionObserver パス専用なので無効化し、
+   * animation との二重適用を防ぐ。 */
+  transition: none;
+}
+@keyframes kw-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--kw-motion-distance));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* 文字サイズ: 大 / 特大 (issue #390)。fs トークンを一括で拡大。 */
