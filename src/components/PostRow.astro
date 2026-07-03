@@ -1,5 +1,6 @@
 ---
 import FormattedDate from './FormattedDate.astro';
+import { toTransitionName } from '../lib/slug';
 
 interface Props {
   num?: string;
@@ -12,6 +13,8 @@ interface Props {
   accentNum?: boolean;
   dataYear?: string;
   dataCategory?: string;
+  /** View Transitions morph 用の slug (issue #500)。未指定なら transition:name を付与しない。 */
+  id?: string;
 }
 
 const {
@@ -25,9 +28,11 @@ const {
   accentNum = false,
   dataYear,
   dataCategory,
+  id,
 } = Astro.props;
 
 const TitleTag = titleTag;
+const titleTransitionName = id ? toTransitionName('title', id) : undefined;
 ---
 
 <article class="post-row" data-year={dataYear} data-category={dataCategory} data-reveal>
@@ -38,7 +43,7 @@ const TitleTag = titleTag;
         <FormattedDate date={pubDate} />
         {category && <span>· {category}</span>}
       </p>
-      <TitleTag class="post-row__title">{title}</TitleTag>
+      <TitleTag class="post-row__title" transition:name={titleTransitionName}>{title}</TitleTag>
       {description && <p class="post-row__desc no-indent">{description}</p>}
     </div>
     <span class="post-row__arrow" aria-hidden="true">→</span>

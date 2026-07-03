@@ -4,11 +4,17 @@ import { getImage } from "astro:assets";
 import SiteLayout from "./SiteLayout.astro";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ContentPicture from "../components/ContentPicture.astro";
+import { toTransitionName } from "../lib/slug";
 
-type Props = CollectionEntry<"works">["data"];
+type Props = CollectionEntry<"works">["data"] & {
+  /** View Transitions morph 用の slug (issue #500)。一覧側の WorksCard と一致させる。 */
+  id?: string;
+};
 
 const work = Astro.props as Props;
-const { title, description, heroImage, status, tags, createdAt, updatedAt, repoUrl, lpUrl, demoUrl } = work;
+const { id, title, description, heroImage, status, tags, createdAt, updatedAt, repoUrl, lpUrl, demoUrl } = work;
+const heroTransitionName = id ? toTransitionName("hero", id) : undefined;
+const titleTransitionName = id ? toTransitionName("title", id) : undefined;
 
 const statusMap = {
   active:   { label: "Active",   className: "kw-chip--status-active",   note: "現在も公開・更新中のプロジェクト" },
@@ -78,7 +84,7 @@ const breadcrumbSchema = {
           <span class:list={["kw-chip", statusMeta.className]}>{statusMeta.label}</span>
           <span class="kw-mono work-hero__meta-note">{statusMeta.note}</span>
         </div>
-        <h1 class="work-hero__title">{title}</h1>
+        <h1 class="work-hero__title" transition:name={titleTransitionName}>{title}</h1>
         <p class="work-hero__lead no-indent">{description}</p>
         <div class="work-hero__actions">
           <a class="kw-button" href={lpUrl} target="_blank" rel="noopener noreferrer">LP を開く <span class="kw-button-arrow">→</span></a>
@@ -127,6 +133,7 @@ const breadcrumbSchema = {
           loading="eager"
           fetchpriority="high"
           decoding="async"
+          transition:name={heroTransitionName}
         />
       </figure>
     )}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { encodeSlugId } from "./slug";
+import { encodeSlugId, toTransitionName } from "./slug";
 
 describe("encodeSlugId", () => {
   it("ASCII スラッグはそのまま返す", () => {
@@ -36,5 +36,39 @@ describe("encodeSlugId", () => {
 
   it("複数スラッシュを含む場合は各セグメントを個別にエンコードする", () => {
     expect(encodeSlugId("a b/c d")).toBe("a%20b/c%20d");
+  });
+});
+
+describe("toTransitionName", () => {
+  it("ASCII スラッグは prefix とハイフンで結合する", () => {
+    expect(toTransitionName("title", "hello-world")).toBe("title-hello-world");
+  });
+
+  it("日本語スラッグを CSS <custom-ident> 互換な英数字に変換する", () => {
+    const result = toTransitionName("hero", "技術メモ");
+    expect(result).toMatch(/^[a-zA-Z][a-zA-Z0-9_-]*$/);
+    expect(result).not.toContain("%");
+  });
+
+  it("スラッシュを含むスラッグも単一の識別子に変換する (リージョン/id 形式)", () => {
+    const result = toTransitionName("title", "blog/技術/記事");
+    expect(result).toMatch(/^[a-zA-Z][a-zA-Z0-9_-]*$/);
+  });
+
+  it("ドットを含むスラッグも CSS 数値トークンと衝突しない形に変換する", () => {
+    const result = toTransitionName("title", "vue-router-4.0");
+    expect(result).toBe("title-vue-router-4-0");
+  });
+
+  it("同一 id からは常に同一の値を生成する (一覧側↔詳細側の一致保証)", () => {
+    expect(toTransitionName("title", "a/b")).toBe(
+      toTransitionName("title", "a/b")
+    );
+  });
+
+  it("異なる prefix では異なる値になる (hero と title の衝突回避)", () => {
+    expect(toTransitionName("hero", "post-1")).not.toBe(
+      toTransitionName("title", "post-1")
+    );
   });
 });

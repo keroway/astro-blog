@@ -43,6 +43,7 @@ const canonicalUrl = new URL(
         description={post.data.description?.trim()}
         pubDate={post.data.pubDate}
         category={categoryLabel(post.data.category)}
+        id={post.id}
       />
     ))}
   </div>

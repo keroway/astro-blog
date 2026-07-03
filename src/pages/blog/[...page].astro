@@ -123,6 +123,7 @@ const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).hre
         accentNum={true}
         dataYear={String(post.data.pubDate.getFullYear())}
         dataCategory={post.data.category}
+        id={post.id}
       />
     ))}
   </div>

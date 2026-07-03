@@ -11,6 +11,7 @@ import PostSeriesNav from "../components/PostSeriesNav.astro";
 import PostNav from "../components/PostNav.astro";
 import PostRelated from "../components/PostRelated.astro";
 import { SITE_AUTHOR } from "../consts";
+import { toTransitionName } from "../lib/slug";
 import type { BlogData, BlogEntry } from "../types/content";
 
 interface Heading {
@@ -20,6 +21,8 @@ interface Heading {
 }
 
 interface Props extends BlogData {
+  /** View Transitions morph 用の slug (issue #500)。一覧側の PostRow / WorksCard と一致させる。 */
+  id?: string;
   ogImage?: string;
   readingTime?: number;
   headings?: Heading[];
@@ -38,6 +41,7 @@ interface Props extends BlogData {
 
 const post = Astro.props as Props;
 const {
+  id,
   title,
   description,
   pubDate,
@@ -54,6 +58,8 @@ const {
   seriesNav = null,
   tags = [],
 } = post;
+const heroTransitionName = id ? toTransitionName("hero", id) : undefined;
+const titleTransitionName = id ? toTransitionName("title", id) : undefined;
 const heroImageSrc = heroImage
   ? heroImage.format === "svg"
     ? heroImage.src
@@ -115,7 +121,7 @@ const breadcrumbSchema = {
             loading="eager"
             fetchpriority="high"
             decoding="async"
-            transition:name={`hero-${title}`}
+            transition:name={heroTransitionName}
           />
         </figure>
       )}
@@ -135,7 +141,7 @@ const breadcrumbSchema = {
             </span>
           )}
         </div>
-        <h1 class="post__title" data-pagefind-meta="title">{title}</h1>
+        <h1 class="post__title" data-pagefind-meta="title" transition:name={titleTransitionName}>{title}</h1>
         <hr />
         {tags.length > 0 && (
           <ul class="post__tags" aria-label="タグ">
