@@ -9,8 +9,8 @@
     id="a11y-trigger"
     class="a11y-menu__trigger"
     type="button"
+    popovertarget="a11y-panel"
     aria-haspopup="dialog"
-    aria-expanded="false"
     aria-controls="a11y-panel"
     aria-label="表示設定を開く"
   >
@@ -20,17 +20,16 @@
   <div
     id="a11y-panel"
     class="a11y-menu__panel"
+    popover="auto"
     role="dialog"
     aria-label="表示設定"
-    aria-modal="false"
-    hidden
   >
     <p class="a11y-menu__title">表示設定</p>
 
     <fieldset class="a11y-menu__fieldset">
       <legend class="a11y-menu__legend">動き</legend>
       <label class="a11y-menu__row">
-        <input id="a11y-reduce-motion" type="checkbox" />
+        <input id="a11y-reduce-motion" type="checkbox" autofocus />
         <span>モーションを減らす</span>
       </label>
     </fieldset>
@@ -91,40 +90,16 @@
     setUnderlineLinks,
   } from '../scripts/underline-links';
 
+  // Popover API (issue #503) へ移行。開閉・light-dismiss・Esc 閉じ・トップレイヤー表示・
+  // フォーカス管理はブラウザネイティブ (popover 属性 + popovertarget) が担うため、
+  // ここでは各コントロールの状態同期と設定反映のみを行う。
   function panel() {
     return document.getElementById('a11y-panel');
   }
-  function trigger() {
-    return document.getElementById('a11y-trigger');
-  }
-
-  function isOpen() {
-    return trigger()?.getAttribute('aria-expanded') === 'true';
-  }
-
-  function open() {
-    const t = trigger();
-    const p = panel();
-    if (!t || !p) return;
-    t.setAttribute('aria-expanded', 'true');
-    p.hidden = false;
-    // 最初のコントロールへフォーカス
-    p.querySelector<HTMLElement>('input, button')?.focus();
-  }
-
-  function close(returnFocus = true) {
-    const t = trigger();
-    const p = panel();
-    if (!t || !p) return;
-    t.setAttribute('aria-expanded', 'false');
-    p.hidden = true;
-    if (returnFocus) t.focus();
-  }
 
   function init() {
-    const t = trigger();
     const p = panel();
-    if (!t || !p) return;
+    if (!p) return;
 
     // 初期状態を同期
     const reduceInput = document.getElementById(
@@ -150,11 +125,6 @@
     if (underlineInput) underlineInput.checked = getUnderlineLinks();
 
     const resetButton = document.getElementById('a11y-reset');
-
-    // トリガー開閉
-    t.addEventListener('click', () => {
-      isOpen() ? close() : open();
-    });
 
     // コントロール
     reduceInput?.addEventListener('change', () => {
@@ -195,16 +165,6 @@
     });
   }
 
-  // Esc で閉じる / 外側クリックで閉じる (document に一度だけ登録)
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isOpen()) close();
-  });
-  document.addEventListener('click', (e) => {
-    if (!isOpen()) return;
-    const target = e.target as Node;
-    if (!document.querySelector('.a11y-menu')?.contains(target)) close(false);
-  });
-
   // 初回ロードと View Transitions 遷移後の両方で初期化
   document.addEventListener('astro:page-load', init);
 </script>
@@ -240,10 +200,20 @@
     outline-offset: 2px;
   }
 
+  /* -------------------------------------------------------------
+   * Popover API + Anchor Positioning + @starting-style (issue #503)
+   *
+   * パネルは popover="auto" でトップレイヤーに表示されるため、UA 既定の
+   * inset:0 / margin:auto (中央寄せ) をリセットする。
+   * フォールバック: Anchor Positioning 未対応 (Firefox 等) では fixed で
+   * ヘッダー右下に配置する。対応ブラウザでは @supports でアンカーに紐付ける。
+   * ------------------------------------------------------------- */
   .a11y-menu__panel {
-    position: absolute;
-    top: calc(100% + var(--kw-space-3));
-    right: 0;
+    position: fixed;
+    inset: auto;
+    top: var(--kw-space-16);
+    right: var(--kw-space-4);
+    margin: 0;
     z-index: 60;
     min-width: 260px;
     max-height: min(70vh, 520px);
@@ -256,6 +226,56 @@
     display: flex;
     flex-direction: column;
     gap: var(--kw-space-4);
+  }
+
+  /* Popover 非対応ブラウザでは popover 属性が無視され、UA の
+   * [popover]:not(:popover-open){display:none} が効かない。不可視の fixed パネルが
+   * クリックを奴うのを防ぐため、非対応時は完全に非表示にする。 */
+  @supports not (selector(:popover-open)) {
+    .a11y-menu__panel {
+      display: none;
+    }
+  }
+
+  /* 開閉トランジション: フェード + スライド。--kw-motion-* トークンに接続し、
+   * reduce-motion 時は global.css が distance=0 / duration≈0 に倒す。
+   * transition は開・閉両方で発火させるため両状態に適用する。 */
+  .a11y-menu__panel:popover-open {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .a11y-menu__panel,
+  .a11y-menu__panel:popover-open {
+    transition:
+      opacity var(--kw-motion-duration) var(--kw-motion-easing),
+      translate var(--kw-motion-duration) var(--kw-motion-easing),
+      overlay var(--kw-motion-duration) allow-discrete,
+      display var(--kw-motion-duration) allow-discrete;
+  }
+  .a11y-menu__panel {
+    opacity: 0;
+    translate: 0 calc(-1 * var(--kw-motion-distance));
+  }
+  @starting-style {
+    .a11y-menu__panel:popover-open {
+      opacity: 0;
+      translate: 0 calc(-1 * var(--kw-motion-distance));
+    }
+  }
+
+  /* Anchor Positioning 対応ブラウザではトリガーに紐付け、画面端で自動フリップ。 */
+  @supports (anchor-name: --a11y-anchor) {
+    .a11y-menu__trigger {
+      anchor-name: --a11y-anchor;
+    }
+    .a11y-menu__panel {
+      position-anchor: --a11y-anchor;
+      position-area: bottom span-left;
+      top: auto;
+      right: auto;
+      margin-block-start: var(--kw-space-3);
+      position-try-fallbacks: flip-block, flip-inline;
+    }
   }
 
   .a11y-menu__title {
@@ -329,7 +349,7 @@
 
   @media (max-width: 640px) {
     .a11y-menu__panel {
-      right: 0;
+      right: var(--kw-space-3);
     }
   }
 </style>
