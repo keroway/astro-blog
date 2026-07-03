@@ -6,36 +6,41 @@
 
 :root,
 [data-theme="light"] {
-  /* ---- Primitives ---- */
-  --kw-navy:        #003366;
-  --kw-blue:        #1E50A2;
-  --kw-paper:       #F3F1EC;
-  --kw-paper-warm:  #E9DECB;
-  --kw-paper-card:  #FFFDF8;
-  --kw-sand:        #D9B382;
-  --kw-sand-soft:   rgba(217, 179, 130, 0.45);
-  --kw-vermilion:   #B43D2F;
-  --kw-vermilion-soft: rgba(180, 61, 47, 0.14);
+  /* ---- Primitives (OKLCH) ----
+   * hex から OKLCH へ移行 (issue #501)。彩度は P3 ディスプレイで映えるよう
+   * 元 sRGB 値よりわずかに広げてある (perceptual boost, L/H は維持)。
+   * *-soft / *-faint 系・rule 系は Relative Color Syntax で派生させ、
+   * ベース色の変更に自動追従させる。
+   */
+  --kw-navy:        oklch(32.33% 0.1148 253.89);
+  --kw-blue:        oklch(44.65% 0.1606 259.95);
+  --kw-paper:       oklch(95.83% 0.0070 88.64);
+  --kw-paper-warm:  oklch(90.43% 0.0281 81.47);
+  --kw-paper-card:  oklch(99.42% 0.0069 88.64);
+  --kw-sand:        oklch(78.89% 0.0875 73.37);
+  --kw-sand-soft:   oklch(from var(--kw-sand) l c h / 0.45);
+  --kw-vermilion:   oklch(52.79% 0.1758 29.88);
+  --kw-vermilion-soft: oklch(from var(--kw-vermilion) l c h / 0.14);
 
   /* ---- Motif: 松並木 (pine grove) ---- */
-  --kw-pine:        #3D5A3E;
-  --kw-pine-soft:   rgba(61, 90, 62, 0.28);
+  --kw-pine:        oklch(43.62% 0.0640 145.34);
+  --kw-pine-soft:   oklch(from var(--kw-pine) l c h / 0.28);
 
   /* ---- Motif: 富士の遠景 (Fuji distant view) ---- */
-  --kw-fuji:        #6E8BAD;
-  --kw-fuji-faint:  rgba(110, 139, 173, 0.08);
+  --kw-fuji:        oklch(62.74% 0.0687 252.75);
+  --kw-fuji-faint:  oklch(from var(--kw-fuji) l c h / 0.08);
 
   /* ---- Motif: 道筋 (Tokaido route) ---- */
-  --kw-road:        #5E7892;
-  --kw-road-soft:   rgba(94, 120, 146, 0.14);
+  --kw-road:        oklch(56.22% 0.0567 248.74);
+  --kw-road-soft:   oklch(from var(--kw-road) l c h / 0.14);
 
-  --kw-ink:         #0B1B33;
-  --kw-ink-dim:     #4A5874;
-  --kw-ink-faint:   #8290AC;
+  --kw-ink:         oklch(22.28% 0.0519 258.34);
+  --kw-ink-dim:     oklch(46.00% 0.0492 263.91);
+  --kw-ink-faint:   oklch(65.20% 0.0450 264.19);
 
-  --kw-rule:        rgba(0, 51, 102, 0.16);
-  --kw-rule-soft:   rgba(0, 51, 102, 0.08);
-  --kw-rule-strong: rgba(0, 51, 102, 0.28);
+  --kw-rule:        oklch(from var(--kw-navy) l c h / 0.16);
+  --kw-rule-soft:   oklch(from var(--kw-navy) l c h / 0.08);
+  --kw-rule-strong: oklch(from var(--kw-navy) l c h / 0.28);
 
   /* ---- Semantic ---- */
   --kw-bg:           var(--kw-paper);
@@ -64,50 +69,50 @@
 
   /* Status pills */
   --kw-status-active-fg:   var(--kw-blue);
-  --kw-status-active-bg:   rgba(30, 80, 162, 0.10);
-  --kw-status-wip-fg:      #8A5A1F;
-  --kw-status-wip-bg:      rgba(217, 179, 130, 0.28);
+  --kw-status-active-bg:   oklch(from var(--kw-blue) l c h / 0.10);
+  --kw-status-wip-fg:      oklch(50.95% 0.0963 67.57);
+  --kw-status-wip-bg:      oklch(from var(--kw-sand) l c h / 0.28);
   --kw-status-archived-fg: var(--kw-ink-dim);
-  --kw-status-archived-bg: rgba(74, 88, 116, 0.10);
+  --kw-status-archived-bg: oklch(from var(--kw-ink-dim) l c h / 0.10);
 
   /* Seal */
   --kw-seal-bg:     var(--kw-vermilion);
-  --kw-seal-fg:     #FFF8EF;
-  --kw-seal-border: rgba(180, 61, 47, 0.35);
+  --kw-seal-fg:     oklch(98.21% 0.0141 74.43);
+  --kw-seal-border: oklch(from var(--kw-vermilion) l c h / 0.35);
 
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --kw-navy:        #9CB4DA;
-  --kw-blue:        #7AA2D0;
-  --kw-paper:       #0B1B33;
-  --kw-paper-warm:  #0F2244;
-  --kw-paper-card:  #122548;
-  --kw-sand:        #D9B382;
-  --kw-sand-soft:   rgba(217, 179, 130, 0.30);
-  --kw-vermilion:   #E07A66;
-  --kw-vermilion-soft: rgba(224, 122, 102, 0.16);
+  --kw-navy:        oklch(76.49% 0.0682 259.52);
+  --kw-blue:        oklch(70.05% 0.0906 252.41);
+  --kw-paper:       oklch(22.28% 0.0519 258.34);
+  --kw-paper-warm:  oklch(25.71% 0.0687 261.04);
+  --kw-paper-card:  oklch(26.97% 0.0698 261.48);
+  --kw-sand:        oklch(78.89% 0.0875 73.37);
+  --kw-sand-soft:   oklch(from var(--kw-sand) l c h / 0.30);
+  --kw-vermilion:   oklch(68.91% 0.1466 32.23);
+  --kw-vermilion-soft: oklch(from var(--kw-vermilion) l c h / 0.16);
 
   /* ---- Motif: 松並木 ---- */
-  --kw-pine:        #7A9B7B;
-  --kw-pine-soft:   rgba(122, 155, 123, 0.22);
+  --kw-pine:        oklch(65.55% 0.0668 145.63);
+  --kw-pine-soft:   oklch(from var(--kw-pine) l c h / 0.22);
 
   /* ---- Motif: 富士の遠景 ---- */
-  --kw-fuji:        #8BA5C2;
-  --kw-fuji-faint:  rgba(139, 165, 194, 0.10);
+  --kw-fuji:        oklch(71.23% 0.0577 251.35);
+  --kw-fuji-faint:  oklch(from var(--kw-fuji) l c h / 0.10);
 
   /* ---- Motif: 道筋 ---- */
-  --kw-road:        #8CA6BD;
-  --kw-road-soft:   rgba(140, 166, 189, 0.14);
+  --kw-road:        oklch(71.32% 0.0497 245.18);
+  --kw-road-soft:   oklch(from var(--kw-road) l c h / 0.14);
 
-  --kw-ink:         #E8EDF6;
-  --kw-ink-dim:     #9AA6BD;
-  --kw-ink-faint:   #6E7A94;
+  --kw-ink:         oklch(94.49% 0.0133 262.38);
+  --kw-ink-dim:     oklch(72.33% 0.0361 263.51);
+  --kw-ink-faint:   oklch(57.91% 0.0426 265.59);
 
-  --kw-rule:        rgba(232, 237, 246, 0.18);
-  --kw-rule-soft:   rgba(232, 237, 246, 0.08);
-  --kw-rule-strong: rgba(232, 237, 246, 0.32);
+  --kw-rule:        oklch(from var(--kw-ink) l c h / 0.18);
+  --kw-rule-soft:   oklch(from var(--kw-ink) l c h / 0.08);
+  --kw-rule-strong: oklch(from var(--kw-ink) l c h / 0.32);
 
   --kw-bg:           var(--kw-paper);
   --kw-bg-card:      var(--kw-paper-card);
@@ -132,16 +137,16 @@
   --kw-btn-ghost-fg:      var(--kw-ink);
   --kw-btn-ghost-border:  var(--kw-rule-strong);
 
-  --kw-status-active-fg:   #B3CCEC;
-  --kw-status-active-bg:   rgba(122, 162, 208, 0.16);
+  --kw-status-active-fg:   oklch(83.72% 0.0525 254.69);
+  --kw-status-active-bg:   oklch(from var(--kw-blue) l c h / 0.16);
   --kw-status-wip-fg:      var(--kw-sand);
-  --kw-status-wip-bg:      rgba(217, 179, 130, 0.18);
+  --kw-status-wip-bg:      oklch(from var(--kw-sand) l c h / 0.18);
   --kw-status-archived-fg: var(--kw-ink-dim);
-  --kw-status-archived-bg: rgba(232, 237, 246, 0.06);
+  --kw-status-archived-bg: oklch(from var(--kw-ink) l c h / 0.06);
 
-  --kw-seal-bg:     #D75C4D;
-  --kw-seal-fg:     #FFF8EF;
-  --kw-seal-border: rgba(224, 122, 102, 0.42);
+  --kw-seal-bg:     oklch(62.75% 0.1771 29.27);
+  --kw-seal-fg:     oklch(98.21% 0.0141 74.43);
+  --kw-seal-border: oklch(from var(--kw-vermilion) l c h / 0.42);
 
   color-scheme: dark;
 }
