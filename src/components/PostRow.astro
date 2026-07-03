@@ -46,6 +46,9 @@ const TitleTag = titleTag;
 </article>
 
 <style>
+  .post-row {
+    container-type: inline-size;
+  }
   .post-row__link {
     display: grid;
     grid-template-columns: 56px 1fr auto;
@@ -96,7 +99,7 @@ const TitleTag = titleTag;
     color: var(--kw-fg-link);
     align-self: center;
   }
-  @media (max-width: 640px) {
+  @container (width < 520px) {
     .post-row__link {
       grid-template-columns: 40px 1fr auto;
       gap: var(--kw-space-4);

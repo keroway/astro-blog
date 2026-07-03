@@ -24,6 +24,7 @@ const num = (index + 1).toString().padStart(2, '0');
 
 <style>
   .focus-card {
+    container-type: inline-size;
     display: grid;
     gap: var(--kw-space-3);
     padding: var(--kw-space-6);
@@ -31,11 +32,6 @@ const num = (index + 1).toString().padStart(2, '0');
     border-radius: var(--kw-radius-lg);
   }
 
-  @media (max-width: 640px) {
-    .focus-card {
-      padding: var(--kw-space-5);
-    }
-  }
   .focus-card__eyebrow {
     display: flex;
     gap: 10px;
@@ -66,5 +62,14 @@ const num = (index + 1).toString().padStart(2, '0');
     color: var(--kw-fg-muted);
     text-indent: 1em;
     margin: 0;
+  }
+
+  @container (width < 360px) {
+    .focus-card__eyebrow {
+      white-space: normal;
+    }
+    .focus-card__title {
+      font-size: clamp(var(--kw-fs-h4), 8cqi, var(--kw-fs-h3));
+    }
   }
 </style>

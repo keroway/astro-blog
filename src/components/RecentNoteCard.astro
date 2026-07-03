@@ -54,6 +54,7 @@ const heroImage = post.data.heroImage;
 
 <style>
   .recent-note {
+    container-type: inline-size;
     min-width: 0;
     background: var(--kw-bg-card);
     border: 1px solid var(--kw-rule);
@@ -133,6 +134,7 @@ const heroImage = post.data.heroImage;
     align-content: center;
     gap: var(--kw-space-4);
     padding: clamp(var(--kw-space-6), 4vw, var(--kw-space-10));
+    padding: clamp(var(--kw-space-6), 8cqi, var(--kw-space-10));
   }
   .recent-note__meta {
     display: flex;
@@ -148,6 +150,7 @@ const heroImage = post.data.heroImage;
   .recent-note__title {
     font-family: var(--kw-font-display);
     font-size: clamp(var(--kw-fs-h2), 4vw, var(--kw-fs-display-md));
+    font-size: clamp(var(--kw-fs-h2), 8cqi, var(--kw-fs-display-md));
     font-weight: var(--kw-fw-medium);
     line-height: var(--kw-lh-snug);
     letter-spacing: var(--kw-ls-display);
@@ -167,7 +170,7 @@ const heroImage = post.data.heroImage;
     text-transform: uppercase;
     color: var(--kw-fg-link);
   }
-  @media (max-width: 760px) {
+  @container (width < 620px) {
     .recent-note__link {
       grid-template-columns: 1fr;
     }
