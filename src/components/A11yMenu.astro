@@ -223,27 +223,23 @@
     border: 1px solid var(--kw-rule-strong);
     border-radius: var(--kw-radius-md);
     box-shadow: var(--kw-shadow-pop);
-    display: flex;
     flex-direction: column;
     gap: var(--kw-space-4);
   }
 
-  /* Popover 非対応ブラウザでは popover 属性が無視され、UA の
-   * [popover]:not(:popover-open){display:none} が効かない。不可視の fixed パネルが
-   * クリックを奴うのを防ぐため、非対応時は完全に非表示にする。 */
-  @supports not (selector(:popover-open)) {
-    .a11y-menu__panel {
-      display: none;
-    }
+  /* 閉じた popover は UA の [popover]:not(:popover-open){display:none} に任せる。
+   * base で display:flex を強制すると不可視のまま fixed パネルが
+   * ヘッダー上のクリックを奴うため、display:flex は開いた状態でのみ適用する。
+   * Popover 非対応ブラウザでも :popover-open がマッチしないためパネルは非表示のまま。 */
+  .a11y-menu__panel:popover-open {
+    display: flex;
+    opacity: 1;
+    translate: 0 0;
   }
 
   /* 開閉トランジション: フェード + スライド。--kw-motion-* トークンに接続し、
    * reduce-motion 時は global.css が distance=0 / duration≈0 に倒す。
    * transition は開・閉両方で発火させるため両状態に適用する。 */
-  .a11y-menu__panel:popover-open {
-    opacity: 1;
-    translate: 0 0;
-  }
   .a11y-menu__panel,
   .a11y-menu__panel:popover-open {
     transition:
