@@ -393,6 +393,16 @@ html.kw-anim.kw-scroll-timeline [data-reveal] {
    * animation との二重適用を防ぐ。 */
   transition: none;
 }
+/* ロード/reload 時点で既にビューポート内にあった要素は SiteLayout の init() が
+ * is-visible を付与する。view-timeline の entry 進捗はスクロールイベントが一度も
+ * 発火しないと初回進捗を解決できず opacity:0 のまま固まることがあるため、
+ * fold 内要素はこのルールで CSS アニメーションを即時無効化して強制表示する。 */
+html.kw-anim.kw-scroll-timeline [data-reveal].is-visible {
+  animation: none;
+  animation-timeline: none;
+  opacity: 1;
+  transform: none;
+}
 @keyframes kw-reveal-in {
   from {
     opacity: 0;
