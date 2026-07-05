@@ -113,19 +113,22 @@
       const actionRules = [
         {
           type: "primary",
-          pattern: /ローカルリポジトリ|Work with Local Repository|保存|Save|作成|New|Create/iu,
+          pattern:
+            /ローカルリポジトリ|Work with Local Repository|保存|Save|作成|New|Create|投稿|Submit/iu,
         },
         {
           type: "danger",
-          pattern: /削除|Delete|破棄|Discard|Remove/iu,
+          pattern: /削除|Delete|破棄|Discard|Remove|リセット|Reset/iu,
         },
         {
           type: "secondary",
-          pattern: /GitHub|プレビュー|Preview|公開|Publish/iu,
+          pattern:
+            /GitHub|プレビュー|Preview|公開|Publish|アップロード|Upload|メディア|Media/iu,
         },
         {
           type: "subtle",
-          pattern: /Access Token|キャンセル|Cancel|閉じる|Close/iu,
+          pattern:
+            /Access Token|キャンセル|Cancel|閉じる|Close|戻る|Back|編集|Edit/iu,
         },
       ];
 
