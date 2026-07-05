@@ -60,16 +60,18 @@ collections:
         field: pubDate
         pattern: \d{4}
     fields:
+      # --- 基本情報（公開に必須） ---
       - label: 記事タイトル
         name: title
         widget: string
-        hint: 一覧・詳細ページ・SNS で表示する記事名。URL slug（ファイル名）とは別管理です。
+        hint: 一覧・詳細ページ・SNS で表示する記事名。保存時の URL slug（ファイル名）はこのタイトルから自動生成されます。後から変えたい場合は一覧のファイル名変更機能を使います。
 
       - label: 記事概要
         name: description
         widget: text
         hint: 記事カード、SNS シェア、検索結果に使う要約文（1〜2 文）。
 
+      # --- 公開設定 ---
       - label: 公開日
         name: pubDate
         widget: datetime
@@ -77,22 +79,20 @@ collections:
         time_format: false
         hint: 記事一覧の並び順と公開可否判定に使用。
 
-      - label: 更新日（任意）
-        name: updatedDate
-        widget: datetime
-        date_format: YYYY-MM-DD
-        time_format: false
-        required: false
-        hint: 内容を大きく更新した場合のみ設定します。未設定なら表示しません。
+      - label: 下書きにする
+        name: draft
+        widget: boolean
+        default: false
+        hint: オンにすると本番公開されません。新規作成中はオンにしておくと安全です。
 
-      - label: ヒーロー画像（任意）
-        name: heroImage
-        widget: image
-        required: false
+      # --- 本文 ---
+      - label: 本文
+        name: body
+        widget: markdown
         media_folder: /src/assets/content/blog
         public_folder: /src/assets/content/blog
-        hint: 記事カードのサムネイル画像。16:9 の画像を推奨します。
 
+      # --- 分類・メタデータ（任意） ---
       - label: カテゴリ（任意）
         name: category
         widget: select
@@ -116,11 +116,28 @@ collections:
         required: false
         hint: 検索・関連記事の判定に使うキーワード。既存タグの再利用を優先します。
 
-      - label: 下書きにする
-        name: draft
-        widget: boolean
-        default: false
-        hint: オンにすると本番公開されません。
+      - label: 著者名（任意）
+        name: author
+        widget: string
+        required: false
+        hint: 省略時はサイト既定の著者名を使います。
+
+      - label: 更新日（任意）
+        name: updatedDate
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: false
+        required: false
+        hint: 内容を大きく更新した場合のみ設定します。未設定なら表示しません。
+
+      # --- 画像・SEO（任意） ---
+      - label: ヒーロー画像（任意）
+        name: heroImage
+        widget: image
+        required: false
+        media_folder: /src/assets/content/blog
+        public_folder: /src/assets/content/blog
+        hint: 記事カードのサムネイル画像。16:9 の画像を推奨します。
 
       - label: SNS シェア画像（任意）
         name: ogImage
@@ -130,23 +147,11 @@ collections:
         public_folder: /src/assets/content/blog
         hint: SNS シェア時のサムネイル画像。省略時はタイトルから 1200×630 の画像を自動生成します。
 
-      - label: 著者名（任意）
-        name: author
-        widget: string
-        required: false
-        hint: 省略時はサイト既定の著者名を使います。
-
       - label: 正規 URL（任意）
         name: canonicalUrl
         widget: string
         required: false
         hint: 外部掲載などで canonical URL が別にある場合のみ設定します。
-
-      - label: 本文
-        name: body
-        widget: markdown
-        media_folder: /src/assets/content/blog
-        public_folder: /src/assets/content/blog
 
   # ────────────────────────────────
   # Works
@@ -167,15 +172,18 @@ collections:
       - label: ステータス
         field: status
     fields:
+      # --- 基本情報（公開に必須） ---
       - label: プロジェクト名
         name: title
         widget: string
+        hint: 一覧・詳細ページ・SNS で表示する制作物名。保存時の URL slug（ファイル名）はこのタイトルから自動生成されます。
 
       - label: 制作物概要
         name: description
         widget: text
         hint: 制作物一覧、SNS シェア、検索結果に使う要約文（1〜2 文）。
 
+      # --- 公開設定 ---
       - label: ステータス
         name: status
         widget: select
@@ -185,23 +193,20 @@ collections:
           - { label: "作業中", value: wip }
         default: active
 
-      - label: リポジトリ URL（任意）
-        name: repoUrl
-        widget: string
-        required: false
-        hint: GitHub など、実装を参照できるリポジトリ URL。
+      - label: トップページに掲載する
+        name: featured
+        widget: boolean
+        default: false
+        hint: オンにするとトップページの注目制作物枠に表示します。
 
-      - label: 紹介ページ URL
-        name: lpUrl
-        widget: string
-        hint: 機能紹介・外部紹介ページの URL。
+      # --- 本文 ---
+      - label: 本文
+        name: body
+        widget: markdown
+        media_folder: /src/assets/content/works
+        public_folder: /src/assets/content/works
 
-      - label: デモ URL（任意）
-        name: demoUrl
-        widget: string
-        required: false
-        hint: 動作デモが公開されている場合のみ設定します。
-
+      # --- 詳細情報 ---
       - label: タグ
         name: tags
         widget: list
@@ -222,6 +227,25 @@ collections:
         required: false
         hint: 内容を大きく更新した場合のみ設定します。未設定なら表示しません。
 
+      # --- 関連 URL ---
+      - label: 紹介ページ URL
+        name: lpUrl
+        widget: string
+        hint: 機能紹介・外部紹介ページの URL。
+
+      - label: リポジトリ URL（任意）
+        name: repoUrl
+        widget: string
+        required: false
+        hint: GitHub など、実装を参照できるリポジトリ URL。
+
+      - label: デモ URL（任意）
+        name: demoUrl
+        widget: string
+        required: false
+        hint: 動作デモが公開されている場合のみ設定します。
+
+      # --- 画像（任意） ---
       - label: ヒーロー画像（任意）
         name: heroImage
         widget: image
@@ -229,15 +253,3 @@ collections:
         media_folder: /src/assets/content/works
         public_folder: /src/assets/content/works
         hint: 制作物カードのサムネイル画像。16:9 の画像を推奨します。
-
-      - label: トップページに掲載する
-        name: featured
-        widget: boolean
-        default: false
-        hint: オンにするとトップページの注目制作物枠に表示します。
-
-      - label: 本文
-        name: body
-        widget: markdown
-        media_folder: /src/assets/content/works
-        public_folder: /src/assets/content/works
