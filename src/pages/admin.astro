@@ -91,6 +91,25 @@
           : collection,
       );
 
+      const labelRules = [
+        { pattern: /^Sveltia CMS$/u, label: "keroway CMS" },
+        {
+          pattern: /^Work with Local Repository$/u,
+          label: "ローカルリポジトリで編集",
+        },
+        { pattern: /^Sign In with .*GitHub/u, label: "GitHub でサインイン" },
+        {
+          pattern: /^Sign In Using Access Token$/u,
+          label: "アクセストークンでサインイン",
+        },
+        { pattern: /^Welcome to/u, label: "keroway CMS へようこそ" },
+        {
+          pattern: /^Once prompted, select the root directory/u,
+          label:
+            "表示されたダイアログで astro-blog リポジトリのルートディレクトリを選択してください。",
+        },
+      ];
+
       const actionRules = [
         {
           type: "primary",
@@ -110,7 +129,49 @@
         },
       ];
 
+      const isLoginScreen = () =>
+        [...document.querySelectorAll("button, a")].some((element) =>
+          /Work with Local Repository|ローカルリポジトリで編集|Sign In/iu.test(
+            element.textContent?.replace(/\s+/g, " ").trim() ?? "",
+          ),
+        );
+
+      const localizeLoginText = () => {
+        if (!isLoginScreen()) return;
+
+        document
+          .querySelectorAll<HTMLElement>("button, a, h1, h2, h3, p, [role='none']")
+          .forEach((element) => {
+            const text = element.textContent?.replace(/\s+/g, " ").trim() ?? "";
+            const matched = labelRules.find(({ pattern }) => pattern.test(text));
+
+            if (matched && element.textContent !== matched.label) {
+              element.textContent = matched.label;
+            }
+          });
+      };
+
+      const renderLoginGuide = () => {
+        const note = document.querySelector(".keroway-admin-shell-note");
+
+        if (!isLoginScreen()) {
+          note?.remove();
+          return;
+        }
+
+        if (note) return;
+
+        const nextNote = document.createElement("aside");
+        nextNote.className = "keroway-admin-shell-note";
+        nextNote.setAttribute("aria-label", "CMS の使い方");
+        nextNote.innerHTML = `<strong>推奨: ローカルリポジトリで編集</strong><span>通常は「ローカルリポジトリで編集」を選び、astro-blog のルートを指定します。GitHub ログインは本番環境用です。</span>`;
+        document.body.append(nextNote);
+      };
+
       const classifyAdminActions = () => {
+        localizeLoginText();
+        renderLoginGuide();
+
         document
           .querySelectorAll<HTMLButtonElement | HTMLAnchorElement>(
             'button, [role="button"], a',
