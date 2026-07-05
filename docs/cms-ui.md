@@ -26,6 +26,20 @@
 | `subtle` | 補助操作、キャンセル、閉じる |
 | `danger` | 削除、破棄など破壊的操作 |
 
+## 主要アクションの棚卸し
+
+Sveltia CMS 側の文言はバージョンにより変わる可能性があるため、`src/pages/admin.astro` では日本語/英語の代表語を正規表現で分類し、`data-keroway-admin-action` を付与する。
+
+| 現状ラベル例 | 改善後/扱い | 種別 |
+| --- | --- | --- |
+| `Work with Local Repository` | `ローカルリポジトリで編集` | `primary` |
+| `Save`, `保存`, `Create`, `作成`, `Submit` | 保存・作成系の最重要操作 | `primary` |
+| `Sign In with GitHub` | `GitHub でサインイン` | `secondary` |
+| `Preview`, `Publish`, `Upload`, `Media` | プレビュー・公開・メディア系の準主要操作 | `secondary` |
+| `Sign In Using Access Token` | `アクセストークンでサインイン` | `subtle` |
+| `Cancel`, `Close`, `Back`, `Edit` | キャンセル・戻る・補助編集 | `subtle` |
+| `Delete`, `Discard`, `Remove`, `Reset` | 削除・破棄・リセット | `danger` |
+
 ## フィールド文言の方針
 
 `public/admin/config.yml` のラベル・ヒントは、久しぶりに開いても判断できることを優先する。
