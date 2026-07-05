@@ -1,0 +1,34 @@
+# CMS UI 改善メモ
+
+- **対象**: `/admin/` (Sveltia CMS)
+- **関連 ADR**: [0016 — CMS を Keystatic から Sveltia CMS へ移行する](./adr/0016-cms-keystatic-to-sveltia.md)
+
+## テーマ適用
+
+管理画面のプロダクト感を keroway.com 本体に寄せるため、Sveltia CMS の SPA に対して `public/admin/theme.css` を読み込む。
+
+```html
+<link rel="stylesheet" href="/admin/theme.css" />
+```
+
+この CSS は Sveltia CMS の内部実装に強く依存しすぎないよう、次の範囲に留める。
+
+- CMS 専用のデザイントークン（色、角丸、影、フォーカス）
+- `button` / `[role="button"]` / form controls の基礎スタイル
+- `data-keroway-admin-action` など、`src/pages/admin.astro` 側で付与する安定したセマンティック hook
+
+## ボタン種別
+
+| 種別 | 用途 |
+| --- | --- |
+| `primary` | 推奨導線、保存、作成など最重要アクション |
+| `secondary` | GitHub ログイン、プレビューなど主操作に準じるアクション |
+| `subtle` | 補助操作、キャンセル、閉じる |
+| `danger` | 削除、破棄など破壊的操作 |
+
+## アクセシビリティ方針
+
+- フォーカスリングは色だけに頼らず、outline + halo で表示する
+- 最小タップ領域は 44px を目安にする
+- `prefers-reduced-motion: reduce` ではホバー移動などの motion を実質無効化する
+- ライト/ダークは `prefers-color-scheme` に追従する

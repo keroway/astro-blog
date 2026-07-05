@@ -1,0 +1,203 @@
+/*
+ * keroway CMS theme
+ *
+ * Sveltia CMS is a third-party SPA, so this file intentionally keeps the
+ * selectors broad and low-risk: design tokens, base surfaces, interactive
+ * states, and generic button/form styling. Product-specific DOM rewrites live
+ * in src/pages/admin.astro.
+ */
+:root {
+  color-scheme: light;
+  --cms-navy: oklch(32.33% 0.1148 253.89);
+  --cms-blue: oklch(44.65% 0.1606 259.95);
+  --cms-paper: oklch(95.83% 0.007 88.64);
+  --cms-paper-warm: oklch(90.43% 0.0281 81.47);
+  --cms-card: oklch(99.42% 0.0069 88.64);
+  --cms-sand: oklch(78.89% 0.0875 73.37);
+  --cms-vermilion: oklch(52.79% 0.1758 29.88);
+  --cms-vermilion-soft: oklch(from var(--cms-vermilion) l c h / 0.14);
+  --cms-ink: oklch(22.28% 0.0519 258.34);
+  --cms-muted: oklch(46% 0.0492 263.91);
+  --cms-rule: oklch(from var(--cms-navy) l c h / 0.16);
+  --cms-rule-strong: oklch(from var(--cms-navy) l c h / 0.28);
+  --cms-focus: var(--cms-vermilion);
+  --cms-success: oklch(43.62% 0.064 145.34);
+  --cms-danger: oklch(50.2% 0.171 27.8);
+  --cms-font-body: "Zen Maru Gothic", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --cms-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+  --cms-radius-sm: 6px;
+  --cms-radius-md: 10px;
+  --cms-radius-lg: 16px;
+  --cms-shadow-card: 0 12px 32px rgb(0 51 102 / 0.08),
+    0 1px 0 rgb(0 51 102 / 0.08);
+  --cms-duration: 160ms;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --cms-navy: oklch(76.49% 0.0682 259.52);
+    --cms-blue: oklch(70.05% 0.0906 252.41);
+    --cms-paper: oklch(22.28% 0.0519 258.34);
+    --cms-paper-warm: oklch(25.71% 0.0687 261.04);
+    --cms-card: oklch(26.97% 0.0698 261.48);
+    --cms-sand: oklch(78.89% 0.0875 73.37);
+    --cms-vermilion: oklch(68.91% 0.1466 32.23);
+    --cms-vermilion-soft: oklch(from var(--cms-vermilion) l c h / 0.16);
+    --cms-ink: oklch(94.49% 0.0133 262.38);
+    --cms-muted: oklch(72.33% 0.0361 263.51);
+    --cms-rule: oklch(from var(--cms-ink) l c h / 0.18);
+    --cms-rule-strong: oklch(from var(--cms-ink) l c h / 0.32);
+    --cms-success: oklch(65.55% 0.0668 145.63);
+    --cms-danger: oklch(55% 0.16 32.23);
+  }
+}
+
+html,
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at 12% 8%, var(--cms-vermilion-soft), transparent 18rem),
+    radial-gradient(circle at 88% 0%, oklch(from var(--cms-blue) l c h / 0.12), transparent 28rem),
+    var(--cms-paper);
+  color: var(--cms-ink);
+  font-family: var(--cms-font-body);
+}
+
+body {
+  margin: 0;
+}
+
+button,
+[role="button"],
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[role="button"] {
+  border-radius: var(--cms-radius-md) !important;
+  min-height: 44px;
+  transition:
+    background-color var(--cms-duration) ease,
+    border-color var(--cms-duration) ease,
+    box-shadow var(--cms-duration) ease,
+    transform var(--cms-duration) ease;
+}
+
+button:hover:not(:disabled),
+[role="button"]:hover {
+  transform: translateY(-1px);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--cms-focus) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 6px var(--cms-vermilion-soft) !important;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed !important;
+  opacity: 0.58 !important;
+  transform: none !important;
+}
+
+input,
+select,
+textarea {
+  border-radius: var(--cms-radius-sm) !important;
+}
+
+/* Semantic hooks added by admin.astro. */
+[data-keroway-admin-action="primary"] {
+  background: var(--cms-navy) !important;
+  border-color: var(--cms-navy) !important;
+  color: var(--cms-paper) !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+}
+
+[data-keroway-admin-action="primary"]:hover:not(:disabled) {
+  background: var(--cms-blue) !important;
+  border-color: var(--cms-blue) !important;
+}
+
+[data-keroway-admin-action="secondary"] {
+  background: var(--cms-card) !important;
+  border: 1px solid var(--cms-rule-strong) !important;
+  color: var(--cms-navy) !important;
+  font-weight: 650 !important;
+}
+
+[data-keroway-admin-action="subtle"] {
+  background: transparent !important;
+  border: 1px solid var(--cms-rule) !important;
+  color: var(--cms-muted) !important;
+}
+
+[data-keroway-admin-action="danger"] {
+  background: var(--cms-danger) !important;
+  border-color: var(--cms-danger) !important;
+  color: oklch(99% 0.003 88.64) !important;
+  font-weight: 700 !important;
+}
+
+.keroway-admin-shell-note {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2147483647;
+  max-width: min(360px, calc(100vw - 36px));
+  padding: 12px 14px;
+  border: 1px solid var(--cms-rule);
+  border-radius: var(--cms-radius-lg);
+  background: color-mix(in srgb, var(--cms-card) 94%, transparent);
+  box-shadow: var(--cms-shadow-card);
+  color: var(--cms-muted);
+  font-size: 13px;
+  line-height: 1.55;
+  backdrop-filter: blur(10px);
+}
+
+.keroway-admin-shell-note strong {
+  display: block;
+  color: var(--cms-ink);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 720px) {
+  .keroway-admin-shell-note {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  button:hover:not(:disabled),
+  [role="button"]:hover {
+    transform: none;
+  }
+}

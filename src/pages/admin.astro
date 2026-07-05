@@ -12,6 +12,7 @@
     <!-- robots: admin は検索インデックス不要 (vercel.json の X-Robots-Tag と二重防衛) -->
     <meta name="robots" content="noindex, nofollow" />
     <title>keroway CMS</title>
+    <link rel="stylesheet" href="/admin/theme.css" />
     <script>
       import CMS from "@sveltia/cms";
       import { parse, stringify } from "yaml";
@@ -80,13 +81,59 @@
       const config = parse(await response.text());
 
       config.load_config_file = false;
+      config.app_title = "keroway CMS";
+      config.site_url = "https://keroway.com";
+      config.display_url = "keroway.com";
+      config.show_preview_links = true;
       config.collections = config.collections.map((collection: any) =>
         ["blog", "works"].includes(collection.name)
           ? { ...collection, format: "mdoc" }
           : collection,
       );
 
+      const actionRules = [
+        {
+          type: "primary",
+          pattern: /ローカルリポジトリ|Work with Local Repository|保存|Save|作成|New|Create/iu,
+        },
+        {
+          type: "danger",
+          pattern: /削除|Delete|破棄|Discard|Remove/iu,
+        },
+        {
+          type: "secondary",
+          pattern: /GitHub|プレビュー|Preview|公開|Publish/iu,
+        },
+        {
+          type: "subtle",
+          pattern: /Access Token|キャンセル|Cancel|閉じる|Close/iu,
+        },
+      ];
+
+      const classifyAdminActions = () => {
+        document
+          .querySelectorAll<HTMLButtonElement | HTMLAnchorElement>(
+            'button, [role="button"], a',
+          )
+          .forEach((element) => {
+            const text =
+              element.textContent?.replace(/\s+/g, " ").trim() ||
+              element.getAttribute("aria-label") ||
+              element.getAttribute("title") ||
+              "";
+            const matched = actionRules.find(({ pattern }) => pattern.test(text));
+
+            if (matched) {
+              element.dataset.kerowayAdminAction = matched.type;
+            }
+          });
+      };
+
       CMS.init({ config });
+
+      const observer = new MutationObserver(classifyAdminActions);
+      observer.observe(document.body, { childList: true, subtree: true });
+      classifyAdminActions();
     </script>
   </head>
   <body>
