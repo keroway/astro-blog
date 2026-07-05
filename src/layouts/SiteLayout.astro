@@ -82,9 +82,20 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
     const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
     observer?.disconnect();
     // animation-timeline: view() 対応ブラウザ (issue #499) では global.css の
-    // html.kw-scroll-timeline [data-reveal] が CSS だけで reveal を駆動するので、
-    // IntersectionObserver は不要 (二重発火を避ける)。is-visible も付与しない。
-    if (document.documentElement.classList.contains('kw-scroll-timeline')) return;
+    // html.kw-scroll-timeline [data-reveal] が CSS だけで reveal を駆動する。
+    // ただし view-timeline の "entry" 進捗は初回ロード/reload 時にまだ解決されておらず、
+    // 最初から画面内 (above the fold) にある要素が opacity:0 のまま固まる既知の挙動がある
+    // (一度もスクロールイベントが発火しないため)。そのため、ロード時点で既にビューポート内に
+    // ある要素だけは JS で即座に可視化し、CSS アニメーションは無効化する。fold 外の要素は
+    // 従来通り CSS の scroll-timeline に描画を任せる (二重発火を避ける)。
+    if (document.documentElement.classList.contains('kw-scroll-timeline')) {
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      for (const el of targets) {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < vh && rect.bottom > 0) el.classList.add('is-visible');
+      }
+      return;
+    }
     // 低減時 / IO 未対応は隠さず即表示 (kw-anim も付いていない)。
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
       for (const el of targets) el.classList.add('is-visible');
