@@ -5,7 +5,8 @@
  * に切り替えられた (Plan 002)。本テストは vercel.json を読んで以下を assert する:
  *   - キャッチオール headers に `Content-Security-Policy` が含まれる
  *   - `Content-Security-Policy-Report-Only` は含まれない
- *   - CSP 値に `unpkg.com` または `esm.sh` が含まれない
+ *   - `script-src` に `unpkg.com` または `esm.sh` が含まれない (CDN スクリプト依存なし)
+ *   - `connect-src` に `https://unpkg.com` が含まれる (Sveltia CMS のバージョンチェック / Prism言語定義取得に必要)
  *   - `frame-ancestors 'none'` が含まれる
  *
  * Playwright の webServer (astro dev) は Vercel ヘッダーを適用しないため、
@@ -54,18 +55,35 @@ test.describe("Plan 002: CSP enforce mode regression", () => {
     ).not.toContain("Content-Security-Policy-Report-Only");
   });
 
-  test("CSP value does not allow unpkg.com or esm.sh", () => {
+  test("script-src does not allow unpkg.com or esm.sh (no CDN script dependency)", () => {
     const csp = headers.find((h) => h.key === "Content-Security-Policy");
     expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
     const cspValue = csp?.value ?? "";
+    const scriptSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("script-src")) ?? "";
     expect(
-      cspValue,
-      "CSP 値に unpkg.com が含まれている — admin バンドルの CDN 依存が残存している可能性"
+      scriptSrc,
+      "script-src に unpkg.com が含まれている — admin バンドルの CDN 依存が残存している可能性"
     ).not.toContain("unpkg.com");
     expect(
-      cspValue,
-      "CSP 値に esm.sh が含まれている — admin バンドルの CDN 依存が残存している可能性"
+      scriptSrc,
+      "script-src に esm.sh が含まれている — admin バンドルの CDN 依存が残存している可能性"
     ).not.toContain("esm.sh");
+  });
+
+  test("connect-src allows https://unpkg.com (Sveltia CMS version check / Prism defs)", () => {
+    // Sveltia CMS 公式 CSP ガイド (https://sveltiacms.app/en/docs/security) より:
+    // 自前バンドル (script-src 不要) でも、内蔵のバージョンチェックや Prism/PDF.js の
+    // 言語定義取得のため connect-src には https://unpkg.com が必要。
+    const csp = headers.find((h) => h.key === "Content-Security-Policy");
+    expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
+    const cspValue = csp?.value ?? "";
+    const connectSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("connect-src")) ?? "";
+    expect(
+      connectSrc,
+      "connect-src に https://unpkg.com が含まれていない — Sveltia CMS の内部バージョンチェック等が CSP 違反になる"
+    ).toContain("https://unpkg.com");
   });
 
   test("CSP value includes frame-ancestors 'none'", () => {

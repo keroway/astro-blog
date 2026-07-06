@@ -113,10 +113,22 @@ button:disabled,
   transform: none !important;
 }
 
-input,
+input:not([type="checkbox"], [type="radio"]),
 select,
 textarea {
   border-radius: var(--cms-radius-sm) !important;
+}
+
+/*
+ * Checkboxes/radios: leave native rendering alone. Forcing a border-radius
+ * onto native input[type=checkbox] here fights the browser's own box/tick
+ * rendering and produces a distorted, hard-to-read shape.
+ */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--cms-navy);
 }
 
 /* Semantic hooks added by admin.astro. */
