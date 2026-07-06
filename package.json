@@ -31,7 +31,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "11.0.2",
     "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "^2.5.1",
+    "@biomejs/biome": "^2.5.2",
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@markdoc/markdoc": "0.5.7",
     "@playwright/test": "^1.61.1",
