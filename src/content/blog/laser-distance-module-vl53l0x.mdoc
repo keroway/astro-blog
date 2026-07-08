@@ -7,7 +7,7 @@ tags:
   - "Arduino"
 heroImage: '/src/assets/content/blog/4e9d239903c5.jpg'
 ---
-![enter image description here](https://lh3.googleusercontent.com/d0hWWPv4R_h3LaVqpbc6krZDXH8SveQ569uRHXytIa9_kngbUNcdJmNQC4W82RxJ_p7Es4vTIbaFmA)
+![机の上に置かれた秋月電子の袋入り部品。左はVL53L0Xレーザー測距モジュールとカラー配線、右は小型ディスプレイモジュール](/5deda35f9d71.jpg)
 だいぶ前に秋月で買ったまま放置していたもの（の一部）
 今回は、レーザー測距モジュール（左側）を使用してみました。
 
@@ -17,15 +17,15 @@ http://akizukidenshi.com/catalog/g/gM-12590/
 http://www.st.com/ja/embedded-software/stsw-img005.html
 
 とりあえず配線。(Arduino UNO互換機を使用)
-![enter image description here](https://lh3.googleusercontent.com/wy78g0FvdlWO_kYxrWlBeRM2eCk5Q6WYNuJNXSM_vJk-xLUVBUtmD4m_2OlGDybPYMxQUdnKCEa8Rg)
-![enter image description here](https://lh3.googleusercontent.com/FoIqPs1op9Bi6ivnz7sPif7BY-JlvXatfsO8NRg_Q_mZwYYzgOql6CUS22DUeRnF5AkkQR74djXwEg)
+![配線したArduino UNO互換機の基板、赤と黒のジャンパ線を接続した様子](/7919cf51b160.jpg)
+![Arduino UNO互換機のSCL・SDA・GNDピンにジャンパ線を配線した接写](/53718a900376.jpg)
 
-![enter image description here](https://lh3.googleusercontent.com/3wYUrytmkc6RmemqwB2k__ycw0whpt7JwA7Lc_lXUOl8mzfWJCIOthLl6vBKhCdn4b2FBkPyB7PdVQ)
+![Arduino UNO互換機とVL53L0Xモジュールをジャンパー線で配線した様子](/4ce0510c12a6.jpg)
 
 ソフトの方はVSCodeにPlatformIOの拡張を入れたものを使用しました。
 さらにVL53L0X用のライブラリを追加しています。
-![enter image description here](https://lh3.googleusercontent.com/WzbcvHdR8vIDE4v5zxMYxCtJJHoHPqx1U2veczpvn5sISXCAi_MqwfeR6EYwEzAdycYHShtuYUCRDQ)
-![enter image description here](https://lh3.googleusercontent.com/6zSDhn7SGo8-tJdQ3vPTBDMW0fjFuMqc5clPWAvTPVFHZWITzIwN6nO7aoNMvYclYh5G4ub09kfbiw)
+![PlatformIOのライブラリ検索画面。Pololu製VL53L0X距離センサーライブラリの登録情報を表示](/a65933f98aa2.png)
+![PlatformIOライブラリ画面。Pololu製VL53L0XライブラリのContinuous.ino例コードを表示](/1a5e72315620.png)
 サンプルコードもそのまま利用
 
 「タスク」-「ビルドタスクの実行」

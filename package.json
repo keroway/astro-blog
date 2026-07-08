@@ -17,6 +17,8 @@
     "suggest-frontmatter": "node --experimental-strip-types scripts/suggest-frontmatter.ts",
     "backfill-descriptions": "node --experimental-strip-types scripts/backfill-descriptions.ts",
     "suggest-alt": "node --experimental-strip-types scripts/suggest-alt.ts",
+    "migrate-remote-images": "node --experimental-strip-types scripts/migrate-remote-images.ts",
+    "backfill-alt-text": "node --experimental-strip-types scripts/backfill-alt-text.ts",
     "new-post": "node --experimental-strip-types scripts/new-post.ts",
     "test:e2e": "CRON_SECRET=ci-test-secret playwright test",
     "test:lighthouse": "npx --yes @lhci/cli@0.14 autorun",

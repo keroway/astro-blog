@@ -10,58 +10,58 @@ heroImage: '/src/assets/content/blog/d1c3b65c53fe.jpg'
 rustでサンプルを書いてみようと思ったところに、ちょうど[codeanywhere](https://codeanywhere.com)のiosアプリ更新の通知があったので、それの使い心地の確認を兼ねて・・・（結果的にそちらがメインになっています）
 
 - ワークスペース作成
-![enter image description here](https://i.imgur.com/OFLxPAG.png)
-![enter image description here](https://i.imgur.com/1lMFPzh.png)
-![enter image description here](https://i.imgur.com/yuIhHqD.png)
+![Codeanywhereアプリのcatestワークスペース画面、右上のメニューボタンが赤枠で強調](/4b0d71be8adb.png)
+![Codeanywhereアプリのメニューで「New Project」が赤枠で強調表示](/3dad45c710fe.png)
+![Codeanywhereアプリの新規プロジェクト作成画面、プロジェクト名にwakutoを入力中](/f10061be99ee.png)
 
 - コンテナ作成
-![enter image description here](https://i.imgur.com/AvES6hU.png)
-![enter image description here](https://i.imgur.com/R1xQjW2.png)
-![enter image description here](https://i.imgur.com/J8qoynE.png)
-![enter image description here](https://i.imgur.com/cdfGxq6.png)
+![Codeanywhereの接続ウィザードで接続先一覧からContainerを赤枠で選択](/61fcf1990a95.png)
+![Codeanywhereのコンテナ作成画面。スタック一覧からBlank Ubuntu 14.04を赤枠で選択](/93d39e242b91.png)
+![Codeanywhereのコンテナ作成画面、Name欄に「ubuntu」と入力しキーボード表示中](/44174e9e413e.png)
+![Codeanywhereのコンテナ作成ダイアログ、ステータスはDeploying Container…と表示](/ba8470431496.png)
 
 - rustのインストール
-![enter image description here](https://i.imgur.com/xHouKcU.png)
-![enter image description here](https://i.imgur.com/sq7N1Xo.png)
-![enter image description here](https://i.imgur.com/ovmXfee.png)
-![enter image description here](https://i.imgur.com/TMIEIkl.png)
+![Codeanywhereアプリのubuntuコンテナ画面。ファイル一覧は空で「This folder is empty」と表示](/073fb978ed41.png)
+![Codeanywhereアプリのubuntuコンテナメニューで「SSH Terminal」を赤枠で選択](/2f8fc0c8c688.png)
+![iOS版CodeanywhereのSSHターミナル起動画面、ubuntuコンテナのプロンプト表示](/1ddb1e00cdea.png)
+![rust-lang.org のRustインストール手順ページ。curl https://sh.rustup.rs -sSf | sh の実行コマンドを表示](/95236e40be99.png)
 コピペします
-![enter image description here](https://i.imgur.com/f0NlOnk.png)
-![enter image description here](https://i.imgur.com/4Fi8j05.png)
+![Codeanywhereのiosターミナルでrustup導入コマンドcurl https://sh.rustup.rs -sSf | sh を入力した画面](/8d1fde415d66.png)
+![iOS版Codeanywhereの端末画面、rustupインストール選択肢（既定/カスタマイズ/中止）を表示](/300fa12da3b5.png)
 デフォルトでいきます(そのままEnter)
-![enter image description here](https://i.imgur.com/zTRLRp8.png)
+![Rustインストール完了のターミナル画面、rustc1.23.0導入とcargoのPATH追加案内を表示](/3c0937faf90c.png)
 指定の通り、PATHにcargoのパスを追加します
-![enter image description here](https://i.imgur.com/3g3CJRq.png)
+![Rustインストール完了後、echoコマンドでcargoのbinパスを.bashrcに追記する端末画面](/3398c434e478.png)
 
 - 準備
 とりあえずapt-get update / upgrade
-![enter image description here](https://i.imgur.com/9A7e0z9.png)
+![Codeanywhereの端末でapt-get updateがPermission denied、sudoで再実行する画面](/63a93d34bcab.png)
 この辺の質問もデフォルト回答
-![enter image description here](https://i.imgur.com/lJRHMst.png)
+![CodeanywhereのiOSアプリ端末画面。upstart設定ファイルの扱いを問うapt-getのY/I/N/O/D/Zプロンプト（default=N）表示](/badd1346b22f.png)
 今、PATHに追加するために、envファイルを読み込む
-![enter image description here](https://i.imgur.com/KGdphGh.png)
+![Codeanywhereのiosターミナルでsource ~/.cargo/envを実行しcargoのPATHを読み込む画面](/3e43d04c157e.png)
 
 - hello world!
 [この辺り](http://rust-lang-ja.github.io/the-rust-programming-language-ja/1.6/book/getting-started.html#新たなcargoプロジェクトを作る簡単な方法)を参考に
-![enter image description here](https://i.imgur.com/I3t8WyQ.png)
-![enter image description here](https://i.imgur.com/s03VtG1.png)
+![iOSのCodeanywhereターミナルでcargo new hello_world --binを入力した画面](/2a01eda4c6c7.png)
+![CodeanywhereのiOSアプリ端末でcargo new hello_world --binを実行しプロジェクト作成成功](/8a4e848acca6.png)
 編集画面から見てみる。（emptyのままなら下に引っ張って更新）
-![enter image description here](https://i.imgur.com/EqRSawd.png)
-![enter image description here](https://i.imgur.com/YhnZeY4.png)
-![enter image description here](https://i.imgur.com/DYsI7px.png)
-![enter image description here](https://i.imgur.com/vxQ2e0E.png)
+![Codeanywhereアプリのubuntuワークスペースにhello_worldフォルダが表示された編集画面](/737e3affb4c1.png)
+![Codeanywhereアプリのhello_worldプロジェクト画面。srcフォルダとCargo.tomlが並ぶファイル一覧](/be2bf6cc3467.png)
+![Codeanywhereアプリのsrcフォルダにmain.rsファイルが表示された画面](/686b51a2e883.png)
+![Codeanywhereの編集画面で開いたmain.rs、Hello, world!を出力するRustコード](/cc7537a10146.png)
 
 - ビルド&実行
 ビルドを実行するとエラーが・・・
-![enter image description here](https://i.imgur.com/thFk416.png)
-![enter image description here](https://i.imgur.com/oCsW5sC.png)
+![Codeanywhere iOSアプリの端末画面。hello_worldのファイル一覧を表示しcargo buildを入力中](/e72d8f76445b.png)
+![Codeanywhereのターミナルでhello_worldのビルドが失敗しError: Could not compileと表示された画面](/7ea21f9dd131.png)
 ccがないとおっしゃるので、gccをインストールする
-![enter image description here](https://i.imgur.com/mEhSvB5.png)
-![enter image description here](https://i.imgur.com/RYWhw8s.png)
+![Codeanywhereのターミナルでcargo buildを実行し、リンカccが見つからないエラーが表示された画面](/dcd7592719bc.png)
+![CodeanywhereのiOSターミナル。hello_worldのコンパイルエラー後にsudo apt-get install gccを入力](/6e1f2d1e608f.png)
 再度ビルド実行
-![enter image description here](https://i.imgur.com/g6rsW7Z.png)
+![gcc導入後にcargo buildが成功しhello_worldのコンパイル完了を示すiOSターミナル画面](/089e2837177c.png)
 今度は成功。最後に実行(run)
-![enter image description here](https://i.imgur.com/foPbM4b.png)
+![Codeanywhereのiosアプリ端末でcargo runが成功しHello, world!を出力](/b082527700d9.png)
 無事、実行完了！
 
 
