@@ -8,12 +8,12 @@ tags:
 heroImage: '/src/assets/content/blog/b638a3920f96.jpg'
 ---
 
-![enter image description here](https://lh3.googleusercontent.com/BkiWZ-u83Ix7QJ-0-wwOvNr8SCudQSmqlqYQUm5JIixKXMTBj-Ur2-Od4Eni-Yr91IWK5BhTEagyrA)
+![Cloud Source Repositories 公式ページのヘッダーと無料トライアルボタン](/799dbe525f48.png)
 個人的な話ですが…
 長らくgithubのDeveloper プランを使ってきましたが、プライベートリポジトリのために月7ドルはやはり高く、無料の範囲でそこそこ使えそうなGoogle の[Cloud Source Repositories](https://cloud.google.com/source-repositories/)に、プライベートリポジトリの移行をすることにしました。
 
 - 料金
-![enter image description here](https://lh3.googleusercontent.com/mJ5zsOOBFb3JTqeoUu6hkKrS7aLpV0yMCe1HtcZnd0Bzaa3dsehCPYmXwH1EMATk0H11oZjemGyNDA)
+![Cloud Source Repositories 料金表。無料枠は5ユーザー・50GBストレージ・50GB下り、超過は各$1/月・$0.10/GB](/a429df7f22c0.png)
 詳しくは、[Cloud Source Repositories の料金](https://cloud.google.com/source-repositories/pricing?hl=ja)をご覧ください。
 料金体系はAWSとほぼ同じなのですが、最初の一年のサービス内容的に、AWSの方はもっとちゃんと動かすものを決めてからにしようかと思いまして。
 
@@ -21,16 +21,16 @@ heroImage: '/src/assets/content/blog/b638a3920f96.jpg'
 
 GitHubから移行したいプロジェクトをローカルにクローンします。
 今回は（初めて）[GitHub Desktop](https://desktop.github.com)を使用してみました。
-![enter image description here](https://lh3.googleusercontent.com/44YxSSfVaT4IosDPmiIdojAZrX3BHnZtU_5e3yViYVp4FUHPoK6DoKK2L50ezqGv-5arhKMlbXxtxw)
+![GitHub Desktopの初期画面。リポジトリ未検出で新規作成・ローカル追加・クローンの3択を表示](/c2938a734271.png)
 GitHubにログインしておけば、右側の`Clone a Repository`でクローン対象のプロジェクトとクローン先を選んで終わりです。
 
 Googleのリポジトリへの取り込みを行います。
 参考にさせていただいたブログ(https://blog.apar.jp/web/7494/)の通り、アカウントやリポジトリを作成します。
 今回はローカルのリポジトリをpushするので、push対象のディレクトリに`cd`して、以下のコマンドを実行します。
-![enter image description here](https://lh3.googleusercontent.com/1xU8iu66res6adEs96ZLaQe4KCGlmjUhBgsJPzMpAe3HSZ1B5_FSAVimvx0PClix0n78QEq7m6ab7w)
+![Cloud Repository へ push する gcloud 認証と git コマンド例](/82e31b00b435.png)
 
 複数リポジトリが対象であれば、リモート側のリポジトリを作成して、pushを繰り返します。
-![enter image description here](https://lh3.googleusercontent.com/DpNYp5v_w_GiSSSjn71kKx-RE1qF55DIx7YpJGakvN_uF1rpV8b0YBII7M1zH_bBPDgQCsr-yuCwtw)
+![Cloud Source Repositoriesのリポジトリ一覧画面。myrepoとsalty-brookの2件がクローンURL付きで表示](/c659070a49d5.png)
 追加できました。
 
 最後にGitHubのFreeプランへのダウングレードを実施。

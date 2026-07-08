@@ -11,16 +11,16 @@ heroImage: '/src/assets/content/blog/df1d7b7a4572.jpg'
 Wikipedia(https://ja.wikipedia.org/wiki/Apache_Solr)より
 > **Solr**（ソーラー）は、[オープンソース](https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9 "オープンソース")の[全文検索](https://ja.wikipedia.org/wiki/%E5%85%A8%E6%96%87%E6%A4%9C%E7%B4%A2 "全文検索")システム。[Apacheソフトウェア財団](https://ja.wikipedia.org/wiki/Apache%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E8%B2%A1%E5%9B%A3 "Apacheソフトウェア財団")の[Lucene](https://ja.wikipedia.org/wiki/Lucene "Lucene")プロジェクトのサブプロジェクトとして開発されている。
 
-![Apache Solr サイトトップページ](https://lh3.googleusercontent.com/zAxzWgVDRLD-Oz7WjvlrdkFyyOVib-p8JZbD7dzZ3nIFIeLqze2HPurdBFii4sjuxphc44YdqzTbWA "site-top")
+![Apache Solr サイトトップページ](/9f45c19a000d.png "site-top")
 
 というわけで、今回はとりあえずsolrを使ってみます。
 まずは"DOWNLOAD"から
-![enter image description here](https://lh3.googleusercontent.com/XCP1cpT1fUQFhQFaWXSBlJaSXLbS3JBf2LLiXemW-uMu8I8jUARBBx0ND_bTOOvle0S6MoCH3LBrgw "download solr")
+![Apache Solr のダウンロードページと山形大学ミラーの案内](/1e6a26c6a373.png "download solr")
 勧められた通りに山形大から取得。
 (zip, tgz等はお好みの形式で)
 
 展開後、solr-x.x.x/example/README.txt を参照。
-![example ディレクトリの README ファイル](https://lh3.googleusercontent.com/_Y-ksHyBMIuLFrtWM5cPav7WUUFxj2vcO0jZQD0NOm_wweGYmnmt1aplF2a75skAVMTad87CQjqw5g "example-readme")
+![example ディレクトリの README ファイル](/0b696157ab25.png "example-readme")
 上記にある"dih"(Data Import Handler) を試してみます。
 solr-x.x.x上にいるとして`bin/solr -e dih`を実行します。
 
@@ -49,22 +49,22 @@ Solr dih example launched successfully. Direct your Web browser to http://localh
 警告が何度か出ていますが、ひとまずここは置いておいて、示された"Solr Admin UI"を確認します。
 
 初期画面は"Dashboard"です。早速データを取り込んでみます。
-![Solr Admin UI データインポート選択画面](https://lh3.googleusercontent.com/S03ysyBuPrv59fV5vPN6m4SGKo3O_rpPXviEd5d13kWzXWR7IhNh-TYIq71Y65_UySWA4RpRHYE54A "import-atm")
+![Solr Admin UI データインポート選択画面](/e65e75e3d664.png "import-atm")
 データの種別(左側メニューのコンボボックス)を選択すると、その下にさらにメニューが表示されます。
 ここでは、"atom" -> "DataImport"と選択しています。
 さらにEntityを選択(exampleでは"stackoverflow"のみ)した後、"Execute"を押下します。
 
 "Refresh Status"を押下すると、右側にステータスが表示されます。
-![インポート結果とステータス表示画面](https://lh3.googleusercontent.com/mRmJIw1b2gqyaG0KqkwPuo6xg1bZvc4lEwAAKeO6u-9IPny93a3NYd_6aKuruIYpGLOaBqyo57Xw2w "result and config")
+![インポート結果とステータス表示画面](/f8bd4866dce0.png "result and config")
 
 クエリを発行してみます。
-![Solr クエリ発行画面](https://lh3.googleusercontent.com/L92yVHOuCM3D2RrHBw8qgox81XRV-g8qdWhr-IZ2keBpNRvN_dnXxSV39R1FWY1z8q9YhpqnSqGbeA "try-query")
+![Solr クエリ発行画面](/604678645abf.png "try-query")
 デフォルトの出力形式(?)はjson形式の模様。
 wtの値を変えれば、出力形式を変えられます。
-![XML 形式のクエリ結果](https://lh3.googleusercontent.com/uUmw9u6ncbFe4o8D02Kr2DejZt3m_wch_7sxrRfI-fT9JGO11ujDtO_YbAwnZxOcxt_TTUB0Gx6oBw "query-xml")
+![XML 形式のクエリ結果](/ffc8d77603c6.png "query-xml")
 xmlや
 
-![Python 形式のクエリ結果](https://lh3.googleusercontent.com/-zqvXHdaF4WbjffbxdnKL89_aJy6gv4aNsdlHqB7HDrGJTeUqJfY6ioFb8SPII0Tt7M86eWW7sFQIQ "query-python")
+![Python 形式のクエリ結果](/506347429add.png "query-python")
 pythonなど
 
 次は実用っぽいものをやってみたいと思います。
