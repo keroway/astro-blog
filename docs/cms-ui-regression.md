@@ -46,6 +46,7 @@ Sveltia CMS の更新、`public/admin/theme.css` の変更、`public/admin/confi
 - [ ] `Tab` のみでローカルリポジトリ編集・GitHub ログイン・アクセストークンの各ボタンに到達できる
 - [ ] フォーカスリングが色のみに依存せず見える（outline + halo）
 - [ ] `data-keroway-admin-action` の primary/secondary/subtle/danger が色以外（太字・枚数）でも区別できる
+- [ ] 本体サイトで `theme=dark` / `theme=light` を切り替えた後、`/admin/` も同じテーマで開く
 - [ ] `prefers-reduced-motion: reduce` でホバー移動などの motion が抹消される
 - [ ] `pnpm exec playwright test tests/playwright/admin-a11y.spec.ts` が green
 - [ ] Sveltia CMS 本体の DOM に起因する除外ルール（`tests/playwright/admin-a11y.spec.ts` 先頭コメント参照）以外の新規違反がない

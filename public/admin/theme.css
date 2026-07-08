@@ -6,7 +6,8 @@
  * states, and generic button/form styling. Product-specific DOM rewrites live
  * in src/pages/admin.astro.
  */
-:root {
+:root,
+:root[data-theme="light"] {
   color-scheme: light;
   --cms-navy: oklch(32.33% 0.1148 253.89);
   --cms-blue: oklch(44.65% 0.1606 259.95);
@@ -35,8 +36,26 @@
   --cms-duration: 160ms;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --cms-navy: oklch(76.49% 0.0682 259.52);
+  --cms-blue: oklch(70.05% 0.0906 252.41);
+  --cms-paper: oklch(22.28% 0.0519 258.34);
+  --cms-paper-warm: oklch(25.71% 0.0687 261.04);
+  --cms-card: oklch(26.97% 0.0698 261.48);
+  --cms-sand: oklch(78.89% 0.0875 73.37);
+  --cms-vermilion: oklch(68.91% 0.1466 32.23);
+  --cms-vermilion-soft: oklch(from var(--cms-vermilion) l c h / 0.16);
+  --cms-ink: oklch(94.49% 0.0133 262.38);
+  --cms-muted: oklch(72.33% 0.0361 263.51);
+  --cms-rule: oklch(from var(--cms-ink) l c h / 0.18);
+  --cms-rule-strong: oklch(from var(--cms-ink) l c h / 0.32);
+  --cms-success: oklch(65.55% 0.0668 145.63);
+  --cms-danger: oklch(55% 0.16 32.23);
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
     color-scheme: dark;
     --cms-navy: oklch(76.49% 0.0682 259.52);
     --cms-blue: oklch(70.05% 0.0906 252.41);
