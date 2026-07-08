@@ -16,7 +16,7 @@ const stations = [
 
 {showBook && (
   <section class="stamp-book" aria-labelledby="stamp-book-heading" data-reveal>
-    <h2 id="stamp-book-heading" class="stamp-book__title">あなたの御朱印帳</h2>
+    <h2 id="stamp-book-heading" class="stamp-book__title">あなたの御朱印帳 <span class="stamp-book__aside">（余談）</span></h2>
     <p class="stamp-book__lead no-indent">
       主要ページを訪れると、ブラウザ内に小さな朱印が保存されます。
     </p>
@@ -96,6 +96,13 @@ const stations = [
 
   .stamp-book__title {
     margin-bottom: var(--kw-space-2);
+  }
+
+  .stamp-book__aside {
+    color: var(--kw-fg-muted);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    font-weight: 400;
   }
 
   .stamp-book__lead {
