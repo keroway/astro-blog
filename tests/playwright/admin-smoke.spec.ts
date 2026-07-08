@@ -18,4 +18,18 @@ test.describe("CMS admin smoke", () => {
       "astro-blog のルート"
     );
   });
+
+  test("login screen classifies visible actions", async ({ page }) => {
+    await page.goto("/admin/", { waitUntil: "networkidle" });
+
+    await expect(
+      page.locator('[data-keroway-admin-action="primary"]')
+    ).not.toHaveCount(0);
+    await expect(
+      page.locator('[data-keroway-admin-action="secondary"]')
+    ).not.toHaveCount(0);
+    await expect(
+      page.locator('[data-keroway-admin-action="subtle"]')
+    ).not.toHaveCount(0);
+  });
 });
