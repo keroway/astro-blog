@@ -15,6 +15,7 @@
     "check": "biome check .",
     "lint:alt": "node --experimental-strip-types scripts/lint-alt.ts",
     "suggest-frontmatter": "node --experimental-strip-types scripts/suggest-frontmatter.ts",
+    "backfill-descriptions": "node --experimental-strip-types scripts/backfill-descriptions.ts",
     "suggest-alt": "node --experimental-strip-types scripts/suggest-alt.ts",
     "new-post": "node --experimental-strip-types scripts/new-post.ts",
     "test:e2e": "CRON_SECRET=ci-test-secret playwright test",

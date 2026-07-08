@@ -157,6 +157,7 @@ Sveltia CMS は Editorial Workflow 未対応のため、PR レビュー・CI・m
 | スクリプト | 実行コマンド | 役割 |
 |------------|-------------|------|
 | frontmatter 補完提案 | `pnpm run suggest-frontmatter src/content/blog/<file>.mdoc` | `description` / `tags` / `category` の候補を提示（ファイルは書き換えない） |
+| description 一括 backfill | `pnpm run backfill-descriptions` (提案のみ) / `pnpm run backfill-descriptions -- --write` (書き込み) | `description: ""` の記事を一括検出し、120文字以内の description を提案・反映（`--write` は上書きのため必ず差分を確認） |
 | alt テキスト lint | `pnpm run lint:alt` | `src/content/{blog,works}` の markdown 画像で alt が空/4 文字未満の箇所を検出（CI の lint ジョブでも実行） |
 | ブログ監査 | `node --experimental-strip-types scripts/audit-blog.ts` | 記事の frontmatter を集計し `docs/content-audit.md` を生成 |
 | readingTime backfill | `node --experimental-strip-types scripts/backfill-frontmatter.ts` | 本文文字数から `readingTime` を算出し未設定記事へ補完 |
