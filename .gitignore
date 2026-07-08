@@ -44,3 +44,6 @@ lhci-reports/
 .lycheecache
 # pi coding agent (remote-pi) のセッションデータ
 .pi/
+
+# pi-subagents artifacts
+.pi-subagents/
