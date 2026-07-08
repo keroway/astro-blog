@@ -12,6 +12,17 @@
     <!-- robots: admin は検索インデックス不要 (vercel.json の X-Robots-Tag と二重防衛) -->
     <meta name="robots" content="noindex, nofollow" />
     <title>keroway CMS</title>
+    <script is:inline>
+      (() => {
+        try {
+          const stored = localStorage.getItem("theme");
+          const theme = stored === "dark" || stored === "light"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = theme;
+        } catch {}
+      })();
+    </script>
     <link rel="stylesheet" href="/admin/theme.css" />
     <script>
       import CMS from "@sveltia/cms";
