@@ -1,3 +1,46 @@
+# llms.txt: https://keroway.com/llms.txt
+
+# --- Answer engines (検索・引用用途): 明示的に許可 ---
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_vercel/
+
+# --- Training crawlers (学習用途): 現状は既定 (Allow) に従う ---
+# GPTBot / ClaudeBot / Google-Extended / CCBot / Applebot-Extended
+# ブロックする場合はここに Disallow を追加する
+
 User-agent: *
 Allow: /
 Disallow: /admin/

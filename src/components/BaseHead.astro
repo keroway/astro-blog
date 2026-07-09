@@ -2,6 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { getAllFocusAreas } from "../data/focus-areas";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
@@ -28,6 +29,10 @@ const personSchema = {
 	"@id": `${siteUrl}#person`,
 	name: SITE_AUTHOR,
 	url: siteUrl,
+	jobTitle: "Software Engineer",
+	description: "組み込みからクラウド、フロントエンドまで横断するソフトウェアエンジニア。",
+	// focus-areas.ts の title から生成し、専門分野が増えても自動追随する (#554)
+	knowsAbout: getAllFocusAreas().map((area) => area.title),
 	sameAs: ["https://twitter.com/keroway21", "https://github.com/keroway"],
 };
 const websiteSchema = {

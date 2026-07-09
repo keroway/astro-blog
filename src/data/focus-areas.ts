@@ -53,3 +53,7 @@ const focusAreaMap: Record<FocusAreaKey, FocusArea> = {
 export function getFocusAreas(keys: readonly FocusAreaKey[]): FocusArea[] {
   return keys.map((k) => focusAreaMap[k]);
 }
+
+export function getAllFocusAreas(): FocusArea[] {
+  return Object.values(focusAreaMap);
+}

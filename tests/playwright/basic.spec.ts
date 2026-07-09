@@ -18,17 +18,36 @@ function extractImageUrl(image: unknown): string | undefined {
   return pick(image);
 }
 
+function parseJsonPayload<T>(payload: string): T {
+  try {
+    return JSON.parse(payload) as T;
+  } catch (error) {
+    throw new Error(
+      `invalid JSON-LD payload: ${error instanceof Error ? error.message : String(error)}`
+    );
+  }
+}
+
 test.describe("SEO: JSON-LD structured data", () => {
-  test("homepage outputs WebSite JSON-LD", async ({ page }) => {
+  test("homepage outputs WebSite and Person JSON-LD", async ({ page }) => {
     await page.goto("/");
     const ldJson = page.locator('script[type="application/ld+json"]');
     const count = await ldJson.count();
-    expect(count).toBeGreaterThanOrEqual(1);
-    const payload = await ldJson.first().textContent();
-    if (!payload) throw new Error("ld+json payload not found");
-    const parsed = JSON.parse(payload);
-    expect(parsed["@type"]).toBe("WebSite");
-    expect(parsed.url).toMatch(/^https:\/\/keroway\.com\/?$/);
+    expect(count).toBeGreaterThanOrEqual(2);
+    const payloads = await ldJson.allTextContents();
+    const parsed = payloads.map((payload) =>
+      parseJsonPayload<Record<string, unknown>>(payload)
+    );
+
+    const website = parsed.find((entry) => entry["@type"] === "WebSite");
+    if (!website) throw new Error("WebSite JSON-LD not found");
+    expect(website.url).toMatch(/^https:\/\/keroway\.com\/?$/);
+
+    const person = parsed.find((entry) => entry["@type"] === "Person");
+    if (!person) throw new Error("Person JSON-LD not found");
+    expect(person.jobTitle).toBe("Software Engineer");
+    expect(person.description).toContain("ソフトウェアエンジニア");
+    expect(person.knowsAbout).toContain("AI 活用開発");
   });
 
   test("blog post outputs BlogPosting JSON-LD alongside WebSite", async ({
@@ -46,16 +65,19 @@ test.describe("SEO: JSON-LD structured data", () => {
     const ldJson = page.locator('script[type="application/ld+json"]');
     await expect(ldJson).toHaveCount(4);
     const payloads = await ldJson.allTextContents();
-    const parsed = payloads.map((p) => JSON.parse(p));
+    const parsed = payloads.map((payload) =>
+      parseJsonPayload<Record<string, unknown>>(payload)
+    );
     const types = parsed.map((p) => p["@type"]);
     expect(types).toContain("Person");
     expect(types).toContain("WebSite");
     expect(types).toContain("BreadcrumbList");
     expect(types).toContain("BlogPosting");
-    const post = parsed.find((p) => p["@type"] === "BlogPosting");
+    const post = parsed.find((entry) => entry["@type"] === "BlogPosting");
+    if (!post) throw new Error("BlogPosting JSON-LD not found");
     expect(post.headline).toBeTruthy();
     expect(post.datePublished).toMatch(/^\d{4}-\d{2}-\d{2}/);
-    expect(post.author?.name).toBeTruthy();
+    expect((post.author as { name?: string } | undefined)?.name).toBeTruthy();
     expect(post.url).toMatch(/^https:\/\/keroway\.com\/blog\/.+\/$/);
 
     // OG 画像生成 (gen-og-default.ts / heroImage) のデグレ検知:
@@ -137,6 +159,14 @@ test.describe("Tag pages", () => {
 });
 
 test.describe("Basic site functionality", () => {
+  test("llms.txt endpoint returns markdown index", async ({ page }) => {
+    const response = await page.goto("/llms.txt");
+    expect(response?.ok()).toBeTruthy();
+    await expect(page.locator("body")).toContainText("# keroway.com");
+    await expect(page.locator("body")).toContainText("## Blog");
+    await expect(page.locator("body")).toContainText("## Works");
+  });
+
   test("home page renders navigation and intro text", async ({ page }) => {
     await page.goto("/");
 
