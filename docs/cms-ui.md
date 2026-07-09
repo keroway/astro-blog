@@ -21,6 +21,27 @@ Sveltia CMS の SPA に対して `public/admin/theme.css` を読み込む。
 - Sveltia UI が公開している `--sui-*` トークン経由のテーマ調整
   （checkbox など内部 UI 部品）
 
+## プレビューの寄せ方
+
+記事エディタ右側のプレビューは `CMS.registerPreviewStyle("/admin/preview.css")`
+で本番記事向けのタイポグラフィを注入する。
+`public/admin/preview.css` は `/admin/theme.css` と同じく self-contained に保ち、
+`src/styles` を直接 import しない。
+
+寄せる対象:
+
+- 本文フォント、見出し階層、行間、本文幅
+- リンク色、code/pre、blockquote、table、img の角丸
+- ライト / ダーク両テーマの配色
+
+割り切る対象:
+
+- Markdoc 独自タグや callout の完全再現
+- 本番レイアウトのすべての補助 UI（共有ボタン、進捗表示など）
+
+ゴールは「公開後の読み味を想像しやすいこと」であり、
+DOM 構造まで本番と一致させることではない。
+
 ### Sveltia UI トークン運用
 
 Sveltia CMS の checkbox はネイティブ `input[type="checkbox"]`

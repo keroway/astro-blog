@@ -1,0 +1,290 @@
+/*
+ * keroway CMS preview style
+ *
+ * Sveltia CMS preview should stay self-contained under /admin.
+ * This file mirrors only the article-facing subset of keroway.com's
+ * typography and spacing tokens; it does not import src/styles directly.
+ */
+
+:root {
+  color-scheme: light;
+  --kw-preview-bg: oklch(95.83% 0.007 88.64);
+  --kw-preview-bg-alt: oklch(90.43% 0.0281 81.47);
+  --kw-preview-card: oklch(99.42% 0.0069 88.64);
+  --kw-preview-fg: oklch(22.28% 0.0519 258.34);
+  --kw-preview-fg-muted: oklch(46% 0.0492 263.91);
+  --kw-preview-fg-display: oklch(32.33% 0.1148 253.89);
+  --kw-preview-link: oklch(44.65% 0.1606 259.95);
+  --kw-preview-accent: oklch(78.89% 0.0875 73.37);
+  --kw-preview-rule: oklch(from var(--kw-preview-fg-display) l c h / 0.16);
+  --kw-preview-rule-soft: oklch(from var(--kw-preview-fg-display) l c h / 0.08);
+  --kw-preview-radius-sm: 4px;
+  --kw-preview-radius-md: 6px;
+  --kw-preview-space-2: 8px;
+  --kw-preview-space-3: 12px;
+  --kw-preview-space-4: 16px;
+  --kw-preview-space-5: 20px;
+  --kw-preview-space-6: 24px;
+  --kw-preview-space-8: 32px;
+  --kw-preview-space-10: 40px;
+  --kw-preview-space-12: 48px;
+  --kw-preview-fs-body: 16px;
+  --kw-preview-fs-body-lg: 17px;
+  --kw-preview-fs-h1: clamp(2rem, 3vw, 2.5rem);
+  --kw-preview-fs-h2: 2rem;
+  --kw-preview-fs-h3: 1.375rem;
+  --kw-preview-fs-h4: 1.125rem;
+  --kw-preview-lh-tight: 1.05;
+  --kw-preview-lh-snug: 1.25;
+  --kw-preview-lh-prose: 1.9;
+  --kw-preview-shadow: 0 10px 30px rgb(0 51 102 / 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --kw-preview-bg: oklch(22.28% 0.0519 258.34);
+    --kw-preview-bg-alt: oklch(25.71% 0.0687 261.04);
+    --kw-preview-card: oklch(26.97% 0.0698 261.48);
+    --kw-preview-fg: oklch(94.49% 0.0133 262.38);
+    --kw-preview-fg-muted: oklch(72.33% 0.0361 263.51);
+    --kw-preview-fg-display: oklch(76.49% 0.0682 259.52);
+    --kw-preview-link: oklch(70.05% 0.0906 252.41);
+    --kw-preview-accent: oklch(68.91% 0.1466 32.23);
+    --kw-preview-rule: oklch(from var(--kw-preview-fg) l c h / 0.18);
+    --kw-preview-rule-soft: oklch(from var(--kw-preview-fg) l c h / 0.08);
+    --kw-preview-shadow: 0 18px 40px rgb(0 0 0 / 0.22);
+  }
+}
+
+html {
+  background: var(--kw-preview-bg);
+}
+
+body {
+  max-width: min(720px, 100%);
+  margin: 0 auto;
+  padding: var(--kw-preview-space-12) var(--kw-preview-space-6);
+  color: var(--kw-preview-fg);
+  background: var(--kw-preview-bg);
+  font-family: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-size: var(--kw-preview-fs-body);
+  line-height: var(--kw-preview-lh-prose);
+  text-spacing-trim: trim-start;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+main,
+article,
+.post,
+.post__content {
+  width: 100%;
+}
+
+body > :first-child {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 var(--kw-preview-space-3);
+  color: var(--kw-preview-fg-display);
+  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho",
+    serif;
+  font-weight: 500;
+  line-height: var(--kw-preview-lh-tight);
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--kw-preview-fs-h1);
+  margin-bottom: var(--kw-preview-space-6);
+}
+
+h2,
+.post__content h2 {
+  font-size: var(--kw-preview-fs-h2);
+  margin-top: var(--kw-preview-space-12);
+}
+
+h3,
+.post__content h3 {
+  font-size: var(--kw-preview-fs-h3);
+  margin-top: var(--kw-preview-space-10);
+  line-height: var(--kw-preview-lh-snug);
+}
+
+h4,
+.post__content h4 {
+  font-size: var(--kw-preview-fs-h4);
+  margin-top: var(--kw-preview-space-8);
+  line-height: var(--kw-preview-lh-snug);
+}
+
+p,
+ul,
+ol,
+blockquote,
+pre,
+table,
+figure {
+  margin: 0 0 var(--kw-preview-space-6);
+}
+
+p {
+  text-indent: 1em;
+  text-wrap: pretty;
+}
+
+p.no-indent,
+li p,
+blockquote p,
+figure p,
+td p,
+th p,
+.post__meta p {
+  text-indent: 0;
+}
+
+ul,
+ol {
+  padding-inline-start: 1.4em;
+}
+
+li + li {
+  margin-top: var(--kw-preview-space-2);
+}
+
+a {
+  color: var(--kw-preview-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+a:hover {
+  border-bottom-color: currentColor;
+}
+
+code,
+kbd,
+samp {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.92em;
+}
+
+code {
+  padding: 2px 5px;
+  border-radius: var(--kw-preview-radius-sm);
+  background: var(--kw-preview-bg-alt);
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1.5em;
+  border: 1px solid var(--kw-preview-rule);
+  border-radius: var(--kw-preview-radius-md);
+  background: var(--kw-preview-bg-alt);
+  box-shadow: var(--kw-preview-shadow);
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+}
+
+blockquote {
+  padding-left: var(--kw-preview-space-5);
+  border-left: 2px solid var(--kw-preview-accent);
+  color: var(--kw-preview-fg-muted);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  border-radius: var(--kw-preview-radius-md);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow-x: auto;
+}
+
+th,
+td {
+  padding: var(--kw-preview-space-3) var(--kw-preview-space-4);
+  border: 1px solid var(--kw-preview-rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: var(--kw-preview-bg-alt);
+  color: var(--kw-preview-fg-display);
+  font-weight: 600;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--kw-preview-rule);
+  margin: var(--kw-preview-space-12) 0;
+}
+
+figure {
+  margin-inline: 0;
+}
+
+figcaption,
+.post__meta,
+.post__meta-date,
+.post__meta-update,
+.post__meta-reading,
+.post__tags {
+  color: var(--kw-preview-fg-muted);
+  font-size: 0.875rem;
+}
+
+.post__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kw-preview-space-2);
+  padding: 0;
+  list-style: none;
+}
+
+.post__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border: 1px solid var(--kw-preview-rule-soft);
+  border-radius: var(--kw-preview-radius-sm);
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: var(--kw-preview-space-8) var(--kw-preview-space-4);
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}
