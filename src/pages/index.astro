@@ -21,7 +21,7 @@ const secondaryPosts = recentPosts.slice(1);
 const allWorks = await getSortedWorks();
 const displayWorks = pickFeaturedWorks(allWorks, 3);
 
-const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot']);
+const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'ai_engineering']);
 ---
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -35,6 +35,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'embedded_iot'
       </h1>
       <p class="hero__lead no-indent">
         組み込みからクラウド、フロントエンドまでを横断しながら書いた、実装と設計の手控えです。
+        最近は、AI を道具にした自作サービスづくりに時間を使っています。
       </p>
       <div class="hero__actions">
         <a class="kw-button" href="/blog">記事一覧へ <span class="kw-button-arrow">→</span></a>
