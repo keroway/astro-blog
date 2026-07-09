@@ -1,8 +1,8 @@
 # CMS 執筆ガイド (Sveltia CMS)
 
 - **関連 ADR**: [0016 — CMS: Sveltia CMS 移行](./adr/0016-cms-keystatic-to-sveltia.md)
-- **関連ドキュメント**: [CMS フロー](./cms-flow.md)
-- **更新日**: 2026-06-25 (Keystatic → Sveltia CMS 移行 #412)
+- **関連ドキュメント**: [CMS フロー](./cms-flow.md) / [AEO 執筆方針](./seo/aeo.md)
+- **更新日**: 2026-07-10 (AEO 執筆方針リンク追加 #555 / Keystatic → Sveltia CMS 移行 #412)
 
 ---
 
