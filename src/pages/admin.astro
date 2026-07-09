@@ -91,6 +91,8 @@
       const response = await fetch("/admin/config.yml");
       const config = parse(await response.text());
 
+      CMS.registerPreviewStyle("/admin/preview.css");
+
       config.load_config_file = false;
       config.app_title = "keroway CMS";
       config.site_url = "https://keroway.com";
