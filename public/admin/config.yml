@@ -69,7 +69,7 @@ collections:
       - label: 記事概要
         name: description
         widget: text
-        hint: 記事カード、SNS シェア、検索結果に使う要約文（1〜2 文）。
+        hint: 記事カード、SNS シェア、検索結果、AI の回答引用に使う要約文（1〜2 文）。記事の結論・答えを含めて書きます。
 
       # --- 公開設定 ---
       - label: 公開日
