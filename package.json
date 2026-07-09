@@ -21,6 +21,7 @@
     "backfill-alt-text": "node --experimental-strip-types scripts/backfill-alt-text.ts",
     "new-post": "node --experimental-strip-types scripts/new-post.ts",
     "test:e2e": "CRON_SECRET=ci-test-secret playwright test",
+    "test:admin": "CI=1 PLAYWRIGHT_PORT=4335 playwright test tests/playwright/admin-smoke.spec.ts tests/playwright/admin-a11y.spec.ts",
     "test:lighthouse": "npx --yes @lhci/cli@0.14 autorun",
     "test:links": "lychee --no-progress --include-fragments --root-dir dist/client --fallback-extensions html 'dist/client/**/*.html'",
     "test:unit": "vitest run",

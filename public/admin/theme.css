@@ -74,6 +74,18 @@
   }
 }
 
+:root {
+  --sui-checkbox-background-color: var(--cms-card);
+  --sui-checkbox-background-color-checked: var(--cms-navy);
+  --sui-checkbox-border-color: var(--cms-rule-strong);
+  --sui-checkbox-border-color-checked: var(--cms-navy);
+  --sui-checkbox-border-radius: var(--cms-radius-sm);
+  --sui-checkbox-border-width: 1px;
+  --sui-checkbox-foreground-color-checked: var(--cms-paper);
+  --sui-focus-ring-color: var(--cms-focus);
+  --sui-primary-accent-color: var(--cms-navy);
+}
+
 html,
 body {
   min-height: 100%;
@@ -98,7 +110,7 @@ textarea {
   font: inherit;
 }
 
-button,
+button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]),
 [role="button"] {
   border-radius: var(--cms-radius-md) !important;
   min-height: 44px;
@@ -109,7 +121,7 @@ button,
     transform var(--cms-duration) ease;
 }
 
-button:hover:not(:disabled),
+button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]):hover:not(:disabled),
 [role="button"]:hover {
   transform: translateY(-1px);
 }

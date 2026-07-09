@@ -25,6 +25,10 @@ test.describe("CMS admin a11y smoke", () => {
     page,
   }) => {
     await page.goto("/admin/", { waitUntil: "networkidle" });
+    await expect(page).toHaveTitle(/keroway CMS|Sveltia CMS/);
+    await expect(
+      page.getByRole("button", { name: "ローカルリポジトリで編集" })
+    ).toBeVisible();
     await page.waitForTimeout(1000);
 
     const results = await new AxeBuilder({ page })
