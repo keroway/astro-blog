@@ -7,7 +7,13 @@ import TimelineRow from '../components/TimelineRow.astro';
 import { SITE_VOLUME } from '../consts';
 import { getFocusAreas } from '../data/focus-areas';
 
-const focusAreas = getFocusAreas(['embedded_iot', 'web_frontend', 'mobile_app', 'cloud_devops']);
+const focusAreas = getFocusAreas([
+  'embedded_iot',
+  'web_frontend',
+  'mobile_app',
+  'cloud_devops',
+  'ai_engineering',
+]);
 
 const skills = {
   languages: ['C', 'C++', 'Python', 'TypeScript', 'Go', 'Dart'],
@@ -20,6 +26,7 @@ const strata = [
   { layer: '分散層', note: '複数台のマシンが協調する仕組みを組む。CI/CD、監視、運用の自動化を含む。' },
   { layer: '抽象層', note: '言語処理系、データの形、API の設計など、仕組みの上に乗る規約を扱う。' },
   { layer: '表層',   note: '画面とタイポグラフィ、人が触れる面。最近の主な関心の一つ。' },
+  { layer: '生成層', note: 'LLM とエージェントを部品として組み込み、自分のサービスを形にする。いま積もりつつある層。' },
 ];
 ---
 

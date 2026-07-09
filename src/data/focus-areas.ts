@@ -2,7 +2,8 @@ export type FocusAreaKey =
   | "embedded_iot"
   | "web_frontend"
   | "mobile_app"
-  | "cloud_devops";
+  | "cloud_devops"
+  | "ai_engineering";
 
 export type FocusArea = {
   key: FocusAreaKey;
@@ -39,6 +40,13 @@ const focusAreaMap: Record<FocusAreaKey, FocusArea> = {
     description:
       "本番に届けたコードを、夜の間も静かに走らせ続ける仕組み。クラウド、オンプレ、その境界を渡る経路まで、長く担当してきた裏方の領域です。",
     visualKey: "cloud_devops",
+  },
+  ai_engineering: {
+    key: "ai_engineering",
+    title: "AI 活用開発",
+    description:
+      "LLM やエージェントを、道具として自分のプロダクトに組み込む領域。長く積んだ設計の勘所を、新しい抽象の上で試しています。",
+    visualKey: "ai_engineering",
   },
 };
 
