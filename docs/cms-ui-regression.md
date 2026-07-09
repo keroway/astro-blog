@@ -6,8 +6,12 @@
 ## 自動スモーク
 
 ```bash
-pnpm exec playwright test tests/playwright/admin-smoke.spec.ts tests/playwright/admin-a11y.spec.ts
+pnpm run test:admin
 ```
+
+`test:admin` は Playwright 専用ポート (`4335`) と `CI=1` を使って
+毎回テスト用 Astro サーバーを起動する。別リポジトリの dev サーバーを
+誤って再利用しないため、管理画面回帰確認ではこのコマンドを優先する。
 
 確認する内容:
 
@@ -39,6 +43,7 @@ Sveltia CMS の更新、`public/admin/theme.css` の変更、`public/admin/confi
 - [ ] プレビュー・公開・メディア系アクションが secondary に見える
 - [ ] キャンセル・閉じる・戻る系アクションが subtle に見える
 - [ ] 削除・破棄系アクションが danger に見える
+- [ ] ブログの「下書きにする」などの checkbox / toggle が縦長ピルにならず、正方形に近い寸法で表示される
 - [ ] フォーカスリングがキーボード操作で見える
 
 ### アクセシビリティ
@@ -48,7 +53,7 @@ Sveltia CMS の更新、`public/admin/theme.css` の変更、`public/admin/confi
 - [ ] `data-keroway-admin-action` の primary/secondary/subtle/danger が色以外（太字・枚数）でも区別できる
 - [ ] 本体サイトで `theme=dark` / `theme=light` を切り替えた後、`/admin/` も同じテーマで開く
 - [ ] `prefers-reduced-motion: reduce` でホバー移動などの motion が抹消される
-- [ ] `pnpm exec playwright test tests/playwright/admin-a11y.spec.ts` が green
+- [ ] `pnpm run test:admin` が green
 - [ ] Sveltia CMS 本体の DOM に起因する除外ルール（`tests/playwright/admin-a11y.spec.ts` 先頭コメント参照）以外の新規違反がない
 
 ### 更新時の記録
