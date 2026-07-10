@@ -7,6 +7,8 @@
  *   - `Content-Security-Policy-Report-Only` は含まれない
  *   - `script-src` に `unpkg.com` または `esm.sh` が含まれない (CDN スクリプト依存なし)
  *   - `connect-src` に `https://unpkg.com` が含まれる (Sveltia CMS のバージョンチェック / Prism言語定義取得に必要)
+ *   - `connect-src` に `data:` が含まれる (data URI の SVG プレビュー取得に必要)
+ *   - `frame-src` に `blob:` が含まれる (CMS プレビュー iframe に必要)
  *   - `frame-ancestors 'self'` が含まれる
  *
  * Playwright の webServer (astro dev) は Vercel ヘッダーを適用しないため、
@@ -84,6 +86,30 @@ test.describe("Plan 002: CSP enforce mode regression", () => {
       connectSrc,
       "connect-src に https://unpkg.com が含まれていない — Sveltia CMS の内部バージョンチェック等が CSP 違反になる"
     ).toContain("https://unpkg.com");
+  });
+
+  test("connect-src allows data: for CMS data URI preview assets", () => {
+    const csp = headers.find((h) => h.key === "Content-Security-Policy");
+    expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
+    const cspValue = csp?.value ?? "";
+    const connectSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("connect-src")) ?? "";
+    expect(
+      connectSrc,
+      "connect-src に data: が含まれていない — Sveltia CMS の data URI プレビュー取得が CSP 違反になる"
+    ).toContain("data:");
+  });
+
+  test("frame-src allows blob: for CMS preview iframe", () => {
+    const csp = headers.find((h) => h.key === "Content-Security-Policy");
+    expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
+    const cspValue = csp?.value ?? "";
+    const frameSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("frame-src")) ?? "";
+    expect(
+      frameSrc,
+      "frame-src に blob: が含まれていない — Sveltia CMS のプレビュー iframe が CSP 違反になる"
+    ).toContain("blob:");
   });
 
   test("CSP value includes frame-ancestors 'self'", () => {
