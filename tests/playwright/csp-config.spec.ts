@@ -7,7 +7,7 @@
  *   - `Content-Security-Policy-Report-Only` は含まれない
  *   - `script-src` に `unpkg.com` または `esm.sh` が含まれない (CDN スクリプト依存なし)
  *   - `connect-src` に `https://unpkg.com` が含まれる (Sveltia CMS のバージョンチェック / Prism言語定義取得に必要)
- *   - `frame-ancestors 'none'` が含まれる
+ *   - `frame-ancestors 'self'` が含まれる
  *
  * Playwright の webServer (astro dev) は Vercel ヘッダーを適用しないため、
  * ここでは HTTP レスポンスではなく vercel.json をファイルシステムから直接検査する。
@@ -86,13 +86,13 @@ test.describe("Plan 002: CSP enforce mode regression", () => {
     ).toContain("https://unpkg.com");
   });
 
-  test("CSP value includes frame-ancestors 'none'", () => {
+  test("CSP value includes frame-ancestors 'self'", () => {
     const csp = headers.find((h) => h.key === "Content-Security-Policy");
     expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
     const cspValue = csp?.value ?? "";
     expect(
       cspValue,
-      "frame-ancestors 'none' が CSP から削除されている — クリックジャッキング保護が失われる"
-    ).toContain("frame-ancestors 'none'");
+      "frame-ancestors 'self'` が含まれていない — 同一オリジンの CMS プレビュー iframe かクリックジャッキング保護のどちらかが壊れている"
+    ).toContain("frame-ancestors 'self'");
   });
 });
