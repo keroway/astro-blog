@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "packageManager": "pnpm@11.1.3",
   "scripts": {
+    "postinstall": "lefthook install",
     "dev": "portless run --name keroway astro dev",
     "start": "portless run --name keroway astro dev",
     "dev:astro": "astro dev",
@@ -43,6 +44,7 @@
     "@sveltia/cms": "^0.170.4",
     "@unocss/astro": "^66.7.5",
     "astro": "^7.0.7",
+    "lefthook": "^2.1.10",
     "pagefind": "^1.5.2",
     "portless": "^0.15.1",
     "satori": "^0.26.0",
