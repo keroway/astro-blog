@@ -1,0 +1,19 @@
+# lefthook config — https://lefthook.dev/configuration/
+#
+# ローカルの pre-commit で機械的にチェックできる部分(フォーマット/lint/typecheck)
+# を自動実行し、CI (.github/workflows) で検知するより前に潰す。
+#
+# 導入: `pnpm install` の postinstall で `lefthook install` が走り、
+# .git/hooks/pre-commit が自動で同期される。
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome check (staged files)
+      glob: "*.{ts,js,mjs,json}"
+      run: pnpm exec biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+
+    - name: astro check (typecheck)
+      glob: "*.{ts,astro}"
+      run: pnpm exec astro check

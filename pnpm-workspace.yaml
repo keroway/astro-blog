@@ -19,6 +19,7 @@ minimumReleaseAgeStrict: true
 # esbuild / sharp は astro が transitively 依存するが、build スクリプト実行は不要。
 allowBuilds:
   esbuild: false
+  lefthook: true
   sharp: false
 
 # v11 では overrides / peerDependencyRules は pnpm-workspace.yaml に置く
