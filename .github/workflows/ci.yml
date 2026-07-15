@@ -265,7 +265,7 @@ jobs:
       # resolve correctly, which `--base-url` would not. Retry/timeout/accept
       # codes and excludes are configured in lychee.toml.
       - name: Link check (lychee)
-        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
           # `--include-fragments` is passed on the CLI rather than in lychee.toml
           # because the toml syntax for that key is incompatible between lychee
