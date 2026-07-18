@@ -262,6 +262,9 @@ const breadcrumbSchema = {
     display: grid;
     gap: var(--kw-space-8);
   }
+  .post > * {
+    min-width: 0;
+  }
   /* Scroll-Driven Animations (issue #499)。ReadingProgress (.reading-progress__fill) は
    * <ReadingProgress /> と <article class="post"> の共通祖先である
    * <main class="post-layout"> (SiteLayout が付与) に定義された
@@ -366,6 +369,8 @@ const breadcrumbSchema = {
   }
   .post__content :global(.code-block) {
     position: relative;
+    min-width: 0;
+    max-width: 100%;
   }
   .post__content :global(.code-block__copy) {
     position: absolute;

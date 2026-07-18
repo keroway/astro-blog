@@ -40,8 +40,8 @@ export default defineConfig({
 
     // ---- Section head — Japanese title + rule + mono en label ----
     "kw-section-head":
-      "flex items-baseline justify-between gap-kw-6 pb-kw-4 mb-kw-10 border-b border-b-kw-rule",
-    "kw-section-head__title": "flex items-baseline gap-kw-5 flex-wrap",
+      "flex items-baseline justify-between gap-kw-6 pb-kw-4 mb-kw-10 border-b border-b-kw-rule flex-wrap",
+    "kw-section-head__title": "flex items-baseline gap-kw-5 flex-wrap min-w-0",
     "kw-section-head__jp":
       "font-[var(--kw-font-display)] text-[var(--kw-fs-display-sm)] [font-weight:var(--kw-fw-medium)] text-kw-fg-display tracking-[var(--kw-ls-display)]",
     "kw-section-head__divider":
