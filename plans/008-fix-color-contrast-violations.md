@@ -34,6 +34,8 @@
 |---|---|---|
 | Build | `pnpm run build` | exit 0 |
 | axe 検証 | 一時スクリプトで dist/client を配信し `@axe-core/playwright` を light/dark × 主要 5 ページ（`/`, `/blog/`, 記事 1 本, `/works/`, `/about/`）に実行 | color-contrast 違反 0 |
+| Lint (CI ゲート) | `pnpm run lint` | exit 0 |
+| Alt テキスト検査 (CI ゲート) | `pnpm run lint:alt` | exit 0 |
 
 ## Scope
 

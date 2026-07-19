@@ -74,7 +74,7 @@
 
 - [ ] カテゴリ絞り込みが全記事を対象に機能し、URL で共有できる。
 - [ ] ページ移動で絞り込みが暗黙解除される挙動が存在しない。
-- [ ] `pnpm run build`（`astro check` 込み）/ `pnpm run lint` / `pnpm run test:unit` exit 0。
+- [ ] `pnpm run build`（`astro check` 込み）/ `pnpm run lint` / `pnpm run lint:alt` / `pnpm run test:unit` exit 0。
 - [ ] 関連 Playwright テストが pass。
 - [ ] `plans/README.md` の Plan 009 行を更新（採用した案と年フィルタの判断を一行で記録）。
 

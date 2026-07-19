@@ -52,7 +52,7 @@
 - [ ] 390px / 320px 幅でヘッダーの要素が重なり・密着なく表示される（スクリーンショット添付）。
 - [ ] X 共有 intent が `x.com` になっており、共有が機能する。
 - [ ] 12-4 の判断（変更 or 現状維持）が README 行に一行で記録されている。
-- [ ] `pnpm run build` / `pnpm run lint` exit 0。既存 Playwright スモークが pass。
+- [ ] `pnpm run build` / `pnpm run lint` / `pnpm run lint:alt` exit 0。既存 Playwright スモークが pass。
 - [ ] `plans/README.md` の Plan 012 行を更新。
 
 ## STOP conditions
