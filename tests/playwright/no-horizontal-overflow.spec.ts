@@ -4,6 +4,10 @@ const paths = [
   "/",
   "/blog/",
   "/blog/getting-started-with-python-web-scraping/",
+  // 修正前に最も深刻だったオーバーフロー実測値 (Plan 007): nginx 1546px, apache-solr-1 1026px。
+  // 回帰を確実に検知するため個別に含める (issue #570)。
+  "/blog/nginx/",
+  "/blog/apache-solr-1/",
   "/works/",
   "/about/",
 ] as const;
