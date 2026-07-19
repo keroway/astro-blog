@@ -53,7 +53,7 @@
 
 - [ ] dark テーマで白背景スクリーンショットの発光感が緩和されている（before/after スクリーンショット添付）。
 - [ ] light テーマの描画に変化がない。
-- [ ] `pnpm run build` / `pnpm run lint` exit 0。
+- [ ] `pnpm run build` / `pnpm run lint` / `pnpm run lint:alt` exit 0。
 - [ ] `plans/README.md` の Plan 010 行を更新。
 
 ## STOP conditions

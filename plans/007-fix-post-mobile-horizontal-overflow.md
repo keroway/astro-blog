@@ -66,6 +66,7 @@
 | Typecheck + build | `pnpm run build` | exit 0 |
 | Targeted E2E | `pnpm exec playwright test tests/playwright/ --grep "overflow"` | 追加テストが pass |
 | Lint | `pnpm run lint` | exit 0 |
+| Alt テキスト検査 (CI ゲート) | `pnpm run lint:alt` | exit 0 |
 
 ## Scope
 
