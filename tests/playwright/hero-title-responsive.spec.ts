@@ -34,8 +34,10 @@ test.describe("#346 hero title responsive", () => {
   for (const width of widths) {
     test(`hero title stays within 2 lines at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
-      await page.goto("/");
-      await page.waitForLoadState("networkidle");
+      await page.goto("/", { waitUntil: "load" });
+      // 行数判定は web フォントのメトリクスに依存するため、networkidle ではなく
+      // document.fonts.ready で直接待つ (issue #573)。
+      await page.evaluate(() => document.fonts.ready);
       const lines = await heroTitleLineCount(page);
       expect(lines).toBeLessThanOrEqual(2);
     });
