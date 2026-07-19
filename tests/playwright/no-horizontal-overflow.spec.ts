@@ -16,7 +16,9 @@ test.describe("mobile pages", () => {
   for (const path of paths) {
     test(`does not horizontally overflow: ${path}`, async ({ page }) => {
       await page.setViewportSize({ width: 390, height: 844 });
-      await page.goto(path, { waitUntil: "networkidle" });
+      // 静的ページのレイアウト幅検証なので "load" で十分（networkidle は不安定な待機で不要 - issue #573）。
+      await page.goto(path, { waitUntil: "load" });
+      await page.locator("body").waitFor({ state: "visible" });
 
       const metrics = await page.locator("html").evaluate((element) => ({
         clientWidth: element.clientWidth,

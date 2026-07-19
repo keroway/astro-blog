@@ -6,7 +6,9 @@ test.describe("mobile header", () => {
   for (const width of widths) {
     test(`does not wrap or overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 720 });
-      await page.goto("/", { waitUntil: "networkidle" });
+      // ページ内のポーリング/外部リクエストに依存しない静的レイアウト検証なので networkidle は不要 (issue #573)。
+      // 以降の expect(header).toBeVisible() が自動リトライで待機する。
+      await page.goto("/", { waitUntil: "load" });
 
       const header = page.locator(".kw-header");
       await expect(header).toBeVisible();
