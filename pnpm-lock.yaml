@@ -54,8 +54,8 @@ importers:
         specifier: ^2.6.2
         version: 2.6.2
       '@sveltia/cms':
-        specifier: ^0.170.4
-        version: 0.170.4
+        specifier: ^0.170.8
+        version: 0.170.8
       '@unocss/astro':
         specifier: ^66.7.5
         version: 66.7.5(vite@8.1.5(@types/node@24.12.4)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.0))
@@ -1276,8 +1276,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@sveltia/cms@0.170.4':
-    resolution: {integrity: sha512-2KpZb9aP6x9WbpiWM5OtSad+pLljBLIUH7+9dfVszyup8P3bYFOJOydlP21HPPQVLZs/eJPy9e726h4eXYY3VQ==}
+  '@sveltia/cms@0.170.8':
+    resolution: {integrity: sha512-NEINLayY9fT1LfGLeDzaJ6q9snBq+9CSB48gQIE6Y9LBMReD7QfyUzKQJ9ZG7Kfw9knnoKYNOBkOSLqY1WxNRw==}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -4339,7 +4339,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@sveltia/cms@0.170.4': {}
+  '@sveltia/cms@0.170.8': {}
 
   '@tybys/wasm-util@0.10.3':
     dependencies:
