@@ -6,16 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 このリポジトリは Claude Code 用に次の構成を持つ。**実装に着手する前に必ず参照する。**
 
-- **詳細な実装方針:** @.claude/rules/implementation.md (スコープ管理、Astro 6 固有の罠、検証順序などのルール)
+- **詳細な実装方針:** @.claude/rules/implementation.md (スコープ管理、Astro 7 固有の罠、検証順序などのルール)
 - **サブエージェント:**
   - `web-designer` — UI/UX 改善・新規ページ設計 (`docs/design-system.md` 準拠、Playwright MCP でスクリーンショット比較可)
   - `web-director` — 要件/アーキテクチャ判断、PR スコープ管理、ADR 起票判断
 - **スラッシュコマンド:**
-  - `/ship-check [pw filter]` — CI 4 ジョブ (lint / typecheck / build / playwright) と同じコマンドを順に走らせる PR 直前ゲート。build は `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩きで、CI と同じ並列構成を再現する。
+  - `/ship-check [pw filter]` — CI のうちローカル再現可能な 5 ジョブ (lint / unit / typecheck / build / playwright) と同じコマンドを順次実行する PR 直前ゲート。build は CI の build ジョブに合わせて `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩き (typecheck は別ステップでカバー、Lighthouse / Link check は CI のみ)。
   - `/fix-ci <PR番号>` — 指定 PR の落ちた CI ログを `gh` で取得して修正に当たる (PR 番号は必ず明示)
 - **自動 hook:**
   - `PostToolUse` (`Edit | Write | MultiEdit`) 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
-  - `SessionEnd` hook 用に `.claude/hooks/stop-dev-server.sh` を用意 (セッション中に立ち上げた `astro dev` を cwd スコープで停止＝立ちっぱなし防止、共有 portless proxy デーモンは残す)。**有効化には `.claude/settings.json` の `hooks` に `SessionEnd` エントリの登録が必要** (エージェント設定ファイルの自己改変ガードにより登録は手動で行う)。
+  - `SessionEnd` hook として `.claude/hooks/stop-dev-server.sh` を **`.claude/settings.json` に登録済み** (セッション中に立ち上げた `astro dev` を cwd スコープで停止＝立ちっぱなし防止、共有 portless proxy デーモンは残す)。
 
 ## Development Commands
 
@@ -36,20 +36,30 @@ pnpm run build     # Runs: astro check && astro build
 # Preview production build locally
 pnpm run preview
 
-# Run Playwright E2E tests
-pnpm exec playwright test
+# Unit tests (vitest)
+pnpm run test:unit
+
+# Playwright E2E tests (CRON_SECRET を CI と同値でセットする正規経路)
+ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e
 
 # Type check only
 pnpm exec astro check
+
+# CI のみで走る補助チェックのローカル実行 (要 build 済み dist/)
+pnpm run test:lighthouse   # Lighthouse CI
+pnpm run test:links        # lychee リンクチェック
+pnpm run test:admin        # CMS admin スモーク + a11y
 ```
 
-**Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (下記、要登録) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
+**Astro 7 の dev 自動 background 化:** Astro 7 は AI コーディングエージェントを検出すると `astro dev` を自動でデタッチした background プロセスとして起動する (lock file: `.astro/dev.json`)。Playwright の webServer がこれを「早期終了」と誤認して落ちるため、エージェントセッションからの E2E 実行は `ASTRO_DEV_BACKGROUND=0` を付ける。残留デーモンは `pnpm exec astro dev status` / `astro dev stop` で確認・停止。
+
+**Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (上記、登録済み) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
 
 **Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
 
 ## Architecture Overview
 
-This is a personal portfolio and technical blog (keroway.com) built with **Astro 6** + TypeScript, featuring:
+This is a personal portfolio and technical blog (keroway.com) built with **Astro 7** + TypeScript, featuring:
 - Japanese language support with URL-encoded slugs
 - Content management via Astro Content Collections (Markdown/Markdoc)
 - Responsive card-based blog listing with 16:9 aspect ratio images
@@ -60,31 +70,45 @@ This is a personal portfolio and technical blog (keroway.com) built with **Astro
 
 ```
 src/
-├── components/       # Reusable UI: BaseHead, Header, Footer, FormattedDate, HeaderLink
+├── assets/content/       # blog / works 用の画像アセット (astro:assets 経由)
+├── components/           # 再利用 UI 全 28 個: BaseHead, Header, Footer, SectionHead,
+│                         #   FocusCard, PostRow, WorksCard, TableOfContents, A11yMenu,
+│                         #   BlogSearch, CommandPalette, HeroBackdrop ほか
 ├── content/
-│   ├── blog/        # Markdown/Markdoc blog posts
-│   └── works/       # Markdown/Markdoc entries for portfolio/projects
+│   ├── blog/            # Markdown/Markdoc blog posts (約 60 記事)
+│   └── works/           # Markdown/Markdoc entries for portfolio/projects
 ├── content.config.ts    # Content Collections schema for blog / works
+├── data/                # focus-areas.ts などの静的データ
 ├── layouts/
-│   ├── SiteLayout.astro    # Main page wrapper with Header/Footer
-│   └── BlogPost.astro      # Blog post layout with image optimization
+│   ├── SiteLayout.astro       # Main page wrapper with Header/Footer
+│   ├── BlogPost.astro         # Blog post layout with image optimization
+│   └── WorkEntryLayout.astro  # Works entry layout
+├── lib/                 # content.ts / content-schema.ts / slug.ts (+ 各 *.test.ts)
 ├── pages/
-│   ├── index.astro         # Homepage (hero, recent posts, focus areas)
-│   ├── about.astro         # About page
+│   ├── index.astro            # Homepage (hero, recent posts, focus areas)
+│   ├── about.astro / now.astro / colophon.astro / 404.astro
+│   ├── admin.astro            # Sveltia CMS (/admin)
+│   ├── api/trigger-build.ts   # 公開予約ビルドの on-demand エンドポイント
 │   ├── blog/
-│   │   ├── index.astro     # Blog listing (card grid, sorted by date)
-│   │   └── [...slug].astro # Dynamic blog post routes
-│   └── rss.xml.js          # RSS feed generation
+│   │   ├── [...page].astro    # Blog listing (ページネーション付きカードグリッド)
+│   │   ├── [...slug].astro    # Dynamic blog post routes
+│   │   └── tags/              # index.astro / [tag].astro
+│   ├── og/[...slug].png.ts    # OGP 画像生成 (satori + resvg)
+│   ├── works/                 # index.astro / [slug].astro / rss.xml.js
+│   ├── rss.xml.js / feed.xml.js / llms.txt.ts
+├── scripts/             # クライアント JS (font-size, reduce-motion など)
 ├── styles/
-│   └── global.css          # Root CSS variables, typography, base styles
-└── consts.ts               # SITE_TITLE, SITE_DESCRIPTION
+│   ├── tokens.css       # `--kw-*` デザイントークン
+│   └── global.css       # ベース要素スタイル、typography
+├── types/               # content.ts (型定義)
+└── consts.ts            # SITE_TITLE, SITE_DESCRIPTION
 ```
 
 **Routing Logic:** Keep top-level routing in `src/pages/`, delegate view logic to `src/components/`. Layout wrappers belong in `src/layouts/`.
 
 ## Critical: Japanese Slug Encoding Pattern
 
-Astro 6 の Content Layer API では `post.id` がスラグ（ファイル名から拡張子を除いたもの）になります。`post.id` には日本語文字が含まれるため、HTML の `href` 属性では `encodeURIComponent` が必要ですが、`getStaticPaths()` のパラメータでは**エンコード不要**です（Astro が内部処理）。
+Astro 7 の Content Layer API では `post.id` がスラグ（ファイル名から拡張子を除いたもの）になります。`post.id` には日本語文字が含まれるため、HTML の `href` 属性では `encodeURIComponent` が必要ですが、`getStaticPaths()` のパラメータでは**エンコード不要**です（Astro が内部処理）。
 
 1. **Blog post routes** (`src/pages/blog/[...slug].astro`):
    ```typescript
@@ -97,7 +121,7 @@ Astro 6 の Content Layer API では `post.id` がスラグ（ファイル名か
    }
    ```
 
-2. **Blog listing** (`src/pages/blog/index.astro`):
+2. **Blog listing** (`src/pages/blog/[...page].astro`):
    ```typescript
    const encodedSlug = post.id.split('/').map((segment) => encodeURIComponent(segment)).join('/');
    // Used in: <a href={`/blog/${encodedSlug}/`}>
@@ -119,13 +143,19 @@ Blog posts in `src/content/blog/` must include this frontmatter:
 title: "Article Title"              # Required
 description: "Short summary"        # Required
 pubDate: 2024-01-15                # Required (coerced to Date)
-category: "Cloud & DevOps"         # Optional
-heroImage: "https://..."           # Optional (for card thumbnails)
 updatedDate: 2024-01-20            # Optional
+category: "Cloud & DevOps"         # Optional (BLOG_CATEGORIES の enum、src/lib/content-schema.ts)
+tags: ["astro", "vercel"]          # Optional (string[])
+series: "シリーズ名"                # Optional
+heroImage: ../../assets/content/blog/xxx.png  # Optional (image()、ローカルアセット参照)
+ogImage: "/og/custom.png"          # Optional
+author: "keroway"                  # Optional
+canonicalUrl: "https://..."        # Optional (URL)
+draft: true                        # Optional (default false、true で非公開)
 ---
 ```
 
-Schema is defined in `src/content.config.ts` using Zod (imported from `astro/zod`). New fields require schema updates.
+Schema is defined in `src/content.config.ts` using Zod (imported from `astro/zod`); category / status の enum は `src/lib/content-schema.ts` に定義。New fields require schema updates.
 
 Works entries in `src/content/works/` use a separate collection with:
 
@@ -133,10 +163,11 @@ Works entries in `src/content/works/` use a separate collection with:
 ---
 title: "Project Name"                   # Required
 description: "Short summary"            # Required
-status: "active"                        # Required: active | archived | wip
-repoUrl: "https://github.com/..."       # Required
+status: "active"                        # Required: active | archived | wip (WORKS_STATUSES)
 lpUrl: "https://..."                    # Required: landing page / external intro
+repoUrl: "https://github.com/..."       # Optional
 demoUrl: "https://..."                  # Optional
+heroImage: ../../assets/content/works/xxx.png  # Optional (image())
 tags: ["Astro", "TypeScript"]           # Required
 createdAt: 2026-05-10                   # Required (coerced to Date)
 updatedAt: 2026-05-10                   # Optional
@@ -181,12 +212,13 @@ No CSS-in-JS framework; pure CSS only.
 ## Testing & Type Safety
 
 - **Type checking:** Run `pnpm run build` to surface type errors and Astro validation issues
-- **E2E tests:** Playwright tests in `tests/playwright/basic.spec.ts`
-  - Tests homepage, blog listing navigation, and about page
-  - Run with: `pnpm exec playwright test`
-  - Default port is `4321`. If another process (e.g. a different `astro dev`) is already on 4321, override with `PLAYWRIGHT_PORT=4322 pnpm exec playwright test` (also accepts `PLAYWRIGHT_HOST` / falls back to `PORT` / `HOST`). Without the override, `reuseExistingServer: true` would let the wrong dev server answer the requests and cause every test to fail.
+- **Unit tests:** `pnpm run test:unit` (vitest)。対象は `src/lib/**/*.test.ts` (content-schema / content / slug) と `tests/**/*.test.ts` (admin-preview-style / admin-theme / robots-txt)。`astro:content` は `src/lib/__mocks__/astro-content.ts` でスタブ (`vitest.config.ts`)
+- **E2E tests:** Playwright tests in `tests/playwright/` (basic, a11y, url-check, blog-search, pagefind-index, mobile-header, no-horizontal-overflow, theme-after-swap, csp-config, hero-title-responsive, admin-smoke, admin-a11y の 12 spec)
+  - Run with: `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` (CI と同じ `CRON_SECRET=ci-test-secret` をセットする正規経路。素の `pnpm exec playwright test` だと url-check の 401 テスト 3 件が落ちる)
+  - Projects: chromium / firefox / mobile-chromium (Pixel 5)
+  - Default port is `4335` (`PLAYWRIGHT_PORT` → `PORT` → 4335 の順で解決、`PLAYWRIGHT_HOST` / `HOST` も同様)。`reuseExistingServer: !CI` のため、別の dev サーバーが同ポートにいると誤応答で全滅する — その場合はポートを明示して回避する。
 - **alt テキスト lint:** `pnpm run lint:alt` で `src/content/{blog,works}/**/*.{md,mdoc}` 内の markdown 画像を走査し、alt が空または 4 文字未満の箇所を検出する (`scripts/lint-alt.ts`)。CI の `lint` ジョブで Biome lint と並んで自動実行され、退行を検知する。
-- **No unit tests:** Rely on TypeScript strict mode and Content Collections schema validation
+- **CI:** `.github/workflows/ci.yml` は 7 ジョブ並列 — Lint (biome ci + lint:alt) / Unit tests (vitest) / Typecheck (astro check) / Build (astro build) / E2E (Playwright, build の dist を利用) / Lighthouse CI / Link check (lychee)。ローカル再現できるのは前 5 つで、`/ship-check` が順に走らせる
 
 ## Deployment
 
@@ -258,13 +290,17 @@ pnpm run suggest-frontmatter src/content/blog/<filename>.mdoc
 ## Key Integrations
 
 - **@astrojs/markdoc:** Markdoc (`.mdoc`) rendering for blog / works content
-- **@astrojs/rss:** RSS feed generation at `/rss.xml`
-- **@astrojs/sitemap:** Auto-generated XML sitemap
-- **Playwright:** E2E testing framework
+- **@astrojs/rss:** RSS feed generation at `/rss.xml` (+ `/feed.xml`, `/works/rss.xml`)
+- **@astrojs/sitemap:** Auto-generated XML sitemap (admin / api は除外)
+- **UnoCSS (`@unocss/astro`):** presetWind4 + `kw-*` shortcuts (`uno.config.ts`)
+- **Pagefind:** 全文検索。`astro.config.mjs` 内の自前インライン統合 `pagefind-inline` が build 後にインデックス生成 (ADR 0015)
+- **Sveltia CMS (`@sveltia/cms`):** `/admin` の Git ベース CMS (ADR 0016)
+- **@astrojs/vercel:** Vercel adapter (静的生成 + `/api/trigger-build` のみ on-demand)
+- **Playwright / vitest:** E2E / unit テストフレームワーク
 
 ## Locale & Accessibility
 
 - **Default language:** Japanese (`ja`)
 - **OGP locale:** Auto-set to `ja_JP` in BaseHead.astro
 - **Accessibility:** ARIA labels on navigation, `rel` attributes on external links, `prefers-reduced-motion` support
-- **Web fonts:** Shippori Mincho + BIZ UDPGothic + JetBrains Mono via Google Fonts (`display=swap` + `preconnect` in `BaseHead.astro`). Zen Maru Gothic is used only for OG image generation (satori), not for page text.
+- **Web fonts:** Shippori Mincho [500] + BIZ UDPGothic [400,700] + JetBrains Mono [400,500] を Astro fonts API (`fontProviders.fontsource()`, `astro.config.mjs`) で自己ホスト配信 (ADR 0013)。Google Fonts への外部リクエストは発生しない。Zen Maru Gothic (`@fontsource/zen-maru-gothic`) は OG 画像生成 (satori) 専用で、ページテキストには使わない。

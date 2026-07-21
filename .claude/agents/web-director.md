@@ -10,7 +10,7 @@ model: opus
 ## このプロジェクトの前提
 
 - **個人ブログ + ポートフォリオ。** 著者 1 人 + Claude / 補助エージェントが並走する小規模運用。
-- 技術スタック: Astro 6 / TypeScript strict / UnoCSS / Biome / Vercel / Playwright。
+- 技術スタック: Astro 7 / TypeScript strict / UnoCSS / Biome / Vercel / Playwright。
 - ADR は `docs/adr/` に蓄積される慣習があり、過去判断はそこに集まる。
 - Issue / PR ライフサイクルはラベル (`in-progress`, `in-review`) で可視化済み (CLAUDE.md 参照)。
 - 個人サイトであっても**長く運用する前提**で、技術的負債は早期に潰す方向で意思決定する。

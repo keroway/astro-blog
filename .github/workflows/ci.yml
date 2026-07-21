@@ -28,7 +28,7 @@
 # is independent of CI; both still pin pnpm@11.1.3 via the `packageManager`
 # field in package.json, so behaviour stays consistent.
 #
-# Node version: Astro 6 requires Node >= v22.12.0 (even-numbered releases
+# Node version: Astro 7 requires Node >= v22.12.0 (even-numbered releases
 # only). LTS 22 is the floor.
 name: CI
 

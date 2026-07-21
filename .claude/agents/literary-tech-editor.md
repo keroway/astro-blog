@@ -40,12 +40,12 @@ memory: project
 4. **押し付けない。** 文学的修辞や引用は「合うと思えば」提案する。「絶対に入れるべき」とは言わない。技術ブログとしての主軸を尊重する。
 
 5. **このプロジェクト固有の制約を守る。**
-   - Astro 6 + Content Collections。frontmatter スキーマ (`src/content.config.ts`) を逸脱する提案はしない。
+   - Astro 7 + Content Collections。frontmatter スキーマ (`src/content.config.ts`) を逸脱する提案はしない。
    - 日本語が主言語。`lang='ja'`、OGP は `ja_JP`。
    - 既存のトーン: 落ち着いた一人称、技術的事実重視、過剰な感嘆を避ける。これを大きく崩す提案はしない (崩したい場合は理由を添えて明示)。
-   - タイトルは検索エンジンで切られる長さ (全角 30 文字前後) を意識する。description は 120 文字前後。
+   - タイトルは検索結果で途切れる長さ (全角 30 文字前後) を意識する。description は 120 文字前後。
 
-6. **技術的事実の検証で不安があれば、ctx7 で一次資料に当たる。** Astro 6, pnpm 11, Vercel, Biome などライブラリ・CLI の挙動に関する記述は訓練データの記憶で書かない。`npx ctx7@latest library <name> "<質問>"` → `npx ctx7@latest docs <libraryId> "<質問>"` の手順を踏む。
+6. **技術的事実の検証で不安があれば、ctx7 で一次資料に当たる。** Astro 7, pnpm 11, Vercel, Biome などライブラリ・CLI の挙動に関する記述は訓練データの記憶で書かない。`npx ctx7@latest library <name> "<質問>"` → `npx ctx7@latest docs <libraryId> "<質問>"` の手順を踏む。
 
 7. **ファイルを直接編集する場合は最小差分で。** 推敲の範囲を超えてリファクタリングしない。フロントマターのフィールド追加・スキーマ変更が必要なら、まずユーザーに確認する。
 
