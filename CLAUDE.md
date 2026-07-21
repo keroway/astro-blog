@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `web-designer` — UI/UX 改善・新規ページ設計 (`docs/design-system.md` 準拠、Playwright MCP でスクリーンショット比較可)
   - `web-director` — 要件/アーキテクチャ判断、PR スコープ管理、ADR 起票判断
 - **スラッシュコマンド:**
-  - `/ship-check [pw filter]` — CI のうちローカル再現可能な 5 ジョブ (lint / unit / typecheck / build / playwright) と同じコマンドを順に走らせる PR 直前ゲート。build は `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩きで、CI と同じ並列構成を再現する (Lighthouse / Link check は CI のみ)。
+  - `/ship-check [pw filter]` — CI のうちローカル再現可能な 5 ジョブ (lint / unit / typecheck / build / playwright) と同じコマンドを順次実行する PR 直前ゲート。build は CI の build ジョブに合わせて `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩き (typecheck は別ステップでカバー、Lighthouse / Link check は CI のみ)。
   - `/fix-ci <PR番号>` — 指定 PR の落ちた CI ログを `gh` で取得して修正に当たる (PR 番号は必ず明示)
 - **自動 hook:**
   - `PostToolUse` (`Edit | Write | MultiEdit`) 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
@@ -53,7 +53,7 @@ pnpm run test:admin        # CMS admin スモーク + a11y
 
 **Astro 7 の dev 自動 background 化:** Astro 7 は AI コーディングエージェントを検出すると `astro dev` を自動でデタッチした background プロセスとして起動する (lock file: `.astro/dev.json`)。Playwright の webServer がこれを「早期終了」と誤認して落ちるため、エージェントセッションからの E2E 実行は `ASTRO_DEV_BACKGROUND=0` を付ける。残留デーモンは `pnpm exec astro dev status` / `astro dev stop` で確認・停止。
 
-**Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (下記、要登録) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
+**Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (上記、登録済み) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
 
 **Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
 
