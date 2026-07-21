@@ -1,5 +1,7 @@
 # レンダリング戦略評価レポート
 
+> **注記 (2026-07-21):** 本レポートは 2026-05 時点の評価記録。結論 (SSG 継続 = ADR 0003) は現在も有効だが、本文中の前提のうち CMS はその後 [ADR 0016](./adr/0016-cms-keystatic-to-sveltia.md) で Keystatic から Sveltia CMS へ移行し、フレームワークは [ADR 0017](./adr/0017-astro-7-upgrade.md) で Astro 7 に更新済み。当時の判断材料として原文のまま保持する。
+
 - **作成日**: 2026-05-16
 - **対象 Issue**: [#61 SSG vs SSR vs ISR の評価レポートを作成](https://github.com/keroway/astro-blog/issues/61)
 - **親 Issue**: [#15 Vercel Adapter / SSR 化の評価](https://github.com/keroway/astro-blog/issues/15)

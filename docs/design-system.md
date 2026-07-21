@@ -632,13 +632,9 @@ div.kw-monogram
 
 ### 8.1 Shippori Mincho
 
-明朝体の和文フォント。Google Fonts から読み込みます。見出し（`--kw-font-display`）・縦書きレール・署名・朱印に使用し、本文は BIZ UDPGothic に分離します（→ [ADR 0012](./adr/0012-tokaido-field-notes-refresh.md)）。
+明朝体の和文フォント。Astro fonts API（`astro.config.mjs` の `fontProviders.fontsource()`）で自己ホスト配信します（→ [ADR 0013](./adr/0013-web-fonts-self-hosting.md)）。見出し（`--kw-font-display`）・縦書きレール・署名・朱印に使用し、本文は BIZ UDPGothic に分離します（→ [ADR 0012](./adr/0012-tokaido-field-notes-refresh.md)）。
 
-**ロードウェイト（`BaseHead.astro` より）:**
-
-```
-family=Shippori+Mincho:wght@400;500;600;700
-```
+**ロードウェイト（`astro.config.mjs` より）:** `500` のみ。下表の 400 / 600 / 700 はフォールバックフォントまたは合成ウェイトで描画されるため、新規要素は medium (500) を基準にする。
 
 | ウェイト | トークン | 主な用途 |
 |---|---|---|
@@ -682,21 +678,13 @@ h1, h2, h3, h4, h5, h6 {
 
 本文用のゴシック体。長文の読みやすさを優先し、通常本文・カード説明文・リード文に使用します。見出しや装飾は Shippori Mincho に残し、本文だけをゴシック化します。
 
-**ロードウェイト（`BaseHead.astro` より）:**
-
-```
-family=BIZ+UDPGothic:wght@400;700
-```
+**ロードウェイト（`astro.config.mjs` より）:** `400` / `700`（Astro fonts API で自己ホスト配信）。
 
 ### 8.3 JetBrains Mono
 
-等幅フォント（`--kw-font-mono`）。Google Fonts から読み込みます。コード・ラベル・ナビゲーション・日付表示などの「機械的・情報的」要素に使用します。
+等幅フォント（`--kw-font-mono`）。Astro fonts API で自己ホスト配信します（→ [ADR 0013](./adr/0013-web-fonts-self-hosting.md)）。コード・ラベル・ナビゲーション・日付表示などの「機械的・情報的」要素に使用します。
 
-**ロードウェイト（`BaseHead.astro` より）:**
-
-```
-family=JetBrains+Mono:wght@400;500;700
-```
+**ロードウェイト（`astro.config.mjs` より）:** `400` / `500`（700 はロードせず限定使用に留める）。
 
 | ウェイト | トークン | 主な用途 |
 |---|---|---|

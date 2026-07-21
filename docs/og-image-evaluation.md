@@ -1,5 +1,7 @@
 # OGP 画像生成ライブラリ評価レポート
 
+> **注記 (2026-07-21):** 本レポートは 2026-05 時点の評価記録。結論 (satori + @resvg/resvg-js 採用) は現在も有効。本文中の「Astro 6」はその後 [ADR 0017](./adr/0017-astro-7-upgrade.md) で Astro 7 に更新済みだが、static endpoint パターンは変わらないため原文のまま保持する。
+
 - **作成日**: 2026-05-17
 - **対象 Issue**: [#82 satori / @vercel/og の比較と採用ライブラリを決定する](https://github.com/keroway/astro-blog/issues/82)
 - **親 Issue**: [#25 OGP 画像の動的生成（satori / @vercel/og）](https://github.com/keroway/astro-blog/issues/25)
