@@ -135,6 +135,10 @@ Playwright テスト（例 `tests/playwright/no-horizontal-overflow.spec.ts`）:
 - [ ] 回帰テストが追加され pass。
 - [ ] `plans/README.md` の Plan 007 行を更新。
 
+### 事後追記（2026-07-21, Issue #571）
+
+- [x] 本 plan の `flex-wrap` 追加により 375〜約590px 帯でセクション見出し（トップページ「最近の記録」）が2行に折り返る意匠変化が発生。敵対的レビュー（Issue #571）→ 実測の上、運用者承認済み。正式意匠として `docs/design-system.md` §7.3 に反映。
+
 ## STOP conditions
 
 - `min-width: 0` を入れても overflow が解消しない（原因が別にある）場合。
