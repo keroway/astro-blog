@@ -165,11 +165,15 @@ const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).hre
 
 <script>
   function initFilter() {
+    const postsList = document.getElementById('posts-list');
+    if (!postsList || postsList.dataset.filterReady === '1') return;
+    postsList.dataset.filterReady = '1';
+
     const params = new URLSearchParams(window.location.search);
     let activeCategory = params.get('category') ?? '';
     let activeYear = params.get('year') ?? '';
 
-    const articles = Array.from(document.querySelectorAll<HTMLElement>('#posts-list .post-row'));
+    const articles = Array.from(postsList.querySelectorAll<HTMLElement>('.post-row'));
     const countEl = document.getElementById('filter-count');
     const emptyEl = document.getElementById('empty-message');
 
@@ -243,7 +247,7 @@ const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).hre
   }
 
   initFilter();
-  document.addEventListener('astro:after-swap', initFilter);
+  document.addEventListener('astro:page-load', initFilter);
 </script>
 
 <style>
