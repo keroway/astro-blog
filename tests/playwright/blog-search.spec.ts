@@ -69,6 +69,39 @@ test.describe("#341 /blog full-text search", () => {
   });
 });
 
+test.describe("#588 astro:page-load 経由の init (ClientRouter swap)", () => {
+  test("navigating from another page keeps search and filter working (no double-init)", async ({
+    page,
+  }) => {
+    // トップページ経由でヘッダーのリンクをクリックし ClientRouter の swap を発生させる。
+    // #588: astro:after-swap 購読だとフィルタ側は即時実行との併発で二重 init していた。
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await page.locator('.kw-header__nav a[href="/blog"]').click();
+    await page.waitForURL("**/blog");
+
+    const input = page.locator(".blog-search__input");
+    await expect(input).toBeEnabled();
+    await input.fill("読書");
+    await expect(page.locator(".blog-search__result").first()).toBeVisible();
+    await page.locator(".blog-search__clear").click();
+
+    const categoryButtons = page.locator('[data-filter-type="category"]');
+    const total = await categoryButtons.count();
+    test.skip(total < 2, "カテゴリが 1 つ以下のため絞り込み検証をスキップ");
+
+    // 二重 init だとリスナーが 2 重登録され pushState/applyFilter が 2 回走る。
+    // filter-count の値は冪等で二重登録を検知できないため、history エントリの
+    // 増分 (pushState の呼び出し回数) で単発であることを直接検証する。
+    const historyLengthBefore = await page.evaluate(() => history.length);
+    await categoryButtons.nth(1).click();
+    await expect(page.locator("#filter-count")).toBeVisible();
+    await expect(page.locator("#filter-count")).toContainText("件");
+    const historyLengthAfter = await page.evaluate(() => history.length);
+    expect(historyLengthAfter - historyLengthBefore).toBe(1);
+  });
+});
+
 test.describe("#341 progressive enhancement (no-JS)", () => {
   test.use({ javaScriptEnabled: false });
 
