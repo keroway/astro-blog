@@ -90,12 +90,15 @@ test.describe("#588 astro:page-load 経由の init (ClientRouter swap)", () => {
     const total = await categoryButtons.count();
     test.skip(total < 2, "カテゴリが 1 つ以下のため絞り込み検証をスキップ");
 
-    // 二重 init だとリスナーが 2 重登録され pushState/applyFilter が 2 回走るが、
-    // 結果は冪等なので filter-count の値そのもので検知はできない。
-    // ここではクリック 1 回で正しく反映されること（例外・二重表示が無いこと）を確認する。
+    // 二重 init だとリスナーが 2 重登録され pushState/applyFilter が 2 回走る。
+    // filter-count の値は冪等で二重登録を検知できないため、history エントリの
+    // 増分 (pushState の呼び出し回数) で単発であることを直接検証する。
+    const historyLengthBefore = await page.evaluate(() => history.length);
     await categoryButtons.nth(1).click();
     await expect(page.locator("#filter-count")).toBeVisible();
     await expect(page.locator("#filter-count")).toContainText("件");
+    const historyLengthAfter = await page.evaluate(() => history.length);
+    expect(historyLengthAfter - historyLengthBefore).toBe(1);
   });
 });
 
