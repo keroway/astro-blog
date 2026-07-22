@@ -81,21 +81,13 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
     applyMotionPreferences();
     const targets = document.querySelectorAll<HTMLElement>('[data-reveal]');
     observer?.disconnect();
-    // animation-timeline: view() 対応ブラウザ (issue #499) では global.css の
-    // html.kw-scroll-timeline [data-reveal] が CSS だけで reveal を駆動する。
-    // ただし view-timeline の "entry" 進捗は初回ロード/reload 時にまだ解決されておらず、
-    // 最初から画面内 (above the fold) にある要素が opacity:0 のまま固まる既知の挙動がある
-    // (一度もスクロールイベントが発火しないため)。そのため、ロード時点で既にビューポート内に
-    // ある要素だけは JS で即座に可視化し、CSS アニメーションは無効化する。fold 外の要素は
-    // 従来通り CSS の scroll-timeline に描画を任せる (二重発火を避ける)。
-    if (document.documentElement.classList.contains('kw-scroll-timeline')) {
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      for (const el of targets) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top < vh && rect.bottom > 0) el.classList.add('is-visible');
-      }
-      return;
-    }
+    // reveal は全ブラウザ IntersectionObserver に一本化する (issue #587)。
+    // かつて animation-timeline: view() (Scroll-Driven Animations, issue #499) で
+    // CSS 駆動へ分岐していたが、view-timeline の entry 進捗が初回ロード/reload/
+    // プリレンダ活性化時に解決されない Chrome の既知バグと、View Transitions の
+    // swap で kw-scroll-timeline クラスが再付与されない不整合が重なり間欠的に
+    // 非表示のまま固まっていたため撤去した。経緯は
+    // docs/adr/0020-scroll-reveal-intersection-observer.md を参照。
     // 低減時 / IO 未対応は隠さず即表示 (kw-anim も付いていない)。
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
       for (const el of targets) el.classList.add('is-visible');
