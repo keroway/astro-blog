@@ -362,16 +362,20 @@ html.reduce-motion::view-transition-new(*) {
 }
 
 /* -------------------------------------------------------------
- * Scroll reveal (issue #377 / Scroll-Driven Animations 化: issue #499)
+ * Scroll reveal (issue #377)
  *
  * 初期非表示は html.kw-anim でゲートする。kw-anim は BaseHead の
  * head inline が「モーション許可時のみ」初回描画前に付与する。
  * よって JS 無効 / モーション低減時は kw-anim が付かず、
  * コンテンツは常に表示される (チラつき・非表示を回避)。
  *
- * html.kw-scroll-timeline (animation-timeline: view() 対応ブラウザで BaseHead が付与)
- * では IntersectionObserver を使わず、CSS の view() タイムラインだけでメインスレッド
- * 負荷ゼロの reveal を行う。非対応ブラウザ (Firefox 等) は SiteLayout の JS パスにフォールバックする。
+ * reveal の駆動は全ブラウザ SiteLayout の IntersectionObserver に一本化する
+ * (issue #587)。かつて animation-timeline: view() (Scroll-Driven Animations,
+ * issue #499) で CSS 駆動を試みたが、view-timeline の entry 進捗が初回ロード /
+ * reload / プリレンダ活性化時に解決されず opacity:0 のまま固まる Chrome の
+ * 既知バグがあり、fold 内要素だけ対症療法を足した (issue #513) 後も間欠的な
+ * 非表示が再発したため撤去した。経緯は docs/adr/0020-scroll-reveal-intersection-observer.md
+ * を参照。「perf のため view() に戻す」提案をする前に必ずこの ADR を読むこと。
  * ------------------------------------------------------------- */
 html.kw-anim [data-reveal] {
   opacity: 0;
@@ -383,35 +387,6 @@ html.kw-anim [data-reveal] {
 html.kw-anim [data-reveal].is-visible {
   opacity: 1;
   transform: none;
-}
-
-html.kw-anim.kw-scroll-timeline [data-reveal] {
-  animation: kw-reveal-in linear both;
-  animation-timeline: view();
-  animation-range: entry 0% entry 40%;
-  /* transition は IntersectionObserver パス専用なので無効化し、
-   * animation との二重適用を防ぐ。 */
-  transition: none;
-}
-/* ロード/reload 時点で既にビューポート内にあった要素は SiteLayout の init() が
- * is-visible を付与する。view-timeline の entry 進捗はスクロールイベントが一度も
- * 発火しないと初回進捗を解決できず opacity:0 のまま固まることがあるため、
- * fold 内要素はこのルールで CSS アニメーションを即時無効化して強制表示する。 */
-html.kw-anim.kw-scroll-timeline [data-reveal].is-visible {
-  animation: none;
-  animation-timeline: none;
-  opacity: 1;
-  transform: none;
-}
-@keyframes kw-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--kw-motion-distance));
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* 文字サイズ: 大 / 特大 (issue #390)。fs トークンを一括で拡大。 */

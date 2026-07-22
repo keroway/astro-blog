@@ -68,14 +68,6 @@ const websiteSchema = {
     // スクロール演出 (issue #377) の初期非表示は kw-anim でゲートする。
     // モーション許可時のみ初回描画前に付与し、チラつきを避ける。
     if (!reduced) document.documentElement.classList.add('kw-anim');
-    // Scroll-Driven Animations (issue #499)。animation-timeline: view() 対応ブラウザでは
-    // CSS のみで reveal を駆動し、SiteLayout の IntersectionObserver パスをスキップする。
-    // 非対応ブラウザ (Firefox 等) では従来通り JS パスを使う。
-    try {
-      if (window.CSS && CSS.supports && CSS.supports('animation-timeline: view()')) {
-        document.documentElement.classList.add('kw-scroll-timeline');
-      }
-    } catch (e) {}
     // 文字サイズ (issue #390)。キー 'font-size' は src/scripts/font-size.ts と一致させること。
     try {
       var fs = localStorage.getItem('font-size');
