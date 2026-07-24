@@ -38,7 +38,7 @@ C3. **画像は `astro:assets` の `Image` コンポーネント + `width` / `he
 
 C4. **frontmatter は `src/content.config.ts` のスキーマと一致させる。** 新フィールドはスキーマ更新が先。スキーマ違反は `pnpm run build` で必ず落ちるので、PR 前に build を通す。
 
-C5. **Node は v22.12.0 以上。** Astro 7 の要件 (CI は `actions/setup-node` の `node-version: "22"`)。CI / Vercel / ローカルすべてここに揃える。
+C5. **Node は v22.12.0 以上 (Astro 7 の要件)。運用は 24 にピン。** keroway ワークスペース標準として `mise.toml` で node 24 / pnpm 11 をピンし、CI (`actions/setup-node` の `node-version: "24"`) も揃える。CI / Vercel / ローカルすべてここに揃える。
 
 C6. **CI と Vercel の整合は「ツール経路一致」ではなく「バージョン pin 一致」で取る。**
    - CI (`.github/workflows/ci.yml`) は `pnpm/action-setup` を使う (pnpm 公式推奨)。
