@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "schedule:weekly"],
+  "timezone": "Asia/Tokyo",
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "description": "Astro 本体と @astrojs/* は lockstep 依存のため 1 PR にまとめる",
+      "groupName": "astrojs",
+      "matchPackageNames": ["astro", "@astrojs/*"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "dev-tooling",
+      "matchPackageNames": ["@playwright/*", "typescript"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "残りのマイナー / パッチはまとめて 1 PR にしてノイズを抑える。major は個別 PR で内容を確認して取り込む",
+      "groupName": "npm-minor-patch",
+      "matchManagers": ["npm"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "description": "major はビルド互換性への影響が大きいため自動更新しない (手動で上げる)",
+      "matchPackageNames": ["typescript", "astro"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
+      "groupName": "github-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"]
+    }
+  ]
+}
