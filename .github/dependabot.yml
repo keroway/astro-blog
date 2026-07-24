@@ -1,42 +1,57 @@
+# keroway 標準 dependabot 設定 (templates/dependabot.yml ベース)。
+# リポジトリ固有の groups (astrojs / dev-tooling) と major を止める ignore は保持する。
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
+      interval: weekly
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
     commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(deps-dev)"
-      include: "scope"
+      prefix: chore
+      include: scope
+    labels:
+      - dependencies
     groups:
+      # Astro 本体と @astrojs/* は lockstep 依存のため 1 PR にまとめる。
       astrojs:
         patterns:
           - "@astrojs/*"
           - "astro"
+        update-types:
+          - minor
+          - patch
       dev-tooling:
         patterns:
           - "@playwright/*"
           - "typescript"
+        update-types:
+          - minor
+          - patch
+      # 残りのマイナー / パッチはまとめて 1 PR にしてノイズを抑える。
+      # major は個別 PR で内容を確認して取り込む。
+      npm-minor-patch:
+        update-types:
+          - minor
+          - patch
     ignore:
+      # major はビルド互換性への影響が大きいため自動更新しない (手動で上げる)。
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
       - dependency-name: "astro"
         update-types: ["version-update:semver-major"]
 
-  - package-ecosystem: "github-actions"
+  - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    labels:
-      - "dependencies"
+      interval: weekly
+    open-pull-requests-limit: 5
     commit-message:
-      prefix: "chore(actions)"
+      prefix: chore
+    labels:
+      - dependencies
+    groups:
+      github-actions:
+        update-types:
+          - minor
+          - patch

@@ -1,0 +1,21 @@
+# 各リポジトリの .github/workflows/gitleaks.yml に配置する呼び出し元。
+name: secret-scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gitleaks:
+    uses: keroway/.github/.github/workflows/reusable-gitleaks.yml@main
