@@ -1,0 +1,5 @@
+# keroway ワークスペース標準のツールチェーンピン (templates/mise.toml 準拠)。
+# CI (.github/workflows/ci.yml の setup-node) と Node メジャーを揃える。
+[tools]
+node = "24"
+pnpm = "11"
