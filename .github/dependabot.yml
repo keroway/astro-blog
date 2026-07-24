@@ -18,10 +18,16 @@ updates:
         patterns:
           - "@astrojs/*"
           - "astro"
+        update-types:
+          - minor
+          - patch
       dev-tooling:
         patterns:
           - "@playwright/*"
           - "typescript"
+        update-types:
+          - minor
+          - patch
       # 残りのマイナー / パッチはまとめて 1 PR にしてノイズを抑える。
       # major は個別 PR で内容を確認して取り込む。
       npm-minor-patch:
