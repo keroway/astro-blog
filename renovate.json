@@ -1,6 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "schedule:weekly"],
+  "extends": [
+    "config:recommended",
+    "schedule:weekly",
+    ":semanticCommitTypeAll(chore)"
+  ],
   "timezone": "Asia/Tokyo",
   "labels": ["dependencies"],
   "prConcurrentLimit": 5,
