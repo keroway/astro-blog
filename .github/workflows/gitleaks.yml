@@ -11,6 +11,9 @@ on:
 
 permissions:
   contents: read
+  # reusable 側の scan ジョブが pull-requests: write を要求するため、
+  # 呼び出し元でも同等以上を付与しないと startup_failure になる。
+  pull-requests: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
