@@ -56,6 +56,8 @@ pnpm run test:admin        # CMS admin スモーク + a11y
 
 **Dev サーバー (portless):** `pnpm dev` / `pnpm start` は [portless](https://github.com/vercel-labs/portless) 経由で `astro dev` を起動し、固定ポート 4321 ではなく `https://keroway.localhost` で配信する (内部はランダムポート割当でポート競合が消える)。HTTPS 構成のため**初回のみ** CA 信頼登録と 443 バインドで sudo 昇格が走る (`portless trust` / proxy 起動)。proxy は port 443 の常駐デーモンで、プロジェクト横断の共有ルーター。セッション終了時の停止は SessionEnd hook (上記、登録済み) が担い、`astro dev` 本体だけを止めて proxy は残す。portless を使わず素の `astro dev` を 4321 で動かしたいときは `pnpm dev:astro`。
 
+**環境変数 (`.env` を常駐させない):** このリポジトリは public のため、ローカルに平文の `.env` を置き続ける運用は #599 でやめた。`pnpm run dev` / `pnpm run test:e2e` はどちらも env ファイルなしで動く (`CRON_SECRET` 未設定時は dev で認証スキップ、`test:e2e` は自前で `CRON_SECRET=ci-test-secret` をセットする)。`/api/trigger-build` を実値で検証したいときだけ `pnpm dlx vercel@latest env pull .env.local --environment=development` で都度取得し、確認後は `rm .env.local` で削除する。詳細は `docs/vercel-preview.md` §3。
+
 **Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
 
 ## Architecture Overview

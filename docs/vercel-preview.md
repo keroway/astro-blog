@@ -47,6 +47,22 @@ Sveltia CMS は静的 SPA のため、CMS 用のサーバーサイド env は Pr
 
 > Vercel ダッシュボードで env を登録するときは、対象環境のチェックを **Production のみ** にしておけば Preview に余計な値が漏れない。
 
+### ローカル開発での扱い（`.env` を常駐させない）
+
+このリポジトリは **public** なので、ローカルに平文の `.env` を置きっぱなしにしない運用とする (#599)。
+
+- 通常の `pnpm run dev` / `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` は env ファイルなしで動く。
+  `CRON_SECRET` が未設定のとき `/api/trigger-build` は dev では認証をスキップし (`src/pages/api/trigger-build.ts`)、
+  E2E は `pnpm run test:e2e` 自体が `CRON_SECRET=ci-test-secret` を渡す (`package.json`)。
+- `/api/trigger-build` を実値で動作確認したいときだけ、Vercel の Development 環境に
+  必要な変数を登録したうえで都度取得する:
+  ```bash
+  pnpm dlx vercel@latest env pull .env.local --environment=development
+  ```
+- **確認が終わったら `rm .env.local` で削除する。** 平文の常駐をゼロに保つのが目的なので、
+  取得しっぱなしにしない。
+- `.env.local` は `.gitignore` の `.env.*` パターンでカバー済み (#597)。
+
 ---
 
 ## 4. draft / 公開予約フィルタの実装
