@@ -9,6 +9,8 @@ keroway.com — エンジニア keroway のポートフォリオ・技術ブロ�
 ## Build, Test, and Development Commands
 Run `pnpm install` before your first change. Use `pnpm run dev` (alias `pnpm start`) for the local dev server with hot reload; it runs through portless at https://keroway.localhost (first run elevates with sudo for the HTTPS proxy). Use `pnpm run dev:astro` for plain `astro dev` on http://localhost:4321. Ship code with `pnpm run build`, which runs `astro check` for type safety before producing the production build in `dist/`. Verify output locally with `pnpm run preview`. Run unit tests with `pnpm run test:unit` (vitest) and E2E tests with `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` (Playwright; sets `CRON_SECRET` to match CI, and opts out of Astro 7's automatic background dev server for agent sessions).
 
+This is a public repo, so don't keep a plaintext `.env` on disk (#599). Neither `pnpm run dev` nor `pnpm run test:e2e` needs one. If you need real values for `/api/trigger-build`, pull them on demand — `pnpm dlx vercel@latest env pull .env.local --environment=development` — and delete `.env.local` once you're done (see `docs/vercel-preview.md` §3).
+
 ## Coding Style & Naming Conventions
 Follow the default Astro + TypeScript style: two-space indentation, trailing commas where valid, and PascalCase for components (`HeaderLink.astro`) while keeping utilities and constants in camelCase or UPPER_CASE as appropriate. Prefer named exports, and keep file names kebab-case under `src/pages` (e.g., `blog/index.astro`) to match route paths. Use markdown frontmatter fields `title`, `pubDate`, and `description` consistently in blog entries.
 
