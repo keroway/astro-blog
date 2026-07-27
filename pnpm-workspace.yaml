@@ -34,12 +34,21 @@ overrides:
   "esbuild@<0.28.1": "^0.28.1"
   # GHSA-9wv6-86v2-598j (path-to-regexp 6.x <6.3.0) — ^6.3.0 で 6.x に固定 (>=6.3.0 は 8.x も含んでしまうため)
   "path-to-regexp@>=6.0.0 <6.3.0": "^6.3.0"
-  # tar <7.5.16 (PAX size override による file smuggling) — @astrojs/vercel>@vercel/nft>@mapbox/node-pre-gyp 経由。
+  # tar <7.5.21 (GHSA-r292-9mhp-454m) — @astrojs/vercel>@vercel/nft>@mapbox/node-pre-gyp 経由。
   # 7.x 内に固定。upstream が修正版を取り込んだら削除する。
-  "tar@<7.5.16": ">=7.5.16 <8"
+  "tar@<7.5.21": ">=7.5.21 <8"
   # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core 由来分は削除済みだが、
   # Astro 7 で @astrojs/internal-helpers 経由で引き続きツリーに存在するため維持。
   "js-yaml@>=4.0.0 <4.2.0": ">=4.2.0 <5"
+  # osv-scanner 検出分 (2026-07-27)。いずれも devDependency 経由 (claude-agent-sdk / vercel adapter / rss)。
+  # GHSA-frvp-7c67-39w9 (@hono/node-server DoS) — @anthropic-ai/claude-agent-sdk 経由。
+  "@hono/node-server@<2.0.5": ">=2.0.5"
+  # GHSA-mh99-v99m-4gvg (brace-expansion ReDoS) — @astrojs/vercel>@vercel/nft 経由。
+  "brace-expansion@<5.0.8": ">=5.0.8 <6"
+  # GHSA-v2hh-gcrm-f6hx (fast-uri) — ajv 経由 (claude-agent-sdk の MCP SDK 等)。
+  "fast-uri@<3.1.4": ">=3.1.4 <4"
+  # GHSA-8r6m-32jq-jx6q (fast-xml-parser) — @astrojs/rss 経由。
+  "fast-xml-parser@<5.10.1": ">=5.10.1 <6"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
