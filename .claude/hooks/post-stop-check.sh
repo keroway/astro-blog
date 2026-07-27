@@ -35,7 +35,13 @@ INPUT="$(cat || true)"
 if command -v jq >/dev/null 2>&1; then
   STOP_HOOK_ACTIVE="$(printf '%s' "$INPUT" | jq -r '.stop_hook_active // false' 2>/dev/null || echo false)"
 else
-  STOP_HOOK_ACTIVE="false"
+  # jq 非依存フォールバック: 空白を除いた生 JSON を直接照合する
+  # （jq が無い環境ではここで "false" 固定にすると下の無限ループ防止が丸ごと無効になる）。
+  COMPACT_INPUT="$(printf '%s' "$INPUT" | tr -d ' \t\n\r')"
+  case "$COMPACT_INPUT" in
+    *'"stop_hook_active":true'*) STOP_HOOK_ACTIVE="true" ;;
+    *) STOP_HOOK_ACTIVE="false" ;;
+  esac
 fi
 
 if [ "$STOP_HOOK_ACTIVE" = "true" ]; then
