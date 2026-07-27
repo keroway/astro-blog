@@ -31,6 +31,7 @@ pnpm-debug.log*
 !.claude/rules/
 !.claude/hooks/
 !.claude/claude-security-guidance.md
+!.claude/README.md
 .serena/
 test-results/
 .playwright-mcp/
