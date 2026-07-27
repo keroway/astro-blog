@@ -21,4 +21,4 @@ concurrency:
 
 jobs:
   gitleaks:
-    uses: keroway/.github/.github/workflows/reusable-gitleaks.yml@main
+    uses: keroway/.github/.github/workflows/reusable-gitleaks.yml@main # zizmor: ignore[unpinned-uses] v3.0.0

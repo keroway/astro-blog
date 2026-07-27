@@ -167,17 +167,17 @@
       if (search === null) return;
 
       const top = search.results.slice(0, 20);
-      const datas = await Promise.all(top.map((r) => r.data()));
+      const entries = await Promise.all(top.map((r) => r.data()));
 
       status.hidden = false;
       status.textContent = `「${trimmed}」の検索結果: ${search.results.length} 件`;
 
-      if (datas.length === 0) {
+      if (entries.length === 0) {
         results.innerHTML = "";
         return;
       }
 
-      results.innerHTML = datas
+      results.innerHTML = entries
         .map((d, i) => {
           const title = escapeHtml(d.meta.title ?? d.url);
           const excerpt = d.sub_results?.[0]?.excerpt ?? d.excerpt ?? "";

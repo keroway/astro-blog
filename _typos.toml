@@ -1,0 +1,26 @@
+# typos (https://github.com/crate-ci/typos) の誤検知除外。
+# CLAUDE.md 記載の通り、既存コンテンツへの誤検出があるため Stop hook には含めず、
+# ここでは CI (workflow-lint) 実行時の既知の誤検知だけを除外する。
+
+[default]
+# Markdown 画像パス中のハッシュ値ファイル名（例: `/4ba5ef6c1a3e.png`）は英単語ではない。
+extend-ignore-re = ['\(/[0-9a-f]{8,}\.(png|jpg|jpeg)\)']
+
+[default.extend-words]
+# GAE = Google App Engine（略称、複数記事で使用）
+GAE = "GAE"
+gae = "gae"
+# Packt Publishing（技術書出版社名）
+Packt = "Packt"
+
+[files]
+# 画像アセットのファイル名はハッシュ値で、英単語ではない
+# （例: 4ba5ef6c1a3e.png の "ba"、799dbe525f48.png の "dbe" 等）。
+extend-exclude = [
+  "public/*.png",
+  "src/assets/content/blog/*.jpg",
+  "src/assets/content/blog/*.png",
+  # 過去記事の本文（コード例・UI引用の転記）。内容修正は本 PR のスコープ外。
+  "src/content/blog/python-docx.mdoc",
+  "src/content/blog/repl-it.mdoc",
+]
