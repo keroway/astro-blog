@@ -1,5 +1,7 @@
 import { component, defineMarkdocConfig } from "@astrojs/markdoc/config";
 import shiki from "@astrojs/markdoc/shiki";
+import githubLight from "@shikijs/themes/github-light";
+import kanagawaWave from "@shikijs/themes/kanagawa-wave";
 
 // コンテンツはすべて .mdoc (blog/works 計54件以上)。
 // Markdoc 本文は astro.config.mjs の markdown.shikiConfig を参照しないため、
@@ -14,15 +16,31 @@ import shiki from "@astrojs/markdoc/shiki";
 // 低コントラストテーマで、--kw-bg-alt (#E9DECB) 上ではトークン 18 色中 16 色が
 // WCAG AA (4.5:1) 未達、中央値 3.36:1 まで落ちる (github-light は 6/12・中央値 4.73:1)。
 // 「ハイライトされた箇所ほど薄い」逆転が起きるため、light だけ統一を見送る。
+//
+// コメント色だけは両テーマとも --kw-bg-alt 上で WCAG AA (4.5:1) 未達だったため (#608)、
+// shiki の colorReplacements で明度だけずらして差し替える。
+// テーマ ID 文字列ではなくテーマオブジェクトを渡しているのは、Astro の ShikiConfig が
+// codeToHtml 側の colorReplacements オプションを素通ししないため
+// (テーマオブジェクト側の colorReplacements は shiki のテーマ正規化時に適用される)。
+//
+//   light  #6a737d on #E9DECB = 3.62:1 → #5a6069 = 4.76:1
+//   dark   #727169 on #0F2244 = 3.21:1 → #8f8d85 = 4.74:1
+//
+// kanagawa-wave の #727169 は comment のほか markdown の blockquote / fenced code
+// トークンにも使われており、いずれも同じ理由で引き上げ対象。
+const THEMES = {
+  light: {
+    ...githubLight,
+    colorReplacements: { "#6a737d": "#5a6069" },
+  },
+  dark: {
+    ...kanagawaWave,
+    colorReplacements: { "#727169": "#8f8d85" },
+  },
+};
+
 export default defineMarkdocConfig({
-  extends: [
-    shiki({
-      themes: {
-        light: "github-light",
-        dark: "kanagawa-wave",
-      },
-    }),
-  ],
+  extends: [shiki({ themes: THEMES })],
 
   // content components (#365): Astro コンポーネントとの接続
   tags: {

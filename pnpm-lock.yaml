@@ -57,6 +57,9 @@ importers:
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
+      '@shikijs/themes':
+        specifier: 4.3.1
+        version: 4.3.1
       '@sveltia/cms':
         specifier: ^0.172.4
         version: 0.172.4
