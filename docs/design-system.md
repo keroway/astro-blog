@@ -25,25 +25,27 @@
 
 プリミティブカラーは具体的な色値を保持する最下層のトークンです。セマンティックトークンはこれらを参照します。
 
+値は OKLCH 表記です。P3 ディスプレイ向けに彩度を広げているため、元の sRGB hex 値とは一致しません（issue #501）。
+
 | トークン | light 値 | dark 値 | 意味 |
 |---|---|---|---|
-| `--kw-navy` | `#003366` | `#9CB4DA` | 紺碧・主役色 |
-| `--kw-blue` | `#1E50A2` | `#7AA2D0` | 水色・インタラクション色 |
-| `--kw-paper` | `#F3F1EC` | `#0B1B33` | わずかに温かい紙白・主背景 |
-| `--kw-paper-warm` | `#E9DECB` | `#0F2244` | 温かみのある紙色・代替背景 |
-| `--kw-paper-card` | `#FFFDF8` | `#122548` | カード背景 |
-| `--kw-sand` | `#D9B382` | `#D9B382` | 砂金・アクセント（両モード共通） |
-| `--kw-sand-soft` | `rgba(217,179,130,0.45)` | `rgba(217,179,130,0.30)` | 砂金の薄掛け |
-| `--kw-vermilion` | `#B43D2F` | `#E07A66` | 朱印・強アクセント |
-| `--kw-vermilion-soft` | `rgba(180,61,47,0.14)` | `rgba(224,122,102,0.16)` | 朱の薄掛け |
-| `--kw-road` | `#5E7892` | `#8CA6BD` | 東海道の道筋 |
-| `--kw-road-soft` | `rgba(94,120,146,0.14)` | `rgba(140,166,189,0.14)` | 道筋の太い下地 |
-| `--kw-ink` | `#0B1B33` | `#E8EDF6` | 墨・主テキスト |
-| `--kw-ink-dim` | `#4A5874` | `#9AA6BD` | 薄墨・補助テキスト |
-| `--kw-ink-faint` | `#8290AC` | `#6E7A94` | 最薄墨・装飾テキスト |
-| `--kw-rule` | `rgba(0,51,102,0.16)` | `rgba(232,237,246,0.18)` | 罫線 |
-| `--kw-rule-soft` | `rgba(0,51,102,0.08)` | `rgba(232,237,246,0.08)` | 薄罫線 |
-| `--kw-rule-strong` | `rgba(0,51,102,0.28)` | `rgba(232,237,246,0.32)` | 強罫線 |
+| `--kw-navy` | `oklch(32.33% 0.1148 253.89)` | `oklch(76.49% 0.0682 259.52)` | 紺碧・主役色 |
+| `--kw-blue` | `oklch(44.65% 0.1606 259.95)` | `oklch(70.05% 0.0906 252.41)` | 水色・インタラクション色 |
+| `--kw-paper` | `oklch(95.83% 0.0070 88.64)` | `oklch(22.28% 0.0519 258.34)` | わずかに温かい紙白・主背景 |
+| `--kw-paper-warm` | `oklch(90.43% 0.0281 81.47)` | `oklch(25.71% 0.0687 261.04)` | 温かみのある紙色・代替背景 |
+| `--kw-paper-card` | `oklch(99.42% 0.0069 88.64)` | `oklch(26.97% 0.0698 261.48)` | カード背景 |
+| `--kw-sand` | `oklch(78.89% 0.0875 73.37)` | `oklch(78.89% 0.0875 73.37)` | 砂金・アクセント（両モード共通） |
+| `--kw-sand-soft` | `oklch(from var(--kw-sand) l c h / 0.45)` | `oklch(from var(--kw-sand) l c h / 0.30)` | 砂金の薄掛け |
+| `--kw-vermilion` | `oklch(52.79% 0.1758 29.88)` | `oklch(68.91% 0.1466 32.23)` | 朱印・強アクセント |
+| `--kw-vermilion-soft` | `oklch(from var(--kw-vermilion) l c h / 0.14)` | `oklch(from var(--kw-vermilion) l c h / 0.16)` | 朱の薄掛け |
+| `--kw-road` | `oklch(56.22% 0.0567 248.74)` | `oklch(71.32% 0.0497 245.18)` | 東海道の道筋 |
+| `--kw-road-soft` | `oklch(from var(--kw-road) l c h / 0.14)` | `oklch(from var(--kw-road) l c h / 0.14)` | 道筋の太い下地 |
+| `--kw-ink` | `oklch(22.28% 0.0519 258.34)` | `oklch(94.49% 0.0133 262.38)` | 墨・主テキスト |
+| `--kw-ink-dim` | `oklch(46.00% 0.0492 263.91)` | `oklch(72.33% 0.0361 263.51)` | 薄墨・補助テキスト |
+| `--kw-ink-faint` | `oklch(65.20% 0.0450 264.19)` | `oklch(57.91% 0.0426 265.59)` | 最薄墨・装飾テキスト |
+| `--kw-rule` | `oklch(from var(--kw-navy) l c h / 0.16)` | `oklch(from var(--kw-ink) l c h / 0.18)` | 罫線 |
+| `--kw-rule-soft` | `oklch(from var(--kw-navy) l c h / 0.08)` | `oklch(from var(--kw-ink) l c h / 0.08)` | 薄罫線 |
+| `--kw-rule-strong` | `oklch(from var(--kw-navy) l c h / 0.28)` | `oklch(from var(--kw-ink) l c h / 0.32)` | 強罫線 |
 
 ### 1.2 セマンティックカラー
 
@@ -94,8 +96,8 @@ works エントリのステータス表示に使用する 3種。
 
 | ステータス | トークン (fg / bg) | light fg | dark fg |
 |---|---|---|---|
-| `active` | `--kw-status-active-fg` / `-bg` | `--kw-blue` | `#B3CCEC` |
-| `wip` | `--kw-status-wip-fg` / `-bg` | `#8A5A1F` | `--kw-sand` |
+| `active` | `--kw-status-active-fg` / `-bg` | `--kw-blue` | `oklch(83.72% 0.0525 254.69)` |
+| `wip` | `--kw-status-wip-fg` / `-bg` | `oklch(50.95% 0.0963 67.57)` | `--kw-sand` |
 | `archived` | `--kw-status-archived-fg` / `-bg` | `--kw-ink-dim` | `--kw-ink-dim` |
 
 ---
@@ -222,8 +224,8 @@ works エントリのステータス表示に使用する 3種。
 | トークン | 値 | 用途 |
 |---|---|---|
 | `--kw-shadow-none` | `none` | 影なし |
-| `--kw-shadow-card` | `0 10px 30px rgba(0,51,102,0.08), 0 1px 0 rgba(0,51,102,0.08)` | カードの柔らかいドロップシャドウ |
-| `--kw-shadow-pop` | `0 18px 48px rgba(0,51,102,0.16), 0 3px 10px rgba(0,51,102,0.10)` | ポップアップ・ドロップダウン |
+| `--kw-shadow-card` | light: `0 10px 30px oklch(from var(--kw-navy) l c h / 0.08), 0 1px 0 oklch(from var(--kw-navy) l c h / 0.08)`<br>dark: `0 10px 30px oklch(from var(--kw-paper) l c h / 0.08), 0 1px 0 oklch(from var(--kw-paper) l c h / 0.08)` | カードの柔らかいドロップシャドウ |
+| `--kw-shadow-pop` | light: `0 18px 48px oklch(from var(--kw-navy) l c h / 0.16), 0 3px 10px oklch(from var(--kw-navy) l c h / 0.10)`<br>dark: `0 18px 48px oklch(from var(--kw-paper) l c h / 0.16), 0 3px 10px oklch(from var(--kw-paper) l c h / 0.10)` | ポップアップ・ドロップダウン |
 
 ### 3.4 ボーダー
 
