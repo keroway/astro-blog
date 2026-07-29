@@ -148,6 +148,10 @@
   --kw-seal-fg:     oklch(98.21% 0.0141 74.43);
   --kw-seal-border: oklch(from var(--kw-vermilion) l c h / 0.42);
 
+  /* Shadow must remain dark: --kw-navy is intentionally light in dark theme. */
+  --kw-shadow-card: 0 10px 30px oklch(from var(--kw-paper) l c h / 0.08), 0 1px 0 oklch(from var(--kw-paper) l c h / 0.08);
+  --kw-shadow-pop:  0 18px 48px oklch(from var(--kw-paper) l c h / 0.16), 0 3px 10px oklch(from var(--kw-paper) l c h / 0.10);
+
   color-scheme: dark;
 }
 
@@ -222,8 +226,8 @@
 
   /* ---- Elevation ---- */
   --kw-shadow-none: none;
-  --kw-shadow-card: 0 10px 30px rgba(0, 51, 102, 0.08), 0 1px 0 rgba(0, 51, 102, 0.08);
-  --kw-shadow-pop:  0 18px 48px rgba(0, 51, 102, 0.16), 0 3px 10px rgba(0, 51, 102, 0.10);
+  --kw-shadow-card: 0 10px 30px oklch(from var(--kw-navy) l c h / 0.08), 0 1px 0 oklch(from var(--kw-navy) l c h / 0.08);
+  --kw-shadow-pop:  0 18px 48px oklch(from var(--kw-navy) l c h / 0.16), 0 3px 10px oklch(from var(--kw-navy) l c h / 0.10);
 
   /* ---- Borders ---- */
   --kw-border-hair:   1px solid var(--kw-rule);
