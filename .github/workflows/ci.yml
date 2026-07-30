@@ -29,8 +29,8 @@
 # field in package.json, so behaviour stays consistent.
 #
 # Node version: Astro 7 requires Node >= v22.12.0 (even-numbered releases
-# only). We pin Node 24 (keroway workspace standard, mise.toml) which
-# satisfies that floor.
+# only). This project intentionally pins Node 24 because Vercel Serverless
+# Functions do not yet support the workspace-standard Node 26 runtime.
 name: CI
 
 on:
