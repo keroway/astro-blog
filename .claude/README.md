@@ -1,6 +1,6 @@
 # astro-blog — Claude Code Setup
 
-このディレクトリは Claude Code / Cursor 等の AI コーディングエージェントの動作をこのプロジェクト用に
+このディレクトリは Claude Code / Codex / pi 等の AI コーディングエージェントの動作をこのプロジェクト用に
 整える共有設定です。`CLAUDE.md`（リポジトリルート）と一緒に読んでください。
 
 ## 構成
