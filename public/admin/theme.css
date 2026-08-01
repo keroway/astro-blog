@@ -194,18 +194,14 @@ button:disabled,
   --sui-button-primary-background-color-focus: var(--cms-blue);
   --sui-button-primary-border-color: var(--cms-navy);
   --sui-button-primary-foreground-color: var(--cms-paper);
-  --sui-button-primary-font-weight: 700;
+
   letter-spacing: 0.02em;
 }
 
-[data-keroway-admin-action="secondary"] {
-  --sui-button-secondary-background-color: var(--cms-card);
-  --sui-button-secondary-border-color: var(--cms-rule-strong);
-  --sui-button-secondary-foreground-color: var(--cms-navy);
-  --sui-button-secondary-font-weight: 650;
-}
-
-/* secondary との差が出るよう、面を持たせず線と文字色だけで表す。 */
+/* [data-keroway-admin-action="secondary"] は :root の --sui-button-secondary-*
+ * 既定値のままで見た目が成立するため、要素スコープの上書きを持たない。
+ *
+ * secondary との差が出るよう、subtle は面を持たせず線と文字色だけで表す。 */
 [data-keroway-admin-action="subtle"] {
   --sui-control-foreground-color: var(--cms-muted);
   --sui-button-secondary-background-color: transparent;
@@ -223,7 +219,6 @@ button:disabled,
   --sui-button-primary-background-color: var(--cms-danger);
   --sui-button-primary-border-color: var(--cms-danger);
   --sui-button-primary-foreground-color: var(--cms-paper);
-  --sui-button-primary-font-weight: 700;
   --sui-button-secondary-border-color: var(--cms-danger);
   --sui-button-secondary-foreground-color: var(--cms-danger);
   --sui-button-tertiary-foreground-color: var(--cms-danger);
