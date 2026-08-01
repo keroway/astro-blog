@@ -77,6 +77,11 @@ jobs:
       - name: Lint markdown alt text
         run: pnpm run lint:alt
 
+      # `scripts/lint-tokens-doc.ts` で tokens.css と design-system.md §1.1 / §5 の
+      # カラートークン表の乖離（欠落・余剰・値不一致）を検知する。
+      - name: Lint tokens doc sync
+        run: pnpm run lint:tokens-doc
+
   unit:
     name: Unit tests (vitest)
     runs-on: ubuntu-latest
