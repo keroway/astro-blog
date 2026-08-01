@@ -173,8 +173,11 @@ import { Font } from "astro:assets";
         },
         {
           type: "subtle",
+          // 「編集 / Edit」は入れない。アイコンのみのボタンは textContent が
+          // Material Symbols のリガチャ ("edit" など) になるため、編集導線
+          // (本来は primary 相当) まで subtle に落ちてしまう。
           pattern:
-            /Access Token|アクセストークン|キャンセル|Cancel|閉じる|Close|戻る|Back|編集|Edit/iu,
+            /Access Token|アクセストークン|キャンセル|Cancel|閉じる|Close|戻る|Back/iu,
         },
       ];
 
@@ -241,32 +244,77 @@ import { Font } from "astro:assets";
         }
       };
 
-      const classifyAdminActions = () => {
+      const ACTION_SELECTOR = 'button, [role="button"], a';
+
+      const classifyElement = (element: HTMLElement) => {
+        const text =
+          element.textContent?.replace(/\s+/g, " ").trim() ||
+          element.getAttribute("aria-label") ||
+          element.getAttribute("title") ||
+          "";
+        const matched = actionRules.find(({ pattern }) => pattern.test(text));
+
+        if (matched) {
+          element.dataset.kerowayAdminAction = matched.type;
+        }
+      };
+
+      // roots を渡すと、その部分木 (と、ラベルが後から差し込まれたケースに備えて
+      // 祖先のボタン) だけを走査する。エディタは入力のたびに DOM を書き換えるため、
+      // 毎回 document 全体を舐めない。
+      const classifyAdminActions = (roots: Element[] = [document.body]) => {
         renderLoginGuide();
         syncPreviewTheme();
         watchPreviewIframe();
 
-        document
-          .querySelectorAll<HTMLButtonElement | HTMLAnchorElement>(
-            'button, [role="button"], a',
-          )
-          .forEach((element) => {
-            const text =
-              element.textContent?.replace(/\s+/g, " ").trim() ||
-              element.getAttribute("aria-label") ||
-              element.getAttribute("title") ||
-              "";
-            const matched = actionRules.find(({ pattern }) => pattern.test(text));
+        const targets = new Set<HTMLElement>();
 
-            if (matched) {
-              element.dataset.kerowayAdminAction = matched.type;
-            }
-          });
+        for (const root of roots) {
+          if (!root.isConnected) continue;
+
+          const self = root.closest<HTMLElement>(ACTION_SELECTOR);
+
+          if (self) targets.add(self);
+
+          for (const element of root.querySelectorAll<HTMLElement>(
+            ACTION_SELECTOR,
+          )) {
+            targets.add(element);
+          }
+        }
+
+        targets.forEach(classifyElement);
       };
 
       CMS.init({ config });
 
-      const observer = new MutationObserver(classifyAdminActions);
+      // Sveltia はキー入力ごとに大量の mutation を出すため、1 フレームぶんを
+      // まとめてから 1 回だけ走査する。
+      const pendingRoots = new Set<Element>();
+      let scanRequest = 0;
+
+      const observer = new MutationObserver((records) => {
+        for (const record of records) {
+          for (const node of record.addedNodes) {
+            const root =
+              node instanceof Element ? node : node.parentElement;
+
+            if (root) pendingRoots.add(root);
+          }
+        }
+
+        if (scanRequest || !pendingRoots.size) return;
+
+        scanRequest = requestAnimationFrame(() => {
+          scanRequest = 0;
+
+          const roots = [...pendingRoots];
+
+          pendingRoots.clear();
+          classifyAdminActions(roots);
+        });
+      });
+
       observer.observe(document.body, { childList: true, subtree: true });
 
       // Sveltia CMS の設定パネルでテーマを切り替えると <html data-theme> が

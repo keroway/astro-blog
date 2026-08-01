@@ -15,11 +15,10 @@ Sveltia CMS の SPA に対して `public/admin/theme.css` を読み込む。
 この CSS は Sveltia CMS の内部実装に強く依存しすぎないよう、次の範囲に留める。
 
 - CMS 専用のデザイントークン（色、角丸、影、フォーカス）
-- `button` / `[role="button"]` / form controls の基礎スタイル
 - `data-keroway-admin-action` など、`src/pages/admin.astro` 側で
   付与する安定したセマンティック hook
 - Sveltia UI が公開している `--sui-*` トークン経由のテーマ調整
-  （checkbox など内部 UI 部品）
+  （ボタン・control・checkbox など内部 UI 部品）
 
 ### フォント (issue #622)
 
@@ -103,22 +102,35 @@ DOM 構造まで本番と一致させることではない。
   の属性変化を監視する `MutationObserver` の両方で同期する。iframe の中身の
   構築完了は親 `document.body` の `MutationObserver` だけでは検知できない）。
 
-### Sveltia UI トークン運用
+### Sveltia UI トークン運用 (issue #623)
 
-Sveltia CMS の checkbox はネイティブ `input[type="checkbox"]`
-ではなく、`<button role="checkbox">` として実装されている。
-そのため keroway 側の汎用 button ルールをそのまま当てると、
-最小高 44px / 大きい角丸が波及して縦長ピル状に崩れる。
+**要素セレクタで殴らず、`--sui-*` トークンで指示する。** 全称の
+`button, [role="button"]` ルールで `min-height` / `border-radius` を
+`!important` 指定すると、ツールバーのアイコンのみボタンやメニュー項目
+（Sveltia の small / medium サイズ）まで肥大化して不格好になる。
+checkbox は `<button role="checkbox">` 実装のため、同じ理由で縦長ピル状に崩れる。
 
-- 汎用ボタンスタイルは
-  `button:not([role="checkbox"]):not([role="radio"]):not([role="switch"])`
-  のように除外する
-- checkbox / control の見た目は `public/admin/theme.css` で
-  `--sui-checkbox-*` や `--sui-focus-ring-color` を上書きし、
-  Sveltia UI の公開トークン経由で合わせる
+- **サイズ**: 高さ・余白は Sveltia のサイズ別既定
+  （fine pointer で small 24 / medium 32 / large 40px）に任せる。
+  タップ領域の確保は `@media (pointer: coarse)` で
+  `--sui-control-medium-height` / `--sui-control-large-height` を上げて行う
+  （Sveltia 自身も coarse で 32 / 40 / 48px に上げるが medium が 44px に届かない）
+- **角丸**: `--sui-control-{small,medium,large}-border-radius` を
+  `--cms-radius-*`（本体サイトの `--kw-radius-*` と同じ 2 / 4 / 6 / 8px）に揃える。
+  textbox / listbox / option の角丸もこの control トークンから派生するため、
+  要素ごとの上書きは不要
+- **色**: `--sui-primary-accent-color` 系と
+  `--sui-button-{primary,secondary}-*` を `:root` で上書きする
 - 追加のトークンを使う前に
-  `grep -o -- '--sui-[a-z-]*' node_modules/@sveltia/cms/dist/sveltia-cms.mjs | sort -u`
+  `grep -oE -- '--sui-[a-z0-9-]*' node_modules/@sveltia/cms/dist/sveltia-cms.mjs | sort -u`
   で実名を確認する
+
+`!important` の要否は「Sveltia 側に既定値があるか」で決まる。Sveltia は起動後に
+`:root` / `:host` へ `<style>` を動的挿入するため、既定値を持つトークン
+（`--sui-primary-accent-color`、`--sui-control-*`、フォント群など）は静的な
+`<link>` の宣言では負ける＝ `!important` が要る。既定値を持たず `var()` の
+第 2 引数でのみフォールバックするトークン（`--sui-checkbox-*`、
+`--sui-button-<variant>-*` など）は通常の宣言で届く。
 
 ## ボタン種別
 
@@ -141,8 +153,24 @@ Sveltia CMS 側の文言はバージョンにより変わる可能性がある�
 | `GitHub にログイン` | `Sign In with GitHub` | `secondary` |
 | `プレビュー`, `公開`, `アップロード`, `メディア` | `Preview`, `Publish`, `Upload`, `Media` | `secondary` |
 | `アクセストークンを使用してログイン` | `Sign In Using Access Token` | `subtle` |
-| `キャンセル`, `閉じる`, `戻る`, `編集` | `Cancel`, `Close`, `Back`, `Edit` | `subtle` |
+| `キャンセル`, `閉じる`, `戻る` | `Cancel`, `Close`, `Back` | `subtle` |
 | `削除`, `破棄`, `リセット` | `Delete`, `Discard`, `Reset` | `danger` |
+
+`編集` / `Edit` は subtle に**含めない**。アイコンのみのボタンは `textContent` が
+Material Symbols のリガチャ（`edit` / `delete` など）になるため、編集導線まで
+補助操作として分類されてしまう（issue #623）。
+
+付与された `data-keroway-admin-action` に対しては、色を直接当てず
+`--sui-button-<variant>-*` / `--sui-control-foreground-color` を**要素スコープで**
+上書きする。同じ意味のアクションでも Sveltia 側の variant
+（primary / secondary / tertiary / ghost / variant なし）は画面ごとに違うため、
+どの variant で描画されてもトークン経由なら追従する。要素への直接宣言は
+`:root` からの継承に必ず勝つので `!important` は不要で、ボタンの形・余白は
+Sveltia のネイティブなものが保たれる。
+
+分類は `MutationObserver` で行うが、Sveltia はキー入力のたびに大量の mutation を
+出すため、`requestAnimationFrame` で 1 フレーム分をまとめ、走査対象も
+追加されたノードの部分木（とその祖先のボタン）に限定する。
 
 ログイン後のアカウントメニューには「(ローカル|テスト)レポジトリで作業中」という
 接続状態表示が出る。「〜で作業」で終わる完全一致ではなくこの部分文字列に
@@ -187,7 +215,8 @@ Sveltia CMS はフィールドをセクション化する UIを標準で提供�
 ## アクセシビリティ方針
 
 - フォーカスリングは色だけに頼らず、outline + halo で表示する
-- 最小タップ領域は 44px を目安にする
+- 最小タップ領域は `@media (pointer: coarse)` で 44px を目安にする
+  （マウス環境では Sveltia のコンパクトな既定サイズを尊重する）
 - `prefers-reduced-motion: reduce` ではホバー移動などの motion を実質無効化する
 - ライト/ダークは本体サイトと同じ `localStorage["theme"]` を
   Sveltia CMS の prefs (`localStorage["sveltia-cms.prefs"].theme`) へ

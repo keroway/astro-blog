@@ -8,10 +8,21 @@ const themeCss = readFileSync(
 );
 
 describe("admin theme checkbox regression guards", () => {
-  it("excludes checkbox/radio/switch roles from generic button sizing rules", () => {
-    expect(themeCss).toContain(
-      'button:not([role="checkbox"]):not([role="radio"]):not([role="switch"])'
+  // Sveltia の checkbox は <button role="checkbox">、アイコンのみのツールバー
+  // ボタンは small/medium サイズ。要素セレクタでサイズを殴ると両方が崩れるため、
+  // サイズ・角丸は --sui-control-* トークン経由でのみ指示する (issue #623)。
+  it("has no generic button sizing rule", () => {
+    expect(themeCss).not.toMatch(
+      /^button[^{]*\{[^}]*\b(min-height|height)\s*:/m
     );
+    expect(themeCss).not.toMatch(/^button[^{]*\{[^}]*\bborder-radius\s*:/m);
+  });
+
+  it("sizes controls through published Sveltia size tokens", () => {
+    expect(themeCss).toContain("--sui-control-small-border-radius:");
+    expect(themeCss).toContain("--sui-control-medium-border-radius:");
+    expect(themeCss).toContain("--sui-control-large-border-radius:");
+    expect(themeCss).toContain("@media (pointer: coarse)");
   });
 
   it("defines published Sveltia checkbox theme tokens", () => {

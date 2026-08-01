@@ -30,12 +30,13 @@
     sans-serif);
   --cms-font-mono: var(--font-mono, "JetBrains Mono", ui-monospace, SFMono-Regular,
     Menlo, Monaco, Consolas, "Liberation Mono", monospace);
-  --cms-radius-sm: 6px;
-  --cms-radius-md: 10px;
-  --cms-radius-lg: 16px;
+  /* 角丸は本体サイトの --kw-radius-* (src/styles/tokens.css) と同じ刻み。 */
+  --cms-radius-xs: 2px;
+  --cms-radius-sm: 4px;
+  --cms-radius-md: 6px;
+  --cms-radius-lg: 8px;
   --cms-shadow-card: 0 12px 32px rgb(0 51 102 / 0.08),
     0 1px 0 rgb(0 51 102 / 0.08);
-  --cms-duration: 160ms;
 }
 
 :root[data-theme="dark"] {
@@ -63,6 +64,16 @@
  * (docs/design-system.md の「[data-theme] 属性セレクタのみ使用する」方針に合わせる)。
  */
 
+/*
+ * Sveltia UI (--sui-*) トークン経由のテーマ調整。
+ *
+ * !important の有無は「Sveltia 側に既定値があるか」で決まる。Sveltia は起動後に
+ * :root / :host へ <style> を動的挿入するため、既定値を持つトークン
+ * (--sui-primary-accent-color, --sui-control-*, フォント群など) はこの静的
+ * <link> より後のカスケードで負ける。既定値を持たず var() の第 2 引数側でのみ
+ * フォールバックするトークン (--sui-checkbox-*, --sui-button-<variant>-* など) は
+ * 通常の宣言で届く。
+ */
 :root {
   --sui-checkbox-background-color: var(--cms-card);
   --sui-checkbox-background-color-checked: var(--cms-navy);
@@ -71,16 +82,39 @@
   --sui-checkbox-border-radius: var(--cms-radius-sm);
   --sui-checkbox-border-width: 1px;
   --sui-checkbox-foreground-color-checked: var(--cms-paper);
-  --sui-focus-ring-color: var(--cms-focus);
-  --sui-primary-accent-color: var(--cms-navy);
+
+  /* アクセント一式。Sveltia の primary/secondary ボタン・選択状態・
+   * フォーカスリングはすべてここから派生する。フォーカスリングは Sveltia が
+   * menu / listbox など「面」にも出すため半透明に留める (ボタン・入力の実線
+   * リングは下の :focus-visible)。 */
+  --sui-focus-ring-color: oklch(from var(--cms-focus) l c h / 0.6) !important;
+  --sui-primary-accent-color: var(--cms-navy) !important;
+  --sui-primary-accent-color-light: var(--cms-blue) !important;
+  --sui-primary-accent-color-dark: oklch(from var(--cms-navy) calc(l * 0.88) c h) !important;
+  --sui-primary-accent-color-inverted: var(--cms-paper) !important;
+  --sui-primary-accent-color-text: var(--cms-blue) !important;
+  --sui-primary-accent-color-translucent: oklch(from var(--cms-navy) l c h / 0.6) !important;
+  --sui-primary-accent-color-translucent-light: oklch(from var(--cms-navy) l c h / 0.4) !important;
+
+  /* 角丸は Sveltia 既定の calc(height / 8) ではなく keroway の刻みに揃える。
+   * button だけでなく textbox / listbox / option もこの control トークンから
+   * 派生するため、要素ごとの上書きは不要。 */
+  --sui-control-small-border-radius: var(--cms-radius-xs) !important;
+  --sui-control-medium-border-radius: var(--cms-radius-sm) !important;
+  --sui-control-large-border-radius: var(--cms-radius-md) !important;
+
+  /* ボタンの色。高さ・余白は Sveltia のサイズ別既定 (small 24 / medium 32 /
+   * large 40px) をそのまま使い、アイコンのみのツールバーボタンが肥大化しない
+   * ようにする。タップ領域の確保は下の pointer: coarse ブロックで行う。 */
+  --sui-button-primary-font-weight: 700;
+  --sui-button-secondary-background-color: var(--cms-card);
+  --sui-button-secondary-border-color: var(--cms-rule-strong);
+  --sui-button-secondary-foreground-color: var(--cms-navy);
+  --sui-button-secondary-font-weight: 650;
 
   /* Sveltia CMS 本体 (エディタ・ダイアログ・ツールバー等) のフォントを
    * keroway.com 本体と揃える。body { font-family } だけでは Sveltia の
-   * コンポーネントに届かないため、公開トークン経由で明示的に上書きする。
-   * Sveltia は起動後にこれらのトークンを :root, :host へ動的に <style>
-   * 挿入し、この静的 <link> より後にカスケードで勝ってしまうため
-   * !important が必要 (--sui-checkbox-* 等と異なり、この変数群は
-   * Sveltia 側で :root に既定値が明示されているため通常の詳細度では負ける)。 */
+   * コンポーネントに届かない。 */
   --sui-font-family-default: var(--cms-font-body) !important;
   --sui-font-family-monospace: var(--cms-font-mono) !important;
   --sui-heading-font-family: var(--cms-font-display) !important;
@@ -95,13 +129,12 @@
   --sui-control-font-family: var(--cms-font-body) !important;
 }
 
+/* Sveltia CMS は不透明なアプリシェルで body を覆うため、ここは CMS マウント前の
+ * 地色 (白フラッシュ防止) としてだけ機能する。装飾は載せない。 */
 html,
 body {
   min-height: 100%;
-  background:
-    radial-gradient(circle at 12% 8%, var(--cms-vermilion-soft), transparent 18rem),
-    radial-gradient(circle at 88% 0%, oklch(from var(--cms-blue) l c h / 0.12), transparent 28rem),
-    var(--cms-paper);
+  background-color: var(--cms-paper);
   color: var(--cms-ink);
   font-family: var(--cms-font-body);
 }
@@ -119,20 +152,15 @@ textarea {
   font: inherit;
 }
 
-button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]),
-[role="button"] {
-  border-radius: var(--cms-radius-md) !important;
-  min-height: 44px;
-  transition:
-    background-color var(--cms-duration) ease,
-    border-color var(--cms-duration) ease,
-    box-shadow var(--cms-duration) ease,
-    transform var(--cms-duration) ease;
-}
-
-button:not([role="checkbox"]):not([role="radio"]):not([role="switch"]):hover:not(:disabled),
-[role="button"]:hover {
-  transform: translateY(-1px);
+/* タップ主体の環境だけボタン・入力の高さを底上げする (Sveltia 自身も
+ * pointer: coarse で small 32 / medium 40 / large 48px へ上げるが、
+ * medium が 44px に届かないため上書きする)。マウス環境では Sveltia の
+ * コンパクトな既定サイズを尊重する。 */
+@media (pointer: coarse) {
+  :root {
+    --sui-control-medium-height: 44px !important;
+    --sui-control-large-height: 48px !important;
+  }
 }
 
 button:focus-visible,
@@ -150,59 +178,55 @@ button:disabled,
 [aria-disabled="true"] {
   cursor: not-allowed !important;
   opacity: 0.58 !important;
-  transform: none !important;
-}
-
-input:not([type="checkbox"], [type="radio"]),
-select,
-textarea {
-  border-radius: var(--cms-radius-sm) !important;
 }
 
 /*
- * Checkboxes/radios: leave native rendering alone. Forcing a border-radius
- * onto native input[type=checkbox] here fights the browser's own box/tick
- * rendering and produces a distorted, hard-to-read shape.
+ * admin.astro が文言から付与するセマンティック hook。
+ *
+ * 同じ意味のアクションでも Sveltia 側の variant (primary / secondary /
+ * tertiary / ghost / variant なし) は画面ごとに異なるため、色そのものではなく
+ * Sveltia が参照する --sui-* トークンを「要素スコープで」上書きする。要素への
+ * 直接宣言は :root からの継承より必ず優先されるので !important は要らず、
+ * ボタンの形・余白は Sveltia のネイティブなものが保たれる。
  */
-input[type="checkbox"],
-input[type="radio"] {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--cms-navy);
-}
-
-/* Semantic hooks added by admin.astro. */
 [data-keroway-admin-action="primary"] {
-  background: var(--cms-navy) !important;
-  border-color: var(--cms-navy) !important;
-  color: var(--cms-paper) !important;
-  font-weight: 700 !important;
+  --sui-button-primary-background-color: var(--cms-navy);
+  --sui-button-primary-background-color-focus: var(--cms-blue);
+  --sui-button-primary-border-color: var(--cms-navy);
+  --sui-button-primary-foreground-color: var(--cms-paper);
+  --sui-button-primary-font-weight: 700;
   letter-spacing: 0.02em;
 }
 
-[data-keroway-admin-action="primary"]:hover:not(:disabled) {
-  background: var(--cms-blue) !important;
-  border-color: var(--cms-blue) !important;
-}
-
 [data-keroway-admin-action="secondary"] {
-  background: var(--cms-card) !important;
-  border: 1px solid var(--cms-rule-strong) !important;
-  color: var(--cms-navy) !important;
-  font-weight: 650 !important;
+  --sui-button-secondary-background-color: var(--cms-card);
+  --sui-button-secondary-border-color: var(--cms-rule-strong);
+  --sui-button-secondary-foreground-color: var(--cms-navy);
+  --sui-button-secondary-font-weight: 650;
 }
 
+/* secondary との差が出るよう、面を持たせず線と文字色だけで表す。 */
 [data-keroway-admin-action="subtle"] {
-  background: transparent !important;
-  border: 1px solid var(--cms-rule) !important;
-  color: var(--cms-muted) !important;
+  --sui-control-foreground-color: var(--cms-muted);
+  --sui-button-secondary-background-color: transparent;
+  --sui-button-secondary-border-color: var(--cms-rule);
+  --sui-button-secondary-font-weight: normal;
+  --sui-button-secondary-foreground-color: var(--cms-muted);
+  --sui-button-tertiary-background-color: transparent;
+  --sui-button-tertiary-border-color: var(--cms-rule);
+  --sui-button-tertiary-foreground-color: var(--cms-muted);
 }
 
 [data-keroway-admin-action="danger"] {
-  background: var(--cms-danger) !important;
-  border-color: var(--cms-danger) !important;
-  color: oklch(99% 0.003 88.64) !important;
-  font-weight: 700 !important;
+  --sui-control-foreground-color: var(--cms-danger);
+  --sui-button-ghost-foreground-color-focus: var(--cms-danger);
+  --sui-button-primary-background-color: var(--cms-danger);
+  --sui-button-primary-border-color: var(--cms-danger);
+  --sui-button-primary-foreground-color: var(--cms-paper);
+  --sui-button-primary-font-weight: 700;
+  --sui-button-secondary-border-color: var(--cms-danger);
+  --sui-button-secondary-foreground-color: var(--cms-danger);
+  --sui-button-tertiary-foreground-color: var(--cms-danger);
 }
 
 .keroway-admin-shell-note {
@@ -246,10 +270,5 @@ input[type="radio"] {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-  }
-
-  button:hover:not(:disabled),
-  [role="button"]:hover {
-    transform: none;
   }
 }
