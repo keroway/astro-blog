@@ -104,6 +104,14 @@
           : collection,
       );
 
+      // dev サーバー限定・明示クエリ付きのときだけ OPFS ベースの test-repo backend に
+      // 差し替える。ログイン不要でコレクション一覧・編集画面・プレビューを確認できる
+      // (UI 改善の検証用、issue #621)。本番バンドルでは import.meta.env.DEV が false に
+      // 評価されるため、この分岐ごと dead code として扱われる。
+      if (import.meta.env.DEV && new URLSearchParams(location.search).has("test-repo")) {
+        config.backend = { name: "test-repo" };
+      }
+
       const labelRules = [
         { pattern: /^Sveltia CMS$/u, label: "keroway CMS" },
         {

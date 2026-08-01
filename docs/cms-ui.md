@@ -111,6 +111,12 @@ Sveltia CMS はフィールドをセクション化する UIを標準で提供�
 毎回テスト用 Astro サーバーを起動するため、他リポジトリで起動中の
 `localhost:4321` を誤って再利用しない。
 
+ログイン画面 (`admin-smoke.spec.ts` / `admin-a11y.spec.ts`) に加えて、
+`admin-editor.spec.ts` は dev 限定の `?test-repo` クエリ経由でコレクション一覧・
+新規作成フォーム・プレビューペインまで検証する (issue #621、詳細は
+[cms-ui-regression.md](./cms-ui-regression.md) の「ログイン不要でエディタ画面を
+確認する」節)。OPFS 依存のため chromium プロジェクトのみ対象。
+
 ## アクセシビリティ方針
 
 - フォーカスリングは色だけに頼らず、outline + halo で表示する

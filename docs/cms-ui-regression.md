@@ -19,6 +19,26 @@ pnpm run test:admin
 - 初期画面の主要 CTA が日本語で表示される
 - 推奨導線「ローカルリポジトリで編集」が見える
 - CMS の使い方メモが表示される
+- (`admin-editor.spec.ts`) dev サーバー限定の test-repo backend でコレクション
+  一覧・新規作成フォーム・プレビューペインまで到達できる (chromium プロジェクト限定)
+
+## ログイン不要でエディタ画面を確認する (`?test-repo`)
+
+`src/pages/admin.astro` は `import.meta.env.DEV` かつ URL に `?test-repo`
+クエリが付いているときだけ、@sveltia/cms が提供する OPFS ベースの
+`test-repo` backend (`config.backend = { name: "test-repo" }`) に切り替える。
+本番ビルドではこの分岐ごと dead code になり、通常の `/admin/` は今までどおり
+本物の backend (GitHub / ローカルリポジトリ) でログイン画面から始まる。
+
+```bash
+ASTRO_DEV_BACKGROUND=0 pnpm run dev:astro
+# ブラウザで http://localhost:4321/admin/?test-repo を開く
+```
+
+「テストレポジトリで作業」を選ぶとログインなしでコレクション一覧・新規作成・
+編集フォーム・プレビューペイン・設定ダイアログまで確認できる。保存したエントリは
+ブラウザの OPFS (Origin Private File System) に閉じており、実リポジトリには
+一切書き込まれない。
 
 ## 手動確認
 
