@@ -32,6 +32,10 @@ backend:
 media_folder: src/assets/content
 public_folder: /src/assets/content
 
+# ログイン画面・ブラウザタブに表示するロゴ。favicon.svg (K モノグラム) を流用。
+logo:
+  src: /favicon.svg
+
 # ──────────────────────────────────────────────────────
 # コレクション定義
 # format: yaml-frontmatter — config.yml 上は schema-valid な標準形式として記述。
@@ -44,15 +48,27 @@ collections:
   - name: blog
     label: ブログ記事
     label_singular: 記事
+    icon: article
     folder: src/content/blog
     format: yaml-frontmatter
     create: true
     identifier_field: title
     preview_path: /blog/{{slug}}/
-    summary: "{{pubDate}} — {{title}}"
+    summary: "{{pubDate | date('YYYY-MM-DD')}} — {{title}}"
+    thumbnail: heroImage
     sortable_fields:
       - pubDate
+      - updatedDate
       - title
+    view_filters:
+      - name: draft
+        label: 下書きのみ
+        field: draft
+        pattern: true
+      - name: published
+        label: 公開済みのみ
+        field: draft
+        pattern: false
     view_groups:
       - label: カテゴリ
         field: category
@@ -159,12 +175,14 @@ collections:
   - name: works
     label: 制作物
     label_singular: 制作物
+    icon: widgets
     folder: src/content/works
     format: yaml-frontmatter
     create: true
     identifier_field: title
     preview_path: /works/{{slug}}/
     summary: "{{status}} — {{title}}"
+    thumbnail: heroImage
     sortable_fields:
       - createdAt
       - title
