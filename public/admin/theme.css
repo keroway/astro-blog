@@ -24,10 +24,12 @@
   --cms-focus: var(--cms-vermilion);
   --cms-success: oklch(43.62% 0.064 145.34);
   --cms-danger: oklch(50.2% 0.171 27.8);
-  --cms-font-body: "Zen Maru Gothic", ui-sans-serif, system-ui, -apple-system,
-    BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --cms-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", monospace;
+  --cms-font-display: var(--font-display, "Shippori Mincho", "Hiragino Mincho ProN",
+    "Yu Mincho", serif);
+  --cms-font-body: var(--font-body, "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic",
+    sans-serif);
+  --cms-font-mono: var(--font-mono, "JetBrains Mono", ui-monospace, SFMono-Regular,
+    Menlo, Monaco, Consolas, "Liberation Mono", monospace);
   --cms-radius-sm: 6px;
   --cms-radius-md: 10px;
   --cms-radius-lg: 16px;
@@ -54,25 +56,12 @@
   --cms-danger: oklch(55% 0.16 32.23);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    color-scheme: dark;
-    --cms-navy: oklch(76.49% 0.0682 259.52);
-    --cms-blue: oklch(70.05% 0.0906 252.41);
-    --cms-paper: oklch(22.28% 0.0519 258.34);
-    --cms-paper-warm: oklch(25.71% 0.0687 261.04);
-    --cms-card: oklch(26.97% 0.0698 261.48);
-    --cms-sand: oklch(78.89% 0.0875 73.37);
-    --cms-vermilion: oklch(68.91% 0.1466 32.23);
-    --cms-vermilion-soft: oklch(from var(--cms-vermilion) l c h / 0.16);
-    --cms-ink: oklch(94.49% 0.0133 262.38);
-    --cms-muted: oklch(72.33% 0.0361 263.51);
-    --cms-rule: oklch(from var(--cms-ink) l c h / 0.18);
-    --cms-rule-strong: oklch(from var(--cms-ink) l c h / 0.32);
-    --cms-success: oklch(65.55% 0.0668 145.63);
-    --cms-danger: oklch(55% 0.16 32.23);
-  }
-}
+/*
+ * Sveltia CMS 自身が prefs.theme (src/pages/admin.astro が localStorage 経由で
+ * 書き込む) に基づいて data-theme 属性を必ず設定するため、
+ * `prefers-color-scheme` メディアクエリのフォールバックは持たない
+ * (docs/design-system.md の「[data-theme] 属性セレクタのみ使用する」方針に合わせる)。
+ */
 
 :root {
   --sui-checkbox-background-color: var(--cms-card);
@@ -84,6 +73,26 @@
   --sui-checkbox-foreground-color-checked: var(--cms-paper);
   --sui-focus-ring-color: var(--cms-focus);
   --sui-primary-accent-color: var(--cms-navy);
+
+  /* Sveltia CMS 本体 (エディタ・ダイアログ・ツールバー等) のフォントを
+   * keroway.com 本体と揃える。body { font-family } だけでは Sveltia の
+   * コンポーネントに届かないため、公開トークン経由で明示的に上書きする。
+   * Sveltia は起動後にこれらのトークンを :root, :host へ動的に <style>
+   * 挿入し、この静的 <link> より後にカスケードで勝ってしまうため
+   * !important が必要 (--sui-checkbox-* 等と異なり、この変数群は
+   * Sveltia 側で :root に既定値が明示されているため通常の詳細度では負ける)。 */
+  --sui-font-family-default: var(--cms-font-body) !important;
+  --sui-font-family-monospace: var(--cms-font-mono) !important;
+  --sui-heading-font-family: var(--cms-font-display) !important;
+  --sui-h1-font-family: var(--cms-font-display) !important;
+  --sui-h2-font-family: var(--cms-font-display) !important;
+  --sui-h3-font-family: var(--cms-font-display) !important;
+  --sui-h4-font-family: var(--cms-font-display) !important;
+  --sui-h5-font-family: var(--cms-font-display) !important;
+  --sui-h6-font-family: var(--cms-font-display) !important;
+  --sui-tab-font-family: var(--cms-font-body) !important;
+  --sui-textbox-font-family: var(--cms-font-body) !important;
+  --sui-control-font-family: var(--cms-font-body) !important;
 }
 
 html,

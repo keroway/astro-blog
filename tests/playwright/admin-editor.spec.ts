@@ -69,11 +69,12 @@ test.describe("CMS admin editor smoke (test-repo backend)", () => {
       page.getByRole("option", { name: /ブログ記事|Blog posts?/i })
     ).toBeVisible();
 
-    // "Create New Entry" という accessible name はグローバルの新規作成ドロップダウンと
-    // コレクション固有のボタンの双方に付くため、一意な "Entry List" グループ内に絞る。
+    // 「新しいエントリーを作成」という accessible name はグローバルの新規作成
+    // ドロップダウンとコレクション固有のボタンの双方に付くため、一意な
+    // 「エントリーリスト」グループ内に絞る (issue #622 で ja ロケールを既定化)。
     await page
-      .getByRole("group", { name: "Entry List" })
-      .getByRole("button", { name: "Create New Entry" })
+      .getByRole("group", { name: /Entry List|エントリーリスト/ })
+      .getByRole("button", { name: /Create New Entry|新しいエントリーを作成/ })
       .click();
 
     // 編集フォームとプレビューペインの両方が描画されること
@@ -95,11 +96,12 @@ test.describe("CMS admin editor smoke (test-repo backend)", () => {
         name: /テストレポジトリで作業|Work with Test Repository/,
       })
       .click();
-    // "Create New Entry" という accessible name はグローバルの新規作成ドロップダウンと
-    // コレクション固有のボタンの双方に付くため、一意な "Entry List" グループ内に絞る。
+    // 「新しいエントリーを作成」という accessible name はグローバルの新規作成
+    // ドロップダウンとコレクション固有のボタンの双方に付くため、一意な
+    // 「エントリーリスト」グループ内に絞る (issue #622 で ja ロケールを既定化)。
     await page
-      .getByRole("group", { name: "Entry List" })
-      .getByRole("button", { name: "Create New Entry" })
+      .getByRole("group", { name: /Entry List|エントリーリスト/ })
+      .getByRole("button", { name: /Create New Entry|新しいエントリーを作成/ })
       .click();
     await page.waitForTimeout(1000);
 

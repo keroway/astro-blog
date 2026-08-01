@@ -5,14 +5,19 @@ test.describe("CMS admin smoke", () => {
     await page.goto("/admin/", { waitUntil: "networkidle" });
 
     await expect(page).toHaveTitle(/keroway CMS|Sveltia CMS/);
+    // ログイン画面の文言は Sveltia CMS 同梱の ja ロケール由来
+    // (src/pages/admin.astro が localStorage["sveltia-cms.prefs"] で
+    // prefs.locale = "ja" を固定する、issue #622)。
     await expect(
-      page.getByRole("button", { name: "ローカルリポジトリで編集" })
+      page.getByRole("button", { name: "ローカルレポジトリで作業" })
+    ).toBeVisible();
+    // Sveltia は {$service} 変数展開時に Unicode isolate 文字 (U+2068/U+2069)
+    // を挿入するため、完全一致ではなく正規表現でマッチさせる。
+    await expect(
+      page.getByRole("button", { name: /GitHub.*にログイン/ })
     ).toBeVisible();
     await expect(
-      page.getByRole("button", { name: "GitHub でサインイン" })
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: "アクセストークンでサインイン" })
+      page.getByRole("button", { name: "アクセストークンを使用してログイン" })
     ).toBeVisible();
     await expect(page.getByLabel("CMS の使い方")).toContainText(
       "astro-blog のルート"

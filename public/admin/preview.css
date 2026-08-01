@@ -40,21 +40,25 @@
   --kw-preview-shadow: 0 10px 30px rgb(0 51 102 / 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-    --kw-preview-bg: oklch(22.28% 0.0519 258.34);
-    --kw-preview-bg-alt: oklch(25.71% 0.0687 261.04);
-    --kw-preview-card: oklch(26.97% 0.0698 261.48);
-    --kw-preview-fg: oklch(94.49% 0.0133 262.38);
-    --kw-preview-fg-muted: oklch(72.33% 0.0361 263.51);
-    --kw-preview-fg-display: oklch(76.49% 0.0682 259.52);
-    --kw-preview-link: oklch(70.05% 0.0906 252.41);
-    --kw-preview-accent: oklch(68.91% 0.1466 32.23);
-    --kw-preview-rule: oklch(from var(--kw-preview-fg) l c h / 0.18);
-    --kw-preview-rule-soft: oklch(from var(--kw-preview-fg) l c h / 0.08);
-    --kw-preview-shadow: 0 18px 40px rgb(0 0 0 / 0.22);
-  }
+/*
+ * src/pages/admin.astro が親ドキュメントの <html data-theme> を
+ * このプレビュー iframe にミラーするため、docs/design-system.md の方針に
+ * 合わせて [data-theme] 属性セレクタのみで切り替える
+ * (`prefers-color-scheme` は使わない)。
+ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --kw-preview-bg: oklch(22.28% 0.0519 258.34);
+  --kw-preview-bg-alt: oklch(25.71% 0.0687 261.04);
+  --kw-preview-card: oklch(26.97% 0.0698 261.48);
+  --kw-preview-fg: oklch(94.49% 0.0133 262.38);
+  --kw-preview-fg-muted: oklch(72.33% 0.0361 263.51);
+  --kw-preview-fg-display: oklch(76.49% 0.0682 259.52);
+  --kw-preview-link: oklch(70.05% 0.0906 252.41);
+  --kw-preview-accent: oklch(68.91% 0.1466 32.23);
+  --kw-preview-rule: oklch(from var(--kw-preview-fg) l c h / 0.18);
+  --kw-preview-rule-soft: oklch(from var(--kw-preview-fg) l c h / 0.08);
+  --kw-preview-shadow: 0 18px 40px rgb(0 0 0 / 0.22);
 }
 
 html {
@@ -67,7 +71,7 @@ body {
   padding: var(--kw-preview-space-12) var(--kw-preview-space-6);
   color: var(--kw-preview-fg);
   background: var(--kw-preview-bg);
-  font-family: "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", sans-serif;
+  font-family: var(--font-body, "BIZ UDPGothic", "Hiragino Sans", "Yu Gothic", sans-serif);
   font-size: var(--kw-preview-fs-body);
   line-height: var(--kw-preview-lh-prose);
   text-spacing-trim: trim-start;
@@ -100,8 +104,8 @@ h5,
 h6 {
   margin: 0 0 var(--kw-preview-space-3);
   color: var(--kw-preview-fg-display);
-  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho",
-    serif;
+  font-family: var(--font-display, "Shippori Mincho", "Hiragino Mincho ProN",
+    "Yu Mincho", serif);
   font-weight: 500;
   line-height: var(--kw-preview-lh-tight);
   letter-spacing: 0;
@@ -180,7 +184,8 @@ a:hover {
 code,
 kbd,
 samp {
-  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono, "JetBrains Mono", ui-monospace, SFMono-Regular,
+    Menlo, monospace);
   font-size: 0.92em;
 }
 

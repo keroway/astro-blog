@@ -26,8 +26,9 @@ test.describe("CMS admin a11y smoke", () => {
   }) => {
     await page.goto("/admin/", { waitUntil: "networkidle" });
     await expect(page).toHaveTitle(/keroway CMS|Sveltia CMS/);
+    // 文言は Sveltia CMS 同梱の ja ロケール由来 (issue #622)。
     await expect(
-      page.getByRole("button", { name: "ローカルリポジトリで編集" })
+      page.getByRole("button", { name: "ローカルレポジトリで作業" })
     ).toBeVisible();
     await page.waitForTimeout(1000);
 
