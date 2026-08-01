@@ -2,6 +2,7 @@
 // Sveltia CMS — @sveltia/cms npm パッケージからバンドルされる静的 SPA (ADR 0016)。
 // Astro バージョンに依存しないため、Astro メジャーアップ時もここを変更不要。
 // 設定: public/admin/config.yml
+import { Font } from "astro:assets";
 ---
 
 <!doctype html>
@@ -12,14 +13,39 @@
     <!-- robots: admin は検索インデックス不要 (vercel.json の X-Robots-Tag と二重防衛) -->
     <meta name="robots" content="noindex, nofollow" />
     <title>keroway CMS</title>
+    <!-- Web fonts — self-hosted via Astro Fonts API + Fontsource (ADR 0013)。
+         Sveltia CMS 本体への反映は theme.css 側の --sui-font-family-* 上書きで行う。 -->
+    <Font cssVariable="--font-display" />
+    <Font cssVariable="--font-body" />
+    <Font cssVariable="--font-mono" />
     <script is:inline>
       (() => {
+        let theme = "light";
+
+        // Sveltia CMS 自身の prefs (localStorage["sveltia-cms.prefs"]) が
+        // dataset.theme を上書きするより先に、サイト本体の設定を初期値として
+        // 反映しておく (CMS.init() 前の FOUC 防止用の先読みヒント)。
         try {
           const stored = localStorage.getItem("theme");
-          const theme = stored === "dark" || stored === "light"
+          theme = stored === "dark" || stored === "light"
             ? stored
             : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
           document.documentElement.dataset.theme = theme;
+        } catch {}
+
+        // Sveltia CMS は「import CMS from "@sveltia/cms"」の評価時点で自身の
+        // prefs (localStorage["sveltia-cms.prefs"]) をメモリに読み込むため、
+        // それより後 (下の module script 内) で書き込んでも間に合わない。
+        // ここで import 前に書き込み、ja ロケールとテーマを固定する
+        // (issue #622)。対応するキー・スキーマがなければ黙って握りつぶし、
+        // navigator.language / Sveltia 既定のフォールバックに委ねる。
+        try {
+          const PREFS_KEY = "sveltia-cms.prefs";
+          const prefs = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}");
+
+          prefs.locale ??= "ja";
+          prefs.theme = theme;
+          localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
         } catch {}
       })();
     </script>
@@ -93,6 +119,20 @@
 
       CMS.registerPreviewStyle("/admin/preview.css");
 
+      // Astro Fonts API (astro:assets の <Font />) は @font-face と --font-*
+      // 変数をこのページの <style> タグとして出力する。プレビューは別ドキュメント
+      // の iframe (sandbox="allow-same-origin") として描画されるため、親の
+      // <link>/<style> は継承されない。@font-face を含むブロックだけを抜き出し、
+      // raw CSS として同じフォントをプレビュー内にも注入する。
+      const fontFaceCss = [...document.querySelectorAll("style")]
+        .map((style) => style.textContent ?? "")
+        .filter((css) => css.includes("@font-face"))
+        .join("\n");
+
+      if (fontFaceCss) {
+        CMS.registerPreviewStyle(fontFaceCss, { raw: true });
+      }
+
       config.load_config_file = false;
       config.app_title = "keroway CMS";
       config.site_url = "https://keroway.com";
@@ -112,30 +152,15 @@
         config.backend = { name: "test-repo" };
       }
 
-      const labelRules = [
-        { pattern: /^Sveltia CMS$/u, label: "keroway CMS" },
-        {
-          pattern: /^Work with Local Repository$/u,
-          label: "ローカルリポジトリで編集",
-        },
-        { pattern: /^Sign In with .*GitHub/u, label: "GitHub でサインイン" },
-        {
-          pattern: /^Sign In Using Access Token$/u,
-          label: "アクセストークンでサインイン",
-        },
-        { pattern: /^Welcome to/u, label: "keroway CMS へようこそ" },
-        {
-          pattern: /^Once prompted, select the root directory/u,
-          label:
-            "表示されたダイアログで astro-blog リポジトリのルートディレクトリを選択してください。",
-        },
-      ];
+      // ja ロケールとテーマの localStorage["sveltia-cms.prefs"] 書き込みは、
+      // このファイル先頭の <script is:inline> (import CMS より前) で行う。
+      // import 文の評価時に Sveltia が prefs を読み込むため、ここではもう遅い。
 
       const actionRules = [
         {
           type: "primary",
           pattern:
-            /ローカルリポジトリ|Work with Local Repository|保存|Save|作成|New|Create|投稿|Submit/iu,
+            /(ローカル|テスト)(リポジトリ|レポジトリ)|Work with (Local|Test) Repository|保存|Save|作成|New|Create|投稿|Submit/iu,
         },
         {
           type: "danger",
@@ -153,27 +178,18 @@
         },
       ];
 
+      // Sveltia CMS 同梱の ja ロケール (上記 prefs.locale) が UI 全体の翻訳を
+      // 担うため、ログイン画面の文言を個別に書き換える処理は持たない。
+      // ここでは「ログイン画面かどうか」の判定だけ ja/en 両方の文言に対応させる。
+      // ログイン後のアカウントメニューに「(ローカル|テスト)レポジトリで作業中」
+      // という現在の接続状態を示す表示が出るため、末尾に続く文字がないことまで
+      // 要求してログイン画面判定との衝突を避ける (issue #622)。
       const isLoginScreen = () =>
         [...document.querySelectorAll("button, a")].some((element) =>
-          /Work with Local Repository|ローカルリポジトリで編集|Sign In/iu.test(
+          /^Work with (Local|Test) Repository$|^(ローカル|テスト)(リポジトリ|レポジトリ)で(編集|作業)$|Sign In|ログイン/iu.test(
             element.textContent?.replace(/\s+/g, " ").trim() ?? "",
           ),
         );
-
-      const localizeLoginText = () => {
-        if (!isLoginScreen()) return;
-
-        document
-          .querySelectorAll<HTMLElement>("button, a, h1, h2, h3, p, [role='none']")
-          .forEach((element) => {
-            const text = element.textContent?.replace(/\s+/g, " ").trim() ?? "";
-            const matched = labelRules.find(({ pattern }) => pattern.test(text));
-
-            if (matched && element.textContent !== matched.label) {
-              element.textContent = matched.label;
-            }
-          });
-      };
 
       const renderLoginGuide = () => {
         const note = document.querySelector(".keroway-admin-shell-note");
@@ -188,13 +204,47 @@
         const nextNote = document.createElement("aside");
         nextNote.className = "keroway-admin-shell-note";
         nextNote.setAttribute("aria-label", "CMS の使い方");
-        nextNote.innerHTML = `<strong>推奨: ローカルリポジトリで編集</strong><span>通常は「ローカルリポジトリで編集」を選び、astro-blog のルートを指定します。GitHub ログインは本番環境用です。</span>`;
+        nextNote.innerHTML = `<strong>推奨: ローカルレポジトリで作業</strong><span>通常は「ローカルレポジトリで作業」を選び、astro-blog のルートを指定します。GitHub ログインは本番環境用です。</span>`;
         document.body.append(nextNote);
       };
 
+      // プレビューは別ドキュメントの iframe (sandbox="allow-same-origin") として
+      // 描画され、Sveltia CMS は data-theme をここへ伝播しない。preview.css は
+      // 親と同じ [data-theme] セレクタでライト/ダークを切り替えるため、
+      // 親の <html data-theme> をそのままミラーする。
+      const syncPreviewTheme = () => {
+        const doc = document.querySelector<HTMLIFrameElement>(
+          "iframe.preview",
+        )?.contentDocument;
+        const theme = document.documentElement.dataset.theme;
+
+        if (doc?.documentElement && theme) {
+          doc.documentElement.dataset.theme = theme;
+        }
+      };
+
+      // iframe の中身がロードされる完了タイミングは、親 document の body
+      // MutationObserver では検知できない (iframe 要素自体は既に body 配下に
+      // あり、その "中身" の構築は別ドキュメントの読み込みのため)。
+      // load イベントで確実にテーマを同期する。同じ iframe 要素には
+      // 一度だけリスナーを付ける。
+      const observedPreviewIframes = new WeakSet<HTMLIFrameElement>();
+
+      const watchPreviewIframe = () => {
+        const iframe = document.querySelector<HTMLIFrameElement>(
+          "iframe.preview",
+        );
+
+        if (iframe && !observedPreviewIframes.has(iframe)) {
+          observedPreviewIframes.add(iframe);
+          iframe.addEventListener("load", syncPreviewTheme);
+        }
+      };
+
       const classifyAdminActions = () => {
-        localizeLoginText();
         renderLoginGuide();
+        syncPreviewTheme();
+        watchPreviewIframe();
 
         document
           .querySelectorAll<HTMLButtonElement | HTMLAnchorElement>(
@@ -218,6 +268,16 @@
 
       const observer = new MutationObserver(classifyAdminActions);
       observer.observe(document.body, { childList: true, subtree: true });
+
+      // Sveltia CMS の設定パネルでテーマを切り替えると <html data-theme> が
+      // 変わる。body の childList とは別に監視し、プレビュー iframe への
+      // ミラーを追従させる。
+      const themeObserver = new MutationObserver(syncPreviewTheme);
+      themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-theme"],
+      });
+
       classifyAdminActions();
     </script>
   </head>
