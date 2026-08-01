@@ -38,7 +38,11 @@
 | `--kw-sand-soft` | `oklch(from var(--kw-sand) l c h / 0.45)` | `oklch(from var(--kw-sand) l c h / 0.30)` | 砂金の薄掛け |
 | `--kw-vermilion` | `oklch(52.79% 0.1758 29.88)` | `oklch(68.91% 0.1466 32.23)` | 朱印・強アクセント |
 | `--kw-vermilion-soft` | `oklch(from var(--kw-vermilion) l c h / 0.14)` | `oklch(from var(--kw-vermilion) l c h / 0.16)` | 朱の薄掛け |
-| `--kw-road` | `oklch(56.22% 0.0567 248.74)` | `oklch(71.32% 0.0497 245.18)` | 東海道の道筋 |
+| `--kw-pine` | `oklch(43.62% 0.0640 145.34)` | `oklch(65.55% 0.0668 145.63)` | 松並木（[ADR 0007](./adr/0007-motif-vocabulary-expansion.md)） |
+| `--kw-pine-soft` | `oklch(from var(--kw-pine) l c h / 0.28)` | `oklch(from var(--kw-pine) l c h / 0.22)` | 松並木の薄掛け |
+| `--kw-fuji` | `oklch(62.74% 0.0687 252.75)` | `oklch(71.23% 0.0577 251.35)` | 富士の遠景（[ADR 0007](./adr/0007-motif-vocabulary-expansion.md)） |
+| `--kw-fuji-faint` | `oklch(from var(--kw-fuji) l c h / 0.08)` | `oklch(from var(--kw-fuji) l c h / 0.10)` | 富士の遠景の最薄掛け |
+| `--kw-road` | `oklch(56.22% 0.0567 248.74)` | `oklch(71.32% 0.0497 245.18)` | 東海道の道筋（[ADR 0007](./adr/0007-motif-vocabulary-expansion.md) で語彙化、[ADR 0011](./adr/0011-motif-road-path.md) / [ADR 0012](./adr/0012-tokaido-field-notes-refresh.md) で実装） |
 | `--kw-road-soft` | `oklch(from var(--kw-road) l c h / 0.14)` | `oklch(from var(--kw-road) l c h / 0.14)` | 道筋の太い下地 |
 | `--kw-ink` | `oklch(22.28% 0.0519 258.34)` | `oklch(94.49% 0.0133 262.38)` | 墨・主テキスト |
 | `--kw-ink-dim` | `oklch(46.00% 0.0492 263.91)` | `oklch(72.33% 0.0361 263.51)` | 薄墨・補助テキスト |
@@ -99,6 +103,16 @@ works エントリのステータス表示に使用する 3種。
 | `active` | `--kw-status-active-fg` / `-bg` | `--kw-blue` | `oklch(83.72% 0.0525 254.69)` |
 | `wip` | `--kw-status-wip-fg` / `-bg` | `oklch(50.95% 0.0963 67.57)` | `--kw-sand` |
 | `archived` | `--kw-status-archived-fg` / `-bg` | `--kw-ink-dim` | `--kw-ink-dim` |
+
+#### 朱印 (Seal)
+
+[ADR 0012](./adr/0012-tokaido-field-notes-refresh.md) で追加した朱印装飾専用のトークン。
+
+| トークン | light 値 | dark 値 | 用途 |
+|---|---|---|---|
+| `--kw-seal-bg` | `--kw-vermilion` | `oklch(62.75% 0.1771 29.27)` | 朱印の背景 |
+| `--kw-seal-fg` | `oklch(98.21% 0.0141 74.43)` | `oklch(98.21% 0.0141 74.43)` | 朱印の文字色 |
+| `--kw-seal-border` | `oklch(from var(--kw-vermilion) l c h / 0.35)` | `oklch(from var(--kw-vermilion) l c h / 0.42)` | 朱印の枠線 |
 
 ---
 
@@ -318,6 +332,10 @@ PascalCase。コンポーネントが代表する UI 概念を名詞で表現し
 | `--kw-sand-soft` | Primitive | 砂金薄掛け |
 | `--kw-vermilion` | Primitive | 朱印・強アクセント |
 | `--kw-vermilion-soft` | Primitive | 朱の薄掛け |
+| `--kw-pine` | Primitive | 松並木 |
+| `--kw-pine-soft` | Primitive | 松並木の薄掛け |
+| `--kw-fuji` | Primitive | 富士の遠景 |
+| `--kw-fuji-faint` | Primitive | 富士の遠景の最薄掛け |
 | `--kw-road` | Primitive | 東海道の道筋 |
 | `--kw-road-soft` | Primitive | 道筋の下地 |
 | `--kw-ink` | Primitive | 墨・主テキスト |
@@ -351,6 +369,11 @@ PascalCase。コンポーネントが代表する UI 概念を名詞で表現し
 | `--kw-status-wip-bg` | Component | wip ステータス背景 |
 | `--kw-status-archived-fg` | Component | archived ステータス文字色 |
 | `--kw-status-archived-bg` | Component | archived ステータス背景 |
+| `--kw-seal-bg` | Component | 朱印の背景 |
+| `--kw-seal-fg` | Component | 朱印の文字色 |
+| `--kw-seal-border` | Component | 朱印の枠線 |
+
+UnoCSS (`uno.config.ts` の `theme.colors.kw`) には上記のうち `pine` / `fuji` / `road` / `seal` / `vermilion` / `accent-strong` 系が未登録です。これらは `text-kw-*` 等のユーティリティクラスでは使えず、`var(--kw-*)` の直接参照でのみ利用できます。
 
 ### タイポグラフィトークン（:root 固定）
 
