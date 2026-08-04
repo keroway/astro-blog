@@ -29,7 +29,9 @@ overrides:
   # rollup は依存ツリーから消滅したため override が dead になった (2026-06-26)。
   "picomatch@<2.3.2": ">=2.3.2"
   "yaml@>=2.0.0 <2.8.3": ">=2.8.3"
-  "postcss@<8.5.10": ">=8.5.10"
+  # GHSA-fxqj-rqcc-2cmp (postcss <8.5.23) — `from` 未設定時に攻撃者制御の sourceMappingURL から
+  # 任意の .map ファイルを読み込める。vite 経由で devDependency ツリーに存在。
+  "postcss@<8.5.23": ">=8.5.23"
   # GHSA-g7r4-m6w7-qqqr / GHSA-dhv9 (esbuild <0.28.1) — ^0.28.1 で 0.x に固定 (>=0.28.1 は 1.x 以上も含んでしまうため)
   "esbuild@<0.28.1": "^0.28.1"
   # GHSA-9wv6-86v2-598j (path-to-regexp 6.x <6.3.0) — ^6.3.0 で 6.x に固定 (>=6.3.0 は 8.x も含んでしまうため)
@@ -46,7 +48,8 @@ overrides:
   # GHSA-mh99-v99m-4gvg (brace-expansion ReDoS) — @astrojs/vercel>@vercel/nft 経由。
   "brace-expansion@<5.0.8": ">=5.0.8 <6"
   # GHSA-v2hh-gcrm-f6hx (fast-uri) — ajv 経由 (claude-agent-sdk の MCP SDK 等)。
-  "fast-uri@<3.1.4": ">=3.1.4 <4"
+  # GHSA-7p8r-x3mc-p8w7 (fast-uri <3.1.5) — backslash authority introducer による host confusion。
+  "fast-uri@<3.1.5": ">=3.1.5 <4"
   # GHSA-8r6m-32jq-jx6q (fast-xml-parser) — @astrojs/rss 経由。
   "fast-xml-parser@<5.10.1": ">=5.10.1 <6"
 
