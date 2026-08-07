@@ -1,0 +1,10 @@
+# エージェント自動化のオプトイン設定。
+# issue-refinement / issue-sprint skill が前提条件として読む。
+enabled: true
+
+# issue-sprint が 1 サイクルで扱う Issue 数の上限（契約上 1 が最大）。
+max_issues_per_cycle: 1
+
+# 自動マージを許可する。squash merge は issue-sprint の merge gate
+# (CI green / レビュー解消済み / branch protection 満たす) を通過した場合のみ実行される。
+allow_merge: true
