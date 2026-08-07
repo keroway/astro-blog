@@ -60,9 +60,12 @@ jobs:
       # pnpm version is resolved from the `packageManager` field in package.json.
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
 
+      # ローカル/CI は Node 26 で揃える。Vercel Serverless Functions は
+      # 2026-08 時点で Node 26 未対応のため、Vercel の Project Settings
+      # 側だけ意図的に Node 24 のまま (.claude/rules/implementation.md C5)。
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
@@ -94,7 +97,7 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
@@ -117,7 +120,7 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
@@ -139,7 +142,7 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
@@ -185,7 +188,7 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: "24"
+          node-version: "26"
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
