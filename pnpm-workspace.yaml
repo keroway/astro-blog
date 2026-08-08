@@ -41,12 +41,16 @@ overrides:
   "tar@<7.5.21": ">=7.5.21 <8"
   # js-yaml <4.2.0 (merge key 処理の二次計算量 DoS) — @keystatic/core 由来分は削除済みだが、
   # Astro 7 で @astrojs/internal-helpers 経由で引き続きツリーに存在するため維持。
-  "js-yaml@>=4.0.0 <4.2.0": ">=4.2.0 <5"
+  # GHSA-5p4m-2wfm-xmqj (js-yaml <4.3.1) — !!omap 解決の二次計算量 DoS。同じ経路で 4.3.0 が
+  # 残っていたため下限を 4.3.1 へ引き上げた (2026-08-09)。
+  "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5"
   # osv-scanner 検出分 (2026-07-27)。いずれも devDependency 経由 (claude-agent-sdk / vercel adapter / rss)。
   # GHSA-frvp-7c67-39w9 (@hono/node-server DoS) — @anthropic-ai/claude-agent-sdk 経由。
   "@hono/node-server@<2.0.5": ">=2.0.5"
   # GHSA-mh99-v99m-4gvg (brace-expansion ReDoS) — @astrojs/vercel>@vercel/nft 経由。
-  "brace-expansion@<5.0.8": ">=5.0.8 <6"
+  # GHSA-rgw5-rvv9-x895 (brace-expansion <5.0.9) — 同じ経路で 5.0.8 が残っていたため
+  # 下限を 5.0.9 へ引き上げた (2026-08-09)。
+  "brace-expansion@<5.0.9": ">=5.0.9 <6"
   # GHSA-v2hh-gcrm-f6hx (fast-uri) — ajv 経由 (claude-agent-sdk の MCP SDK 等)。
   # GHSA-7p8r-x3mc-p8w7 (fast-uri <3.1.5) — backslash authority introducer による host confusion。
   "fast-uri@<3.1.5": ">=3.1.5 <4"
