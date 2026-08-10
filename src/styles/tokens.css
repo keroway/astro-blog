@@ -59,6 +59,8 @@
   --kw-accent-soft:   var(--kw-sand-soft);
   --kw-accent-strong: var(--kw-vermilion);
   --kw-accent-strong-soft: var(--kw-vermilion-soft);
+  /* 本文サイズの sand テキスト用。--kw-accent は 1.7:1 しかなく WCAG AA 未達 (issue #647) */
+  --kw-accent-text:   oklch(46% 0.0875 73.37);
 
   /* Button surfaces */
   --kw-btn-primary-bg:    var(--kw-navy);
@@ -130,6 +132,8 @@
   --kw-accent-soft:   var(--kw-sand-soft);
   --kw-accent-strong: var(--kw-vermilion);
   --kw-accent-strong-soft: var(--kw-vermilion-soft);
+  /* dark 背景では sand そのままで 8.8:1 出るため据え置き */
+  --kw-accent-text:   var(--kw-sand);
 
   --kw-btn-primary-bg:    var(--kw-blue);
   --kw-btn-primary-fg:    var(--kw-paper);
@@ -144,7 +148,8 @@
   --kw-status-archived-fg: var(--kw-ink-dim);
   --kw-status-archived-bg: oklch(from var(--kw-ink) l c h / 0.06);
 
-  --kw-seal-bg:     oklch(62.75% 0.1771 29.27);
+  /* 62.75% だと seal-fg との対比が 3.6:1 で WCAG AA 未達 (issue #647)。46% で 7.4:1 */
+  --kw-seal-bg:     oklch(46% 0.1771 29.27);
   --kw-seal-fg:     oklch(98.21% 0.0141 74.43);
   --kw-seal-border: oklch(from var(--kw-vermilion) l c h / 0.42);
 
