@@ -125,7 +125,16 @@ const canonicalUrl = isFirstPage ? undefined : new URL('/blog/', Astro.site).hre
 
   .posts-list :global(.post-row) {
     content-visibility: auto;
-    contain-intrinsic-size: auto 180px;
+    /* 実測中央値 (1280px 幅) に合わせて更新 (issue #651 12-4)。以前の 180px は
+       オフスクリーン行のプレースホルダ高そのものを測る誤測定で決めていた値。 */
+    contain-intrinsic-size: auto 165px;
+  }
+
+  @media (max-width: 640px) {
+    .posts-list :global(.post-row) {
+      /* モバイルは折り返しで行高が伸びる。実測中央値 (390px 幅) に合わせる。 */
+      contain-intrinsic-size: auto 280px;
+    }
   }
 
   /* ページネーション */

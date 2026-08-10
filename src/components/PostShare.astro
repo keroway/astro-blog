@@ -5,7 +5,7 @@ interface Props {
 }
 
 const { title, url } = Astro.props;
-const xIntent = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
+const xIntent = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`;
 ---
 
 <section class="post-share" aria-label="この記事をシェア">
