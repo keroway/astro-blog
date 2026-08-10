@@ -227,13 +227,22 @@ flowchart TD
 
 ### 自動更新
 
-[`.github/dependabot.yml`](./.github/dependabot.yml) で Dependabot を設定しており、毎週月曜 09:00 (JST) に以下のチェックが走ります。
+バージョン追従は **Renovate**（[`renovate.json`](./renovate.json)）が担当します。
+`schedule:weekly` + `timezone: Asia/Tokyo` で週次実行し、更新は以下のグループにまとめます。
 
-- `npm` エコシステム: 2 グループにバンドルして PR 作成（`astrojs` = `@astrojs/*` + `astro`、`dev-tooling` = `@playwright/*` + `typescript`）
-- `github-actions`: アクションのバージョン更新
-- `astro` と `typescript` のメジャーアップデートは別途扱うため Dependabot からは除外（`ignore`）
+- `astrojs`（`astro` + `@astrojs/*`）— lockstep 依存のため 1 PR
+- `dev-tooling`（`@playwright/*` + `typescript`）
+- `npm-minor-patch` — 上記以外の minor / patch をまとめてノイズを抑える
+- `github-actions` — アクションの minor / patch
+- `astro` と `typescript` の **major は `enabled: false`** で自動更新しない（手動で上げる）
 
 更新 PR には `dependencies` ラベルが自動付与されるため、PR 一覧でフィルタできます。
+ただし Renovate は現在 **silent mode** で動いており、PR も Dependency Dashboard も
+作られません。PR が見当たらないことは設定の不備を意味しないので注意してください。
+
+**脆弱性由来の更新は Renovate ではなく Dependabot security updates が出します。**
+これはリポジトリ設定側の機能で、`.github/dependabot.yml` は不要です
+（Renovate 移行時に削除済み）。
 
 ### 脆弱性監査
 
