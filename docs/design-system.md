@@ -111,7 +111,7 @@ works エントリのステータス表示に使用する 3種。
 
 | トークン | light 値 | dark 値 | 用途 |
 |---|---|---|---|
-| `--kw-seal-bg` | `--kw-vermilion` | `oklch(62.75% 0.1771 29.27)` | 朱印の背景 |
+| `--kw-seal-bg` | `--kw-vermilion` | `oklch(46% 0.1771 29.27)` | 朱印の背景（dark は seal-fg との対比 7.4:1 を確保するため 46%。issue #647） |
 | `--kw-seal-fg` | `oklch(98.21% 0.0141 74.43)` | `oklch(98.21% 0.0141 74.43)` | 朱印の文字色 |
 | `--kw-seal-border` | `oklch(from var(--kw-vermilion) l c h / 0.35)` | `oklch(from var(--kw-vermilion) l c h / 0.42)` | 朱印の枠線 |
 
