@@ -423,3 +423,21 @@ html.text-spacing {
     box-shadow: var(--kw-shadow-pop);
   }
 }
+
+/* ダークテーマでの画像のまぶしさ抑制 (issue #649)
+ *
+ * 記事・works のヒーロー画像の多くは白背景のスクリーンショットで、紺地のダークテーマ上で
+ * 強く発光して見える。輝度をわずかに落として「白い矩形の浮き」を抑える。
+ *
+ * `.recent-note__media img` は **意図的に対象外**。RecentNoteCard は既に
+ * ダークテーマ用の処理 (mix-blend-mode: normal + opacity: 0.72) を自前で持っており、
+ * ここで filter を重ねると二重に暗くなる。
+ *
+ * SVG ロゴ類は対象にしない (`img` に限定し、`svg` 要素は含めない)。
+ * テーマ切替時のちらつき対策としての transition は付けない (コスト増のみ)。
+ */
+[data-theme="dark"]
+  :where(.post__hero, .post__content, .work-card__visual, .work-entry__hero)
+  img {
+  filter: brightness(0.85) contrast(1.02);
+}
