@@ -110,6 +110,13 @@ describe("setFontSize", () => {
 
   it("switches from x-large back to normal, clearing both classes", () => {
     setFontSize("x-large");
+    // 直後の状態を検証する。ここを飛ばすと setFontSize("x-large") 自体が
+    // 何もしなくても次の setFontSize("normal") だけでテストが通ってしまう。
+    expect(document.documentElement.classList.contains("fs-x-large")).toBe(
+      true
+    );
+    expect(localStorage.getItem(FONT_SIZE_KEY)).toBe("x-large");
+
     setFontSize("normal");
     expect(document.documentElement.classList.contains("fs-large")).toBe(false);
     expect(document.documentElement.classList.contains("fs-x-large")).toBe(

@@ -178,8 +178,19 @@ describe("watchReducedMotion", () => {
     unsubscribe();
   });
 
-  it("returns a no-op unsubscribe function that does not throw", () => {
-    const unsubscribe = watchReducedMotion(vi.fn());
+  it("stops notifying the callback after unsubscribe is called", async () => {
+    const callback = vi.fn();
+    const unsubscribe = watchReducedMotion(callback);
+
+    setReduceMotion("on");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    expect(callback).toHaveBeenCalledTimes(1);
+
     expect(() => unsubscribe()).not.toThrow();
+
+    setReduceMotion("off");
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    // disconnect() が効いていなければ、この class 変更でも callback が呼ばれてしまう。
+    expect(callback).toHaveBeenCalledTimes(1);
   });
 });
