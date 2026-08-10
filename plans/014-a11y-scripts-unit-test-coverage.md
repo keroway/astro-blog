@@ -31,7 +31,8 @@
 **In scope**:
 - `src/scripts/font-size.test.ts`, `reduce-motion.test.ts`, `text-spacing.test.ts`, `underline-links.test.ts` の新規追加
 - jsdom（または happy-dom、どちらか軽量な方）を devDependencies に追加
-- `vitest.config.ts` の `test.environment` をファイル単位で切り替える（`// @vitest-environment jsdom` の per-file pragma を使い、`src/lib/**` の既存 node 環境テストに影響を与えない）か、`include` を `src/scripts/**/*.test.ts` にも広げた上で環境を分離する
+- `vitest.config.ts` の `include` に `src/scripts/**/*.test.ts` を**必ず追加する**。現在の `include` は `src/lib/**/*.test.ts` と `tests/**/*.test.ts` だけなので、これを広げないと新規テストはそもそも収集されない（`// @vitest-environment jsdom` の per-file pragma は環境を変えるだけで、収集対象は変えない）
+- 環境の分離は per-file pragma（各新規テストの先頭に `// @vitest-environment jsdom`）で行い、`src/lib/**` の既存 node 環境テストに影響を与えない。pragma で共存できない場合のみ別プロジェクト設定へ切り替える
 
 **Out of scope**: `src/components/StampRally.astro` 等インタラクティブコンポーネントの Playwright spec 追加（見つかった別課題だが、`.astro` の script タグ全体を対象にする調査・実装コストが本 plan と別スコープになるため、必要なら別 issue として起票する）。`vitest.config.ts` へのカバレッジ閾値導入（同様に別課題）。
 
