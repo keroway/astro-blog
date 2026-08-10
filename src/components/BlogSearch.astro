@@ -90,9 +90,7 @@
     const resultsEl = root.querySelector<HTMLElement>(".blog-search__results");
     // 既存の静的一覧 + フィルタ。検索モード中は隠す。
     const filterBar = document.querySelector<HTMLElement>(".filter-bar");
-    const filterCount = document.getElementById("filter-count");
     const postsList = document.getElementById("posts-list");
-    const emptyMessage = document.getElementById("empty-message");
 
     if (!input || !resultsEl || !statusEl) return;
     // 以降のクロージャで non-null narrowing を確実に効かせるため const に束ね直す。
@@ -128,10 +126,6 @@
     function setSearchMode(active: boolean) {
       if (filterBar) filterBar.hidden = active;
       if (postsList) postsList.hidden = active;
-      if (active) {
-        if (filterCount) filterCount.hidden = true;
-        if (emptyMessage) emptyMessage.hidden = true;
-      }
       if (clearBtn) clearBtn.hidden = !active;
       results.hidden = !active;
     }

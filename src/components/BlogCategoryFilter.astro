@@ -1,0 +1,73 @@
+---
+import { categoryLabel } from '../consts';
+import { encodeSlugId } from '../lib/slug';
+
+interface Props {
+  categories: string[];
+  /** 未指定 (undefined) は「すべて」がアクティブ、つまり /blog/ 自身を表す。 */
+  activeCategory?: string;
+}
+
+const { categories, activeCategory } = Astro.props;
+---
+
+<div class="filter-bar">
+  <div class="filter-group" role="group" aria-label="カテゴリで絞り込む">
+    <a
+      href="/blog/"
+      class:list={['filter-btn', { 'filter-btn--active': !activeCategory }]}
+      aria-current={!activeCategory ? 'page' : undefined}
+    >すべて</a>
+    {categories.map((cat) => (
+      <a
+        href={`/blog/category/${encodeSlugId(cat)}/`}
+        class:list={['filter-btn', { 'filter-btn--active': cat === activeCategory }]}
+        aria-current={cat === activeCategory ? 'page' : undefined}
+      >{categoryLabel(cat)}</a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .filter-bar {
+    margin-bottom: var(--kw-space-6);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kw-space-2);
+  }
+
+  .filter-btn {
+    display: inline-block;
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    padding: var(--kw-space-2) var(--kw-space-4);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    background: transparent;
+    color: var(--kw-fg-muted);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing),
+                color var(--kw-duration-fast) var(--kw-easing),
+                background var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .filter-btn:hover {
+    border-color: var(--kw-rule);
+    color: var(--kw-fg);
+  }
+
+  .filter-btn--active {
+    border-color: var(--kw-accent);
+    color: var(--kw-accent-text);
+    background: color-mix(in srgb, var(--kw-accent) 8%, transparent);
+  }
+
+  .filter-btn:focus-visible {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 3px;
+  }
+</style>
