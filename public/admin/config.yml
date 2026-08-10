@@ -167,6 +167,7 @@ collections:
         name: canonicalUrl
         widget: string
         required: false
+        pattern: ['^$|^https?://\S+$', 'http(s):// で始まる URL を入力してください']
         hint: 外部掲載などで canonical URL が別にある場合のみ設定します。
 
   # ────────────────────────────────
@@ -249,18 +250,21 @@ collections:
       - label: 紹介ページ URL
         name: lpUrl
         widget: string
+        pattern: ['^https?://\S+$', 'http(s):// で始まる URL を入力してください']
         hint: 機能紹介・外部紹介ページの URL。
 
       - label: リポジトリ URL（任意）
         name: repoUrl
         widget: string
         required: false
+        pattern: ['^$|^https?://\S+$', 'http(s):// で始まる URL を入力してください']
         hint: GitHub など、実装を参照できるリポジトリ URL。
 
       - label: デモ URL（任意）
         name: demoUrl
         widget: string
         required: false
+        pattern: ['^$|^https?://\S+$', 'http(s):// で始まる URL を入力してください']
         hint: 動作デモが公開されている場合のみ設定します。
 
       # --- 画像（任意） ---
