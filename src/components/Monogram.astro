@@ -48,6 +48,7 @@ const { caption = '/ keroway', tag = `Vol. ${SITE_VOLUME} · field notes` } = As
     font-size: var(--kw-fs-mono-xs);
     text-transform: uppercase;
     letter-spacing: var(--kw-ls-eyebrow);
-    color: var(--kw-fg-faint);
+    /* --kw-fg-faint は dark で 4.0:1 と WCAG AA (4.5:1) 未達 (issue #647) */
+    color: var(--kw-fg-muted);
   }
 </style>

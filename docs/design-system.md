@@ -83,6 +83,7 @@
 | `--kw-accent-soft` | `--kw-sand-soft` | アクセントの薄掛け（選択状態） |
 | `--kw-accent-strong` | `--kw-vermilion` | 朱の強アクセント（朱印・hover・小さな active 表現） |
 | `--kw-accent-strong-soft` | `--kw-vermilion-soft` | 朱の薄掛け |
+| `--kw-accent-text` | light: 暗めの sand 単独値 / dark: `--kw-sand` | 本文サイズの sand テキスト（`--kw-accent` は地に対し 1.7:1 で WCAG AA 未達のため分離、issue #647） |
 
 #### ボタン
 
@@ -358,6 +359,7 @@ PascalCase。コンポーネントが代表する UI 概念を名詞で表現し
 | `--kw-accent-soft` | Semantic | アクセント薄掛け |
 | `--kw-accent-strong` | Semantic | 強アクセントカラー |
 | `--kw-accent-strong-soft` | Semantic | 強アクセント薄掛け |
+| `--kw-accent-text` | Semantic | 本文サイズの sand テキスト（WCAG AA 対応） |
 | `--kw-btn-primary-bg` | Component | プライマリボタン背景 |
 | `--kw-btn-primary-fg` | Component | プライマリボタン文字 |
 | `--kw-btn-primary-hover` | Component | プライマリボタンホバー背景 |
