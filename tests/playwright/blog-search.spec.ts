@@ -53,28 +53,67 @@ test.describe("#341 /blog full-text search", () => {
     await expect(page.locator(".blog-search__results")).toBeHidden();
   });
 
-  test("existing category filter keeps working alongside search", async ({
+  test("category filter is a real link and coexists with search UI", async ({
     page,
   }) => {
     await page.goto("/blog");
     await page.waitForLoadState("networkidle");
 
-    const categoryButtons = page.locator('[data-filter-type="category"]');
-    const total = await categoryButtons.count();
-    test.skip(total < 2, "カテゴリが 1 つ以下のため絞り込み検証をスキップ");
+    // #648: フィルタは JS トグルの button ではなく静的リンクへ移行した。
+    const categoryLinks = page.locator(
+      '.filter-bar a.filter-btn:not([aria-current="page"])'
+    );
+    const total = await categoryLinks.count();
+    test.skip(total < 1, "カテゴリが 0 件のため絞り込み検証をスキップ");
 
-    await categoryButtons.nth(1).click();
-    await expect(page.locator("#filter-count")).toBeVisible();
-    await expect(page.locator("#filter-count")).toContainText("件");
+    const href = await categoryLinks.first().getAttribute("href");
+    expect(href).toMatch(/^\/blog\/category\/[^/]+\/$/);
+
+    // 検索 UI 表示中でもフィルタバーの DOM は維持される (JS 非対応環境の互換性)。
+    await expect(page.locator(".filter-bar")).toBeVisible();
+  });
+});
+
+test.describe("#648 category archive page", () => {
+  test("category link navigates to a full, cross-page archive", async ({
+    page,
+  }) => {
+    await page.goto("/blog");
+    await page.waitForLoadState("networkidle");
+
+    const categoryLinks = page.locator(
+      '.filter-bar a.filter-btn:not([aria-current="page"])'
+    );
+    const total = await categoryLinks.count();
+    test.skip(total < 1, "カテゴリが 0 件のため絞り込み検証をスキップ");
+
+    const firstLink = categoryLinks.first();
+    const href = await firstLink.getAttribute("href");
+    expect(href).toBeTruthy();
+    await firstLink.click();
+    await page.waitForURL(`**${href}`);
+
+    // アーカイブページ自身のフィルタバーで、いま見ているカテゴリが active になっている。
+    await expect(
+      page.locator('.filter-bar a.filter-btn[aria-current="page"]')
+    ).toHaveAttribute("href", href as string);
+
+    const rows = await page.locator(".posts-list .post-row").count();
+    expect(rows).toBeGreaterThan(0);
+
+    // URL 単体で共有・再訪しても同じ一覧が出る (#648 の受け入れ条件)。
+    await page.goto(href as string);
+    const rowsAfterReload = await page.locator(".posts-list .post-row").count();
+    expect(rowsAfterReload).toBe(rows);
   });
 });
 
 test.describe("#588 astro:page-load 経由の init (ClientRouter swap)", () => {
-  test("navigating from another page keeps search and filter working (no double-init)", async ({
+  test("navigating from another page keeps search working (no double-init)", async ({
     page,
   }) => {
     // トップページ経由でヘッダーのリンクをクリックし ClientRouter の swap を発生させる。
-    // #588: astro:after-swap 購読だとフィルタ側は即時実行との併発で二重 init していた。
+    // #588: astro:after-swap 購読だと即時実行との併発で二重 init していた。
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     await page.locator('.kw-header__nav a[href="/blog"]').click();
@@ -84,21 +123,12 @@ test.describe("#588 astro:page-load 経由の init (ClientRouter swap)", () => {
     await expect(input).toBeEnabled();
     await input.fill("読書");
     await expect(page.locator(".blog-search__result").first()).toBeVisible();
+    // 二重 init だと検索結果が重複描画されるため、件数で単発 init を確認する。
+    const count = await page.locator(".blog-search__result").count();
     await page.locator(".blog-search__clear").click();
-
-    const categoryButtons = page.locator('[data-filter-type="category"]');
-    const total = await categoryButtons.count();
-    test.skip(total < 2, "カテゴリが 1 つ以下のため絞り込み検証をスキップ");
-
-    // 二重 init だとリスナーが 2 重登録され pushState/applyFilter が 2 回走る。
-    // filter-count の値は冪等で二重登録を検知できないため、history エントリの
-    // 増分 (pushState の呼び出し回数) で単発であることを直接検証する。
-    const historyLengthBefore = await page.evaluate(() => history.length);
-    await categoryButtons.nth(1).click();
-    await expect(page.locator("#filter-count")).toBeVisible();
-    await expect(page.locator("#filter-count")).toContainText("件");
-    const historyLengthAfter = await page.evaluate(() => history.length);
-    expect(historyLengthAfter - historyLengthBefore).toBe(1);
+    await input.fill("読書");
+    await expect(page.locator(".blog-search__result").first()).toBeVisible();
+    expect(await page.locator(".blog-search__result").count()).toBe(count);
   });
 });
 

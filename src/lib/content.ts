@@ -1,5 +1,6 @@
 import { getCollection } from "astro:content";
 import type { BlogEntry, WorksEntry } from "../types/content";
+import { BLOG_CATEGORIES } from "./content-schema";
 
 const READING_SPEED_CHARS_PER_MIN = 400;
 
@@ -110,6 +111,17 @@ export async function getAllTags(now: Date = new Date()): Promise<string[]> {
     }
   }
   return [...tagSet].sort((a, b) => a.localeCompare(b, "ja"));
+}
+
+/**
+ * 公開済み記事から使用中のカテゴリを BLOG_CATEGORIES の定義順で返す。
+ */
+export async function getAllCategories(
+  now: Date = new Date()
+): Promise<string[]> {
+  const posts = await getPublishedPosts(now);
+  const used = new Set(posts.map((p) => p.data.category).filter(Boolean));
+  return BLOG_CATEGORIES.filter((c) => used.has(c));
 }
 
 /**
