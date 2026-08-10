@@ -39,7 +39,7 @@ function parseHeroImage(frontmatter: string): string | null {
 }
 
 function extractBody(content: string): string {
-  return content.replace(/^---[\s\S]*?---\r?\n/, "");
+  return content.replace(/^---[\s\S]*?---\r?\n/, "").replace(/\r\n/g, "\n");
 }
 
 function firstBodyImage(body: string): string | null {
@@ -47,14 +47,24 @@ function firstBodyImage(body: string): string | null {
   return m ? m[1].trim() : null;
 }
 
+/** 解決したパスが baseDir の外を指していないか確認する (`../` によるディレクトリ脱出対策)。 */
+function withinBaseDir(resolved: string, baseDir: string): boolean {
+  const rel = path.relative(baseDir, resolved);
+  return rel !== "" && !rel.startsWith("..") && !path.isAbsolute(rel);
+}
+
 /** `/foo.png` 形式は public/ 直下、`/src/...` 形式はリポジトリルート起点で解決する。 */
 function resolveImagePath(imgPath: string): string | null {
   if (/^https?:\/\//.test(imgPath)) return null;
   if (imgPath.startsWith("/")) {
     const inPublic = path.join(PUBLIC_DIR, imgPath);
-    if (fs.existsSync(inPublic)) return inPublic;
+    if (withinBaseDir(inPublic, PUBLIC_DIR) && fs.existsSync(inPublic)) {
+      return inPublic;
+    }
     const fromRoot = path.join(REPO_ROOT, imgPath.replace(/^\//, ""));
-    if (fs.existsSync(fromRoot)) return fromRoot;
+    if (withinBaseDir(fromRoot, REPO_ROOT) && fs.existsSync(fromRoot)) {
+      return fromRoot;
+    }
     return null;
   }
   return null;
