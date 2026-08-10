@@ -76,6 +76,19 @@ These read-only checks were run during planning:
   （受け入れ条件）で発見した。正規表現を `^$|^https?://\S+$`（空文字列も許容）に
   修正して解消した。`lpUrl` は required なので空文字列を許容する必要がなく、
   元の正規表現のまま。
+- **PR #660 の自動レビューで追加発見**: `pattern` は入力時の UI バリデーションのみで、
+  Sveltia CMS は `required: false` な未入力フィールドを既定で `""`（空文字列）として
+  frontmatter に書き出す（`?test-repo` バックエンドで OPFS 上の保存済みファイルを直接
+  読んで実測確認済み: `repoUrl: ""` / `demoUrl: ""` / `updatedAt: ""` が実際に書かれていた）。
+  `content.config.ts` は `.optional()`（`undefined` のみ許容）なので、`z.url()` はもちろん
+  `z.coerce.date()` も空文字列を弾き、CMS 上は保存できてもビルド時に初めて失敗する
+  late failure になっていた（issue #652 が解消しようとした問題そのもの）。
+  `config.yml` ルートに `output: { omit_empty_optional_fields: true }` を追加し、
+  未入力の optional フィールドをキーごと省略させて解消した（Sveltia CMS 公式ドキュメント
+  `configuration.md` に記載の標準対処。URL フィールドに限らず全 optional フィールドに
+  効くグローバル設定のため、`updatedAt` 等 URL 以外の late failure も併せて解消される）。
+  修正後、同じ `?test-repo` バックエンドで OPFS 上の保存結果を再確認し、
+  未入力フィールドがキーごと省略されることを実測確認済み。
 - `pnpm run test:admin` で新規 CMS admin 系リグレッションが無いことを確認済み。
 
 ## Plan 009 implementation notes (2026-08-10)
