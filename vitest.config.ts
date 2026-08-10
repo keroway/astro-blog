@@ -12,9 +12,17 @@ export default defineConfig({
     },
   },
   test: {
-    // src/lib の純関数と、静的アセット/設定の軽量回帰テストを対象にする。
-    // Astro コンポーネントや astro:content 依存コードは Playwright E2E で検証する。
-    include: ["src/lib/**/*.test.ts", "tests/**/*.test.ts"],
+    // src/lib の純関数、src/scripts の a11y 設定ロジック、静的アセット/設定の
+    // 軽量回帰テストを対象にする。Astro コンポーネントや astro:content 依存コードは
+    // Playwright E2E で検証する。
+    // src/scripts/**/*.test.ts は document/localStorage に依存するため、
+    // 各ファイル先頭の `@vitest-environment happy-dom` docblock で個別に happy-dom を使う
+    // (このプロジェクト全体の既定は node のまま、src/lib 側への影響を避ける)。
+    include: [
+      "src/lib/**/*.test.ts",
+      "src/scripts/**/*.test.ts",
+      "tests/**/*.test.ts",
+    ],
     environment: "node",
   },
 });
