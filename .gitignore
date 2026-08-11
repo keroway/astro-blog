@@ -32,6 +32,9 @@ pnpm-debug.log*
 !.claude/hooks/
 !.claude/claude-security-guidance.md
 !.claude/README.md
+# Codex CLI の Stop hook 設定。hooks.json が絶対パスを含む個人ローカル層で、
+# 共有すると他の環境で壊れる (keroway/agent-assets#186)
+.codex/
 .serena/
 test-results/
 .playwright-mcp/
