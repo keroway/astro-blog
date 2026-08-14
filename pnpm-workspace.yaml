@@ -11,6 +11,9 @@ packages:
 # minimumReleaseAgeStrict: 制約を満たすバージョンが無いときに resolve を失敗させ、
 #   古いバージョンへフォールバックしない (デフォルトの「黙って妥協」を禁止)。
 minimumReleaseAgeStrict: true
+# ワークスペース全体でサプライチェーン保護水準を統一 (agent-assets#171、2026-08-14決定)。
+# 既定の1日 (1440分) から3日 (4320分) へ明示的に固定する。
+minimumReleaseAge: 4320
 # trustPolicy: no-downgrade は本来追加で入れたいが、現状 Astro が依存する
 # `chokidar@4.0.3` が過去版で持っていた provenance attestation を落としているため
 # 全件 install が落ちる。依存側で provenance が復活したら有効化する。
