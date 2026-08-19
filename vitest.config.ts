@@ -22,6 +22,7 @@ export default defineConfig({
       "src/lib/**/*.test.ts",
       "src/scripts/**/*.test.ts",
       "tests/**/*.test.ts",
+      "scripts/**/*.test.ts",
     ],
     environment: "node",
   },
