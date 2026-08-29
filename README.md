@@ -163,7 +163,6 @@ Sveltia CMS は Editorial Workflow 未対応のため、PR レビュー・CI・m
 | 外部画像移設 | `pnpm run migrate-remote-images -- --write` | `imgur` / `googleusercontent` の本文画像を `public/` 配下へダウンロードし、Markdown の参照先を書き換える（デフォルトはドライラン） |
 | alt テキスト一括補完 | `pnpm run backfill-alt-text -- --write` | ローカル画像のプレースホルダ alt を Claude Agent SDK で一括補完する（デフォルトは提案のみ） |
 | ブログ監査 | `node --experimental-strip-types scripts/audit-blog.ts` | 記事の frontmatter を集計し `docs/content-audit.md` を生成 |
-| readingTime backfill | `node --experimental-strip-types scripts/backfill-frontmatter.ts` | 本文文字数から `readingTime` を算出し未設定記事へ補完 |
 | デフォルト OG 画像生成 | `node --experimental-strip-types scripts/gen-og-default.ts` | satori + resvg で 1200×630 のデフォルト OG 画像を生成 |
 
 ## 設計判断（ADR）
