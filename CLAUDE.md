@@ -216,7 +216,7 @@ No CSS-in-JS framework; pure CSS only.
 
 - **Type checking:** Run `pnpm run build` to surface type errors and Astro validation issues
 - **Unit tests:** `pnpm run test:unit` (vitest)。対象は `src/lib/**/*.test.ts` (content-schema / content / slug) と `tests/**/*.test.ts` (admin-preview-style / admin-theme / robots-txt)。`astro:content` は `src/lib/__mocks__/astro-content.ts` でスタブ (`vitest.config.ts`)
-- **E2E tests:** Playwright tests in `tests/playwright/` (basic, a11y, url-check, blog-search, pagefind-index, mobile-header, no-horizontal-overflow, theme-after-swap, csp-config, hero-title-responsive, admin-smoke, admin-a11y の 12 spec)
+- **E2E tests:** Playwright tests in `tests/playwright/` (basic, a11y, url-check, blog-search, pagefind-index, mobile-header, no-horizontal-overflow, theme-after-swap, csp-config, hero-title-responsive, admin-smoke, admin-a11y, admin-editor, reveal-visibility の 14 spec)
   - Run with: `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` (CI と同じ `CRON_SECRET=ci-test-secret` をセットする正規経路。素の `pnpm exec playwright test` だと url-check の 401 テスト 3 件が落ちる)
   - Projects: chromium / firefox / mobile-chromium (Pixel 5)
   - Default port is `4335` (`PLAYWRIGHT_PORT` → `PORT` → 4335 の順で解決、`PLAYWRIGHT_HOST` / `HOST` も同様)。`reuseExistingServer: !CI` のため、別の dev サーバーが同ポートにいると誤応答で全滅する — その場合はポートを明示して回避する。
