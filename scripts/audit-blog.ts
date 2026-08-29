@@ -14,7 +14,6 @@ type Frontmatter = {
   category?: string;
   heroImage?: string;
   draft?: boolean;
-  readingTime?: number;
   tags?: string[];
 };
 
@@ -29,7 +28,6 @@ function parseFrontmatter(content: string): Frontmatter {
     const [, key, val] = kv;
     const v = val.trim().replace(/^["']|["']$/g, "");
     if (key === "draft") result.draft = v === "true";
-    else if (key === "readingTime") result.readingTime = Number(v);
     else if (key === "pubDate") result.pubDate = v;
     else if (key === "title") result.title = v;
     else if (key === "description") result.description = v;
