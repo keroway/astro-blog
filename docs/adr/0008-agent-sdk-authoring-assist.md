@@ -15,8 +15,10 @@ keroway.com の記事執筆まわりには、すでに **静的検査** と **�
 
 | 種別 | 実体 | できること | できないこと |
 |------|------|-----------|------------|
-| 静的検査スクリプト | `scripts/audit-blog.ts` / `scripts/lint-alt.ts` / `scripts/backfill-frontmatter.ts` | 公開維持/更新必要/アーカイブの機械判定、alt の空/短検出、readingTime の文字数計算 | 文章を読んだ上での**生成・提案**（alt 文の候補、description の起案、改善内容の具体化） |
+| 静的検査スクリプト | `scripts/audit-blog.ts` / `scripts/lint-alt.ts` | 公開維持/更新必要/アーカイブの機械判定、alt の空/短検出 | 文章を読んだ上での**生成・提案**（alt 文の候補、description の起案、改善内容の具体化） |
 | 人手起動エージェント | `.claude/agents/literary-tech-editor.md` | 技術層/論理層/情緒層の三層推敲、トーン調整、タイトル/description 案出し | 自動実行（管理者が会話で起動する前提。CI や CLI からは回らない） |
+
+> **2026-08-30 追記**: 本 ADR 決定当時は `scripts/backfill-frontmatter.ts`（readingTime の文字数計算を frontmatter へ機械挿入するスクリプト）も静的検査スクリプトの一系統として存在したが、readingTime の算出方式がビルド時算出に統一されたため不要になり、PR #676 で削除済み。以下の本文中の言及は決定当時の記録として残すが、現在は存在しない。
 
 静的検査は「欠落の検出」止まりで、欠落を**埋める文面の生成**はできない。人手起動エージェントは生成できるが、管理者が対話で呼び出す必要があり、定型作業（frontmatter 補完・alt 候補出し）まで毎回会話で回すのは運用負荷が高い。この隙間 ——「機械的だが文章理解を要する定型生成」—— を埋める手段がない。
 
@@ -66,7 +68,7 @@ Issue #180 の候補 (1)〜(5) を「管理者向け・非ランタイム」前�
 
 | # | 機能 | 既存フック | 出力の性質 | 優先度 | 想定工数 | 備考 |
 |---|------|-----------|-----------|--------|---------|------|
-| (2) | **frontmatter 補完提案** | `backfill-frontmatter.ts` | 構造化（description/tags/category）。`outputFormat` の JSON Schema に素直に乗る | **高（最初に着手）** | 半日〜1日 | テキスト入力のみ。category は audit-blog.ts の正規カテゴリ集合に沿わせる。Agent SDK 統合のパターンを最小で実証できる |
+| (2) | **frontmatter 補完提案** | `backfill-frontmatter.ts`（削除済み、#676） | 構造化（description/tags/category）。`outputFormat` の JSON Schema に素直に乗る | **高（最初に着手）** | 半日〜1日 | テキスト入力のみ。category は audit-blog.ts の正規カテゴリ集合に沿わせる。Agent SDK 統合のパターンを最小で実証できる |
 | (3) | alt テキスト候補生成 | `lint-alt.ts` | 画像＋文脈 → alt 文。管理者が確認して採用 | 中 | 1日 | 画像入力（マルチモーダル）が必要で (2) より複雑。lint:alt と連携 |
 | (5) | 過去記事の改善提案 | `audit-blog.ts` | 「更新必要」記事への自然文提案 | 中 | 1日 | audit-blog の静的判定を具体提案で強化。出力が主観的で評価が難しい |
 | (1) | 下書きの推敲・トーンレビュー | `literary-tech-editor.md` | 三層レビュー（技術/論理/情緒） | 中〜低 | 1〜2日 | 人手起動エージェントと役割が重なる。自動化と人手の棲み分け設計が前提 |
@@ -76,7 +78,7 @@ Issue #180 の候補 (1)〜(5) を「管理者向け・非ランタイム」前�
 
 - テキスト入力のみで完結し、マルチモーダルや複合判定が要らない（最小の縦切り）。
 - 出力が構造化されており、Agent SDK の `outputFormat`（JSON Schema 構造化出力）に素直に乗る。統合パターンを一直線で実証できる。
-- 既存の `backfill-frontmatter.ts`（frontmatter を機械挿入する先例）の延長で、認証→`query()`→構造化出力→提案提示という一連の経路を最小コードで通せる。
+- 既存の `backfill-frontmatter.ts`（frontmatter を機械挿入する先例。決定当時は存在、その後 readingTime のビルド時算出統一に伴い #676 で削除済み）の延長で、認証→`query()`→構造化出力→提案提示という一連の経路を最小コードで通せる。
 - category 制約（正規カテゴリ集合）という明確なガードレールがあり、出力の妥当性を機械検証しやすい。
 
 ---
@@ -100,7 +102,7 @@ Issue #180 の候補 (1)〜(5) を「管理者向け・非ランタイム」前�
 |--------|------|
 | **A: Agent SDK を非ランタイム CLI として採用** ★採用 | `@anthropic-ai/claude-agent-sdk` を dev 依存として導入し、`scripts/` のローカル CLI（将来 GH Actions）で執筆補助を自動化。サブスククレジットで運用 |
 | **B: Anthropic API（API キー）を直接叩く** | SDK を介さず REST/SDK + API キーで実装。クレジット制度ではなく従量課金 |
-| **C: 人手起動エージェント＋静的スクリプトの現状維持** | `literary-tech-editor` と `audit-blog`/`lint-alt`/`backfill-frontmatter` のみ。自動生成は入れない |
+| **C: 人手起動エージェント＋静的スクリプトの現状維持** | `literary-tech-editor` と `audit-blog`/`lint-alt`（決定当時は `backfill-frontmatter` も含む、後に #676 で削除）のみ。自動生成は入れない |
 | **D: 何も導入しない（完全現状維持）** | 補助の拡張を行わない |
 
 ---
@@ -209,6 +211,6 @@ Issue #180 の候補 (1)〜(5) を「管理者向け・非ランタイム」前�
 - [ADR 0001 — CSS フレームワーク](./0001-css-framework.md)（新規依存は ADR を要する根拠）
 - Claude Agent SDK ドキュメント（ctx7: `/nothflare/claude-agent-sdk-docs`） — `query()` の `outputFormat` / `permissionMode` / `settingSources` / `allowedTools`
 - gihyo.jp『Claude 有料プランの月間クレジット制度』(2026-05) — プログラム利用クレジットの開始日・対象・金額・繰り越しなし
-- 既存資産: `.claude/agents/literary-tech-editor.md`, `scripts/{audit-blog,lint-alt,backfill-frontmatter}.ts`
+- 既存資産: `.claude/agents/literary-tech-editor.md`, `scripts/{audit-blog,lint-alt}.ts`（`backfill-frontmatter.ts` は決定当時は存在したが、readingTime のビルド時算出統一に伴い #676 で削除済み）
 </content>
 </invoke>
