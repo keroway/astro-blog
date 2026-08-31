@@ -16,6 +16,13 @@
     />
     <div class="command-palette__body">
       <p class="command-palette__hint no-indent">⌘K / Ctrl+K で開閉、Esc で閉じる</p>
+      <p
+        class="command-palette__status no-indent"
+        id="command-palette-status"
+        role="status"
+        aria-live="polite"
+        hidden
+      ></p>
       <ul class="command-palette__list" id="command-palette-results"></ul>
     </div>
   </section>
@@ -48,13 +55,27 @@
   ];
 
   let pagefind: PagefindModule | null = null;
+  let pagefindInitFailed = false;
   let lastFocused: Element | null = null;
 
   const getEls = () => ({
     root: document.getElementById('command-palette'),
     input: document.getElementById('command-palette-input') as HTMLInputElement | null,
     results: document.getElementById('command-palette-results'),
+    status: document.getElementById('command-palette-status'),
   });
+
+  const setStatus = (message: string | null) => {
+    const { status } = getEls();
+    if (!status) return;
+    if (!message) {
+      status.hidden = true;
+      status.textContent = '';
+      return;
+    }
+    status.hidden = false;
+    status.textContent = message;
+  };
 
   const renderItems = (items: CommandItem[]) => {
     const { results } = getEls();
@@ -73,16 +94,24 @@
   };
 
   const searchPagefind = async (query: string): Promise<CommandItem[]> => {
-    if (!query.trim()) return commands;
+    if (!query.trim()) {
+      setStatus(null);
+      return commands;
+    }
     const navMatches = commands.filter((item) =>
       `${item.title} ${item.note}`.toLowerCase().includes(query.toLowerCase())
     );
+    if (pagefindInitFailed) {
+      setStatus('検索を利用できません(ページ内移動のみ表示)');
+      return navMatches;
+    }
     try {
       const pagefindPath = '/pagefind/pagefind.js';
       pagefind ??= await import(/* @vite-ignore */ pagefindPath) as PagefindModule;
       if ('init' in pagefind && typeof pagefind.init === 'function') await pagefind.init();
       const search = await pagefind.search(query);
       const pages = await Promise.all(search.results.slice(0, 6).map((result: PagefindResult) => result.data()));
+      setStatus(null);
       return [
         ...navMatches,
         ...pages.map((page) => ({
@@ -92,6 +121,8 @@
         })),
       ].slice(0, 8);
     } catch {
+      pagefindInitFailed = true;
+      setStatus('検索を利用できません(ページ内移動のみ表示)');
       return navMatches;
     }
   };
@@ -102,6 +133,7 @@
     lastFocused = document.activeElement;
     root.hidden = false;
     document.documentElement.classList.add('command-palette-open');
+    setStatus(null);
     renderItems(commands);
     window.setTimeout(() => input.focus(), 0);
   };
@@ -112,6 +144,7 @@
     root.hidden = true;
     document.documentElement.classList.remove('command-palette-open');
     if (input) input.value = '';
+    setStatus(null);
     if (lastFocused instanceof HTMLElement) lastFocused.focus();
   }
 
@@ -183,10 +216,14 @@
     box-shadow: var(--kw-shadow-pop);
   }
   .command-palette__label,
-  .command-palette__hint {
+  .command-palette__hint,
+  .command-palette__status {
     color: var(--kw-fg-muted);
     font-family: var(--kw-font-mono);
     font-size: var(--kw-fs-mono-sm);
+  }
+  .command-palette__status {
+    margin: var(--kw-space-2) 0 0;
   }
   .command-palette__input {
     width: 100%;
