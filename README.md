@@ -219,6 +219,8 @@ flowchart TD
 
 ローカルでは `pnpm run test:unit` / `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` のほか、build 済み `dist/` を対象に `pnpm run test:lighthouse` / `pnpm run test:links` で CI 専用ジョブも再現できます。
 
+Lighthouse CI の閾値（`lighthouserc.cjs`）は accessibility / best-practices / seo は `error`（品質ゲート）ですが、performance は `warn`（監視値）です。共有 runner の負荷変動で performance スコアだけノイズが大きく、error にすると実装に問題がなくてもジョブが赤くなる意図的な運用判断です。回帰の検知は `lhci-reports` artifact を確認して行います。
+
 - CI の pnpm は `pnpm/action-setup@v6`（pnpm 公式推奨経路）、Vercel は `vercel.json` で corepack 経路を使用します。両者は `package.json` の `packageManager: pnpm@11.17.0` で同じバージョンを取得するため、経路が違っても挙動は揃います。
 - Vercel は Astro の静的生成結果（`dist/`）を自動デプロイします。日本語スラッグを含む URL は `encodeURIComponent` 済みのパスを使用しているため、ミドルウェアの失敗なく動作します。
 
