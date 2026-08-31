@@ -8,11 +8,12 @@ PR 直前の品質ゲートを順に実行する。各ステップが**直前の
 
 CI 7 ジョブのうちローカル再現可能な 5 つ (lint / unit / typecheck / build / test) と同じコマンドを順に走らせる (Lighthouse / Link check は CI のみ)。CI の build ジョブは意図的に `astro check` を含まない (典型的な `astro check && astro build` ではなく `astro build` 直叩き、`typecheck` ジョブで `astro check` をカバーする並列構成) — それに合わせる。
 
-1. **lint** (CI `lint` ジョブ相当: `biome ci` + alt テキスト lint)
+1. **lint** (CI `lint` ジョブ相当: `biome ci` + alt テキスト lint + tokens doc 同期チェック)
 
    ```bash
    pnpm run lint
    pnpm run lint:alt
+   pnpm run lint:tokens-doc
    ```
 
 2. **unit** (CI `unit` ジョブ相当: vitest)
