@@ -65,7 +65,7 @@ D5. **3 ブレークポイント (900px / 720px / 640px) で必ず確認する�
 
 ## E. 検証順序 (PR 前の必須シーケンス)
 
-E1. **`pnpm run lint`** — Biome lint + format check (= `biome ci`。CI の `lint` ジョブは加えて `pnpm run lint:alt` も走る)。差分が出ない状態にする。安全な自動修正だけ試したいときは `pnpm exec biome check --write .` を別途実行する (`--unsafe` は付けない)。
+E1. **`pnpm run lint`** — Biome lint + format check (= `biome ci`。CI の `lint` ジョブは加えて `pnpm run lint:alt`・`pnpm run lint:tokens-doc` も走る)。差分が出ない状態にする。安全な自動修正だけ試したいときは `pnpm exec biome check --write .` を別途実行する (`--unsafe` は付けない)。
 E2. **`pnpm run test:unit`** — vitest (CI の `unit` ジョブと一致)。
 E3. **`pnpm exec astro check`** — typecheck (CI の `typecheck` ジョブと一致)。
 E4. **`pnpm exec astro build`** — schema 違反と build 時エラーを surface (CI の `build` ジョブと一致、`pnpm run build` ではなく `astro build` 直叩き)。
