@@ -29,8 +29,9 @@
 # field in package.json, so behaviour stays consistent.
 #
 # Node version: Astro 7 requires Node >= v22.12.0 (even-numbered releases
-# only). This project intentionally pins Node 24 because Vercel Serverless
-# Functions do not yet support the workspace-standard Node 26 runtime.
+# only). Local (mise.toml) and CI pin Node 26; only the Vercel Project
+# Settings stay on Node 24 because Vercel Serverless Functions do not yet
+# support 26 (see .claude/rules/implementation.md C5).
 name: CI
 
 on:
