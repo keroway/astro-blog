@@ -31,6 +31,7 @@ const { caption = '/ keroway', tag = `Vol. ${SITE_VOLUME} · field notes` } = As
   }
   .kw-monogram__k {
     font-family: var(--kw-font-display);
+    /* ロゴタイプの固定サイズのため D3 (clamp) 対象外 */
     font-size: 56px;
     font-weight: var(--kw-fw-medium);
     line-height: 1;
@@ -39,7 +40,7 @@ const { caption = '/ keroway', tag = `Vol. ${SITE_VOLUME} · field notes` } = As
   }
   .kw-monogram__caption {
     font-family: var(--kw-font-display);
-    font-size: 14px;
+    font-size: var(--kw-fs-body-sm);
     color: var(--kw-fg-link);
     letter-spacing: 0;
   }

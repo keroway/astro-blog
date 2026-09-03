@@ -266,7 +266,7 @@
     background: transparent;
     color: var(--kw-fg-muted);
     cursor: pointer;
-    font-size: 20px;
+    font-size: clamp(var(--kw-fs-h4), 2vw, var(--kw-fs-h3));
     line-height: 1;
     padding: 0 var(--kw-space-1);
     transition: color var(--kw-duration-fast) var(--kw-easing);
@@ -316,7 +316,7 @@
   }
 
   .blog-search__result-num {
-    font-size: 18px;
+    font-size: var(--kw-fs-h4);
     color: var(--kw-accent);
   }
 

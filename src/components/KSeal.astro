@@ -47,6 +47,7 @@ const { label = 'K', detail = '記', size = 'md' } = Astro.props;
   }
   .k-seal__label {
     font-family: var(--kw-font-display);
+    /* 印章のラベルはボックス寸法 (56/40/72px) に対する固定比率の装飾のため D3 (clamp) 対象外 */
     font-size: 28px;
     line-height: 0.9;
     letter-spacing: 0;
