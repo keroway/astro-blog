@@ -58,7 +58,7 @@ pnpm run test:admin        # CMS admin スモーク + a11y
 
 **環境変数 (`.env` を常駐させない):** このリポジトリは public のため、ローカルに平文の `.env` を置き続ける運用は #599 でやめた。`pnpm run dev` / `pnpm run test:e2e` はどちらも env ファイルなしで動く (`CRON_SECRET` 未設定時は dev で認証スキップ、`test:e2e` は自前で `CRON_SECRET=ci-test-secret` をセットする)。`/api/trigger-build` を実値で検証したいときだけ `pnpm dlx vercel@latest env pull .env.local --environment=development` で都度取得し、確認後は `rm .env.local` で削除する。詳細は `docs/vercel-preview.md` §3。
 
-**Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` はリポジトリに置かない (npmmirror を指す `.npmrc` を同梱していた時期があり、CI / Vercel / Dependabot まで第三者ミラー経由で解決していたため #695 で撤去し gitignore 化)。制約のある環境では `npm_config_registry` / `COREPACK_NPM_REGISTRY` を環境変数で与える。
+**Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効。`minimumReleaseAge` はデフォルトの 1440 (1 日) からワークスペース共通の 4320 (3 日) に明示的に上書きし (agent-assets#171)、`minimumReleaseAgeStrict: true` も設定済み。`allowBuilds` は `esbuild` / `sharp` が false、`lefthook` (postinstall で hook 同期) だけ true。`.npmrc` はリポジトリに置かない (npmmirror を指す `.npmrc` を同梱していた時期があり、CI / Vercel / Dependabot まで第三者ミラー経由で解決していたため #695 で撤去し gitignore 化)。制約のある環境では `npm_config_registry` / `COREPACK_NPM_REGISTRY` を環境変数で与える。
 
 ## Architecture Overview
 
@@ -74,11 +74,11 @@ This is a personal portfolio and technical blog (keroway.com) built with **Astro
 ```
 src/
 ├── assets/content/       # blog / works 用の画像アセット (astro:assets 経由)
-├── components/           # 再利用 UI 全 28 個: BaseHead, Header, Footer, SectionHead,
+├── components/           # 再利用 UI (`*.astro`。個数は列挙しない): BaseHead, Header, Footer, SectionHead,
 │                         #   FocusCard, PostRow, WorksCard, TableOfContents, A11yMenu,
 │                         #   BlogSearch, CommandPalette, HeroBackdrop ほか
 ├── content/
-│   ├── blog/            # Markdown/Markdoc blog posts (約 60 記事)
+│   ├── blog/            # Markdown/Markdoc blog posts
 │   └── works/           # Markdown/Markdoc entries for portfolio/projects
 ├── content.config.ts    # Content Collections schema for blog / works
 ├── data/                # focus-areas.ts などの静的データ
@@ -215,13 +215,13 @@ No CSS-in-JS framework; pure CSS only.
 ## Testing & Type Safety
 
 - **Type checking:** Run `pnpm run build` to surface type errors and Astro validation issues
-- **Unit tests:** `pnpm run test:unit` (vitest)。対象は `src/lib/**/*.test.ts` (content-schema / content / slug) と `tests/**/*.test.ts` (admin-preview-style / admin-theme / robots-txt)。`astro:content` は `src/lib/__mocks__/astro-content.ts` でスタブ (`vitest.config.ts`)
-- **E2E tests:** Playwright tests in `tests/playwright/` (basic, a11y, url-check, blog-search, pagefind-index, mobile-header, no-horizontal-overflow, theme-after-swap, csp-config, hero-title-responsive, admin-smoke, admin-a11y, admin-editor, reveal-visibility の 14 spec)
+- **Unit tests:** `pnpm run test:unit` (vitest)。対象は `vitest.config.ts` の `include` を正とする (`src/lib/**`・`src/scripts/**`・`tests/**`・`scripts/**` 配下の `*.test.ts`。ここに個別ファイル名は列挙しない)。`astro:content` は `src/lib/__mocks__/astro-content.ts` でスタブ (`vitest.config.ts`)
+- **E2E tests:** Playwright tests in `tests/playwright/*.spec.ts` (一覧は `ls tests/playwright` を正とし、ここには列挙しない。#675 で直した直後に再びずれたため個数・名前の直書きをやめた)
   - Run with: `ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` (CI と同じ `CRON_SECRET=ci-test-secret` をセットする正規経路。素の `pnpm exec playwright test` だと url-check の 401 テスト 3 件が落ちる)
   - Projects: chromium / firefox / mobile-chromium (Pixel 5)
   - Default port is `4335` (`PLAYWRIGHT_PORT` → `PORT` → 4335 の順で解決、`PLAYWRIGHT_HOST` / `HOST` も同様)。`reuseExistingServer: !CI` のため、別の dev サーバーが同ポートにいると誤応答で全滅する — その場合はポートを明示して回避する。
 - **alt テキスト lint:** `pnpm run lint:alt` で `src/content/{blog,works}/**/*.{md,mdoc}` 内の markdown 画像を走査し、alt が空または 4 文字未満の箇所を検出する (`scripts/lint-alt.ts`)。CI の `lint` ジョブで Biome lint と並んで自動実行され、退行を検知する。
-- **CI:** `.github/workflows/ci.yml` は 7 ジョブ並列 — Lint (biome ci + lint:alt) / Unit tests (vitest) / Typecheck (astro check) / Build (astro build) / E2E (Playwright, build の dist を利用) / Lighthouse CI / Link check (lychee)。ローカル再現できるのは前 5 つで、`/ship-check` が順に走らせる
+- **CI:** `.github/workflows/ci.yml` は 7 ジョブ — Lint (biome ci + lint:alt + lint:tokens-doc) / Unit tests (vitest) / Typecheck (astro check) / Build (astro build) / E2E (Playwright, build の dist を利用) / Lighthouse CI / Link check (lychee)。E2E・Lighthouse・Link check は `needs: [build]` で build 後に走り、それ以外は並列。ローカル再現できるのは前 5 つで、`/ship-check` が順に走らせる
 
 ## Deployment
 
