@@ -22,8 +22,9 @@
    や `git -C ../keroway/.github log -p` で内容を確認)。
 3. レビュー済みの SHA で、上記4ファイルの `uses:` 行末尾を更新する
    (`@<旧SHA>` → `@<新SHA>`)。コメントの日付・要約も合わせて更新する。
-4. `pnpm run lint` (Biome + `lint:alt`) と `gh workflow run workflow-lint.yml`
-   相当のローカル検査 (actionlint / zizmor があれば) を通す。
+4. `just check` (Biome + `lint:alt` + `lint:tokens-doc` + typecheck + unit test)
+   と `gh workflow run workflow-lint.yml` 相当のローカル検査
+   (actionlint / zizmor があれば) を通す。
 5. PR を作成し、CI (特に `workflow-lint`) が green であることを確認してからマージする。
 
 `keroway/.github` 側は個人アカウント配下の自前リポジトリのため Dependabot の

@@ -16,8 +16,10 @@ lint:
 format:
     pnpm run format
 
-# lint / typecheck / unit test をまとめて実行（コミット前の全通し確認）
+# CI の lint / typecheck / unit test ジョブと同じ検査をまとめて実行（コミット前の全通し確認）
 check:
     pnpm run lint
+    pnpm run lint:alt
+    pnpm run lint:tokens-doc
     pnpm exec astro check
     pnpm run test:unit
