@@ -68,6 +68,9 @@ overrides:
   # GHSA-4mjr-xmp4-gh2g / GHSA-x5fp-wj9c-mxmx (qs 6.15.3) — transitive 依存。
   # 6.x 内に固定 (#714)。
   "qs@<6.16.0": ">=6.16.0 <7"
+  # GHSA-px8p-9vwx-vf98 (fflate <0.7.5) — satori>@shuding/opentype.js 経由 (OG 画像生成、#722)。
+  # 0.7.x 内に固定。
+  "fflate@<0.7.5": ">=0.7.5 <0.8"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
