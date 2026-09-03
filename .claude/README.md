@@ -47,6 +47,7 @@
   - コード/コンテンツ変更 → `biome ci` + `astro check`
   - `src/content/**` の md/mdoc 変更 → `lint:alt`
   - TS/テスト変更 → `vitest`
+  - `src/styles/tokens.css` / `docs/design-system.md` 変更 → `lint:tokens-doc`
 - 失敗時: exit 2 で Claude にフィードバック（ブロッキング）
 - pnpm が見つからない等「検証できない」場合も exit 2（silent-pass しない）
 - 一時的に止めたい場合: `BLOG_SKIP_STOP_HOOK=1`

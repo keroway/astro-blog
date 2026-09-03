@@ -12,8 +12,9 @@
 #   2. コード / コンテンツが変わったら biome ci + astro check (typecheck)
 #   3. TS / テストが変わったら vitest (unit)
 #   4. src/content 配下の md / mdoc が変わったら lint:alt
-#   5. 失敗時は stderr に内容を出力し exit 2 で Claude にフィードバックする
-#   6. pnpm が見つからないのに対象変更がある場合も FAIL として通知する
+#   5. src/styles/tokens.css / docs/design-system.md が変わったら lint:tokens-doc
+#   6. 失敗時は stderr に内容を出力し exit 2 で Claude にフィードバックする
+#   7. pnpm が見つからないのに対象変更がある場合も FAIL として通知する
 #      （silent-pass しない = 「検証できない」を「成功」と扱わない）
 #
 # 実行するコマンドは CI (.github/workflows/ci.yml) の lint / typecheck / unit ジョブと
@@ -103,6 +104,7 @@ fi
 CODE_CHANGED=0
 UNIT_CHANGED=0
 CONTENT_CHANGED=0
+TOKENS_DOC_CHANGED=0
 
 while IFS= read -r file; do
   [ -z "$file" ] && continue
@@ -128,9 +130,14 @@ while IFS= read -r file; do
   if [[ "$file" == src/content/* ]] && { [[ "$file" == *.md ]] || [[ "$file" == *.mdoc ]]; }; then
     CONTENT_CHANGED=1
   fi
+
+  # lint:tokens-doc (scripts/lint-tokens-doc.ts) の対象: tokens.css と design-system.md の対応表
+  if [[ "$file" == "src/styles/tokens.css" ]] || [[ "$file" == "docs/design-system.md" ]]; then
+    TOKENS_DOC_CHANGED=1
+  fi
 done <<< "$CHANGED_FILES"
 
-if [ "$CODE_CHANGED" -eq 0 ] && [ "$UNIT_CHANGED" -eq 0 ] && [ "$CONTENT_CHANGED" -eq 0 ]; then
+if [ "$CODE_CHANGED" -eq 0 ] && [ "$UNIT_CHANGED" -eq 0 ] && [ "$CONTENT_CHANGED" -eq 0 ] && [ "$TOKENS_DOC_CHANGED" -eq 0 ]; then
   exit 0
 fi
 
@@ -179,6 +186,10 @@ fi
 
 if [ "$UNIT_CHANGED" -eq 1 ]; then
   run_step "vitest (unit)" pnpm run --silent test:unit
+fi
+
+if [ "$TOKENS_DOC_CHANGED" -eq 1 ]; then
+  run_step "lint:tokens-doc (tokens.css と design-system.md の同期)" pnpm run --silent lint:tokens-doc
 fi
 
 if [ "$FAILED" -eq 1 ]; then
