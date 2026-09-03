@@ -65,6 +65,9 @@ overrides:
   # 無限ループする。postcss (ソースマップ用 ID 生成、size は固定) > vite 経由。
   # advisory の影響範囲が 2026-08-08 に 3.3.16 まで拡大されたため追加 (2026-08-09)。
   "nanoid@>=3.0.0 <3.3.17": ">=3.3.17 <4"
+  # GHSA-4mjr-xmp4-gh2g / GHSA-x5fp-wj9c-mxmx (qs 6.15.3) — transitive 依存。
+  # 6.x 内に固定 (#714)。
+  "qs@<6.16.0": ">=6.16.0 <7"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
