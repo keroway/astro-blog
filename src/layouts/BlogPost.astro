@@ -11,7 +11,7 @@ import PostSeriesNav from "../components/PostSeriesNav.astro";
 import PostNav from "../components/PostNav.astro";
 import PostRelated from "../components/PostRelated.astro";
 import { SITE_AUTHOR } from "../consts";
-import { toTransitionName } from "../lib/slug";
+import { encodeSlugId, toTransitionName } from "../lib/slug";
 import type { BlogData, BlogEntry } from "../types/content";
 
 interface Heading {
@@ -147,7 +147,7 @@ const breadcrumbSchema = {
           <ul class="post__tags" aria-label="タグ">
             {tags.map((tag) => (
               <li>
-                <a href={`/blog/tags/${encodeURIComponent(tag)}/`} class="post__tag">#{tag}</a>
+                <a href={`/blog/tags/${encodeSlugId(tag)}/`} class="post__tag">#{tag}</a>
               </li>
             ))}
           </ul>
