@@ -17,3 +17,12 @@ pre-commit:
     - name: astro check (typecheck)
       glob: "*.{ts,astro}"
       run: pnpm exec astro check
+
+    # CI の lint ジョブと同じ補助 lint。対象ファイルが staged のときだけ走る (#696)。
+    - name: lint:alt (markdown alt text)
+      glob: "src/content/**/*.{md,mdoc}"
+      run: pnpm run --silent lint:alt
+
+    - name: lint:tokens-doc (tokens.css / design-system.md)
+      glob: "{src/styles/tokens.css,docs/design-system.md}"
+      run: pnpm run --silent lint:tokens-doc
