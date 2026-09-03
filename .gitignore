@@ -65,3 +65,6 @@ lhci-reports/
 # いずれも絶対パスや個人環境固有の値を含みうる個人ローカル層で、
 # 共有すると他の環境で壊れる (keroway/agent-assets#186)
 .agents/
+
+# npm registry の切替はローカルの環境変数か個人用 .npmrc で行う (#695、リポジトリには同梱しない)
+.npmrc

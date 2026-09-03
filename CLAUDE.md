@@ -58,7 +58,7 @@ pnpm run test:admin        # CMS admin スモーク + a11y
 
 **環境変数 (`.env` を常駐させない):** このリポジトリは public のため、ローカルに平文の `.env` を置き続ける運用は #599 でやめた。`pnpm run dev` / `pnpm run test:e2e` はどちらも env ファイルなしで動く (`CRON_SECRET` 未設定時は dev で認証スキップ、`test:e2e` は自前で `CRON_SECRET=ci-test-secret` をセットする)。`/api/trigger-build` を実値で検証したいときだけ `pnpm dlx vercel@latest env pull .env.local --environment=development` で都度取得し、確認後は `rm .env.local` で削除する。詳細は `docs/vercel-preview.md` §3。
 
-**Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` は registry のみで、制約のある環境では `COREPACK_NPM_REGISTRY` を併設する。
+**Important:** `pnpm-workspace.yaml` で `esbuild` / `sharp` の build スクリプトは `allowBuilds: false` (v10 までの `ignoredBuiltDependencies` 相当) で無効化。`overrides` / `peerDependencyRules` も pnpm 11 の正規場所として `pnpm-workspace.yaml` に集約 (v10 までは `package.json#pnpm` 配下)。pnpm 11 のサプライチェーン保護 (`minimumReleaseAge=1440`, `strictDepBuilds=true`, `blockExoticSubdeps=true`) はデフォルト有効、追加で `minimumReleaseAgeStrict: true` を設定済み。`.npmrc` はリポジトリに置かない (npmmirror を指す `.npmrc` を同梱していた時期があり、CI / Vercel / Dependabot まで第三者ミラー経由で解決していたため #695 で撤去し gitignore 化)。制約のある環境では `npm_config_registry` / `COREPACK_NPM_REGISTRY` を環境変数で与える。
 
 ## Architecture Overview
 

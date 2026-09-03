@@ -52,7 +52,7 @@ pnpm run dev
 - 本番ビルド: `pnpm run build`（`astro check && astro build`）
 - ビルドのローカル確認: `pnpm run preview`
 
-> `pnpm install` では同梱の `.npmrc` を利用しており、npm レジストリへのアクセス制限がある環境では `COREPACK_NPM_REGISTRY` を適宜設定してください。
+> リポジトリに `.npmrc` は同梱しない (以前は npmmirror を指す `.npmrc` があり、CI / Vercel / Dependabot まで第三者ミラー経由になっていたため #695 で撤去)。npm レジストリへのアクセス制限がある環境では、`npm_config_registry` / `COREPACK_NPM_REGISTRY` を環境変数で与えるか、gitignore 済みの `.npmrc` をローカルに置いてください。
 
 ## アーキテクチャ
 
