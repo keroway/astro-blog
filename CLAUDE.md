@@ -14,7 +14,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex, pi, etc.) w
   - `/ship-check [pw filter]` — CI のうちローカル再現可能な 5 ジョブ (lint / unit / typecheck / build / playwright) と同じコマンドを順次実行する PR 直前ゲート。build は CI の build ジョブに合わせて `astro check` 込みの `pnpm run build` ではなく `astro build` 直叩き (typecheck は別ステップでカバー、Lighthouse / Link check は CI のみ)。
   - `/fix-pr <PR番号>` — 指定 PR の落ちた CI ログを `gh` で取得して修正する。agent-assets から `~/.claude/commands/` へ配布される共有コマンドで、リポジトリ内には置かない (以前の `.claude/commands/fix-ci.md` は共有の `/fix-ci` と同名で衝突していたため #699 で撤去)。誤爆防止のため PR 番号は省略せず渡す
 - **自動 hook:**
-  - `PostToolUse` (`Edit | Write | MultiEdit`) 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.tsx/.js/.jsx/.mjs/.cjs/.json`) は Biome で format される。`.astro` / `.md` / `.css` は対象外。
+  - `PostToolUse` (`Edit | Write | MultiEdit`) 直後に `.claude/hooks/format-on-write.sh` が走り、対象拡張子 (`.ts/.js/.mjs/.json`、`biome.json` の `files.includes` と同じ) は Biome で format される。`.astro` / `.md` / `.mdoc` / `.css` は対象外。リポジトリ外・`node_modules` / `dist` 等の生成物は触らない。
   - `Stop` hook として `.claude/hooks/post-stop-check.sh` を **`.claude/settings.json` に登録済み**。ターン終了時に変更ファイル (uncommitted + untracked + 未 push commit) を分類し、影響がある領域だけ CI と同じコマンドを走らせる — コード/コンテンツ変更で `biome ci` + `astro check`、`src/content/**` の md/mdoc 変更で `lint:alt`、TS/テスト変更で `vitest`、`src/styles/tokens.css` / `docs/design-system.md` 変更で `lint:tokens-doc` (全部走っても実測 7 秒程度)。失敗すると exit 2 で内容が Claude にフィードバックされる。lefthook の pre-commit は staged ファイルにしか効かないため、未コミットのままターンが終わるケースをここで拾う。一時的に止めたいときは `BLOG_SKIP_STOP_HOOK=1`。`typos` は既存コンテンツへの誤検出があるため意図的に含めない (必要なときに手動実行)。
   - `SessionEnd` hook として `.claude/hooks/stop-dev-server.sh` を **`.claude/settings.json` に登録済み** (セッション中に立ち上げた `astro dev` を cwd スコープで停止＝立ちっぱなし防止、共有 portless proxy デーモンは残す)。
 
