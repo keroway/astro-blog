@@ -7,6 +7,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import { createIndex } from "pagefind";
 import sirv from "sirv";
 import UnoCSS from "unocss/astro";
+import { runPagefindBuild } from "./src/lib/pagefind-build-hook.ts";
 
 const siteUrl = process.env.SITE_URL ?? "https://keroway.com";
 
@@ -48,31 +49,10 @@ function pagefindIntegration() {
       },
       "astro:build:done": async ({ dir, logger }) => {
         const outDir = fileURLToPath(dir);
-        const { index, errors: createErrors } = await createIndex();
-        if (!index) {
-          logger.error("Pagefind: インデックス作成に失敗しました");
-          for (const e of createErrors) logger.error(e);
-          return;
-        }
-        const { page_count, errors: addErrors } = await index.addDirectory({
-          path: outDir,
-        });
-        if (addErrors.length) {
-          logger.error("Pagefind: ファイルのインデックス化に失敗しました");
-          for (const e of addErrors) logger.error(e);
-          return;
-        }
-        const { outputPath, errors: writeErrors } = await index.writeFiles({
-          outputPath: path.join(outDir, "pagefind"),
-        });
-        if (writeErrors.length) {
-          logger.error("Pagefind: インデックスの書き込みに失敗しました");
-          for (const e of writeErrors) logger.error(e);
-          return;
-        }
-        logger.info(
-          `Pagefind: ${page_count} ページをインデックス化 → ${outputPath}`
-        );
+        // 失敗時は throw して astro build を非0終了にする (#719)。
+        // logger.error() だけでは Vercel の buildCommand (corepack pnpm run build) が
+        // 成功扱いのまま検索インデックス欠落の成果物を通過させてしまう。
+        await runPagefindBuild({ outDir, logger, createIndex });
       },
     },
   };
