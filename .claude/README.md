@@ -12,8 +12,7 @@
 │   ├── web-director.md        # 要件/アーキテクチャ判断、スコープ管理担当
 │   └── literary-tech-editor.md # 記事の技術層/論理層/情緒層の推敲担当
 ├── commands/
-│   ├── ship-check.md          # /ship-check スラッシュコマンド
-│   └── fix-ci.md              # /fix-ci スラッシュコマンド
+│   └── ship-check.md          # /ship-check スラッシュコマンド (リポジトリ固有。CI 失敗の修正は共有の /fix-pr)
 ├── rules/
 │   └── implementation.md      # スコープ管理・Astro 7 固有の罠・検証順序などの詳細ルール
 ├── hooks/
@@ -62,9 +61,9 @@
 
 CI のうちローカル再現可能な5ジョブ（lint / unit / typecheck / build / playwright）と同じコマンドを順次実行する PR 直前ゲート。
 
-### `/fix-ci <PR番号>`
+### `/fix-pr <PR番号>` (共有コマンド、このディレクトリには置かない)
 
-指定 PR の落ちた CI ログを `gh` で取得して修正に当たる（PR 番号は必ず明示）。
+指定 PR の落ちた CI ログを `gh` で取得して修正する。agent-assets の `commands/claude/fix-pr.md` が `~/.claude/commands/` へ symlink 配布される共有コマンドで、スタックは実行時に自動判定される。以前ここにあった `fix-ci.md` は共有の `/fix-ci` と同名で衝突していたため #699 で撤去した。誤爆防止のため PR 番号は省略せず渡す。
 
 ## Agents の役割分担
 
