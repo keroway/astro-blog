@@ -68,7 +68,7 @@ const titleTransitionName = id ? toTransitionName('title', id) : undefined;
     color: var(--kw-fg-link);
   }
   .post-row__num {
-    font-size: 22px;
+    font-size: var(--kw-fs-h3);
   }
   .post-row__num--accent {
     color: var(--kw-accent);
@@ -96,7 +96,7 @@ const titleTransitionName = id ? toTransitionName('title', id) : undefined;
   }
   .post-row__arrow {
     font-family: var(--kw-font-display);
-    font-size: 20px;
+    font-size: clamp(var(--kw-fs-h4), 2cqi, var(--kw-fs-h3));
     color: var(--kw-fg-link);
     align-self: center;
   }
