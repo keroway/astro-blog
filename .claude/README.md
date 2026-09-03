@@ -35,7 +35,7 @@
 
 ### PostToolUse: `format-on-write.sh`
 
-- 発火条件: `Edit` / `Write` / `MultiEdit` が `.ts/.tsx/.js/.jsx/.mjs/.cjs/.json` を編集したとき（`.astro` / `.md` / `.css` は対象外）
+- 発火条件: `Edit` / `Write` / `MultiEdit` が `.ts/.js/.mjs/.json` (`biome.json` の `files.includes` と同じ) を編集したとき（`.astro` / `.md` / `.mdoc` / `.css`、リポジトリ外、`node_modules` / `dist` 等は対象外）
 - 動作: 対象ファイルに Biome format を適用
 - 失敗時: 標準的な PostToolUse としてフィードバック
 
