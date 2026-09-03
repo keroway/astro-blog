@@ -1,6 +1,18 @@
+import { timingSafeEqual } from "node:crypto";
 import type { APIRoute } from "astro";
 
 export const prerender = false;
+
+function timingSafeEqualString(a: string, b: string): boolean {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) {
+    // 長さの違いによる早期終了を避けるため、ダミー比較を行ってからfalseを返す。
+    timingSafeEqual(aBuf, aBuf);
+    return false;
+  }
+  return timingSafeEqual(aBuf, bBuf);
+}
 
 export const GET: APIRoute = async ({ request }) => {
   const cronSecret = import.meta.env.CRON_SECRET;
@@ -12,8 +24,8 @@ export const GET: APIRoute = async ({ request }) => {
     }
     // ローカル dev は認証をスキップ（.env.example 参照）
   } else {
-    const authHeader = request.headers.get("authorization");
-    if (authHeader !== `Bearer ${cronSecret}`) {
+    const authHeader = request.headers.get("authorization") ?? "";
+    if (!timingSafeEqualString(authHeader, `Bearer ${cronSecret}`)) {
       return new Response("Unauthorized", { status: 401 });
     }
   }
