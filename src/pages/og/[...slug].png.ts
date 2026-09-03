@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { createRequire } from "node:module";
 import { Resvg } from "@resvg/resvg-js";
 import type { APIRoute } from "astro";
 import satori from "satori";
@@ -21,21 +21,24 @@ const COLORS = {
   seal: "#B43D2F", // --kw-accent-strong
 } as const;
 
+const require = createRequire(import.meta.url);
+
 let fontCache: { regular: Buffer; bold: Buffer } | null = null;
 
 function loadFonts() {
   if (!fontCache) {
     // Use woff format from @fontsource/zen-maru-gothic — satori's opentype.js supports woff but not woff2
-    const base = join(
-      process.cwd(),
-      "node_modules/@fontsource/zen-maru-gothic/files"
-    );
+    // require.resolve でパッケージの実体位置を解決する (pnpm hoisting / node_modules 構成に依存しない)
     fontCache = {
       regular: readFileSync(
-        join(base, "zen-maru-gothic-japanese-400-normal.woff")
+        require.resolve(
+          "@fontsource/zen-maru-gothic/files/zen-maru-gothic-japanese-400-normal.woff"
+        )
       ),
       bold: readFileSync(
-        join(base, "zen-maru-gothic-japanese-700-normal.woff")
+        require.resolve(
+          "@fontsource/zen-maru-gothic/files/zen-maru-gothic-japanese-700-normal.woff"
+        )
       ),
     };
   }
