@@ -59,61 +59,11 @@ function parseArgs(argv: string[]): {
   return { title, slug, suggest };
 }
 
-const { title, slug: slugOverride, suggest } = parseArgs(process.argv);
-
-const autoSlug = generateSlug(title);
-const slug = slugOverride ?? autoSlug;
-
-if (!slug) {
-  console.error(
-    "Error: slug を自動生成できませんでした (日本語タイトルは --slug で手動指定してください)"
-  );
-  console.error(
-    '  例: pnpm run new-post "日本語タイトル" --slug my-article-slug'
-  );
-  process.exit(1);
-}
-
-if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/.test(slug)) {
-  console.error(
-    `Error: slug "${slug}" は ADR 0010 の命名規則 ([a-z0-9-]、先頭末尾はハイフン不可) に違反します`
-  );
-  process.exit(1);
-}
-
-const filePath = path.join(BLOG_DIR, `${slug}.mdoc`);
-
-if (fs.existsSync(filePath)) {
-  console.error(`Error: ${filePath} は既に存在します`);
-  process.exit(1);
-}
-
-const today = getTodayIso();
-const frontmatter = `---
-title: ${JSON.stringify(title)}
-description: ""
-pubDate: ${today}
-draft: true
----
-`;
-
-fs.writeFileSync(filePath, frontmatter, "utf-8");
-console.log(`Created: src/content/blog/${slug}.mdoc`);
-console.log(`  title: ${title}`);
-console.log(`  slug:  ${slug}`);
-console.log(`  date:  ${today}`);
-console.log(`  draft: true`);
-
-if (!slugOverride && autoSlug !== title) {
-  console.log("");
-  console.log(
-    `Note: slug は自動生成されました。意図しない場合は --slug で指定してください。`
-  );
-}
-
-if (suggest) {
-  console.log("");
-  console.log("Running suggest-frontmatter…");
+// --suggest の子プロセスが非 0 終了しても、下書き (.mdoc) は削除せず残す。
+// scaffolding は提案の前に完了しており、失敗時に消すと再実行のたびに
+// 同名ファイルが再生成されて pubDate がずれる (既存の「先に scaffolding
+// を作る」挙動との互換性を優先)。呼び出し元には exitCode で失敗を伝える。
+function runSuggestFrontmatter(filePath: string): boolean {
   try {
     execFileSync(
       "node",
@@ -124,7 +74,77 @@ if (suggest) {
       ],
       { stdio: "inherit" }
     );
+    return true;
   } catch {
     console.error("suggest-frontmatter の実行に失敗しました");
+    return false;
   }
 }
+
+function main(): void {
+  const { title, slug: slugOverride, suggest } = parseArgs(process.argv);
+
+  const autoSlug = generateSlug(title);
+  const slug = slugOverride ?? autoSlug;
+
+  if (!slug) {
+    console.error(
+      "Error: slug を自動生成できませんでした (日本語タイトルは --slug で手動指定してください)"
+    );
+    console.error(
+      '  例: pnpm run new-post "日本語タイトル" --slug my-article-slug'
+    );
+    process.exit(1);
+  }
+
+  if (!/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/.test(slug)) {
+    console.error(
+      `Error: slug "${slug}" は ADR 0010 の命名規則 ([a-z0-9-]、先頭末尾はハイフン不可) に違反します`
+    );
+    process.exit(1);
+  }
+
+  const filePath = path.join(BLOG_DIR, `${slug}.mdoc`);
+
+  if (fs.existsSync(filePath)) {
+    console.error(`Error: ${filePath} は既に存在します`);
+    process.exit(1);
+  }
+
+  const today = getTodayIso();
+  const frontmatter = `---
+title: ${JSON.stringify(title)}
+description: ""
+pubDate: ${today}
+draft: true
+---
+`;
+
+  fs.writeFileSync(filePath, frontmatter, "utf-8");
+  console.log(`Created: src/content/blog/${slug}.mdoc`);
+  console.log(`  title: ${title}`);
+  console.log(`  slug:  ${slug}`);
+  console.log(`  date:  ${today}`);
+  console.log(`  draft: true`);
+
+  if (!slugOverride && autoSlug !== title) {
+    console.log("");
+    console.log(
+      `Note: slug は自動生成されました。意図しない場合は --slug で指定してください。`
+    );
+  }
+
+  if (suggest) {
+    console.log("");
+    console.log("Running suggest-frontmatter…");
+    if (!runSuggestFrontmatter(filePath)) {
+      process.exitCode = 1;
+    }
+  }
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main();
+}
+
+export { generateSlug, getTodayIso, parseArgs, runSuggestFrontmatter };
