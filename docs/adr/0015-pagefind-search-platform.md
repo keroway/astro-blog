@@ -34,7 +34,7 @@
 
 ## 決定事項
 
-**ビルド後処理として静的全文検索インデックスを生成する Pagefind を採用する。** Astro 統合 (`astro-pagefind`) または Pagefind CLI を `astro build` の後段に挟み、`dist/pagefind/` に出力された静的バンドルを検索 UI から読み込む。
+**ビルド後処理として静的全文検索インデックスを生成する Pagefind を採用する。** Astro 統合 (`astro-pagefind`) または Pagefind CLI を `astro build` の後段に挟み、`dist/client/pagefind/` に出力された静的バンドルを検索 UI から読み込む。
 
 *Rationale:* Pagefind は SSG が生成した HTML をビルド後にクロールして静的インデックスを生成し、ランタイムサーバを一切必要としない。インデックスはチャンク分割され、ブラウザは検索語に必要な部分だけを WebAssembly + Web Worker で取得するため、サイト規模が増えても初期ロードが膨らまない。SSG (`output: "static"`) という既存制約と最も整合し、サーバ運用コスト・SaaS 課金・ベンダーロックインのいずれも発生しない。v1.5.0 で CJK の自動セグメンテーション・relevance 改善・インデックス縮小・Web Worker 検索が入っており、日本語ブログの要求水準 (タイトル・本文のキーワードヒット) を満たす。
 
@@ -67,7 +67,7 @@
 - `astro-pagefind` を devDependencies から削除。
 - `sirv`（`astro-pagefind` の依存として間接的に利用していたが直接宣言がなかった）を devDependencies に昇格。
 - `astro.config.mjs` の `pagefindIntegration()` 関数として同等ロジック（約 50 行）をインライン化。
-  - `astro:build:done`: `createIndex` → `addDirectory` → `writeFiles` で `dist/pagefind/` を生成。
+  - `astro:build:done`: `createIndex` → `addDirectory` → `writeFiles` で `dist/client/pagefind/` を生成。
   - `astro:server:setup`: `sirv` で dev 時に `/pagefind/` を配信。
 - `BlogSearch.astro`・`vite.build.rollupOptions.external` 設定は変更なし。
 
@@ -77,7 +77,7 @@
 
 ## Revisit When
 
-- 記事数増加で `dist/pagefind/` の合計サイズ・初回検索レイテンシが体感で劣化したとき (チャンク戦略の見直し / 代替検討)。
+- 記事数増加で `dist/client/pagefind/` の合計サイズ・初回検索レイテンシが体感で劣化したとき (チャンク戦略の見直し / 代替検討)。
 - 日本語検索品質への要求が「キーワードヒット」を超えて部分一致・あいまい検索・サジェストに及んだとき (Pagefind の CJK サポートは語境界セグメント方式で部分一致が弱い。upstream の [Pagefind#987](https://github.com/Pagefind/pagefind/issues/987) の進捗を確認し、必要ならサーバ型検索を再評価する)。
 - Pagefind がメジャーアップデートで Component UI / API に破壊的変更を入れたとき (`pnpm-workspace.yaml` の pin と検索 UI ラッパーの再検証)。
 - Astro が SSG 以外 (SSR / ハイブリッド) へ戦略変更したとき (ビルド後処理という前提が崩れるため再評価)。

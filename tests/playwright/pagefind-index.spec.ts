@@ -1,14 +1,17 @@
 /**
  * #340 回帰テスト: `astro build` 後に Pagefind 静的インデックスが生成されることを担保する。
  *
- * 背景: Pagefind は `astro-pagefind` 統合により `astro build` の `astro:build:done` フックで
- * `dist/client/pagefind/` に静的全文検索インデックスを出力する (ADR 0015)。CI の E2E ジョブは
- * build ジョブが生成した `dist/` artifact をダウンロードするため、ここでインデックス生成物の
- * 存在を assert すれば CI / Vercel の両ビルド経路でインデックスが出ていることを退行検知できる。
+ * 背景: `astro.config.mjs` の Pagefind Node API 直接統合 (`pagefindIntegration()`) が
+ * `astro build` の `astro:build:done` フックで `dist/client/pagefind/` に静的全文検索
+ * インデックスを出力する (ADR 0015)。CI の E2E ジョブは build ジョブが生成した `dist/`
+ * artifact をダウンロードするため、ここでインデックス生成物の存在を assert すれば
+ * CI / Vercel の両ビルド経路でインデックスが出ていることを退行検知できる。
  *
  * 注: Playwright webServer (`astro dev`) ではなく、ビルド成果物 (`dist/client/`) を直接検査する。
- * `astro-pagefind` は dev でも直前の build インデックスを serve するが、本テストの目的は
+ * dev サーバも `sirv` で直前の build インデックスを serve するが、本テストの目的は
  * 「ビルドがインデックスを生成したか」なので filesystem を真実源とする。
+ * インデックス生成が失敗した場合は `astro build` 自体が非0終了になる
+ * (`src/lib/pagefind-build-hook.ts`, #719)。
  */
 
 import { existsSync, readdirSync } from "node:fs";
