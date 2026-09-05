@@ -49,6 +49,8 @@ pnpm exec astro check
 # CI のみで走る補助チェックのローカル実行 (要 build 済み dist/)
 pnpm run test:lighthouse   # Lighthouse CI
 pnpm run test:links        # lychee リンクチェック
+
+# test:e2e に含まれる admin 系 spec だけを素早く回す部分実行 (dist 不要、CI 専用ではない)
 pnpm run test:admin        # CMS admin スモーク + a11y
 ```
 
