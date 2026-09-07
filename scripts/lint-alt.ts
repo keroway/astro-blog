@@ -6,7 +6,10 @@ const CONTENT_DIRS = [
   path.resolve(import.meta.dirname, "../src/content/works"),
 ];
 
-const IMAGE_PATTERN = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
+const IMAGE_INLINE_PATTERN = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
+const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
+const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
+const FENCE_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
 
 const MIN_ALT_LENGTH = 4;
 const PLACEHOLDER_ALTS = new Set([
@@ -62,30 +65,84 @@ export function altIssueReason(alt: string, src: string): string | null {
   return null;
 }
 
+function findFencedCodeLines(lines: string[]): boolean[] {
+  const inCode: boolean[] = [];
+  let fenceChar: string | null = null;
+  for (const line of lines) {
+    const fenceMatch = line.match(FENCE_PATTERN);
+    if (fenceMatch && (fenceChar === null || fenceMatch[1][0] === fenceChar)) {
+      inCode.push(true);
+      fenceChar = fenceChar === null ? fenceMatch[1][0] : null;
+      continue;
+    }
+    inCode.push(fenceChar !== null);
+  }
+  return inCode;
+}
+
+function collectReferenceDefinitions(
+  lines: string[],
+  inCode: boolean[]
+): Map<string, string> {
+  const refs = new Map<string, string>();
+  for (let i = 0; i < lines.length; i++) {
+    if (inCode[i]) continue;
+    const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
+    if (match) refs.set(match[1].trim().toLowerCase(), match[2].trim());
+  }
+  return refs;
+}
+
 export function findAltIssues(filePath: string): Issue[] {
   const content = fs.readFileSync(filePath, "utf8");
   const lines = content.split("\n");
+  const inCode = findFencedCodeLines(lines);
+  const refs = collectReferenceDefinitions(lines, inCode);
   const issues: Issue[] = [];
 
+  const pushIssue = (
+    lineNumber: number,
+    alt: string,
+    src: string,
+    markdown: string
+  ) => {
+    const reason = altIssueReason(alt, src);
+    if (reason) {
+      issues.push({
+        file: filePath,
+        line: lineNumber,
+        alt,
+        src,
+        reason,
+        markdown: markdown.slice(0, 120),
+      });
+    }
+  };
+
   for (let i = 0; i < lines.length; i++) {
+    if (inCode[i]) continue;
     const line = lines[i];
-    IMAGE_PATTERN.lastIndex = 0;
-    let match = IMAGE_PATTERN.exec(line);
-    while (match !== null) {
-      const alt = match[1].trim();
-      const src = match[2].trim();
-      const reason = altIssueReason(alt, src);
-      if (reason) {
-        issues.push({
-          file: filePath,
-          line: i + 1,
-          alt,
-          src,
-          reason,
-          markdown: match[0].slice(0, 120),
-        });
-      }
-      match = IMAGE_PATTERN.exec(line);
+
+    IMAGE_INLINE_PATTERN.lastIndex = 0;
+    let inlineMatch = IMAGE_INLINE_PATTERN.exec(line);
+    while (inlineMatch !== null) {
+      pushIssue(
+        i + 1,
+        inlineMatch[1].trim(),
+        inlineMatch[2].trim(),
+        inlineMatch[0]
+      );
+      inlineMatch = IMAGE_INLINE_PATTERN.exec(line);
+    }
+
+    IMAGE_REFERENCE_PATTERN.lastIndex = 0;
+    let refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
+    while (refMatch !== null) {
+      const alt = refMatch[1].trim();
+      const label = (refMatch[2].trim() || alt).toLowerCase();
+      const src = refs.get(label);
+      if (src !== undefined) pushIssue(i + 1, alt, src, refMatch[0]);
+      refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
     }
   }
 

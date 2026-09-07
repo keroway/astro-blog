@@ -88,4 +88,52 @@ describe("findAltIssues", () => {
       fs.unlinkSync(filePath);
     }
   });
+
+  it("参照形式の画像 (![][ref] + [ref]: url) を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-reference.md");
+    const content = ["![][figure]", "", "[figure]: /sample.png"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        alt: "",
+        src: "/sample.png",
+        reason: "alt が 4 文字未満",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("fenced code block 内の画像記法は無視する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-code.md");
+    const content = ["```md", "![](/sample.png)", "```"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("fenced code block の外側は通常どおり検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-mixed.md");
+    const content = [
+      "```md",
+      "![](/sample.png)",
+      "```",
+      "",
+      "![img](../../assets/content/blog/a.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 5, alt: "img" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
 });
