@@ -8,6 +8,7 @@
   "timezone": "Asia/Tokyo",
   "labels": ["dependencies"],
   "prConcurrentLimit": 5,
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "description": "残りのマイナー / パッチはまとめて 1 PR にしてノイズを抑える。major は個別 PR で内容を確認して取り込む。astrojs / dev-tooling グループは後続ルールで上書きされる",
