@@ -107,6 +107,41 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("ショートカット参照形式 (![label] + [label]: url) を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-shortcut.md");
+    const content = ["![img]", "", "[img]: /sample.png"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        alt: "img",
+        src: "/sample.png",
+        reason: "alt が 4 文字未満",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("シングルクォートの title を持つ画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-single-title.md");
+    const content = "![](../../assets/content/blog/a.png 'title')";
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        alt: "",
+        reason: "alt が 4 文字未満",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("fenced code block 内の画像記法は無視する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-code.md");
     const content = ["```md", "![](/sample.png)", "```"].join("\n");
