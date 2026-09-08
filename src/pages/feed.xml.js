@@ -41,6 +41,8 @@ export async function GET(context) {
     title: `${SITE_TITLE} Feed`,
     description: `${SITE_DESCRIPTION} Blog と Works の統合フィード`,
     site: context.site,
+    // <dc:date> を items で使うため Dublin Core 名前空間を宣言する
+    xmlns: { dc: "http://purl.org/dc/elements/1.1/" },
     customData: `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
     items,
   });
