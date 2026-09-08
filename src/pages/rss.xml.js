@@ -9,6 +9,8 @@ export async function GET(context) {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: context.site,
+    // <dc:date> を items で使うため Dublin Core 名前空間を宣言する
+    xmlns: { dc: "http://purl.org/dc/elements/1.1/" },
     // feed-level の lastBuildDate を customData で付与
     customData: `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
     items: posts.map((post) => {
