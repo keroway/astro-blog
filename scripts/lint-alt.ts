@@ -6,8 +6,10 @@ const CONTENT_DIRS = [
   path.resolve(import.meta.dirname, "../src/content/works"),
 ];
 
-const IMAGE_INLINE_PATTERN = /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g;
+const IMAGE_INLINE_PATTERN =
+  /!\[([^\]]*)\]\(([^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\)/g;
 const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
+const IMAGE_SHORTCUT_PATTERN = /!\[([^\]]+)\](?!\(|\[)/g;
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
 const FENCE_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
 
@@ -143,6 +145,15 @@ export function findAltIssues(filePath: string): Issue[] {
       const src = refs.get(label);
       if (src !== undefined) pushIssue(i + 1, alt, src, refMatch[0]);
       refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
+    }
+
+    IMAGE_SHORTCUT_PATTERN.lastIndex = 0;
+    let shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
+    while (shortcutMatch !== null) {
+      const alt = shortcutMatch[1].trim();
+      const src = refs.get(alt.toLowerCase());
+      if (src !== undefined) pushIssue(i + 1, alt, src, shortcutMatch[0]);
+      shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
     }
   }
 
