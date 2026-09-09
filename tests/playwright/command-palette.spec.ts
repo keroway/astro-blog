@@ -52,3 +52,27 @@ test.describe("#689 command palette search", () => {
     ).not.toHaveCount(0);
   });
 });
+
+test.describe("#740 command palette shortcut after client-side navigation", () => {
+  test("Ctrl+K opens the palette after multiple client-side navigations", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    const palette = page.locator("#command-palette");
+
+    // astro:page-load を複数回発火させ、window の keydown リスナーが
+    // 再登録ごとに積み上がらないことを確認する (#740)。
+    for (const href of ["/works", "/blog", "/about"]) {
+      await page.locator(`a.kw-header__link[href="${href}"]`).click();
+      await page.waitForLoadState("networkidle");
+    }
+
+    await page.keyboard.press("Control+k");
+    await expect(palette).toBeVisible();
+
+    await page.keyboard.press("Control+k");
+    await expect(palette).toBeHidden();
+  });
+});
