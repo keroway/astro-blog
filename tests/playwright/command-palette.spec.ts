@@ -53,6 +53,49 @@ test.describe("#689 command palette search", () => {
   });
 });
 
+test.describe("#752 command palette renders titles as plain text", () => {
+  test("HTML-like characters in a search result title are not interpreted as markup", async ({
+    page,
+  }) => {
+    await page.route("**/pagefind/pagefind.js", (route) =>
+      route.fulfill({
+        contentType: "text/javascript",
+        body: `
+          export async function init() {}
+          export async function search() {
+            return {
+              results: [
+                {
+                  data: async () => ({
+                    url: "/blog/test/",
+                    meta: { title: "Array<T> の使い方" },
+                    excerpt: "A &amp; B",
+                  }),
+                },
+              ],
+            };
+          }
+        `,
+      })
+    );
+
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    await page.keyboard.press("Control+k");
+    const input = page.locator("#command-palette-input");
+    await expect(input).toBeFocused();
+    await input.fill("Array");
+
+    const item = page
+      .locator("#command-palette-results .command-palette__item")
+      .filter({ hasText: "Array" });
+    await expect(item.locator("span")).toHaveText("Array<T> の使い方");
+    // <T> はテキストとして保持され、子要素として解釈されない (#752)。
+    await expect(item.locator("span > *")).toHaveCount(0);
+  });
+});
+
 test.describe("#740 command palette shortcut after client-side navigation", () => {
   test("Ctrl+K opens the palette after multiple client-side navigations", async ({
     page,
