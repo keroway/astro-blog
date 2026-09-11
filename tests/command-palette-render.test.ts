@@ -25,7 +25,7 @@ function renderWithRealCommandPalette(items: CommandItem[]) {
     join(process.cwd(), "src/components/CommandPalette.astro"),
     "utf8"
   );
-  const scriptMatch = source.match(/<script>([\s\S]*?)<\/script>/);
+  const scriptMatch = source.match(/<script>([\s\S]*?)<\/script>/i);
   if (!scriptMatch)
     throw new Error("CommandPalette.astro の <script> が見つからない");
 
