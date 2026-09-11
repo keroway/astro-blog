@@ -100,6 +100,8 @@
 
     let pagefind: PagefindApi | null = null;
     let initFailed = false;
+    // 非同期処理の完了順序が入力順と入れ替わっても、最新の呼び出しだけが DOM を更新できるようにする世代番号。
+    let generation = 0;
 
     async function ensurePagefind(): Promise<PagefindApi | null> {
       if (pagefind || initFailed) return pagefind;
@@ -139,6 +141,7 @@
     }
 
     async function render(term: string) {
+      const gen = ++generation;
       const trimmed = term.trim();
       if (trimmed === "") {
         setSearchMode(false);
@@ -148,6 +151,7 @@
       }
 
       const pf = await ensurePagefind();
+      if (gen !== generation) return;
       if (!pf) {
         // 初期化失敗時は検索モードに入らず静的一覧を維持する (フェイルセーフ)。
         status.hidden = false;
@@ -157,11 +161,13 @@
 
       setSearchMode(true);
       const search = await pf.debouncedSearch(trimmed, undefined, 200);
+      if (gen !== generation) return;
       // debounce により後発クエリへ置き換わった場合は null。描画しない。
       if (search === null) return;
 
       const top = search.results.slice(0, 20);
       const entries = await Promise.all(top.map((r) => r.data()));
+      if (gen !== generation) return;
 
       status.hidden = false;
       status.textContent = `「${trimmed}」の検索結果: ${search.results.length} 件`;
