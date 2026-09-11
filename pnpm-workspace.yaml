@@ -71,6 +71,9 @@ overrides:
   # GHSA-px8p-9vwx-vf98 (fflate <0.7.5) — satori>@shuding/opentype.js 経由 (OG 画像生成、#722)。
   # 0.7.x 内に固定。
   "fflate@<0.7.5": ">=0.7.5 <0.8"
+minimumReleaseAgeExclude:
+  # Renovate security update: vitest@4.1.11
+  - vitest@4.1.11
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
