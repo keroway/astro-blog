@@ -60,7 +60,7 @@ localStorage.setItem("sveltia-cms.prefs", JSON.stringify(prefs));
 
 この結果、旧来の DOM 書き換え（`labelRules` / `localizeLoginText()`）は不要になり
 削除した。Sveltia 公式訳と旧独自訳は語彙が異なる
-（例: `Work with Local Repository` → 「ローカルレポジトリで作業」、
+（例: `Work with Local Repository` → 「ローカルリポジトリで作業」、
 旧訳は「ローカルリポジトリで編集」）。
 
 ## プレビューの寄せ方
@@ -148,7 +148,7 @@ Sveltia CMS 側の文言はバージョンにより変わる可能性がある�
 
 | 表示ラベル例（ja ロケール） | 対応する英語 | 種別 |
 | --- | --- | --- |
-| `ローカルレポジトリで作業`, `テストレポジトリで作業` | `Work with Local/Test Repository` | `primary` |
+| `ローカルリポジトリで作業`, `テストリポジトリで作業` | `Work with Local/Test Repository` | `primary` |
 | `保存`, `作成`, `投稿` | `Save`, `Create`, `Submit` | `primary` |
 | `GitHub にログイン` | `Sign In with GitHub` | `secondary` |
 | `プレビュー`, `公開`, `アップロード`, `メディア` | `Preview`, `Publish`, `Upload`, `Media` | `secondary` |
@@ -172,7 +172,7 @@ Sveltia のネイティブなものが保たれる。
 出すため、`requestAnimationFrame` で 1 フレーム分をまとめ、走査対象も
 追加されたノードの部分木（とその祖先のボタン）に限定する。
 
-ログイン後のアカウントメニューには「(ローカル|テスト)レポジトリで作業中」という
+ログイン後のアカウントメニューには「(ローカル|テスト)リポジトリで作業中」という
 接続状態表示が出る。「〜で作業」で終わる完全一致ではなくこの部分文字列に
 `isLoginScreen()` がマッチしてしまわないよう、正規表現は行末アンカー
 （`(ローカル|テスト)(リポジトリ|レポジトリ)で(編集|作業)$` 相当）で区別する。

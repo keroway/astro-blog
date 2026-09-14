@@ -184,7 +184,7 @@ import { Font } from "astro:assets";
       // Sveltia CMS 同梱の ja ロケール (上記 prefs.locale) が UI 全体の翻訳を
       // 担うため、ログイン画面の文言を個別に書き換える処理は持たない。
       // ここでは「ログイン画面かどうか」の判定だけ ja/en 両方の文言に対応させる。
-      // ログイン後のアカウントメニューに「(ローカル|テスト)レポジトリで作業中」
+      // ログイン後のアカウントメニューに「(ローカル|テスト)(リポジトリ|レポジトリ)で作業中」
       // という現在の接続状態を示す表示が出るため、末尾に続く文字がないことまで
       // 要求してログイン画面判定との衝突を避ける (issue #622)。
       const isLoginScreen = () =>
@@ -207,7 +207,7 @@ import { Font } from "astro:assets";
         const nextNote = document.createElement("aside");
         nextNote.className = "keroway-admin-shell-note";
         nextNote.setAttribute("aria-label", "CMS の使い方");
-        nextNote.innerHTML = `<strong>推奨: ローカルレポジトリで作業</strong><span>通常は「ローカルレポジトリで作業」を選び、astro-blog のルートを指定します。GitHub ログインは本番環境用です。</span>`;
+        nextNote.innerHTML = `<strong>推奨: ローカルリポジトリで作業</strong><span>通常は「ローカルリポジトリで作業」を選び、astro-blog のルートを指定します。GitHub ログインは本番環境用です。</span>`;
         document.body.append(nextNote);
       };
 

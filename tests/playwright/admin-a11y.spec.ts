@@ -26,9 +26,10 @@ test.describe("CMS admin a11y smoke", () => {
   }) => {
     await page.goto("/admin/", { waitUntil: "networkidle" });
     await expect(page).toHaveTitle(/keroway CMS|Sveltia CMS/);
-    // 文言は Sveltia CMS 同梱の ja ロケール由来 (issue #622)。
+    // 文言は Sveltia CMS 同梱の ja ロケール由来 (issue #622)。0.209.x で
+    // 「レポジトリ」→「リポジトリ」に表記修正されたため両対応させる。
     await expect(
-      page.getByRole("button", { name: "ローカルレポジトリで作業" })
+      page.getByRole("button", { name: /ローカル(リ|レ)ポジトリで作業/ })
     ).toBeVisible();
     await page.waitForTimeout(1000);
 
