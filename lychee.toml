@@ -52,6 +52,12 @@ exclude = [
     # **別ホストまで除外**してしまう (パターンを書いた直後に実測して踏んだ)。
     "^https?://(www\\.)?nihao\\.co\\.jp([/?#]|$)",
 
+    # serge.io は 2026-09-05 以降 main の CI で継続的に TLS handshake failed /
+    # Connection reset by peer で落ち続けている (nihao.co.jp と同型の runner 側要因)。
+    # ローカル (日本の家庭回線) からは curl で TLSv1.3 handshake 正常・200 応答を確認済み
+    # (2026-09-14)。記事本文のリンク自体は有効なので記事側は変更しない。
+    "^https?://(www\\.)?serge\\.io([/?#]|$)",
+
     # SiteLayout が 404.html に出力する canonical URL は `<site>/404/` というディレクトリ形
     # パスになるが、Vercel は 404 を 404.html ファイルとして配信するため `/404/` は存在しない。
     # 404 ページの canonical は SEO 的にも意味を持たないので除外。
