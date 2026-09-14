@@ -59,14 +59,16 @@ test.describe("CMS admin editor smoke (test-repo backend)", () => {
 
     await page
       .getByRole("button", {
-        name: /テストレポジトリで作業|Work with Test Repository/,
+        name: /テスト(リ|レ)ポジトリで作業|Work with Test Repository/,
       })
       .click();
 
     // コレクション一覧 (ブログ記事)。コレクション名は config.yml の label
     // (日本語固定文字列) がそのまま使われ、CMS の UI ロケールに影響されない。
+    // Sveltia CMS 0.209.x でコレクション一覧の ARIA role が listbox/option から
+    // tree/treeitem に変更された。
     await expect(
-      page.getByRole("option", { name: /ブログ記事|Blog posts?/i })
+      page.getByRole("treeitem", { name: /ブログ記事|Blog posts?/i })
     ).toBeVisible();
 
     // 「新しいエントリーを作成」という accessible name はグローバルの新規作成
@@ -93,7 +95,7 @@ test.describe("CMS admin editor smoke (test-repo backend)", () => {
 
     await page
       .getByRole("button", {
-        name: /テストレポジトリで作業|Work with Test Repository/,
+        name: /テスト(リ|レ)ポジトリで作業|Work with Test Repository/,
       })
       .click();
     // 「新しいエントリーを作成」という accessible name はグローバルの新規作成

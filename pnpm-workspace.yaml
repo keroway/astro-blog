@@ -71,7 +71,7 @@ overrides:
   "qs@<6.16.0": ">=6.16.0 <7"
   # GHSA-px8p-9vwx-vf98 (fflate <0.7.5) — satori>@shuding/opentype.js 経由 (OG 画像生成、#722)。
   # 0.7.x 内に固定。
-  "fflate@<0.7.5": ">=0.7.5 <0.8"
+  "fflate@<0.7.5": ">=0.7.5 <0.9"
   # osv-scanner 検出分 (2026-09-09、#742)。
   # GHSA-crvj-82cr-hjcx / GHSA-g6gw-c38x-mqfc / GHSA-gqvv-2mrq-wpjv (hono <4.13.5) —
   # @hono/node-server>@modelcontextprotocol/sdk>@anthropic-ai/claude-agent-sdk 経由。

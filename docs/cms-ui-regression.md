@@ -35,7 +35,7 @@ ASTRO_DEV_BACKGROUND=0 pnpm run dev:astro
 # ブラウザで http://localhost:4321/admin/?test-repo を開く
 ```
 
-「テストレポジトリで作業」を選ぶとログインなしでコレクション一覧・新規作成・
+「テストリポジトリで作業」を選ぶとログインなしでコレクション一覧・新規作成・
 編集フォーム・プレビューペイン・設定ダイアログまで確認できる。保存したエントリは
 ブラウザの OPFS (Origin Private File System) に閉じており、実リポジトリには
 一切書き込まれない。
