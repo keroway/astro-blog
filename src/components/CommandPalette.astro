@@ -57,6 +57,7 @@
   let pagefind: PagefindModule | null = null;
   let pagefindInitFailed = false;
   let lastFocused: Element | null = null;
+  let isOpen = false;
 
   const getEls = () => ({
     root: document.getElementById('command-palette'),
@@ -132,19 +133,23 @@
   };
 
   const openPalette = () => {
+    if (isOpen) return;
     const { root, input } = getEls();
     if (!root || !input) return;
+    isOpen = true;
     lastFocused = document.activeElement;
     root.hidden = false;
     document.documentElement.classList.add('command-palette-open');
     setStatus(null);
     renderItems(commands);
-    window.setTimeout(() => input.focus(), 0);
+    input.focus();
   };
 
   function closePalette() {
+    if (!isOpen) return;
     const { root, input } = getEls();
     if (!root) return;
+    isOpen = false;
     root.hidden = true;
     document.documentElement.classList.remove('command-palette-open');
     if (input) input.value = '';
@@ -192,10 +197,8 @@
     shortcutRegistered = true;
     window.addEventListener('keydown', (event) => {
       if (!((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k')) return;
-      const { root } = getEls();
-      if (!root) return;
       event.preventDefault();
-      root.hidden ? openPalette() : closePalette();
+      isOpen ? closePalette() : openPalette();
     });
   };
 
