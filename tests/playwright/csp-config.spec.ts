@@ -112,6 +112,26 @@ test.describe("Plan 002: CSP enforce mode regression", () => {
     ).toContain("blob:");
   });
 
+  test("style-src and font-src do not allow fonts.googleapis.com / fonts.gstatic.com (self-hosted fonts, no Google Fonts dependency)", () => {
+    // ADR 0013 でウェブフォントは Astro Fonts API + Fontsource による自己ホストに移行済み。
+    // Keystatic 時代の名残 (issue #766) が再混入していないことを固定する。
+    const csp = headers.find((h) => h.key === "Content-Security-Policy");
+    expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
+    const cspValue = csp?.value ?? "";
+    const styleSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("style-src")) ?? "";
+    const fontSrc =
+      cspValue.split(";").find((d) => d.trim().startsWith("font-src")) ?? "";
+    expect(
+      styleSrc,
+      "style-src に fonts.googleapis.com が含まれている — Google Fonts への外部依存が復活している"
+    ).not.toContain("fonts.googleapis.com");
+    expect(
+      fontSrc,
+      "font-src に fonts.gstatic.com が含まれている — Google Fonts への外部依存が復活している"
+    ).not.toContain("fonts.gstatic.com");
+  });
+
   test("CSP value includes frame-ancestors 'self'", () => {
     const csp = headers.find((h) => h.key === "Content-Security-Policy");
     expect(csp, "CSP ヘッダーが見つからない").toBeTruthy();
