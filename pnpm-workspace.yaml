@@ -46,7 +46,8 @@ overrides:
   # Astro 7 で @astrojs/internal-helpers 経由で引き続きツリーに存在するため維持。
   # GHSA-5p4m-2wfm-xmqj (js-yaml <4.3.1) — !!omap 解決の二次計算量 DoS。同じ経路で 4.3.0 が
   # 残っていたため下限を 4.3.1 へ引き上げた (2026-08-09)。
-  "js-yaml@>=4.0.0 <4.3.1": ">=4.3.1 <5"
+  # osv-scanner 検出分 (2026-09-09、#742)。下限を 4.3.2 へ引き上げ。
+  "js-yaml@>=4.0.0 <4.3.2": ">=4.3.2 <5"
   # osv-scanner 検出分 (2026-07-27)。いずれも devDependency 経由 (claude-agent-sdk / vercel adapter / rss)。
   # GHSA-frvp-7c67-39w9 (@hono/node-server DoS) — @anthropic-ai/claude-agent-sdk 経由。
   "@hono/node-server@<2.0.5": ">=2.0.5"
@@ -71,6 +72,12 @@ overrides:
   # GHSA-px8p-9vwx-vf98 (fflate <0.7.5) — satori>@shuding/opentype.js 経由 (OG 画像生成、#722)。
   # 0.7.x 内に固定。
   "fflate@<0.7.5": ">=0.7.5 <0.8"
+  # osv-scanner 検出分 (2026-09-09、#742)。
+  # GHSA-crvj-82cr-hjcx / GHSA-g6gw-c38x-mqfc / GHSA-gqvv-2mrq-wpjv (hono <4.13.5) —
+  # @hono/node-server>@modelcontextprotocol/sdk>@anthropic-ai/claude-agent-sdk 経由。
+  "hono@<4.13.5": ">=4.13.5 <5"
+  # GHSA-4vpr-x523-8j87 / GHSA-w27v-7q3p-w38r (svgo <4.1.0) — astro 経由 (画像最適化)。
+  "svgo@<4.1.0": ">=4.1.0 <5"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
