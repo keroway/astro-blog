@@ -86,7 +86,11 @@
       const a = document.createElement('a');
       a.className = 'command-palette__item';
       a.href = item.url;
-      a.innerHTML = `<span>${item.title}</span><small>${item.note ?? item.url}</small>`;
+      const titleSpan = document.createElement('span');
+      titleSpan.textContent = item.title;
+      const noteSmall = document.createElement('small');
+      noteSmall.textContent = item.note ?? item.url;
+      a.append(titleSpan, noteSmall);
       a.addEventListener('click', closePalette);
       li.append(a);
       results.append(li);
