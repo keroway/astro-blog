@@ -62,4 +62,13 @@ exclude = [
     # パスになるが、Vercel は 404 を 404.html ファイルとして配信するため `/404/` は存在しない。
     # 404 ページの canonical は SEO 的にも意味を持たないので除外。
     "/404/?$",
+
+    # app.classeur.io は 2026-09-14 以降 main の CI で継続的に [TIMEOUT] Request timed out
+    # で落ち続けている (nihao.co.jp / serge.io と同型の runner 側要因、#768)。
+    # timeout = 20 秒 × max_retries = 3 でも一貫して同一箇所
+    # (dist/client/blog/stackedit/index.html 内の同一リンク) でのみ失敗しており、
+    # 単発のネットワーク瞬断ではなく継続的な事象と判断した。このセッションからは
+    # サンドボックスの制約でローカル到達性を実測できていないが、記事本文のリンク自体は
+    # 変更しない (リンク切れとは別問題として扱う)。
+    "^https?://(www\\.)?app\\.classeur\\.io([/?#]|$)",
 ]
