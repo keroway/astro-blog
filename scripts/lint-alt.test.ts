@@ -153,6 +153,47 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("入れ子のフェンス (4文字フェンス内の3文字フェンス) の後の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-nested-fence.md");
+    const content = [
+      "````markdown",
+      "```",
+      "````",
+      "",
+      "![](/sample.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 5, alt: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("末尾に文字が続くフェンス行を閉じフェンスと誤認せず後続の画像を検出する", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-fence-with-text.md"
+    );
+    const content = [
+      "```text",
+      "```not-a-closing-fence",
+      "```",
+      "",
+      "![](/sample.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 5, alt: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("fenced code block の外側は通常どおり検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-mixed.md");
     const content = [

@@ -67,14 +67,36 @@ export function altIssueReason(alt: string, src: string): string | null {
   return null;
 }
 
+function isClosingFenceLine(line: string, fenceMatchText: string): boolean {
+  return /^\s*$/.test(line.slice(fenceMatchText.length));
+}
+
 function findFencedCodeLines(lines: string[]): boolean[] {
   const inCode: boolean[] = [];
   let fenceChar: string | null = null;
+  let fenceLength = 0;
   for (const line of lines) {
     const fenceMatch = line.match(FENCE_PATTERN);
-    if (fenceMatch && (fenceChar === null || fenceMatch[1][0] === fenceChar)) {
+    if (fenceMatch) {
+      const char = fenceMatch[1][0];
+      const length = fenceMatch[1].length;
+      if (fenceChar === null) {
+        inCode.push(true);
+        fenceChar = char;
+        fenceLength = length;
+        continue;
+      }
+      if (
+        char === fenceChar &&
+        length >= fenceLength &&
+        isClosingFenceLine(line, fenceMatch[0])
+      ) {
+        inCode.push(true);
+        fenceChar = null;
+        fenceLength = 0;
+        continue;
+      }
       inCode.push(true);
-      fenceChar = fenceChar === null ? fenceMatch[1][0] : null;
       continue;
     }
     inCode.push(fenceChar !== null);
