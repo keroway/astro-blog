@@ -1,6 +1,6 @@
 # 0014 — Keystatic 管理 UI の Google Fonts 参照を `pnpm patch` で除去する
 
-- **ステータス**: Accepted
+- **ステータス**: Deprecated — Superseded by [ADR 0016](./0016-cms-keystatic-to-sveltia.md)（前提の Keystatic 自体が撤去されたため）
 - **決定日**: 2026-06-21
 - **決定者**: @keroway
 - **関連 Issue**: [#327 Keystatic 管理 UI が Google Fonts (Inter) を読み込む参照を除去する](https://github.com/keroway/astro-blog/issues/327) / [#342 Keystatic の Google Fonts 除去手段を ADR で確定する](https://github.com/keroway/astro-blog/issues/342)
