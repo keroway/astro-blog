@@ -16,6 +16,7 @@
     "check": "biome check .",
     "lint:alt": "node --experimental-strip-types scripts/lint-alt.ts",
     "lint:tokens-doc": "node --experimental-strip-types scripts/lint-tokens-doc.ts",
+    "lint:cms-config": "node --experimental-strip-types scripts/lint-cms-config-sync.ts",
     "suggest-frontmatter": "node --experimental-strip-types scripts/suggest-frontmatter.ts",
     "backfill-descriptions": "node --experimental-strip-types scripts/backfill-descriptions.ts",
     "suggest-alt": "node --experimental-strip-types scripts/suggest-alt.ts",

@@ -87,6 +87,11 @@ jobs:
       - name: Lint tokens doc sync
         run: pnpm run lint:tokens-doc
 
+      # `scripts/lint-cms-config-sync.ts` で public/admin/config.yml の
+      # カテゴリ/ステータス選択肢と src/lib/content-schema.ts の定数の乖離を検知する。
+      - name: Lint CMS config sync
+        run: pnpm run lint:cms-config
+
   unit:
     name: Unit tests (vitest)
     runs-on: ubuntu-latest
