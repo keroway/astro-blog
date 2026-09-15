@@ -97,6 +97,39 @@ test.describe("URL compatibility check", () => {
     expect(missing.status(), "missing token should return 401").toBe(401);
   });
 
+  test("/api/trigger-build accepts the correct token and reaches the deploy hook call", async ({
+    request,
+  }) => {
+    // CI では CRON_SECRET=ci-test-secret（package.json の test:e2e）かつ
+    // VERCEL_DEPLOY_HOOK_URL 未設定（playwright.config.ts の webServer.env が
+    // https://example.com/dummy-deploy-hook にフォールバック）で走る。
+    // example.com は POST を 405 で拒否するため、認証成功後は
+    // 「Deploy hook failed: 405」→ 502 になる（200 にはならない）。
+    const cronSecret = process.env.CRON_SECRET;
+    test.skip(
+      !cronSecret,
+      "CRON_SECRET is not set locally; this test only runs where test:e2e sets it (CI)"
+    );
+
+    const res = await request.get("/api/trigger-build", {
+      headers: { Authorization: `Bearer ${cronSecret}` },
+    });
+
+    expect(
+      res.status(),
+      "correct token should not be rejected as unauthorized"
+    ).not.toBe(401);
+    expect(
+      res.status(),
+      "correct token should pass CRON_SECRET config validation"
+    ).not.toBe(500);
+    expect(
+      res.status(),
+      "dummy deploy hook URL rejects POST with 405, surfaced as 502"
+    ).toBe(502);
+    expect(await res.text()).toBe("Deploy hook failed: 405");
+  });
+
   test("og:image meta tags include width/height/alt", async ({ page }) => {
     await page.goto("/");
 
