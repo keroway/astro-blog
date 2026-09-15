@@ -5,13 +5,15 @@ interface Props {
   action?: string;
   actionHref?: string;
   id?: string;
+  level?: 1 | 2;
 }
-const { jp, en, action, actionHref = '#', id } = Astro.props;
+const { jp, en, action, actionHref = '#', id, level = 2 } = Astro.props;
+const Tag = level === 1 ? 'h1' : 'h2';
 ---
 
 <div class="kw-section-head" data-reveal>
   <div class="kw-section-head__title">
-    <span class="kw-section-head__jp" id={id}>{jp}</span>
+    <Tag class="kw-section-head__jp" id={id}>{jp}</Tag>
     <span class="kw-section-head__divider" aria-hidden="true"></span>
     <span class="kw-section-head__en">{en}</span>
   </div>
