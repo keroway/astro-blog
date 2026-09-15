@@ -1,18 +1,7 @@
-import { timingSafeEqual } from "node:crypto";
 import type { APIRoute } from "astro";
+import { timingSafeEqualString } from "../../lib/timing-safe-equal";
 
 export const prerender = false;
-
-function timingSafeEqualString(a: string, b: string): boolean {
-  const aBuf = Buffer.from(a);
-  const bBuf = Buffer.from(b);
-  if (aBuf.length !== bBuf.length) {
-    // 長さの違いによる早期終了を避けるため、ダミー比較を行ってからfalseを返す。
-    timingSafeEqual(aBuf, aBuf);
-    return false;
-  }
-  return timingSafeEqual(aBuf, bBuf);
-}
 
 export const GET: APIRoute = async ({ request }) => {
   const cronSecret = import.meta.env.CRON_SECRET;
