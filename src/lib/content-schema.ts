@@ -25,7 +25,10 @@ export const BLOG_CATEGORIES = [
 
 export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
 
-/** CMS 表示ラベル。public/admin/config.yml の options と一致させること */
+/**
+ * 値 → 表示ラベルの対応表 (単一ソース)。src/consts.ts の categoryLabel() から
+ * 参照される。public/admin/config.yml の options と一致させること。
+ */
 export const BLOG_CATEGORY_LABELS: Record<BlogCategory, string> = {
   dev: "開発・プログラミング",
   hardware: "ハードウェア・電子工作",
