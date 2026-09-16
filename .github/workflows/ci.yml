@@ -92,6 +92,11 @@ jobs:
       - name: Lint CMS config sync
         run: pnpm run lint:cms-config
 
+      # `scripts/lint-description-length.ts` で description frontmatter の
+      # 120文字上限 (SEO meta description / OGP / Twitter Card) 超過を検知する。
+      - name: Lint description length
+        run: pnpm run lint:description-length
+
   unit:
     name: Unit tests (vitest)
     runs-on: ubuntu-latest
