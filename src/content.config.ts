@@ -8,7 +8,7 @@ const blog = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      description: z.string(),
+      description: z.string().max(120),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),
       heroImage: image().optional(),
@@ -27,7 +27,7 @@ const works = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      description: z.string(),
+      description: z.string().max(120),
       status: z.enum(WORKS_STATUSES),
       heroImage: image().optional(),
       repoUrl: z.url().optional(),
