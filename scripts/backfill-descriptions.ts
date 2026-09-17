@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { stripBom } from "./lib/strip-bom.ts";
 
 const BLOG_DIR = path.resolve(import.meta.dirname, "../src/content/blog");
 const DESCRIPTION_LINE = /^description:\s*".*"$/m;
@@ -20,10 +21,6 @@ type Frontmatter = {
   title?: string;
   description?: string;
 };
-
-function stripBom(content: string): string {
-  return content.replace(/^\uFEFF/, "");
-}
 
 function parseFrontmatter(content: string): Frontmatter {
   const match = stripBom(content).match(/^---\r?\n([\s\S]*?)\r?\n---/);

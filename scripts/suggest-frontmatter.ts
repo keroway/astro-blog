@@ -10,6 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { BLOG_CATEGORIES } from "../src/lib/content-schema";
+import { stripBom } from "./lib/strip-bom.ts";
 
 type Frontmatter = {
   title?: string;
@@ -20,7 +21,7 @@ type Frontmatter = {
 };
 
 function parseFrontmatter(content: string): Frontmatter {
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const match = stripBom(content).match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return {};
   const raw = match[1];
   const result: Frontmatter = {};
@@ -45,7 +46,9 @@ function parseFrontmatter(content: string): Frontmatter {
 }
 
 function extractBody(content: string): string {
-  return content.replace(/^---[\s\S]*?---\n/, "").trim();
+  return stripBom(content)
+    .replace(/^---[\s\S]*?---\n/, "")
+    .trim();
 }
 
 const SCHEMA = {
