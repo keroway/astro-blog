@@ -13,6 +13,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { stripBom } from "./lib/strip-bom.ts";
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const BLOG_DIR = path.join(REPO_ROOT, "src/content/blog");
@@ -143,7 +144,7 @@ async function main() {
 
   for (const file of files) {
     const full = path.join(BLOG_DIR, file);
-    const content = fs.readFileSync(full, "utf8");
+    const content = stripBom(fs.readFileSync(full, "utf8"));
     const fmMatch = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     const frontmatter = fmMatch ? fmMatch[1] : "";
     const body = extractBody(content);

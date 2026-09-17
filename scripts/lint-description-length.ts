@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
+import { stripBom } from "./lib/strip-bom.ts";
 
 const CONTENT_DIRS = [
   path.resolve(import.meta.dirname, "../src/content/blog"),
@@ -28,7 +29,7 @@ export function collectFiles(dir: string): string[] {
 
 export function readDescriptionLength(filePath: string): number | null {
   const content = fs.readFileSync(filePath, "utf8");
-  const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  const match = stripBom(content).match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return null;
   const frontmatter = parse(match[1]) as { description?: unknown };
   const description = frontmatter?.description;
