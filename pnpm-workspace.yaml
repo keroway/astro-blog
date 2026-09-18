@@ -78,6 +78,11 @@ overrides:
   "hono@<4.13.5": ">=4.13.5 <5"
   # GHSA-4vpr-x523-8j87 / GHSA-w27v-7q3p-w38r (svgo <4.1.0) — astro 経由 (画像最適化)。
   "svgo@<4.1.0": ">=4.1.0 <5"
+  # osv-scanner 検出分 (2026-09-18、#789)。astro 本体 (@astrojs/internal-helpers) 経由の transitive 依存。
+  # GHSA-9rgm-9g3h-6x36 (devalue <5.9.2)。
+  "devalue@<5.9.2": ">=5.9.2 <6"
+  # GHSA-7w5x-hrqm-74c2 (smol-toml <1.7.1)。
+  "smol-toml@<1.7.1": ">=1.7.1 <2"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
