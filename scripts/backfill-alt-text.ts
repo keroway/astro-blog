@@ -11,6 +11,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { stripBom } from "./lib/strip-bom.ts";
 
 const BLOG_DIR = path.resolve(import.meta.dirname, "../src/content/blog");
 const PUBLIC_DIR = path.resolve(import.meta.dirname, "../public");
@@ -64,14 +65,16 @@ function isBadAlt(alt: string): boolean {
 }
 
 function parseFrontmatterTitle(content: string): string {
-  const match = content.match(
+  const match = stripBom(content).match(
     /^---\r?\n[\s\S]*?^title:\s*["']?(.+?)["']?\s*$/m
   );
   return match ? match[1].trim() : "";
 }
 
 function extractBody(content: string): string {
-  return content.replace(/^---[\s\S]*?---\n/, "").trim();
+  return stripBom(content)
+    .replace(/^---[\s\S]*?---\n/, "")
+    .trim();
 }
 
 function collectImageRefs(content: string): ImageRef[] {
