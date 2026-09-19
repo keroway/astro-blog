@@ -12,6 +12,7 @@ const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
 const IMAGE_SHORTCUT_PATTERN = /!\[([^\]]+)\](?!\(|\[)/g;
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
 const FENCE_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
+const INLINE_CODE_SPAN_PATTERN = /(`+).*?\1/g;
 
 const MIN_ALT_LENGTH = 4;
 const PLACEHOLDER_ALTS = new Set([
@@ -65,6 +66,13 @@ export function altIssueReason(alt: string, src: string): string | null {
   if (isTargetRemoteHost(src))
     return "外部ホスト画像（imgur/googleusercontent）";
   return null;
+}
+
+export function maskInlineCodeSpans(line: string): string {
+  INLINE_CODE_SPAN_PATTERN.lastIndex = 0;
+  return line.replace(INLINE_CODE_SPAN_PATTERN, (match) =>
+    " ".repeat(match.length)
+  );
 }
 
 function isClosingFenceLine(line: string, fenceMatchText: string): boolean {
@@ -145,7 +153,7 @@ export function findAltIssues(filePath: string): Issue[] {
 
   for (let i = 0; i < lines.length; i++) {
     if (inCode[i]) continue;
-    const line = lines[i];
+    const line = maskInlineCodeSpans(lines[i]);
 
     IMAGE_INLINE_PATTERN.lastIndex = 0;
     let inlineMatch = IMAGE_INLINE_PATTERN.exec(line);
