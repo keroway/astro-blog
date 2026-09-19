@@ -194,6 +194,34 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("インラインコード内の画像記法は誤検出しない", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-inline-code.md");
+    const content = "`![](/sample.png)`";
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("インラインコードの外側にある実際の画像は検出する", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-inline-code-mixed.md"
+    );
+    const content =
+      "`![](/sample.png)` の後に ![](../../assets/content/blog/a.png)";
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 1, alt: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("fenced code block の外側は通常どおり検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-mixed.md");
     const content = [
