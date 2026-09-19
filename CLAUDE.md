@@ -97,6 +97,7 @@ src/
 │   ├── blog/
 │   │   ├── [...page].astro    # Blog listing (ページネーション付きカードグリッド)
 │   │   ├── [...slug].astro    # Dynamic blog post routes
+│   │   ├── category/          # [category].astro
 │   │   └── tags/              # index.astro / [tag].astro
 │   ├── og/[...slug].png.ts    # OGP 画像生成 (satori + resvg)
 │   ├── works/                 # index.astro / [slug].astro / rss.xml.js
