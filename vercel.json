@@ -1,6 +1,7 @@
 {
   "installCommand": "corepack pnpm install --frozen-lockfile",
   "buildCommand": "corepack pnpm run build",
+  "ignoreCommand": "sh scripts/vercel-ignore-build.sh",
   "crons": [
     {
       "path": "/api/trigger-build",
