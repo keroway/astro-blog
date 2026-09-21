@@ -310,3 +310,9 @@ pnpm run suggest-frontmatter src/content/blog/<filename>.mdoc
 - **OGP locale:** Auto-set to `ja_JP` in BaseHead.astro
 - **Accessibility:** ARIA labels on navigation, `rel` attributes on external links, `prefers-reduced-motion` support
 - **Web fonts:** Shippori Mincho [500] + BIZ UDPGothic [400,700] + JetBrains Mono [400,500] を Astro fonts API (`fontProviders.fontsource()`, `astro.config.mjs`) で自己ホスト配信 (ADR 0013)。Google Fonts への外部リクエストは発生しない。Zen Maru Gothic (`@fontsource/zen-maru-gothic`) は OG 画像生成 (satori) 専用で、ページテキストには使わない。
+
+## Codex 向け運用ルール
+
+Codex 向けの横断運用ルールは `keroway/CLAUDE.md` ではなく
+[agent-assets `docs/codex-common-instructions.md`](https://github.com/keroway/agent-assets/blob/main/docs/codex-common-instructions.md)
+を正典とする（Codex は git ルートより上の AGENTS.md を読まないため）。
