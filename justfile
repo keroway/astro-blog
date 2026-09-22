@@ -21,5 +21,7 @@ check:
     pnpm run lint
     pnpm run lint:alt
     pnpm run lint:tokens-doc
+    pnpm run lint:cms-config
+    pnpm run lint:description-length
     pnpm exec astro check
     pnpm run test:unit
