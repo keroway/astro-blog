@@ -23,6 +23,6 @@ pre-commit:
       glob: "src/content/**/*.{md,mdoc}"
       run: pnpm run --silent lint:alt
 
-    - name: lint:tokens-doc (tokens.css / design-system.md)
+    - name: lint:tokens-doc (tokens.css / design-system.md カラートークン表)
       glob: "{src/styles/tokens.css,docs/design-system.md}"
       run: pnpm run --silent lint:tokens-doc
