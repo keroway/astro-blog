@@ -1,3 +1,9 @@
+// tokens.css と design-system.md §1.1 / §5 の「カラートークン表」限定の同期チェック。
+// タイポグラフィ・スペーシング等 (--kw-fs-* / --kw-space-* / --kw-radius-* 等) は
+// このスクリプトの対象外 (#756)。スコープを広げる場合は parseCssBlock を :root
+// ブロックにも適用し、extractDocTableRows をタイポグラフィ表・スペーシング表
+// (2カラム×2組の変則テーブル) にも対応させる必要がある。
+
 import fs from "node:fs";
 import path from "node:path";
 
