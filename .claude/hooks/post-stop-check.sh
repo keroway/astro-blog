@@ -13,6 +13,7 @@
 #   3. TS / テストが変わったら vitest (unit)
 #   4. src/content 配下の md / mdoc が変わったら lint:alt + lint:description-length
 #   5. src/styles/tokens.css / docs/design-system.md が変わったら lint:tokens-doc
+#      (カラートークン表限定。タイポグラフィ/スペーシング表は対象外、#756)
 #   6. public/admin/config.yml が変わったら lint:cms-config
 #   7. 失敗時は stderr に内容を出力し exit 2 で Claude にフィードバックする
 #   8. pnpm が見つからないのに対象変更がある場合も FAIL として通知する
@@ -133,7 +134,8 @@ while IFS= read -r file; do
     CONTENT_CHANGED=1
   fi
 
-  # lint:tokens-doc (scripts/lint-tokens-doc.ts) の対象: tokens.css と design-system.md の対応表
+  # lint:tokens-doc (scripts/lint-tokens-doc.ts) の対象: tokens.css と design-system.md の
+  # カラートークン表 (§1.1 / §5) の対応のみ。タイポグラフィ/スペーシング表は対象外 (#756)
   if [[ "$file" == "src/styles/tokens.css" ]] || [[ "$file" == "docs/design-system.md" ]]; then
     TOKENS_DOC_CHANGED=1
   fi
@@ -197,7 +199,7 @@ if [ "$UNIT_CHANGED" -eq 1 ]; then
 fi
 
 if [ "$TOKENS_DOC_CHANGED" -eq 1 ]; then
-  run_step "lint:tokens-doc (tokens.css と design-system.md の同期)" pnpm run --silent lint:tokens-doc
+  run_step "lint:tokens-doc (tokens.css と design-system.md のカラートークン表同期)" pnpm run --silent lint:tokens-doc
 fi
 
 if [ "$CMS_CONFIG_CHANGED" -eq 1 ]; then
