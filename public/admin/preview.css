@@ -293,3 +293,59 @@ figcaption,
     font-size: 1.25rem;
   }
 }
+
+/*
+ * content components (#365) の CMS プレビュー (#670)。
+ * src/components/Callout.astro / LinkCard.astro の見た目を、この preview.css の
+ * 自己完結したトークン (--kw-preview-*) だけで簡略再現する。本番の実描画は
+ * src/pages/og/... ではなく実際のブログページ (BlogPost.astro) を参照する。
+ */
+.kw-callout {
+  border-radius: var(--kw-preview-radius-sm);
+  border-inline-start: 3px solid var(--kw-preview-accent);
+  margin-block: var(--kw-preview-space-6);
+  padding: var(--kw-preview-space-3) var(--kw-preview-space-4);
+  background: var(--kw-preview-bg-alt);
+}
+
+.kw-callout--warning,
+.kw-callout--danger {
+  border-color: oklch(55% 0.18 35);
+}
+
+.kw-callout__title {
+  margin: 0 0 var(--kw-preview-space-2);
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.kw-callout__body {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--kw-preview-fg-muted);
+}
+
+.kw-link-card {
+  display: block;
+  border: 1px solid var(--kw-preview-rule);
+  border-radius: var(--kw-preview-radius-md);
+  padding: var(--kw-preview-space-3) var(--kw-preview-space-5);
+  margin-block: var(--kw-preview-space-5);
+  text-decoration: none;
+  color: inherit;
+  background: var(--kw-preview-card);
+}
+
+.kw-link-card__title {
+  display: block;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--kw-preview-link);
+}
+
+.kw-link-card__desc {
+  display: block;
+  margin-top: var(--kw-preview-space-2);
+  font-size: 0.875rem;
+  color: var(--kw-preview-fg-muted);
+}
