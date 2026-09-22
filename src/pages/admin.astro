@@ -53,6 +53,16 @@ import { Font } from "astro:assets";
     <script>
       import CMS from "@sveltia/cms";
       import { parse, stringify } from "yaml";
+      import {
+        CALLOUT_PATTERN,
+        LINK_CARD_PATTERN,
+        calloutFromBlock,
+        calloutToBlock,
+        calloutToPreview,
+        linkCardFromBlock,
+        linkCardToBlock,
+        linkCardToPreview,
+      } from "../lib/markdoc-editor-components";
 
       const normalizeDates = (value: any): any => {
         if (value instanceof Date) {
@@ -285,6 +295,49 @@ import { Font } from "astro:assets";
 
         targets.forEach(classifyElement);
       };
+
+      // content components (#365) の CMS 導線 (#670)。パース (fromBlock) ・
+      // シリアライズ (toBlock) ・プレビュー (toPreview) は src/lib/markdoc-editor-components.ts
+      // の純粋関数に切り出してあり、markdoc.config.mjs のタグ定義
+      // (Callout.astro / LinkCard.astro) と対応させる。
+      CMS.registerEditorComponent({
+        id: "callout",
+        label: "コールアウト",
+        fields: [
+          {
+            name: "type",
+            label: "種別",
+            widget: "select",
+            options: [
+              { label: "情報 (info)", value: "info" },
+              { label: "ヒント (tip)", value: "tip" },
+              { label: "注意 (warning)", value: "warning" },
+              { label: "危険 (danger)", value: "danger" },
+            ],
+            default: "info",
+          },
+          { name: "title", label: "タイトル（任意）", widget: "string", required: false },
+          { name: "body", label: "本文", widget: "markdown" },
+        ],
+        pattern: CALLOUT_PATTERN,
+        fromBlock: calloutFromBlock,
+        toBlock: calloutToBlock,
+        toPreview: calloutToPreview,
+      });
+
+      CMS.registerEditorComponent({
+        id: "link-card",
+        label: "リンクカード",
+        fields: [
+          { name: "href", label: "URL", widget: "string" },
+          { name: "title", label: "タイトル", widget: "string" },
+          { name: "description", label: "説明（任意）", widget: "string", required: false },
+        ],
+        pattern: LINK_CARD_PATTERN,
+        fromBlock: linkCardFromBlock,
+        toBlock: linkCardToBlock,
+        toPreview: linkCardToPreview,
+      });
 
       CMS.init({ config });
 
