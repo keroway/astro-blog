@@ -98,7 +98,7 @@ const focusAreas = getFocusAreas(['cloud_devops', 'web_frontend', 'ai_engineerin
       <ul class="works-grid">
         {displayWorks.map((work, i) => (
           <li>
-            <WorksCard work={work} priority={i === 0} />
+            <WorksCard work={work} variant={i === 0 ? "featured" : "grid"} priority={i === 0} />
           </li>
         ))}
       </ul>
