@@ -37,7 +37,7 @@
     "@astrojs/markdoc": "2.0.9",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@astrojs/vercel": "11.0.10",
+    "@astrojs/vercel": "11.0.11",
     "@axe-core/playwright": "^4.12.1",
     "@biomejs/biome": "^2.5.5",
     "@fontsource/zen-maru-gothic": "^5.2.8",
