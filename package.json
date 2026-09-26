@@ -2,7 +2,7 @@
   "name": "astro-blog",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@11.26.0",
+  "packageManager": "pnpm@11.27.1",
   "scripts": {
     "postinstall": "lefthook install",
     "dev": "portless run --name keroway astro dev",
@@ -41,12 +41,12 @@
     "@axe-core/playwright": "^4.12.1",
     "@biomejs/biome": "^2.5.5",
     "@fontsource/zen-maru-gothic": "^5.2.8",
-    "@markdoc/markdoc": "0.5.9",
+    "@markdoc/markdoc": "0.5.10",
     "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",
     "@shikijs/themes": "4.4.3",
-    "@sveltia/cms": "^0.209.0",
-    "@unocss/astro": ">=66.7.5 <66.10.1",
+    "@sveltia/cms": "^0.219.0",
+    "@unocss/astro": ">=66.7.5 <66.10.6",
     "astro": "^7.3.1",
     "happy-dom": "^20.11.2",
     "lefthook": "^2.1.10",
@@ -56,7 +56,7 @@
     "sharp": "^0.35.4",
     "sirv": "^3.0.0",
     "typescript": "^6.0.0",
-    "unocss": ">=66.7.5 <66.10.1",
+    "unocss": ">=66.7.5 <66.10.6",
     "vitest": "^4.1.11",
     "yaml": "^2.9.0"
   }
