@@ -1,6 +1,8 @@
 # OGP 画像生成ライブラリ評価レポート
 
 > **注記 (2026-07-21):** 本レポートは 2026-05 時点の評価記録。結論 (satori + @resvg/resvg-js 採用) は現在も有効。本文中の「Astro 6」はその後 [ADR 0017](./adr/0017-astro-7-upgrade.md) で Astro 7 に更新済みだが、static endpoint パターンは変わらないため原文のまま保持する。
+>
+> **注記 (2026-09-22):** 本文中の「pyftsubset によるフォントサブセット化を #83 で確定」は計画時点の想定であり、実装では採用されなかった。現行の `src/pages/og/[...slug].png.ts` は `@fontsource/zen-maru-gothic` のフルサイズ WOFF ファイル（`zen-maru-gothic-japanese-{400,700}-normal.woff`）をそのまま `readFileSync` で読み込んでおり、`pyftsubset` を呼ぶスクリプト・依存・workflow は存在しない。ビルド時間・パフォーマンス上の問題が顕在化していないため、本レポート作成時点で見込んでいたサブセット化は当面行わない判断とする（#775）。
 
 - **作成日**: 2026-05-17
 - **対象 Issue**: [#82 satori / @vercel/og の比較と採用ライブラリを決定する](https://github.com/keroway/astro-blog/issues/82)
