@@ -26,3 +26,11 @@ pre-commit:
     - name: lint:tokens-doc (tokens.css / design-system.md)
       glob: "{src/styles/tokens.css,docs/design-system.md}"
       run: pnpm run --silent lint:tokens-doc
+
+    - name: lint:cms-config (config.yml の選択肢同期)
+      glob: "public/admin/config.yml"
+      run: pnpm run --silent lint:cms-config
+
+    - name: lint:description-length (description 文字数)
+      glob: "src/content/**/*.{md,mdoc}"
+      run: pnpm run --silent lint:description-length
