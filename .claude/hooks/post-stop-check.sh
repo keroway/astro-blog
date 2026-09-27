@@ -11,10 +11,11 @@
 #   1. 変更ファイル（uncommitted + 未 push の commit）を分類する
 #   2. コード / コンテンツが変わったら biome ci + astro check (typecheck)
 #   3. TS / テストが変わったら vitest (unit)
-#   4. src/content 配下の md / mdoc が変わったら lint:alt
+#   4. src/content 配下の md / mdoc が変わったら lint:alt + lint:description-length
 #   5. src/styles/tokens.css / docs/design-system.md が変わったら lint:tokens-doc
-#   6. 失敗時は stderr に内容を出力し exit 2 で Claude にフィードバックする
-#   7. pnpm が見つからないのに対象変更がある場合も FAIL として通知する
+#   6. public/admin/config.yml が変わったら lint:cms-config
+#   7. 失敗時は stderr に内容を出力し exit 2 で Claude にフィードバックする
+#   8. pnpm が見つからないのに対象変更がある場合も FAIL として通知する
 #      （silent-pass しない = 「検証できない」を「成功」と扱わない）
 #
 # 実行するコマンドは CI (.github/workflows/ci.yml) の lint / typecheck / unit ジョブと
@@ -105,6 +106,7 @@ CODE_CHANGED=0
 UNIT_CHANGED=0
 CONTENT_CHANGED=0
 TOKENS_DOC_CHANGED=0
+CMS_CONFIG_CHANGED=0
 
 while IFS= read -r file; do
   [ -z "$file" ] && continue
@@ -135,9 +137,14 @@ while IFS= read -r file; do
   if [[ "$file" == "src/styles/tokens.css" ]] || [[ "$file" == "docs/design-system.md" ]]; then
     TOKENS_DOC_CHANGED=1
   fi
+
+  # lint:cms-config (scripts/lint-cms-config-sync.ts) の対象: Sveltia CMS の設定ファイル
+  if [[ "$file" == "public/admin/config.yml" ]]; then
+    CMS_CONFIG_CHANGED=1
+  fi
 done <<< "$CHANGED_FILES"
 
-if [ "$CODE_CHANGED" -eq 0 ] && [ "$UNIT_CHANGED" -eq 0 ] && [ "$CONTENT_CHANGED" -eq 0 ] && [ "$TOKENS_DOC_CHANGED" -eq 0 ]; then
+if [ "$CODE_CHANGED" -eq 0 ] && [ "$UNIT_CHANGED" -eq 0 ] && [ "$CONTENT_CHANGED" -eq 0 ] && [ "$TOKENS_DOC_CHANGED" -eq 0 ] && [ "$CMS_CONFIG_CHANGED" -eq 0 ]; then
   exit 0
 fi
 
@@ -182,6 +189,7 @@ fi
 
 if [ "$CONTENT_CHANGED" -eq 1 ]; then
   run_step "lint:alt (alt テキスト)" pnpm run --silent lint:alt
+  run_step "lint:description-length (description 文字数)" pnpm run --silent lint:description-length
 fi
 
 if [ "$UNIT_CHANGED" -eq 1 ]; then
@@ -190,6 +198,10 @@ fi
 
 if [ "$TOKENS_DOC_CHANGED" -eq 1 ]; then
   run_step "lint:tokens-doc (tokens.css と design-system.md の同期)" pnpm run --silent lint:tokens-doc
+fi
+
+if [ "$CMS_CONFIG_CHANGED" -eq 1 ]; then
+  run_step "lint:cms-config (config.yml の選択肢同期)" pnpm run --silent lint:cms-config
 fi
 
 if [ "$FAILED" -eq 1 ]; then
