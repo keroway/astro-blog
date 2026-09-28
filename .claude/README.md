@@ -14,7 +14,13 @@
 ├── commands/
 │   └── ship-check.md          # /ship-check スラッシュコマンド (リポジトリ固有。CI 失敗の修正は共有の /fix-pr)
 ├── rules/
-│   └── implementation.md      # スコープ管理・Astro 7 固有の罠・検証順序などの詳細ルール
+│   ├── implementation.md      # スコープ管理・Astro 7 固有の罠・検証順序などの詳細ルール（常時参照）
+│   ├── pages.md               # paths: src/pages/** — 日本語スラグ encode パターン、新規ページ追加手順
+│   ├── content.md             # paths: src/content/** 等 — Content Collections スキーマ、記事追加手順
+│   ├── ui.md                  # paths: src/components/** 等 — 画像/スタイル/レイアウトコンポーネント規約
+│   ├── testing.md             # paths: tests/** 等 — unit/E2E テストの実行詳細
+│   ├── architecture.md        # paths: src/** — ディレクトリ構成の詳細
+│   └── dev-environment.md     # paths: package.json 等 — dev サーバー/env var/サプライチェーン設定の詳細
 ├── hooks/
 │   ├── format-on-write.sh     # PostToolUse: 編集ファイルの自動 Biome format
 │   ├── post-stop-check.sh     # Stop: 変更範囲に応じた lint/typecheck/unit test
@@ -76,7 +82,7 @@ CI のうちローカル再現可能な5ジョブ（lint / unit / typecheck / bu
 
 ## Rules の参照階層
 
-`CLAUDE.md`（最上位） → `.claude/rules/implementation.md`（詳細）の順で参照。矛盾があれば `CLAUDE.md` が優先。
+`CLAUDE.md`（最上位） → `.claude/rules/implementation.md`（常時参照の詳細ルール） → `.claude/rules/{pages,content,ui,testing,architecture,dev-environment}.md`（`paths:` frontmatter によるパス限定ルール、該当ファイルを触るターンだけ自動で載る）の順で参照。矛盾があれば `CLAUDE.md` が優先。
 
 ## 他環境への移植
 
