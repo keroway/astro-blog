@@ -59,7 +59,8 @@ overrides:
   # GHSA-7p8r-x3mc-p8w7 (fast-uri <3.1.5) — backslash authority introducer による host confusion。
   # GHSA (Dependabot alert #25, fast-uri <3.1.6) — scheme-relative 参照で IDN 正規化を
   # 飛ばす host confusion。Dependabot の自動修正 run が失敗したため下限を 3.1.6 へ (2026-09-03、#694)。
-  "fast-uri@<3.1.6": ">=3.1.6 <4"
+  # GHSA-58mr-gqgx-xq4g / GHSA-qw65-cvwx-89v3 (fast-uri 3.1.6) — 下限を 3.1.7 へ (2026-09-29、#823)。
+  "fast-uri@<3.1.7": ">=3.1.7 <4"
   # GHSA-8r6m-32jq-jx6q (fast-xml-parser) — @astrojs/rss 経由。
   "fast-xml-parser@<5.10.1": ">=5.10.1 <6"
   # GHSA-2v37-7h3g-55p8 (nanoid <3.3.17) — customAlphabet / customRandom に size=0 を渡すと
@@ -83,6 +84,10 @@ overrides:
   "devalue@<5.9.2": ">=5.9.2 <6"
   # GHSA-7w5x-hrqm-74c2 (smol-toml <1.7.1)。
   "smol-toml@<1.7.1": ">=1.7.1 <2"
+  # osv-scanner 検出分 (2026-09-29、#823)。
+  # GHSA-2vr4-cq9g-pvrc / GHSA-rpw4-54j3-4h4q (ip-address <10.5.1) —
+  # @anthropic-ai/claude-agent-sdk>@modelcontextprotocol/sdk>express-rate-limit 経由。
+  "ip-address@<10.5.1": ">=10.5.1 <11"
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
