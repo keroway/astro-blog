@@ -14,7 +14,7 @@ test.describe("URL compatibility check", () => {
       await page.goto(nextUrl);
       const pageHrefs = await page
         .locator("a.post-row__link")
-        .evaluateAll<string[]>((els: Element[]) =>
+        .evaluateAll((els: Element[]) =>
           els
             .map((el) => el.getAttribute("href"))
             .filter((h): h is string => h !== null)
