@@ -229,6 +229,10 @@ const breadcrumbSchema = {
         try {
           await navigator.clipboard.writeText(code.textContent ?? '');
         } catch {
+          status.textContent = 'コピーに失敗しました。コードを選択して手動でコピーしてください';
+          window.setTimeout(() => {
+            status.textContent = '';
+          }, 4000);
           return;
         }
         button.textContent = 'Copied';
