@@ -1,17 +1,22 @@
 import { describe, expect, it } from "vitest";
 import { computeProblems } from "./lint-cms-config-sync";
 
+const DESCRIPTION_FIELD = `
+      - name: description
+        widget: text
+        pattern: ['^[\\s\\S]{0,120}$', '120 文字以内で入力してください']`;
+
 const CONFIG_FIXTURE = `
 collections:
   - name: blog
-    fields:
+    fields:${DESCRIPTION_FIELD}
       - name: category
         widget: select
         options:
           - { label: "開発", value: dev }
           - { label: "ツール", value: tools }
   - name: works
-    fields:
+    fields:${DESCRIPTION_FIELD}
       - name: status
         widget: select
         options:
@@ -49,6 +54,30 @@ describe("computeProblems", () => {
     expect(problems).toHaveLength(1);
     expect(problems[0]?.message).toContain("tools");
     expect(problems[0]?.message).toContain("余剰");
+  });
+
+  it("description の pattern が無い場合を検出する", () => {
+    const config = CONFIG_FIXTURE.replaceAll(
+      /\n\s+pattern: \['\^\[\\s\\S\]\{0,120\}\$'.*\]/g,
+      ""
+    );
+    const problems = computeProblems(
+      config,
+      ["dev", "tools"],
+      ["active", "wip"]
+    );
+    expect(problems).toHaveLength(2);
+    expect(problems[0]?.message).toContain("description.pattern");
+  });
+
+  it("description の pattern が 120 文字と異なる上限なら検出する", () => {
+    const config = CONFIG_FIXTURE.replaceAll("{0,120}", "{0,121}");
+    const problems = computeProblems(
+      config,
+      ["dev", "tools"],
+      ["active", "wip"]
+    );
+    expect(problems).toHaveLength(2);
   });
 
   it("フィールド自体が見つからない場合を検出する", () => {

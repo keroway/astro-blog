@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { parse } from "yaml";
 import { BLOG_CATEGORIES, WORKS_STATUSES } from "../src/lib/content-schema.ts";
+import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const CONFIG_PATH = path.join(ROOT, "public/admin/config.yml");
@@ -85,6 +86,29 @@ export function computeProblems(
     }
   }
 
+  problems.push(...computeDescriptionProblems(config));
+
+  return problems;
+}
+
+function computeDescriptionProblems(config: unknown): Problem[] {
+  const problems: Problem[] = [];
+  for (const collection of ["blog", "works"]) {
+    const field = findCollectionField(config, collection, "description") as
+      | { pattern?: unknown }
+      | undefined;
+    const source = Array.isArray(field?.pattern) ? field.pattern[0] : undefined;
+    const regex = typeof source === "string" ? new RegExp(source) : undefined;
+    const accepts = (length: number) => regex?.test("あ".repeat(length));
+    if (
+      !accepts(MAX_DESCRIPTION_LENGTH) ||
+      accepts(MAX_DESCRIPTION_LENGTH + 1)
+    ) {
+      problems.push({
+        message: `${CONFIG_REL} の ${collection}.description.pattern が ${MAX_DESCRIPTION_LENGTH} 文字以内のみを許可する設定になっていません（${SCHEMA_REL} / content.config.ts の max と不一致）`,
+      });
+    }
+  }
   return problems;
 }
 
