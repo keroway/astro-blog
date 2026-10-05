@@ -179,3 +179,86 @@ describe("#746 BlogSearch の非同期検索の完了順序", () => {
     expect(results.innerHTML).toBe("");
   });
 });
+
+describe("#832 BlogSearch の検索失敗時の表示", () => {
+  it("検索が reject したらエラーを表示し、静的一覧を復元する", async () => {
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async () => {
+        throw new Error("search failed");
+      },
+    };
+    const { input, status, results } = setupDom(fakePagefind);
+
+    input.value = "keyword";
+    input.listeners.input();
+    await flush();
+
+    expect(status.hidden).toBe(false);
+    expect(status.textContent).toBe("検索に失敗しました");
+    expect(results.innerHTML).toBe("");
+    expect(results.hidden).toBe(true);
+  });
+
+  it("結果データ取得が reject しても同様にエラーを表示する", async () => {
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async () => ({
+        results: [
+          {
+            data: () => Promise.reject(new Error("data failed")),
+          },
+        ],
+      }),
+    };
+    const { input, status, results } = setupDom(fakePagefind);
+
+    input.value = "keyword";
+    input.listeners.input();
+    await flush();
+
+    expect(status.textContent).toBe("検索に失敗しました");
+    expect(results.hidden).toBe(true);
+  });
+
+  it("古い検索の失敗が新しい検索の表示を変えない", async () => {
+    let rejectOld: (e: unknown) => void = () => {};
+    const oldSearch = new Promise((_, rej) => {
+      rejectOld = rej;
+    });
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: (term: string) =>
+        term === "old"
+          ? oldSearch
+          : Promise.resolve({
+              results: [
+                {
+                  data: () =>
+                    Promise.resolve({
+                      url: "/new/",
+                      meta: { title: "NEW" },
+                      excerpt: "",
+                    }),
+                },
+              ],
+            }),
+    };
+    const { input, status, results } = setupDom(fakePagefind);
+
+    input.value = "old";
+    input.listeners.input();
+    await flush();
+
+    input.value = "new";
+    input.listeners.input();
+    await flush();
+
+    rejectOld(new Error("old failed"));
+    await flush();
+
+    expect(status.textContent).toContain("new");
+    expect(results.innerHTML).toContain("NEW");
+    expect(results.hidden).toBe(false);
+  });
+});

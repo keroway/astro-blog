@@ -161,13 +161,25 @@
       }
 
       setSearchMode(true);
-      const search = await pf.debouncedSearch(trimmed, undefined, 200);
-      if (gen !== generation) return;
-      // debounce により後発クエリへ置き換わった場合は null。描画しない。
-      if (search === null) return;
+      let search: Awaited<ReturnType<PagefindApi["debouncedSearch"]>>;
+      let entries: PagefindResultData[];
+      try {
+        search = await pf.debouncedSearch(trimmed, undefined, 200);
+        if (gen !== generation) return;
+        // debounce により後発クエリへ置き換わった場合は null。描画しない。
+        if (search === null) return;
 
-      const top = search.results.slice(0, 20);
-      const entries = await Promise.all(top.map((r) => r.data()));
+        const top = search.results.slice(0, 20);
+        entries = await Promise.all(top.map((r) => r.data()));
+      } catch {
+        // 古い検索の失敗は最新の表示を変えない。最新の失敗だけ静的一覧へ戻して知らせる。
+        if (gen !== generation) return;
+        setSearchMode(false);
+        results.innerHTML = "";
+        status.hidden = false;
+        status.textContent = "検索に失敗しました";
+        return;
+      }
       if (gen !== generation) return;
 
       status.hidden = false;
