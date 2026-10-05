@@ -9,6 +9,14 @@ describe("isTargetRemoteHost", () => {
     expect(isTargetRemoteHost("https://imgur.com/abc.png")).toBe(true);
   });
 
+  it("山括弧付きの URL でも検出する", () => {
+    expect(isTargetRemoteHost("<https://i.imgur.com/abc.png>")).toBe(true);
+    expect(
+      isTargetRemoteHost("<https://lh3.googleusercontent.com/abc.png>")
+    ).toBe(true);
+    expect(isTargetRemoteHost("<https://example.com/abc.png>")).toBe(false);
+  });
+
   it("imgur.com のサブドメインを検出する", () => {
     expect(isTargetRemoteHost("https://i.imgur.com/abc.png")).toBe(true);
   });
@@ -84,6 +92,27 @@ describe("findAltIssues", () => {
         alt: "img",
         reason: "alt が 4 文字未満",
       });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("山括弧付きの外部ホスト画像 (インライン / 参照定義) を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-angle.md");
+    const content = [
+      "![説明文です](<https://i.imgur.com/a.png>)",
+      "",
+      "![説明文です][fig]",
+      "",
+      "[fig]: <https://lh3.googleusercontent.com/b.png>",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 3]);
+      expect(issues[0].reason).toBe(
+        "外部ホスト画像（imgur/googleusercontent）"
+      );
     } finally {
       fs.unlinkSync(filePath);
     }

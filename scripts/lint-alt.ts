@@ -46,9 +46,10 @@ export function collectFiles(dir: string): string[] {
 }
 
 export function isTargetRemoteHost(src: string): boolean {
-  if (!/^https?:\/\//.test(src)) return false;
+  const url = src.replace(/^<(.*)>$/, "$1");
+  if (!/^https?:\/\//.test(url)) return false;
   try {
-    const host = new URL(src).hostname;
+    const host = new URL(url).hostname;
     return TARGET_REMOTE_HOSTS.some(
       (target) => host === target || host.endsWith(`.${target}`)
     );
