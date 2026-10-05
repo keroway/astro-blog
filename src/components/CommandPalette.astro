@@ -98,7 +98,10 @@
     }
   };
 
-  const searchPagefind = async (query: string): Promise<CommandItem[]> => {
+  // 入力ごとに進める世代番号。古い検索が後から完了しても結果を上書きさせない (#830)。
+  let searchGeneration = 0;
+
+  const searchPagefind = async (query: string, generation: number): Promise<CommandItem[] | null> => {
     if (!query.trim()) {
       setStatus(null);
       return commands;
@@ -113,9 +116,13 @@
     try {
       const pagefindPath = '/pagefind/pagefind.js';
       pagefind ??= await import(/* @vite-ignore */ pagefindPath) as PagefindModule;
+      if (generation !== searchGeneration) return null;
       if ('init' in pagefind && typeof pagefind.init === 'function') await pagefind.init();
+      if (generation !== searchGeneration) return null;
       const search = await pagefind.search(query);
+      if (generation !== searchGeneration) return null;
       const pages = await Promise.all(search.results.slice(0, 6).map((result: PagefindResult) => result.data()));
+      if (generation !== searchGeneration) return null;
       setStatus(null);
       return [
         ...navMatches,
@@ -126,6 +133,7 @@
         })),
       ].slice(0, 8);
     } catch {
+      if (generation !== searchGeneration) return null;
       pagefindInitFailed = true;
       setStatus('検索を利用できません(ページ内移動のみ表示)');
       return navMatches;
@@ -150,6 +158,7 @@
     const { root, input } = getEls();
     if (!root) return;
     isOpen = false;
+    searchGeneration += 1;
     root.hidden = true;
     document.documentElement.classList.remove('command-palette-open');
     if (input) input.value = '';
@@ -170,7 +179,9 @@
     });
 
     input.addEventListener('input', async () => {
-      renderItems(await searchPagefind(input.value));
+      searchGeneration += 1;
+      const items = await searchPagefind(input.value, searchGeneration);
+      if (items) renderItems(items);
     });
 
     root.addEventListener('keydown', (event) => {
