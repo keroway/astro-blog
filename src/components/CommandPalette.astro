@@ -113,11 +113,19 @@
       setStatus('検索を利用できません(ページ内移動のみ表示)');
       return navMatches;
     }
+    // 読み込み・初期化の失敗は固定扱い。search / data の失敗は一時エラーとして次の入力で再試行する (#848)。
     try {
       const pagefindPath = '/pagefind/pagefind.js';
       pagefind ??= await import(/* @vite-ignore */ pagefindPath) as PagefindModule;
       if (generation !== searchGeneration) return null;
       if ('init' in pagefind && typeof pagefind.init === 'function') await pagefind.init();
+    } catch {
+      if (generation !== searchGeneration) return null;
+      pagefindInitFailed = true;
+      setStatus('検索を利用できません(ページ内移動のみ表示)');
+      return navMatches;
+    }
+    try {
       if (generation !== searchGeneration) return null;
       const search = await pagefind.search(query);
       if (generation !== searchGeneration) return null;
@@ -134,7 +142,6 @@
       ].slice(0, 8);
     } catch {
       if (generation !== searchGeneration) return null;
-      pagefindInitFailed = true;
       setStatus('検索を利用できません(ページ内移動のみ表示)');
       return navMatches;
     }
