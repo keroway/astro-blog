@@ -55,7 +55,10 @@ function setup(fakePagefind: unknown) {
     input.value = value;
     input.dispatchEvent(new window.Event("input"));
   };
-  return { type, results, input, window };
+  const status = window.document.getElementById(
+    "command-palette-status"
+  ) as HTMLElement | null;
+  return { type, results, status, input, window };
 }
 
 const page = (title: string) =>
@@ -113,5 +116,81 @@ describe("#830 CommandPalette の非同期検索の完了順序", () => {
     await flush();
 
     expect(results?.textContent).not.toContain("LATEPAGE");
+  });
+});
+
+describe("#848 CommandPalette の一時的な検索失敗からの回復", () => {
+  it("search が一度失敗しても次の入力で再検索し、通知を解除する", async () => {
+    let calls = 0;
+    const fakePagefind = {
+      init: async () => {},
+      search: async () => {
+        calls += 1;
+        if (calls === 1) throw new Error("transient");
+        return { results: [{ data: () => page("RECOVERED") }] };
+      },
+    };
+    const { type, results, status } = setup(fakePagefind);
+
+    type("first");
+    await flush();
+    expect(status?.hidden).toBe(false);
+
+    type("second");
+    await flush();
+    expect(calls).toBe(2);
+    expect(results?.textContent).toContain("RECOVERED");
+    expect(status?.hidden).toBe(true);
+  });
+
+  it("結果 data の取得だけが失敗しても次の入力で回復する", async () => {
+    let calls = 0;
+    const fakePagefind = {
+      init: async () => {},
+      search: async () => {
+        calls += 1;
+        return {
+          results: [
+            {
+              data: () =>
+                calls === 1
+                  ? Promise.reject(new Error("transient"))
+                  : page("RECOVERED"),
+            },
+          ],
+        };
+      },
+    };
+    const { type, results, status } = setup(fakePagefind);
+
+    type("first");
+    await flush();
+    expect(status?.hidden).toBe(false);
+
+    type("second");
+    await flush();
+    expect(results?.textContent).toContain("RECOVERED");
+    expect(status?.hidden).toBe(true);
+  });
+
+  it("init の失敗は固定扱いで、以後 search を呼ばず縮退を維持する", async () => {
+    let searchCalls = 0;
+    const fakePagefind = {
+      init: async () => {
+        throw new Error("init failed");
+      },
+      search: async () => {
+        searchCalls += 1;
+        return { results: [] };
+      },
+    };
+    const { type, status } = setup(fakePagefind);
+
+    type("first");
+    await flush();
+    type("second");
+    await flush();
+    expect(searchCalls).toBe(0);
+    expect(status?.hidden).toBe(false);
   });
 });
