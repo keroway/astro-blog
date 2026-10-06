@@ -220,8 +220,18 @@
     });
   };
 
+  // ページ交換前に状態を畳む。交換後の DOM は hidden なパレットなので、isOpen を残すと次の開く操作が閉じ扱いになる (#847)。
+  // 旧ページの要素へフォーカスを戻さないよう closePalette は呼ばない。
+  const resetBeforeSwap = () => {
+    isOpen = false;
+    searchGeneration += 1;
+    lastFocused = null;
+    document.documentElement.classList.remove('command-palette-open');
+  };
+
   initCommandPalette();
   registerGlobalShortcut();
+  document.addEventListener('astro:before-swap', resetBeforeSwap);
   document.addEventListener('astro:page-load', initCommandPalette);
 </script>
 

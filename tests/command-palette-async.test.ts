@@ -119,6 +119,34 @@ describe("#830 CommandPalette の非同期検索の完了順序", () => {
   });
 });
 
+describe("#847 CommandPalette を開いたままのページ遷移", () => {
+  it("開いたまま DOM が交換されても、遷移先の最初の Ctrl+K で開く", () => {
+    const { window } = setup({
+      init: async () => {},
+      search: async () => ({ results: [] }),
+    });
+    const doc = window.document;
+    const initialHtml = doc.body.innerHTML;
+    const toggle = () =>
+      window.dispatchEvent(
+        new window.KeyboardEvent("keydown", { key: "k", ctrlKey: true })
+      );
+    const root = () =>
+      doc.getElementById("command-palette") as unknown as HTMLElement;
+
+    toggle();
+    expect(root().hidden).toBe(false);
+
+    doc.dispatchEvent(new window.Event("astro:before-swap"));
+    doc.body.innerHTML = initialHtml;
+    doc.dispatchEvent(new window.Event("astro:page-load"));
+    expect(root().hidden).toBe(true);
+
+    toggle();
+    expect(root().hidden).toBe(false);
+  });
+});
+
 describe("#848 CommandPalette の一時的な検索失敗からの回復", () => {
   it("search が一度失敗しても次の入力で再検索し、通知を解除する", async () => {
     let calls = 0;
