@@ -14,6 +14,20 @@ async function visitColophonWith(
   await page.goto("/colophon/");
 }
 
+test.describe("#851 stamp rally script is evaluated safely twice", () => {
+  test("colophon direct access raises no page error and collects the stamp", async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto("/colophon/");
+    await expect(
+      page.locator('.stamp-book__item[data-stamp-id="colophon"]')
+    ).toHaveClass(/is-collected/);
+    expect(errors).toEqual([]);
+  });
+});
+
 test.describe("#833 stamp rally validates saved values", () => {
   test("unknown ids do not trigger the completion message", async ({
     page,

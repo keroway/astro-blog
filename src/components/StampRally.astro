@@ -35,6 +35,11 @@ const stations = [
 )}
 
 <script is:inline>
+  // SiteLayout と colophon の両方が配置するため、宣言の再評価と購読の重複を避ける
+  (() => {
+  if (window.__kwStampRallyReady) return;
+  window.__kwStampRallyReady = true;
+
   const STAMP_KEY = 'kw-stamp-rally:v1';
   const STATIONS = [
     { id: 'home', path: '/' },
@@ -85,6 +90,7 @@ const stations = [
 
   initStampRally();
   document.addEventListener('astro:page-load', initStampRally);
+  })();
 </script>
 
 <style>
