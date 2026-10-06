@@ -13,68 +13,20 @@
 </div>
 
 <script>
-  // Scroll-Driven Animations (issue #499)。名前付き view-timeline 対応ブラウザは
-  // CSS (下記 <style> の @supports ブロック) だけで stroke-dashoffset を駆動し、
-  // このスクリプトは早期 return してメインスレッドの scroll ハンドラを増やさない。
-  // CSS 側と同じ機能 (animation-timeline) を検出する。
-  const supportsScrollTimeline = () => {
-    try {
-      return typeof CSS !== 'undefined' && CSS.supports && CSS.supports('animation-timeline: --x');
-    } catch {
-      return false;
-    }
+  // 駆動ロジックと Scroll-Driven Animations 分岐 (issue #499) は
+  // src/scripts/reading-progress.ts。モーション低減の切り替えにも追従する (issue #844)。
+  import { mountReadingProgress } from '../scripts/reading-progress';
+
+  let unmount = () => {};
+
+  const init = () => {
+    unmount();
+    unmount = mountReadingProgress();
   };
 
-  const initReadingProgress = () => {
-    const root = document.querySelector<HTMLElement>('.reading-progress');
-    const fill = document.querySelector<SVGPathElement>('.reading-progress__fill');
-    const article = document.querySelector<HTMLElement>('.post');
-    if (!root || !fill || !article) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-      document.documentElement.classList.contains('reduce-motion');
-    if (reduceMotion) {
-      root.dataset.reducedMotion = 'true';
-      fill.style.strokeDashoffset = '0';
-      return;
-    }
-
-    root.dataset.reducedMotion = 'false';
-
-    // CSS 側 (animation-timeline: scroll()) が駆動できるブラウザでは JS のスクロール
-    // ハンドラを一切登録しない。fill の初期値は CSS の @supports ブロックに委ねる。
-    if (supportsScrollTimeline()) {
-      root.dataset.cssTimeline = 'true';
-      return;
-    }
-
-    let ticking = false;
-
-    const update = () => {
-      ticking = false;
-      const rect = article.getBoundingClientRect();
-      const scrollable = Math.max(1, rect.height - window.innerHeight);
-      const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
-      fill.style.strokeDashoffset = String(100 - progress * 100);
-    };
-
-    const requestUpdate = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(update);
-    };
-
-    update();
-    window.addEventListener('scroll', requestUpdate, { passive: true });
-    window.addEventListener('resize', requestUpdate);
-    document.addEventListener('astro:before-swap', () => {
-      window.removeEventListener('scroll', requestUpdate);
-      window.removeEventListener('resize', requestUpdate);
-    }, { once: true });
-  };
-
-  initReadingProgress();
-  document.addEventListener('astro:page-load', initReadingProgress);
+  init();
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => unmount());
 </script>
 
 <style>
