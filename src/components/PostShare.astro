@@ -32,6 +32,16 @@ const xIntent = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url
       <span class="post-share__copy-text">URL をコピー</span>
     </button>
   </div>
+  <p class="post-share__status no-indent" role="status" data-share-status></p>
+  <input
+    type="text"
+    class="post-share__fallback"
+    value={url}
+    readonly
+    hidden
+    aria-label="共有 URL"
+    data-share-fallback
+  />
 </section>
 
 <script>
@@ -44,13 +54,24 @@ const xIntent = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url
         const url = btn.dataset.shareUrl;
         const textEl = btn.querySelector<HTMLElement>('.post-share__copy-text');
         if (!url || !textEl) return;
+        const section = btn.closest('.post-share');
+        const statusEl = section?.querySelector<HTMLElement>('[data-share-status]');
+        const fallbackEl = section?.querySelector<HTMLInputElement>('[data-share-fallback]');
         const original = btn.dataset.copyLabel ?? textEl.textContent ?? '';
         const copied = btn.dataset.copiedLabel ?? 'コピーしました';
         try {
           await navigator.clipboard.writeText(url);
         } catch {
+          if (statusEl) statusEl.textContent = 'コピーに失敗しました。下の URL を選択してコピーしてください。';
+          if (fallbackEl) {
+            fallbackEl.hidden = false;
+            fallbackEl.focus();
+            fallbackEl.select();
+          }
           return;
         }
+        if (statusEl) statusEl.textContent = '';
+        if (fallbackEl) fallbackEl.hidden = true;
         textEl.textContent = copied;
         btn.disabled = true;
         window.setTimeout(() => {
@@ -112,6 +133,27 @@ const xIntent = `https://x.com/intent/post?text=${encodeURIComponent(title)}&url
     cursor: default;
     color: var(--kw-fg-muted);
     border-color: var(--kw-rule);
+  }
+  .post-share__status {
+    margin: 0;
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-muted);
+  }
+  .post-share__status:empty {
+    display: none;
+  }
+  .post-share__fallback {
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-sm);
+    color: var(--kw-fg-display);
+    background: transparent;
+    border: 1px solid var(--kw-rule);
+    border-radius: var(--kw-radius-sm);
+    padding: var(--kw-space-2) var(--kw-space-3);
+    inline-size: 100%;
+  }
+  .post-share__fallback[hidden] {
+    display: none;
   }
   .post-share__btn-arrow {
     color: var(--kw-accent);
