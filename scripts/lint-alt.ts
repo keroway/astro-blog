@@ -113,6 +113,10 @@ function findFencedCodeLines(lines: string[]): boolean[] {
   return inCode;
 }
 
+function normalizeLabel(label: string): string {
+  return label.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
 function collectReferenceDefinitions(
   lines: string[],
   inCode: boolean[]
@@ -121,7 +125,7 @@ function collectReferenceDefinitions(
   for (let i = 0; i < lines.length; i++) {
     if (inCode[i]) continue;
     const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
-    if (match) refs.set(match[1].trim().toLowerCase(), match[2].trim());
+    if (match) refs.set(normalizeLabel(match[1]), match[2].trim());
   }
   return refs;
 }
@@ -172,8 +176,7 @@ export function findAltIssues(filePath: string): Issue[] {
     let refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
     while (refMatch !== null) {
       const alt = refMatch[1].trim();
-      const label = (refMatch[2].trim() || alt).toLowerCase();
-      const src = refs.get(label);
+      const src = refs.get(normalizeLabel(refMatch[2].trim() || alt));
       if (src !== undefined) pushIssue(i + 1, alt, src, refMatch[0]);
       refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
     }
@@ -182,7 +185,7 @@ export function findAltIssues(filePath: string): Issue[] {
     let shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
     while (shortcutMatch !== null) {
       const alt = shortcutMatch[1].trim();
-      const src = refs.get(alt.toLowerCase());
+      const src = refs.get(normalizeLabel(alt));
       if (src !== undefined) pushIssue(i + 1, alt, src, shortcutMatch[0]);
       shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
     }
