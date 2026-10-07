@@ -164,6 +164,27 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("参照ラベルの連続空白を正規化して照合する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-label-space.md");
+    const content = [
+      "![説明文です][Photo Label]",
+      "",
+      "![img][Photo  Label]",
+      "",
+      "[photo   label]: https://i.imgur.com/example.png",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => [i.line, i.reason])).toEqual([
+        [1, "外部ホスト画像（imgur/googleusercontent）"],
+        [3, "alt が 4 文字未満"],
+      ]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("ショートカット参照形式 (![label] + [label]: url) を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-shortcut.md");
     const content = ["![img]", "", "[img]: /sample.png"].join("\n");
