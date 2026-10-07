@@ -7,7 +7,7 @@ const CONTENT_DIRS = [
 ];
 
 const IMAGE_INLINE_PATTERN =
-  /!\[([^\]]*)\]\(([^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\)/g;
+  /!\[([^\]]*)\]\((<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\)/g;
 const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
 const IMAGE_SHORTCUT_PATTERN = /!\[([^\]]+)\](?!\(|\[)/g;
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
