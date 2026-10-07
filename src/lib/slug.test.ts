@@ -55,9 +55,27 @@ describe("toTransitionName", () => {
     expect(result).toMatch(/^[a-zA-Z][a-zA-Z0-9_-]*$/);
   });
 
-  it("ドットを含むスラッグも CSS 数値トークンと衝突しない形に変換する", () => {
-    const result = toTransitionName("title", "vue-router-4.0");
-    expect(result).toBe("title-vue-router-4-0");
+  it("ドットをエスケープして CSS 数値トークンと衝突しない形に変換する", () => {
+    expect(toTransitionName("title", "vue-router-4.0")).toBe(
+      "title-vue-router-4_2E0"
+    );
+  });
+
+  it("エスケープ前に区別できる id は衝突しない", () => {
+    expect(toTransitionName("title", "a.b")).not.toBe(
+      toTransitionName("title", "a-b")
+    );
+    expect(toTransitionName("title", "a/b")).not.toBe(
+      toTransitionName("title", "a-2Fb")
+    );
+    expect(toTransitionName("title", "a_2Eb")).not.toBe(
+      toTransitionName("title", "a.b")
+    );
+  });
+
+  it("括弧・感嘆符も識別子として有効な文字だけにする", () => {
+    expect(toTransitionName("title", "Docker(2)")).toBe("title-Docker_282_29");
+    expect(toTransitionName("title", "hello!")).toBe("title-hello_21");
   });
 
   it("同一 id からは常に同一の値を生成する (一覧側↔詳細側の一致保証)", () => {
