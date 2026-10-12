@@ -97,6 +97,66 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("複数行にまたがる画像記法の短い alt・空 alt・外部ホストを元の行番号で検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-multiline.md");
+    const content = [
+      "![img](",
+      "/sample.png",
+      ")",
+      "",
+      "![](",
+      "  ./empty.png",
+      ")",
+      "",
+      "![説明文です](",
+      "  https://i.imgur.com/a.png",
+      '  "title"',
+      ")",
+      "",
+      "![十分に長い説明文](",
+      "  ./ok.png",
+      ")",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 5, 9]);
+      expect(issues[0]).toMatchObject({ alt: "img", src: "/sample.png" });
+      expect(issues[1]).toMatchObject({ alt: "" });
+      expect(issues[2].reason).toBe(
+        "外部ホスト画像（imgur/googleusercontent）"
+      );
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("コードブロック・インラインコード内と空行をまたぐ記法は複数行でも検査しない", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-multiline-skip.md"
+    );
+    const content = [
+      "```md",
+      "![img](",
+      "/sample.png",
+      ")",
+      "```",
+      "",
+      "`![img](` と /sample.png と `)`",
+      "",
+      "![img](",
+      "",
+      "/sample.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toEqual([]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("山括弧付きの外部ホスト画像 (インライン / 参照定義) を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-angle.md");
     const content = [

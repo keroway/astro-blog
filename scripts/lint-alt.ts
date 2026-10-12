@@ -7,7 +7,7 @@ const CONTENT_DIRS = [
 ];
 
 const IMAGE_INLINE_PATTERN =
-  /!\[([^\]]*)\]\((<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\)/g;
+  /!\[([^\]]*)\]\(\s*(<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
 const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
 const IMAGE_SHORTCUT_PATTERN = /!\[([^\]]+)\](?!\(|\[)/g;
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
@@ -156,21 +156,47 @@ export function findAltIssues(filePath: string): Issue[] {
     }
   };
 
-  for (let i = 0; i < lines.length; i++) {
-    if (inCode[i]) continue;
-    const line = maskInlineCodeSpans(lines[i]);
+  // 複数行にまたがる画像記法を拾うため、コード行を空白化した全文に対して
+  // インライン記法を照合し、一致位置から元の行番号を求める。
+  const maskedLines = lines.map((line, i) =>
+    inCode[i] ? " ".repeat(line.length) : maskInlineCodeSpans(line)
+  );
+  const lineStarts: number[] = [];
+  let offset = 0;
+  for (const line of maskedLines) {
+    lineStarts.push(offset);
+    offset += line.length + 1;
+  }
+  const lineNumberAt = (position: number): number => {
+    let lo = 0;
+    let hi = lineStarts.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi + 1) >> 1;
+      if (lineStarts[mid] <= position) lo = mid;
+      else hi = mid - 1;
+    }
+    return lo + 1;
+  };
 
-    IMAGE_INLINE_PATTERN.lastIndex = 0;
-    let inlineMatch = IMAGE_INLINE_PATTERN.exec(line);
-    while (inlineMatch !== null) {
+  const maskedText = maskedLines.join("\n");
+  IMAGE_INLINE_PATTERN.lastIndex = 0;
+  let inlineMatch = IMAGE_INLINE_PATTERN.exec(maskedText);
+  while (inlineMatch !== null) {
+    // 空行は段落区切りで、画像記法はそれをまたげない
+    if (!/\n[ \t]*\n/.test(inlineMatch[0])) {
       pushIssue(
-        i + 1,
+        lineNumberAt(inlineMatch.index),
         inlineMatch[1].trim(),
         inlineMatch[2].trim(),
-        inlineMatch[0]
+        inlineMatch[0].replace(/\s*\n\s*/g, " ")
       );
-      inlineMatch = IMAGE_INLINE_PATTERN.exec(line);
     }
+    inlineMatch = IMAGE_INLINE_PATTERN.exec(maskedText);
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    if (inCode[i]) continue;
+    const line = maskedLines[i];
 
     IMAGE_REFERENCE_PATTERN.lastIndex = 0;
     let refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
