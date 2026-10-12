@@ -1,3 +1,4 @@
+import Markdoc from "@markdoc/markdoc";
 import { describe, expect, it } from "vitest";
 import {
   CALLOUT_PATTERN,
@@ -54,6 +55,18 @@ describe("callout editor component", () => {
     });
   });
 
+  it("keeps & and double quotes in the title (#860)", () => {
+    const data = { type: "info" as const, title: 'A & "B"', body: "本文" };
+    const block = calloutToBlock(data);
+    const match = block.match(CALLOUT_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(calloutFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+    const tag = Markdoc.parse(block).children[0];
+    expect(tag.attributes).toMatchObject({ type: "info", title: data.title });
+  });
+
   it("escapes HTML in the preview", () => {
     const html = calloutToPreview({
       type: "tip",
@@ -92,6 +105,22 @@ describe("link-card editor component", () => {
     expect(block).toBe(
       '{% link-card href="https://example.com/" title="Example" /%}'
     );
+  });
+
+  it("keeps & and double quotes intact and matches the real Markdoc parser (#860)", () => {
+    const data = {
+      href: "https://example.com/?a=1&b=2",
+      title: 'A "B" & C \\ D',
+      description: "x & y",
+    };
+    const block = linkCardToBlock(data);
+    const match = block.match(LINK_CARD_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(linkCardFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+    const tag = Markdoc.parse(block).children[0];
+    expect(tag.attributes).toMatchObject(data);
   });
 
   it("escapes HTML in the preview", () => {
