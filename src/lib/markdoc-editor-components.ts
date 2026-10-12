@@ -7,16 +7,26 @@
 // ここに切り出すのは、Sveltia のランタイムに依存せず vitest で純粋関数として
 // 検証できるようにするため (#670)。
 
-const ATTR_PATTERN = /(\w[\w-]*)="([^"]*)"/g;
+// Markdoc の属性文字列は JSON 風で、`\"` と `\\` だけをエスケープする。
+const ATTR_PATTERN = /(\w[\w-]*)="((?:\\.|[^"\\])*)"/g;
+
+function unescapeMarkdocString(value: string): string {
+  return value.replace(/\\(["\\])/g, "$1");
+}
+
+function escapeMarkdocString(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
 
 function parseAttrs(raw: string): Record<string, string> {
   const attrs: Record<string, string> = {};
   for (const m of raw.matchAll(ATTR_PATTERN)) {
-    attrs[m[1]] = m[2];
+    attrs[m[1]] = unescapeMarkdocString(m[2]);
   }
   return attrs;
 }
 
+// HTML プレビュー (toPreview) 用。Markdoc ソースには使わない。
 function escapeAttr(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 }
@@ -60,7 +70,7 @@ export function calloutToBlock(data: Partial<CalloutBlockData>): string {
   const body = data.body ?? "";
   const attrs = [`type="${type}"`];
 
-  if (title) attrs.push(`title="${escapeAttr(title)}"`);
+  if (title) attrs.push(`title="${escapeMarkdocString(title)}"`);
 
   return `{% callout ${attrs.join(" ")} %}\n${body}\n{% /callout %}`;
 }
@@ -102,9 +112,13 @@ export function linkCardToBlock(data: Partial<LinkCardBlockData>): string {
   const href = (data.href ?? "").trim();
   const title = (data.title ?? "").trim();
   const description = (data.description ?? "").trim();
-  const attrs = [`href="${escapeAttr(href)}"`, `title="${escapeAttr(title)}"`];
+  const attrs = [
+    `href="${escapeMarkdocString(href)}"`,
+    `title="${escapeMarkdocString(title)}"`,
+  ];
 
-  if (description) attrs.push(`description="${escapeAttr(description)}"`);
+  if (description)
+    attrs.push(`description="${escapeMarkdocString(description)}"`);
 
   return `{% link-card ${attrs.join(" ")} /%}`;
 }
