@@ -50,9 +50,13 @@ export interface CalloutBlockData {
   body: string;
 }
 
+// タグ属性部分: 引用符付き文字列 (内部の % を許す) か、引用符・% 以外の 1 文字。
+const ATTRS_SOURCE = String.raw`((?:"(?:\\.|[^"\\])*"|[^%"])*)`;
+
 // {% callout type="tip" title="ヒント" %}\n本文\n{% /callout %}
-export const CALLOUT_PATTERN =
-  /^\{%\s*callout\b([^%]*)%\}\n([\s\S]*?)\n\{%\s*\/callout\s*%\}$/;
+export const CALLOUT_PATTERN = new RegExp(
+  String.raw`^\{%\s*callout\b${ATTRS_SOURCE}%\}\n([\s\S]*?)\n\{%\s*\/callout\s*%\}$`
+);
 
 export function calloutFromBlock(match: RegExpMatchArray): CalloutBlockData {
   const [, attrsRaw = "", body = ""] = match;
@@ -95,7 +99,9 @@ export interface LinkCardBlockData {
 }
 
 // {% link-card href="https://example.com" title="Example" description="desc" /%}
-export const LINK_CARD_PATTERN = /^\{%\s*link-card\b([^%]*)\/%\}$/;
+export const LINK_CARD_PATTERN = new RegExp(
+  String.raw`^\{%\s*link-card\b${ATTRS_SOURCE}\/%\}$`
+);
 
 export function linkCardFromBlock(match: RegExpMatchArray): LinkCardBlockData {
   const [, attrsRaw = ""] = match;

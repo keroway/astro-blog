@@ -67,6 +67,18 @@ describe("callout editor component", () => {
     expect(tag.attributes).toMatchObject({ type: "info", title: data.title });
   });
 
+  it("recognizes % in the title (#861)", () => {
+    const data = { type: "info" as const, title: "20% off %}", body: "text" };
+    const block = calloutToBlock(data);
+    const match = block.match(CALLOUT_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(calloutFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+    const tag = Markdoc.parse(block).children[0];
+    expect(tag.attributes).toMatchObject({ type: "info", title: data.title });
+  });
+
   it("escapes HTML in the preview", () => {
     const html = calloutToPreview({
       type: "tip",
@@ -112,6 +124,22 @@ describe("link-card editor component", () => {
       href: "https://example.com/?a=1&b=2",
       title: 'A "B" & C \\ D',
       description: "x & y",
+    };
+    const block = linkCardToBlock(data);
+    const match = block.match(LINK_CARD_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(linkCardFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+    const tag = Markdoc.parse(block).children[0];
+    expect(tag.attributes).toMatchObject(data);
+  });
+
+  it("recognizes % in description and percent-encoded href (#861)", () => {
+    const data = {
+      href: "https://example.com/%E3%81%82?q=100%25",
+      title: "Example",
+      description: "20% off /%}",
     };
     const block = linkCardToBlock(data);
     const match = block.match(LINK_CARD_PATTERN);
