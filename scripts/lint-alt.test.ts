@@ -501,4 +501,56 @@ describe("findAltIssues", () => {
       fs.unlinkSync(filePath);
     }
   });
+
+  it("閉じられていない引用内フェンスは引用の終了で終わり後続の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-quote-open.md");
+    const content = ["> ~~~md", "> example", "", "![](/real.png)"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 4, src: "/real.png" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("閉じられていないリスト内フェンスはリストの終了で終わり後続の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-list-open.md");
+    const content = ["- ~~~md", "  example", "", "![](/real.png)"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 4, src: "/real.png" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("リスト内フェンスの空行と字下げ行はコードとして扱い画像を無視する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-list-blank.md");
+    const content = ["- ~~~md", "  a", "", "  ![](/example.png)", "  ~~~"].join(
+      "\n"
+    );
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("URL が次の行にある参照定義の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-nextline.md");
+    const content = ["![img][pic]", "", "[pic]:", "  /real.png"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 1, src: "/real.png" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
 });

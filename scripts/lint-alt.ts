@@ -29,10 +29,15 @@ const IMAGE_SHORTCUT_PATTERN = new RegExp(
   "g"
 );
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
+// URL が次の行に置かれた定義（`[label]:` だけの行 + 次行に URL）
+const REFERENCE_LABEL_ONLY_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*$/;
 // フェンスはリスト項目（`- ` / `1. `）や引用（`>`）の内側にも置ける。
-// それらのマーカーを前置したフェンス行も開始・終了として扱う。
-const FENCE_PATTERN =
-  /^(?:\s{0,3}(?:>[ \t]?|(?:[-+*]|\d{1,9}[.)])[ \t]+))*\s{0,3}(`{3,}|~{3,})/;
+// 開始行の前置マーカーを容器として記録し、後続行が容器を継続しなくなった時点で
+// フェンスも終了したものとして扱う。
+const CONTAINER_PREFIX_PATTERN =
+  /^\s{0,3}(?:(>)[ \t]?|(?:[-+*]|\d{1,9}[.)])([ \t]+))/;
+const FENCE_OPEN_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
+const FENCE_CLOSE_PATTERN = /^\s{0,3}(`{3,}|~{3,})\s*$/;
 const INLINE_CODE_SPAN_PATTERN = /(`+).*?\1/g;
 
 const MIN_ALT_LENGTH = 4;
@@ -97,39 +102,72 @@ export function maskInlineCodeSpans(line: string): string {
   );
 }
 
-function isClosingFenceLine(line: string, fenceMatchText: string): boolean {
-  return /^\s*$/.test(line.slice(fenceMatchText.length));
+type Container = { kind: "quote" } | { kind: "list"; indent: number };
+type FenceOpen = { char: string; length: number; containers: Container[] };
+
+function parseFenceOpen(line: string): FenceOpen | null {
+  const containers: Container[] = [];
+  let rest = line;
+  for (;;) {
+    const prefix = rest.match(CONTAINER_PREFIX_PATTERN);
+    if (!prefix) break;
+    if (prefix[1] === ">") {
+      containers.push({ kind: "quote" });
+    } else {
+      const spaces = prefix[2].length > 4 ? 1 : prefix[2].length;
+      const indent = prefix[0].length - prefix[2].length + spaces;
+      containers.push({ kind: "list", indent });
+      rest = rest.slice(prefix[0].length - prefix[2].length + spaces);
+      continue;
+    }
+    rest = rest.slice(prefix[0].length);
+  }
+  const fence = rest.match(FENCE_OPEN_PATTERN);
+  if (!fence) return null;
+  return { char: fence[1][0], length: fence[1].length, containers };
+}
+
+// 行が容器を継続していれば容器分を除いた残りを返す。継続していなければ null。
+function stripContainers(line: string, containers: Container[]): string | null {
+  let rest = line;
+  for (const container of containers) {
+    if (container.kind === "quote") {
+      const m = rest.match(/^\s{0,3}>[ \t]?/);
+      if (!m) return null;
+      rest = rest.slice(m[0].length);
+    } else {
+      if (rest.trim() === "") continue;
+      const leading = (rest.match(/^ */) as RegExpMatchArray)[0].length;
+      if (leading < container.indent) return null;
+      rest = rest.slice(container.indent);
+    }
+  }
+  return rest;
 }
 
 function findFencedCodeLines(lines: string[]): boolean[] {
   const inCode: boolean[] = [];
-  let fenceChar: string | null = null;
-  let fenceLength = 0;
+  let open: FenceOpen | null = null;
   for (const line of lines) {
-    const fenceMatch = line.match(FENCE_PATTERN);
-    if (fenceMatch) {
-      const char = fenceMatch[1][0];
-      const length = fenceMatch[1].length;
-      if (fenceChar === null) {
+    if (open !== null) {
+      const rest = stripContainers(line, open.containers);
+      if (rest !== null) {
         inCode.push(true);
-        fenceChar = char;
-        fenceLength = length;
+        const close = rest.match(FENCE_CLOSE_PATTERN);
+        if (
+          close &&
+          close[1][0] === open.char &&
+          close[1].length >= open.length
+        ) {
+          open = null;
+        }
         continue;
       }
-      if (
-        char === fenceChar &&
-        length >= fenceLength &&
-        isClosingFenceLine(line, fenceMatch[0])
-      ) {
-        inCode.push(true);
-        fenceChar = null;
-        fenceLength = 0;
-        continue;
-      }
-      inCode.push(true);
-      continue;
+      // 容器が終わった行でフェンスも終了し、その行は通常行として再判定する
+      open = null;
     }
-    inCode.push(fenceChar !== null);
+    open = parseFenceOpen(line);
+    inCode.push(open !== null);
   }
   return inCode;
 }
@@ -145,11 +183,21 @@ function collectReferenceDefinitions(
   const refs = new Map<string, string>();
   for (let i = 0; i < lines.length; i++) {
     if (inCode[i]) continue;
+    let label: string;
+    let src: string;
     const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
-    if (!match) continue;
+    if (match) {
+      label = normalizeLabel(match[1]);
+      src = match[2].trim();
+    } else {
+      const labelOnly = lines[i].match(REFERENCE_LABEL_ONLY_PATTERN);
+      const next = lines[i + 1]?.trim();
+      if (!labelOnly || !next || inCode[i + 1]) continue;
+      label = normalizeLabel(labelOnly[1]);
+      src = next.split(/\s+/)[0];
+    }
     // Markdoc の描画は同じラベルの最初の定義を採用する
-    const label = normalizeLabel(match[1]);
-    if (!refs.has(label)) refs.set(label, match[2].trim());
+    if (!refs.has(label)) refs.set(label, src);
   }
   return refs;
 }
