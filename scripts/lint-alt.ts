@@ -22,7 +22,10 @@ const IMAGE_SHORTCUT_PATTERN = new RegExp(
   "g"
 );
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
-const FENCE_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
+// フェンスはリスト項目（`- ` / `1. `）や引用（`>`）の内側にも置ける。
+// それらのマーカーを前置したフェンス行も開始・終了として扱う。
+const FENCE_PATTERN =
+  /^(?:\s{0,3}(?:>[ \t]?|(?:[-+*]|\d{1,9}[.)])[ \t]+))*\s{0,3}(`{3,}|~{3,})/;
 const INLINE_CODE_SPAN_PATTERN = /(`+).*?\1/g;
 
 const MIN_ALT_LENGTH = 4;

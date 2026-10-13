@@ -360,6 +360,44 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("リスト内コードフェンスの閉じフェンス後の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-list-fence.md");
+    const content = [
+      "- ```md",
+      "  ![](/example.png)",
+      "  ```",
+      "",
+      "![](/real.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 5, src: "/real.png" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("引用内コードフェンスの閉じフェンス後の画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-quote-fence.md");
+    const content = [
+      "> ```md",
+      "> ![](/example.png)",
+      "> ```",
+      "",
+      "![](/real.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 5, src: "/real.png" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("インラインコード内の画像記法は誤検出しない", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-inline-code.md");
     const content = "`![](/sample.png)`";
