@@ -26,7 +26,13 @@ export const GET: APIRoute = async ({ request }) => {
     });
   }
 
-  const res = await fetch(deployHookUrl, { method: "POST" });
+  let res: Response;
+  try {
+    res = await fetch(deployHookUrl, { method: "POST" });
+  } catch {
+    // 例外オブジェクトには接続先 URL が含まれうるため、詳細は応答に出さない。
+    return new Response("Deploy hook unreachable", { status: 502 });
+  }
   if (!res.ok) {
     return new Response(`Deploy hook failed: ${res.status}`, { status: 502 });
   }
