@@ -245,6 +245,34 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("重複した参照定義は描画と同じく最初の定義で検査する", () => {
+    const run = (name: string, defs: string[]) => {
+      const filePath = path.join(os.tmpdir(), name);
+      fs.writeFileSync(
+        filePath,
+        ["![valid description][pic]", "", ...defs].join("\n"),
+        "utf8"
+      );
+      try {
+        return findAltIssues(filePath).map((i) => [i.line, i.reason]);
+      } finally {
+        fs.unlinkSync(filePath);
+      }
+    };
+    expect(
+      run("fixture-lint-alt-dup-ref-a.md", [
+        "[pic]: https://i.imgur.com/a.png",
+        "[pic]: /safe.png",
+      ])
+    ).toEqual([[1, "外部ホスト画像（imgur/googleusercontent）"]]);
+    expect(
+      run("fixture-lint-alt-dup-ref-b.md", [
+        "[pic]: /safe.png",
+        "[pic]: https://i.imgur.com/a.png",
+      ])
+    ).toEqual([]);
+  });
+
   it("ショートカット参照形式 (![label] + [label]: url) を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-shortcut.md");
     const content = ["![img]", "", "[img]: /sample.png"].join("\n");

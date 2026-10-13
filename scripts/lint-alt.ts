@@ -125,7 +125,10 @@ function collectReferenceDefinitions(
   for (let i = 0; i < lines.length; i++) {
     if (inCode[i]) continue;
     const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
-    if (match) refs.set(normalizeLabel(match[1]), match[2].trim());
+    if (!match) continue;
+    // Markdoc の描画は同じラベルの最初の定義を採用する
+    const label = normalizeLabel(match[1]);
+    if (!refs.has(label)) refs.set(label, match[2].trim());
   }
   return refs;
 }
