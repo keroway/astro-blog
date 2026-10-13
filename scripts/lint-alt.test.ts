@@ -464,6 +464,28 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("alt 内で角括弧が 2 段以上入れ子でも外部ホスト画像を検出する", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-nested-brackets.md"
+    );
+    const content = [
+      "![説明 [補足 [詳細]]](https://i.imgur.com/a.png)",
+      "![説明 [補足 [詳細 [さらに]]]](https://i.imgur.com/b.png)",
+      "![説明 [補足 [詳細]]](../../assets/content/blog/a.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => [i.line, i.alt])).toEqual([
+        [1, "説明 [補足 [詳細]]"],
+        [2, "説明 [補足 [詳細 [さらに]]]"],
+      ]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("alt 内に角括弧を含む参照形式の画像を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-brackets-ref.md");
     const content = [
