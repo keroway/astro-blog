@@ -6,9 +6,16 @@ const CONTENT_DIRS = [
   path.resolve(import.meta.dirname, "../src/content/works"),
 ];
 
-// alt 内の角括弧は 1 段のネスト（例: ![説明 [補足]](src)）まで許容する。
-// Markdoc は対応した括弧を alt の一部として画像ノードにする。
-const ALT_BODY = String.raw`(?:[^\[\]]|\[[^\[\]]*\])`;
+// alt 内の対応した角括弧（例: ![説明 [補足 [詳細]]](src)）は Markdoc が alt の
+// 一部として画像ノードにする。正規表現は再帰できないため、深さを固定して展開する。
+const ALT_BRACKET_DEPTH = 5;
+const ALT_BODY = (() => {
+  let body = String.raw`[^\[\]]`;
+  for (let depth = 0; depth < ALT_BRACKET_DEPTH; depth++) {
+    body = String.raw`(?:[^\[\]]|\[${body}*\])`;
+  }
+  return body;
+})();
 const IMAGE_INLINE_PATTERN = new RegExp(
   String.raw`!\[(${ALT_BODY}*)\]\(\s*(<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)`,
   "g"
