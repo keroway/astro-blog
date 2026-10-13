@@ -6,10 +6,21 @@ const CONTENT_DIRS = [
   path.resolve(import.meta.dirname, "../src/content/works"),
 ];
 
-const IMAGE_INLINE_PATTERN =
-  /!\[([^\]]*)\]\(\s*(<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)/g;
-const IMAGE_REFERENCE_PATTERN = /!\[([^\]]*)\]\[([^\]]*)\]/g;
-const IMAGE_SHORTCUT_PATTERN = /!\[([^\]]+)\](?!\(|\[)/g;
+// alt 内の角括弧は 1 段のネスト（例: ![説明 [補足]](src)）まで許容する。
+// Markdoc は対応した括弧を alt の一部として画像ノードにする。
+const ALT_BODY = String.raw`(?:[^\[\]]|\[[^\[\]]*\])`;
+const IMAGE_INLINE_PATTERN = new RegExp(
+  String.raw`!\[(${ALT_BODY}*)\]\(\s*(<[^>\n]*>|[^)\s]+)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)`,
+  "g"
+);
+const IMAGE_REFERENCE_PATTERN = new RegExp(
+  String.raw`!\[(${ALT_BODY}*)\]\[([^\]]*)\]`,
+  "g"
+);
+const IMAGE_SHORTCUT_PATTERN = new RegExp(
+  String.raw`!\[(${ALT_BODY}+)\](?!\(|\[)`,
+  "g"
+);
 const REFERENCE_DEFINITION_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*(\S+)/;
 const FENCE_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
 const INLINE_CODE_SPAN_PATTERN = /(`+).*?\1/g;
