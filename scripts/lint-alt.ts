@@ -8,11 +8,13 @@ const CONTENT_DIRS = [
 
 // alt 内の対応した角括弧（例: ![説明 [補足 [詳細]]](src)）は Markdoc が alt の
 // 一部として画像ノードにする。正規表現は再帰できないため、深さを固定して展開する。
+// バックスラッシュでエスケープした文字（`\[` など）は括弧の対応に数えない。
 const ALT_BRACKET_DEPTH = 5;
 const ALT_BODY = (() => {
-  let body = String.raw`[^\[\]]`;
+  const escaped = String.raw`\\[\s\S]`;
+  let body = String.raw`(?:${escaped}|[^\[\]\\])`;
   for (let depth = 0; depth < ALT_BRACKET_DEPTH; depth++) {
-    body = String.raw`(?:[^\[\]]|\[${body}*\])`;
+    body = String.raw`(?:${escaped}|[^\[\]\\]|\[${body}*\])`;
   }
   return body;
 })();
@@ -251,43 +253,41 @@ export function findAltIssues(filePath: string): Issue[] {
   };
 
   const maskedText = maskedLines.join("\n");
-  IMAGE_INLINE_PATTERN.lastIndex = 0;
-  let inlineMatch = IMAGE_INLINE_PATTERN.exec(maskedText);
-  while (inlineMatch !== null) {
-    // 空行は段落区切りで、画像記法はそれをまたげない
-    if (!/\n[ \t]*\n/.test(inlineMatch[0])) {
-      pushIssue(
-        lineNumberAt(inlineMatch.index),
-        inlineMatch[1].trim(),
-        inlineMatch[2].trim(),
-        inlineMatch[0].replace(/\s*\n\s*/g, " ")
-      );
+  const scan = (
+    pattern: RegExp,
+    resolve: (match: RegExpExecArray) => { alt: string; src?: string }
+  ) => {
+    pattern.lastIndex = 0;
+    let match = pattern.exec(maskedText);
+    while (match !== null) {
+      // 空行は段落区切りで、画像記法はそれをまたげない
+      if (!/\n[ \t]*\n/.test(match[0])) {
+        const { alt, src } = resolve(match);
+        if (src !== undefined) {
+          pushIssue(
+            lineNumberAt(match.index),
+            alt,
+            src,
+            match[0].replace(/\s*\n\s*/g, " ")
+          );
+        }
+      }
+      match = pattern.exec(maskedText);
     }
-    inlineMatch = IMAGE_INLINE_PATTERN.exec(maskedText);
-  }
+  };
 
-  for (let i = 0; i < lines.length; i++) {
-    if (inCode[i]) continue;
-    const line = maskedLines[i];
-
-    IMAGE_REFERENCE_PATTERN.lastIndex = 0;
-    let refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
-    while (refMatch !== null) {
-      const alt = refMatch[1].trim();
-      const src = refs.get(normalizeLabel(refMatch[2].trim() || alt));
-      if (src !== undefined) pushIssue(i + 1, alt, src, refMatch[0]);
-      refMatch = IMAGE_REFERENCE_PATTERN.exec(line);
-    }
-
-    IMAGE_SHORTCUT_PATTERN.lastIndex = 0;
-    let shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
-    while (shortcutMatch !== null) {
-      const alt = shortcutMatch[1].trim();
-      const src = refs.get(normalizeLabel(alt));
-      if (src !== undefined) pushIssue(i + 1, alt, src, shortcutMatch[0]);
-      shortcutMatch = IMAGE_SHORTCUT_PATTERN.exec(line);
-    }
-  }
+  scan(IMAGE_INLINE_PATTERN, (m) => ({
+    alt: m[1].trim(),
+    src: m[2].trim(),
+  }));
+  scan(IMAGE_REFERENCE_PATTERN, (m) => {
+    const alt = m[1].trim();
+    return { alt, src: refs.get(normalizeLabel(m[2].trim() || alt)) };
+  });
+  scan(IMAGE_SHORTCUT_PATTERN, (m) => {
+    const alt = m[1].trim();
+    return { alt, src: refs.get(normalizeLabel(alt)) };
+  });
 
   return issues;
 }
