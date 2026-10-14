@@ -553,4 +553,71 @@ describe("findAltIssues", () => {
       fs.unlinkSync(filePath);
     }
   });
+
+  it("エスケープした角括弧を含む alt の外部ホスト画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-escaped.md");
+    const content = String.raw`![説明\[補足](https://i.imgur.com/a.png)`;
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        reason: "外部ホスト画像（imgur/googleusercontent）",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("alt が複数行にまたがる参照画像の外部ホストを検出する", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-ref-multiline.md"
+    );
+    const content = [
+      "![説明文、",
+      "です][pic]",
+      "",
+      "[pic]: https://i.imgur.com/a.png",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        src: "https://i.imgur.com/a.png",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("alt が複数行にまたがる参照画像の短い alt を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-short.md");
+    const content = ["![a", "b][pic]", "", "[pic]: /a.png"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        reason: "alt が 4 文字未満",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("空行をまたぐ参照画像記法は画像として扱わない", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-blank.md");
+    const content = ["![a", "", "b][pic]", "", "[pic]: /a.png"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
 });
