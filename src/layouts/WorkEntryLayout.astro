@@ -40,11 +40,19 @@ const workSchema: Record<string, unknown> = {
 if (updatedAt) {
   workSchema.dateModified = updatedAt.toISOString();
 }
-const heroImageSrc = heroImage
-  ? heroImage.format === "svg"
-    ? heroImage.src
-    : (await getImage({ src: heroImage, width: 1200, format: "png" })).src
-  : undefined;
+// og:image の寸法は実ファイルに合わせる (#889)。SVG は元寸法、ラスターは変換後の寸法。
+const heroOg = !heroImage
+  ? undefined
+  : heroImage.format === "svg"
+    ? { src: heroImage.src, width: heroImage.width, height: heroImage.height }
+    : await getImage({ src: heroImage, width: 1200, format: "png" }).then((img) => ({
+        src: img.src,
+        width: Number(img.attributes.width),
+        height: Number(img.attributes.height),
+      }));
+const heroImageSrc = heroOg?.src;
+const heroImageWidth = heroOg?.width;
+const heroImageHeight = heroOg?.height;
 const heroImageAbsolute = heroImageSrc
   ? (Astro.site ? new URL(heroImageSrc, Astro.site).toString() : heroImageSrc)
   : undefined;
@@ -71,6 +79,8 @@ const breadcrumbSchema = {
   title={`${title} | Works`}
   description={description}
   image={heroImageSrc}
+  imageWidth={heroImageWidth}
+  imageHeight={heroImageHeight}
   mainClass="work-layout"
   articleSchema={workSchema}
   breadcrumbSchema={breadcrumbSchema}

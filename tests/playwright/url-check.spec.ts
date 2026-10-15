@@ -149,6 +149,30 @@ test.describe("URL compatibility check", () => {
     expect(twAlt, "twitter:image:alt should be non-empty").toBeTruthy();
   });
 
+  test("works og:image width/height match the SVG hero's real size", async ({
+    page,
+    request,
+  }) => {
+    await page.goto("/works/obsidian-clipper/");
+
+    const ogImage = await page
+      .locator('head > meta[property="og:image"]')
+      .getAttribute("content");
+    const ogWidth = await page
+      .locator('head > meta[property="og:image:width"]')
+      .getAttribute("content");
+    const ogHeight = await page
+      .locator('head > meta[property="og:image:height"]')
+      .getAttribute("content");
+    expect(ogImage, "og:image should be present").toBeTruthy();
+
+    const res = await request.get(new URL(ogImage as string).pathname);
+    expect(res.ok(), "og:image should be fetchable").toBeTruthy();
+    const svg = await res.text();
+    expect(svg.match(/<svg[^>]*\swidth="(\d+)"/)?.[1]).toBe(ogWidth);
+    expect(svg.match(/<svg[^>]*\sheight="(\d+)"/)?.[1]).toBe(ogHeight);
+  });
+
   test("works detail page has JSON-LD with SoftwareApplication schema", async ({
     page,
   }) => {
