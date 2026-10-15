@@ -115,6 +115,42 @@ describe("mountReadingProgress (JS fallback)", () => {
     expect(root().dataset.reducedMotion).toBe("false");
   });
 
+  it("保留中のフレームは低減 ON 後・解除後の表示を上書きしない", async () => {
+    const pending = new Map<number, FrameRequestCallback>();
+    let nextId = 1;
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      pending.set(nextId, cb);
+      return nextId++;
+    });
+    vi.stubGlobal("cancelAnimationFrame", (id: number) => {
+      pending.delete(id);
+    });
+    const flushFrames = () => {
+      for (const cb of [...pending.values()]) cb(0);
+      pending.clear();
+    };
+
+    setArticleTop(-500);
+    const unmount = mountReadingProgress();
+    setArticleTop(-1000);
+    window.dispatchEvent(new Event("scroll"));
+
+    toggleManualReduce(true);
+    await flush();
+    flushFrames();
+    expect(root().dataset.reducedMotion).toBe("true");
+    expect(fill().style.strokeDashoffset).toBe("0");
+
+    toggleManualReduce(false);
+    await flush();
+    setArticleTop(-500);
+    window.dispatchEvent(new Event("scroll"));
+    unmount();
+    flushFrames();
+    // 再開時の同期更新 (top=-1000 → 0) のまま、保留フレーム (top=-500 → 50) は無効
+    expect(fill().style.strokeDashoffset).toBe("0");
+  });
+
   it("対象要素が無いページでは何もしない", () => {
     document.body.innerHTML = "";
     expect(() => mountReadingProgress()()).not.toThrow();

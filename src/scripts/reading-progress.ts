@@ -38,6 +38,7 @@ export function mountReadingProgress(): () => void {
 
   const startScroll = () => {
     let ticking = false;
+    let frameId = 0;
 
     const update = () => {
       ticking = false;
@@ -50,7 +51,7 @@ export function mountReadingProgress(): () => void {
     const requestUpdate = () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(update);
+      frameId = requestAnimationFrame(update);
     };
 
     update();
@@ -59,6 +60,8 @@ export function mountReadingProgress(): () => void {
     stopScroll = () => {
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
+      // 予約済みフレームが解除後の表示 (低減 ON の完了表示など) を上書きしないようにする
+      cancelAnimationFrame(frameId);
       stopScroll = () => {};
     };
   };
