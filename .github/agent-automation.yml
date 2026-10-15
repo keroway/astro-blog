@@ -8,3 +8,7 @@ max_issues_per_cycle: 1
 # 自動マージを許可する。squash merge は issue-sprint の merge gate
 # (CI green / レビュー解消済み / branch protection 満たす) を通過した場合のみ実行される。
 allow_merge: true
+
+# Codex による非対話 issue 実装を許可する。秘密情報を扱うリポジトリでは true にしない。
+# (agent-assets#371: 既定値依存をやめて明示する。本リポジトリは秘密情報・本番デプロイ資格情報を持たない)
+allow_codex_implementation: true
