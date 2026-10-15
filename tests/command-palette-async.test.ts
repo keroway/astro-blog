@@ -119,6 +119,68 @@ describe("#830 CommandPalette の非同期検索の完了順序", () => {
   });
 });
 
+describe("#886 CommandPalette の再描画時のフォーカス維持", () => {
+  const focusSetup = () => {
+    let resolveData: (v: unknown) => void = () => {};
+    const pending = new Promise((r) => {
+      resolveData = r;
+    });
+    const fakePagefind = {
+      init: async () => {},
+      search: async () => ({ results: [{ data: () => pending }] }),
+    };
+    const env = setup(fakePagefind);
+    env.window.dispatchEvent(
+      new env.window.KeyboardEvent("keydown", { key: "k", ctrlKey: true })
+    );
+    return { ...env, resolveData };
+  };
+
+  it("再描画後も残るリンクにフォーカスを戻す", async () => {
+    const { type, window, resolveData } = focusSetup();
+    type("Home");
+    await flush();
+    const link = window.document.querySelector(
+      '#command-palette-results a[href="/"]'
+    ) as unknown as HTMLElement;
+    link.focus();
+    expect(window.document.activeElement).toBe(link);
+
+    resolveData({ url: "/p/", meta: { title: "P" }, excerpt: "" });
+    await flush();
+
+    const active = window.document.activeElement as unknown as HTMLElement;
+    expect(active.getAttribute("href")).toBe("/");
+  });
+
+  it("フォーカス中のリンクが消えたら検索入力へ戻す", async () => {
+    const { type, input, window, resolveData } = focusSetup();
+    type("Home");
+    await flush();
+    const link = window.document.querySelector(
+      '#command-palette-results a[href="/blog/"]'
+    ) as unknown as HTMLElement;
+    link.focus();
+
+    resolveData({ url: "/p/", meta: { title: "P" }, excerpt: "" });
+    await flush();
+
+    expect(window.document.activeElement).toBe(input);
+  });
+
+  it("入力欄にフォーカスがあるときは結果へ奪わない", async () => {
+    const { type, input, window, resolveData } = focusSetup();
+    type("Home");
+    await flush();
+    input.focus();
+
+    resolveData({ url: "/p/", meta: { title: "P" }, excerpt: "" });
+    await flush();
+
+    expect(window.document.activeElement).toBe(input);
+  });
+});
+
 describe("#847 CommandPalette を開いたままのページ遷移", () => {
   it("開いたまま DOM が交換されても、遷移先の最初の Ctrl+K で開く", () => {
     const { window } = setup({

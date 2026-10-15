@@ -81,6 +81,9 @@
   const renderItems = (items: CommandItem[]) => {
     const { results } = getEls();
     if (!results) return;
+    // 全削除でフォーカス対象が切断されると activeElement が BODY になるため、再描画前に結果内のフォーカスを記録する (#886)。
+    const active = document.activeElement;
+    const focusedHref = active && results.contains(active) ? active.getAttribute('href') : null;
     results.innerHTML = '';
     for (const item of items) {
       const li = document.createElement('li');
@@ -96,6 +99,10 @@
       li.append(a);
       results.append(li);
     }
+    if (focusedHref === null) return;
+    const links = Array.from(results.querySelectorAll<HTMLElement>('a'));
+    const restored = links.find((link) => link.getAttribute('href') === focusedHref);
+    (restored ?? getEls().input)?.focus();
   };
 
   // 入力ごとに進める世代番号。古い検索が後から完了しても結果を上書きさせない (#830)。
