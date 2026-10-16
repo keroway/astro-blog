@@ -10,6 +10,8 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   mainClass?: string;
   lang?: string;
   locale?: string;
@@ -24,6 +26,8 @@ const {
   title,
   description,
   image,
+  imageWidth,
+  imageHeight,
   mainClass,
   lang = 'ja',
   locale: localeOverride,
@@ -39,7 +43,7 @@ const locale = localeOverride ?? (lang.startsWith('ja') ? 'ja_JP' : lang.startsW
 <!doctype html>
 <html lang={lang}>
   <head>
-    <BaseHead title={title} description={description} image={image} locale={locale} canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema} />
+    <BaseHead title={title} description={description} image={image} imageWidth={imageWidth} imageHeight={imageHeight} locale={locale} canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema} />
     <slot name="head" />
   </head>
   <body>

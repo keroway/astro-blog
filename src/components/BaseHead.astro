@@ -11,13 +11,16 @@ interface Props {
 	title: string;
 	description: string;
 	image?: string | null;
+	/** og:image の実寸。省略時は既定の 1200x630 (OGP 生成画像) */
+	imageWidth?: number;
+	imageHeight?: number;
 	locale?: string;
 	canonicalUrl?: string;
 	articleSchema?: Record<string, unknown>;
 	breadcrumbSchema?: Record<string, unknown>;
 }
 
-const { title, description, image = "/og-default.png", locale = "ja_JP", canonicalUrl, articleSchema, breadcrumbSchema } = Astro.props;
+const { title, description, image = "/og-default.png", imageWidth = 1200, imageHeight = 630, locale = "ja_JP", canonicalUrl, articleSchema, breadcrumbSchema } = Astro.props;
 const canonicalURL = canonicalUrl ? new URL(canonicalUrl) : new URL(Astro.url.pathname, Astro.site);
 const ogImageUrl = image ? new URL(image, Astro.url).toString() : null;
 const ogImageAlt = title || SITE_TITLE;
@@ -143,8 +146,8 @@ const websiteSchema = {
 {ogImageUrl && (
 	<>
 		<meta property="og:image" content={ogImageUrl} />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
+		<meta property="og:image:width" content={String(imageWidth)} />
+		<meta property="og:image:height" content={String(imageHeight)} />
 		<meta property="og:image:alt" content={ogImageAlt} />
 	</>
 )}
