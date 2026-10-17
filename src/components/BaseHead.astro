@@ -3,6 +3,7 @@ import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import { getAllFocusAreas } from "../data/focus-areas";
+import { serializeJsonLd } from "../lib/json-ld";
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import "../styles/global.css";
@@ -165,13 +166,13 @@ const websiteSchema = {
 )}
 
 <!-- Structured data (JSON-LD) -->
-<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-<script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+<script is:inline type="application/ld+json" set:html={serializeJsonLd(websiteSchema)} />
+<script is:inline type="application/ld+json" set:html={serializeJsonLd(personSchema)} />
 {articleSchema && (
-	<script is:inline type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+	<script is:inline type="application/ld+json" set:html={serializeJsonLd(articleSchema)} />
 )}
 {breadcrumbSchema && (
-	<script is:inline type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+	<script is:inline type="application/ld+json" set:html={serializeJsonLd(breadcrumbSchema)} />
 )}
 
 <!-- Vercel Web Analytics — cookie-less, injected via Vercel's edge path -->
