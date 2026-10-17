@@ -150,18 +150,29 @@
         localStorage.removeItem(TEXT_SPACING_KEY);
         localStorage.removeItem(UNDERLINE_LINKS_KEY);
       } catch (e) {}
+      // 保存キーの削除に失敗しても手動設定を解除できるよう、先に現在の class を外す。
+      // apply* は localStorage 不可時に現在の class へフォールバックするため、
+      // 外した後に呼べば OS 設定由来の kw-anim だけが再計算される。
+      document.documentElement.classList.remove(
+        'reduce-motion',
+        'fs-large',
+        'fs-x-large',
+        'text-spacing',
+        'underline-links'
+      );
       applyMotionPreferences();
-      document.documentElement.classList.remove('fs-large', 'fs-x-large');
       applyTextSpacingPreference();
       applyUnderlineLinksPreference();
+      // 入力要素は適用後の実際の状態に同期する。
       if (reduceInput) reduceInput.checked = manualReduceMotion();
+      const size = getFontSize();
       for (const r of p.querySelectorAll<HTMLInputElement>(
         'input[name="a11y-font-size"]'
       )) {
-        r.checked = r.value === 'normal';
+        r.checked = r.value === size;
       }
-      if (spacingInput) spacingInput.checked = false;
-      if (underlineInput) underlineInput.checked = false;
+      if (spacingInput) spacingInput.checked = getTextSpacing();
+      if (underlineInput) underlineInput.checked = getUnderlineLinks();
     });
   }
 
