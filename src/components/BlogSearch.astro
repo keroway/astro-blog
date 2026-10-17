@@ -61,6 +61,7 @@
     hidden
   >
   </div>
+  <button type="button" class="blog-search__more" hidden>もっと表示</button>
 </div>
 
 <script>
@@ -89,6 +90,7 @@
     const clearBtn = root.querySelector<HTMLButtonElement>(".blog-search__clear");
     const statusEl = root.querySelector<HTMLElement>(".blog-search__status");
     const resultsEl = root.querySelector<HTMLElement>(".blog-search__results");
+    const moreBtn = root.querySelector<HTMLButtonElement>(".blog-search__more");
     // 既存の静的一覧 + フィルタ。検索モード中は隠す。
     const filterBar = document.querySelector<HTMLElement>(".filter-bar");
     const postsList = document.getElementById("posts-list");
@@ -103,6 +105,12 @@
     let initFailed = false;
     // 非同期処理の完了順序が入力順と入れ替わっても、最新の呼び出しだけが DOM を更新できるようにする世代番号。
     let generation = 0;
+    // 一度に取得・描画する件数。21 件目以降は「もっと表示」で PAGE_SIZE ずつ追加する。
+    const PAGE_SIZE = 20;
+    let hits: PagefindResult[] = [];
+    let entries: PagefindResultData[] = [];
+    let currentTerm = "";
+    let loadingMore = false;
 
     async function ensurePagefind(): Promise<PagefindApi | null> {
       if (pagefind || initFailed) return pagefind;
@@ -131,6 +139,7 @@
       if (postsList) postsList.hidden = active;
       if (clearBtn) clearBtn.hidden = !active;
       results.hidden = !active;
+      if (moreBtn && !active) moreBtn.hidden = true;
     }
 
     function escapeHtml(s: string): string {
@@ -141,54 +150,12 @@
         .replace(/"/g, "&quot;");
     }
 
-    async function render(term: string) {
-      const gen = ++generation;
-      const trimmed = term.trim();
-      if (trimmed === "") {
-        setSearchMode(false);
-        status.hidden = true;
-        results.innerHTML = "";
-        return;
-      }
-
-      const pf = await ensurePagefind();
-      if (gen !== generation) return;
-      if (!pf) {
-        // 初期化失敗時は検索モードに入らず静的一覧を維持する (フェイルセーフ)。
-        status.hidden = false;
-        status.textContent = "検索を利用できません";
-        return;
-      }
-
-      setSearchMode(true);
-      let search: Awaited<ReturnType<PagefindApi["debouncedSearch"]>>;
-      let entries: PagefindResultData[];
-      try {
-        search = await pf.debouncedSearch(trimmed, undefined, 200);
-        if (gen !== generation) return;
-        // debounce により後発クエリへ置き換わった場合は null。描画しない。
-        if (search === null) return;
-
-        const top = search.results.slice(0, 20);
-        entries = await Promise.all(top.map((r) => r.data()));
-      } catch {
-        // 古い検索の失敗は最新の表示を変えない。最新の失敗だけ静的一覧へ戻して知らせる。
-        if (gen !== generation) return;
-        setSearchMode(false);
-        results.innerHTML = "";
-        status.hidden = false;
-        status.textContent = "検索に失敗しました";
-        return;
-      }
-      if (gen !== generation) return;
-
+    function paint() {
       status.hidden = false;
-      status.textContent = `「${trimmed}」の検索結果: ${search.results.length} 件`;
-
-      if (entries.length === 0) {
-        results.innerHTML = "";
-        return;
-      }
+      const shown =
+        entries.length < hits.length ? ` (${entries.length} 件を表示)` : "";
+      status.textContent = `「${currentTerm}」の検索結果: ${hits.length} 件${shown}`;
+      if (moreBtn) moreBtn.hidden = entries.length >= hits.length;
 
       results.innerHTML = entries
         .map((d, i) => {
@@ -209,10 +176,87 @@
         .join("");
     }
 
+    async function render(term: string) {
+      const gen = ++generation;
+      const trimmed = term.trim();
+      if (trimmed === "") {
+        setSearchMode(false);
+        status.hidden = true;
+        results.innerHTML = "";
+        hits = [];
+        entries = [];
+        return;
+      }
+
+      const pf = await ensurePagefind();
+      if (gen !== generation) return;
+      if (!pf) {
+        // 初期化失敗時は検索モードに入らず静的一覧を維持する (フェイルセーフ)。
+        status.hidden = false;
+        status.textContent = "検索を利用できません";
+        return;
+      }
+
+      setSearchMode(true);
+      let search: Awaited<ReturnType<PagefindApi["debouncedSearch"]>>;
+      let first: PagefindResultData[];
+      try {
+        search = await pf.debouncedSearch(trimmed, undefined, 200);
+        if (gen !== generation) return;
+        // debounce により後発クエリへ置き換わった場合は null。描画しない。
+        if (search === null) return;
+
+        first = await Promise.all(
+          search.results.slice(0, PAGE_SIZE).map((r) => r.data()),
+        );
+      } catch {
+        // 古い検索の失敗は最新の表示を変えない。最新の失敗だけ静的一覧へ戻して知らせる。
+        if (gen !== generation) return;
+        setSearchMode(false);
+        results.innerHTML = "";
+        hits = [];
+        entries = [];
+        status.hidden = false;
+        status.textContent = "検索に失敗しました";
+        return;
+      }
+      if (gen !== generation) return;
+
+      hits = search.results;
+      entries = first;
+      currentTerm = trimmed;
+      paint();
+    }
+
+    async function loadMore() {
+      if (loadingMore) return;
+      loadingMore = true;
+      const gen = generation;
+      try {
+        const next = await Promise.all(
+          hits.slice(entries.length, entries.length + PAGE_SIZE).map((r) => r.data()),
+        );
+        if (gen !== generation) return;
+        const start = entries.length;
+        entries = entries.concat(next);
+        paint();
+        // 追加分の先頭へフォーカスを移し、キーボード操作の文脈を保つ (ボタンが消える場合も含む)。
+        results.querySelectorAll<HTMLAnchorElement>("a")[start]?.focus();
+      } catch {
+        if (gen !== generation) return;
+        status.textContent = "続きの取得に失敗しました";
+      } finally {
+        loadingMore = false;
+      }
+    }
+
     searchInput.disabled = false;
     searchInput.addEventListener("input", () => {
       if (clearBtn) clearBtn.hidden = searchInput.value.trim() === "";
       void render(searchInput.value);
+    });
+    moreBtn?.addEventListener("click", () => {
+      void loadMore();
     });
     clearBtn?.addEventListener("click", () => {
       searchInput.value = "";
@@ -312,6 +356,29 @@
     display: flex;
     flex-direction: column;
     margin-top: var(--kw-space-2);
+  }
+
+  .blog-search__more {
+    display: block;
+    margin: var(--kw-space-5) auto 0;
+    padding: var(--kw-space-2) var(--kw-space-5);
+    border: 1px solid var(--kw-rule-soft);
+    border-radius: var(--kw-radius-sm);
+    background: transparent;
+    color: var(--kw-fg);
+    font-family: var(--kw-font-mono);
+    font-size: var(--kw-fs-mono-xs);
+    cursor: pointer;
+    transition: border-color var(--kw-duration-fast) var(--kw-easing);
+  }
+
+  .blog-search__more:hover {
+    border-color: var(--kw-accent);
+  }
+
+  .blog-search__more:focus-visible {
+    outline: 2px solid var(--kw-blue);
+    outline-offset: 2px;
   }
 
   .blog-search__result-link {

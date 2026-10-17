@@ -23,6 +23,7 @@ type Stub = {
   listeners: Record<string, () => void>;
   addEventListener(type: string, fn: () => void): void;
   focus(): void;
+  querySelectorAll(selector: string): { focus(): void }[];
 };
 
 function element(): Stub {
@@ -38,6 +39,9 @@ function element(): Stub {
       this.listeners[type] = fn;
     },
     focus() {},
+    querySelectorAll() {
+      return [];
+    },
   };
 }
 
@@ -67,6 +71,7 @@ const flush = () => new Promise((r) => setImmediate(r));
 function setupDom(fakePagefind: unknown) {
   const input = element();
   const clear = element();
+  const more = element();
   const status = element();
   const results = element();
   const filter = element();
@@ -79,6 +84,7 @@ function setupDom(fakePagefind: unknown) {
       ({
         ".blog-search__input": input,
         ".blog-search__clear": clear,
+        ".blog-search__more": more,
         ".blog-search__status": status,
         ".blog-search__results": results,
       }) as Record<string, Stub>
@@ -97,7 +103,7 @@ function setupDom(fakePagefind: unknown) {
   vm.createContext(context);
   vm.runInContext(compileScript(), context);
 
-  return { input, clear, status, results };
+  return { input, clear, more, status, results };
 }
 
 describe("#746 BlogSearch の非同期検索の完了順序", () => {
@@ -260,5 +266,116 @@ describe("#832 BlogSearch の検索失敗時の表示", () => {
     expect(status.textContent).toContain("new");
     expect(results.innerHTML).toContain("NEW");
     expect(results.hidden).toBe(false);
+  });
+});
+
+describe("#895 BlogSearch の21件目以降の表示", () => {
+  const hitsOf = (n: number, term: string) =>
+    Array.from({ length: n }, (_, i) => ({
+      data: () =>
+        Promise.resolve({
+          url: `/${term}/${i + 1}/`,
+          meta: { title: `${term}-${i + 1}` },
+          excerpt: "",
+        }),
+    }));
+  const countArticles = (html: string) => html.split("<article").length - 1;
+
+  it("初期は20件のみ描画し、もっと表示で21件目以降を追加する", async () => {
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async (term: string) => ({ results: hitsOf(45, term) }),
+    };
+    const { input, more, status, results } = setupDom(fakePagefind);
+
+    input.value = "q";
+    input.listeners.input();
+    await flush();
+
+    expect(countArticles(results.innerHTML)).toBe(20);
+    expect(results.innerHTML).not.toContain("q-21<");
+    expect(status.textContent).toContain("45 件");
+    expect(status.textContent).toContain("20 件を表示");
+    expect(more.hidden).toBe(false);
+
+    more.listeners.click();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(40);
+    expect(results.innerHTML).toContain("q-21<");
+    expect(more.hidden).toBe(false);
+
+    more.listeners.click();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(45);
+    expect(status.textContent).not.toContain("を表示");
+    expect(more.hidden).toBe(true);
+  });
+
+  it("20件以下ならもっと表示は出ない", async () => {
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async (term: string) => ({ results: hitsOf(20, term) }),
+    };
+    const { input, more } = setupDom(fakePagefind);
+
+    input.value = "q";
+    input.listeners.input();
+    await flush();
+
+    expect(more.hidden).toBe(true);
+  });
+
+  it("検索語を変えると表示範囲が先頭20件に戻る", async () => {
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async (term: string) => ({ results: hitsOf(45, term) }),
+    };
+    const { input, more, results } = setupDom(fakePagefind);
+
+    input.value = "a";
+    input.listeners.input();
+    await flush();
+    more.listeners.click();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(40);
+
+    input.value = "b";
+    input.listeners.input();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(20);
+    expect(results.innerHTML).toContain("b-1<");
+    expect(results.innerHTML).not.toContain("a-1<");
+    expect(more.hidden).toBe(false);
+  });
+
+  it("クリアするともっと表示が隠れ、遅れて完了した追加取得が結果を復活させない", async () => {
+    let resolveLate: (v: unknown) => void = () => {};
+    const late = new Promise((r) => {
+      resolveLate = r;
+    });
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async () => ({
+        results: [...hitsOf(20, "q"), { data: () => late }],
+      }),
+    };
+    const { input, clear, more, status, results } = setupDom(fakePagefind);
+
+    input.value = "q";
+    input.listeners.input();
+    await flush();
+    more.listeners.click();
+    await flush();
+
+    clear.listeners.click();
+    await flush();
+    expect(more.hidden).toBe(true);
+
+    resolveLate({ url: "/late/", meta: { title: "LATE" }, excerpt: "" });
+    await flush();
+
+    expect(results.innerHTML).toBe("");
+    expect(status.hidden).toBe(true);
+    expect(more.hidden).toBe(true);
   });
 });
