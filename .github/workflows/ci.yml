@@ -230,14 +230,16 @@ jobs:
         env:
           CRON_SECRET: ci-test-secret
 
-      # Upload the HTML report on failure so flakes / regressions can be
-      # diagnosed without re-running the suite locally.
+      # Preserve reports and raw traces/error contexts even when retries pass,
+      # so flakes can be diagnosed without re-running the suite locally.
       - name: Upload Playwright report
-        if: failure()
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: playwright-report
-          path: playwright-report
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 7
 
   lighthouse:
