@@ -233,20 +233,21 @@
     async function loadMore() {
       if (loadingMore) return;
       loadingMore = true;
-      // 新検索の完了前は hits が前の結果のまま。結果集合の同一性で追加分の適用可否を決める。
+      // 新検索の完了前は hits が前の結果のまま。結果集合と世代の両方で追加分の適用可否を決める。
       const base = hits;
+      const gen = generation;
       try {
         const next = await Promise.all(
           base.slice(entries.length, entries.length + PAGE_SIZE).map((r) => r.data()),
         );
-        if (base !== hits) return;
+        if (gen !== generation || base !== hits) return;
         const start = entries.length;
         entries = entries.concat(next);
         paint();
         // 追加分の先頭へフォーカスを移し、キーボード操作の文脈を保つ (ボタンが消える場合も含む)。
         results.querySelectorAll<HTMLAnchorElement>("a")[start]?.focus();
       } catch {
-        if (base !== hits) return;
+        if (gen !== generation || base !== hits) return;
         status.textContent = "続きの取得に失敗しました";
       } finally {
         loadingMore = false;
