@@ -74,6 +74,64 @@ test.describe("#341 /blog full-text search", () => {
   });
 });
 
+test.describe("#901 検索語変更中の追加取得", () => {
+  test("前の検索の追加取得が新しい結果へ混入しない", async ({ page }) => {
+    // Pagefind を差し替え、A は21件 (21件目の data は手動解決)、B は応答を保留できるようにする。
+    await page.route("**/pagefind/pagefind.js", (route) =>
+      route.fulfill({
+        contentType: "text/javascript",
+        body: `
+          export async function init() {}
+          export async function debouncedSearch(term) {
+            if (term === "B") await new Promise((r) => { window.__releaseB = r; });
+            const n = term === "A" ? 21 : 1;
+            return {
+              results: Array.from({ length: n }, (_, i) => ({
+                data: async () => {
+                  if (term === "A" && i === 20) {
+                    await new Promise((r) => { window.__releaseA20 = r; });
+                  }
+                  return { url: "/" + term + i + "/", meta: { title: term + i }, excerpt: "" };
+                },
+              })),
+            };
+          }
+        `,
+      })
+    );
+
+    await page.goto("/blog");
+    await page.waitForLoadState("networkidle");
+
+    const input = page.locator(".blog-search__input");
+    const results = page.locator(".blog-search__result");
+    const more = page.locator(".blog-search__more");
+    await expect(input).toBeEnabled();
+
+    await input.fill("A");
+    await expect(results).toHaveCount(20);
+    await expect(more).toBeVisible();
+
+    // B の応答待ち中は前の結果の「もっと表示」を出さない。
+    await input.fill("B");
+    await expect(more).toBeHidden();
+
+    // それでも click が届いた場合に備え、追加取得を強制的に開始する。
+    await more.evaluate((el) => (el as HTMLButtonElement).click());
+    await page.waitForFunction(() => "__releaseA20" in window);
+
+    await page.evaluate("window.__releaseB()");
+    await expect(results).toHaveCount(1);
+
+    await page.evaluate("window.__releaseA20()");
+    // A20 が遅れて解決しても B の結果へ混入しない。
+    await expect(results).toHaveCount(1);
+    await expect(page.locator(".blog-search__results")).not.toContainText(
+      "A20"
+    );
+  });
+});
+
 test.describe("#648 category archive page", () => {
   test("category link navigates to a full, cross-page archive", async ({
     page,
