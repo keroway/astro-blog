@@ -77,7 +77,7 @@ test.describe("#341 /blog full-text search", () => {
 test.describe("#901 検索語変更中の追加取得", () => {
   test("前の検索の追加取得が新しい結果へ混入しない", async ({ page }) => {
     // Pagefind を差し替え、A は21件 (21件目の data は手動解決)、B は応答を保留できるようにする。
-    await page.route("**/pagefind/pagefind.js", (route) =>
+    await page.route(/\/pagefind\/pagefind\.js(\?.*)?$/, (route) =>
       route.fulfill({
         contentType: "text/javascript",
         body: `
@@ -119,6 +119,7 @@ test.describe("#901 検索語変更中の追加取得", () => {
     // それでも click が届いた場合に備え、追加取得を強制的に開始する。
     await more.evaluate((el) => (el as HTMLButtonElement).click());
 
+    await page.waitForFunction("typeof window.__releaseB === 'function'");
     await page.evaluate("window.__releaseB()");
     await expect(results).toHaveCount(1);
 
