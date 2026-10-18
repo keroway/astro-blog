@@ -378,4 +378,44 @@ describe("#895 BlogSearch の21件目以降の表示", () => {
     expect(status.hidden).toBe(true);
     expect(more.hidden).toBe(true);
   });
+
+  it("#903 追加取得中に検索語を変えると、新検索完了前に旧追加取得が完了しても旧結果を描画しない", async () => {
+    let resolveLate: (v: unknown) => void = () => {};
+    const late = new Promise((r) => {
+      resolveLate = r;
+    });
+    let resolveNew: (v: unknown) => void = () => {};
+    const newSearch = new Promise((r) => {
+      resolveNew = r;
+    });
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async (term: string) =>
+        term === "old"
+          ? { results: [...hitsOf(20, "old"), { data: () => late }] }
+          : newSearch,
+    };
+    const { input, more, status, results } = setupDom(fakePagefind);
+
+    input.value = "old";
+    input.listeners.input();
+    await flush();
+    more.listeners.click();
+    await flush();
+
+    input.value = "new";
+    input.listeners.input();
+    await flush();
+
+    resolveLate({ url: "/late/", meta: { title: "LATE" }, excerpt: "" });
+    await flush();
+    expect(results.innerHTML).not.toContain("LATE");
+    expect(countArticles(results.innerHTML)).toBe(20);
+    expect(status.textContent).toContain("20 件を表示");
+
+    resolveNew({ results: hitsOf(3, "new") });
+    await flush();
+    expect(results.innerHTML).toContain("new-1<");
+    expect(results.innerHTML).not.toContain("LATE");
+  });
 });
