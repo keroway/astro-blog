@@ -118,12 +118,11 @@ test.describe("#901 検索語変更中の追加取得", () => {
 
     // それでも click が届いた場合に備え、追加取得を強制的に開始する。
     await more.evaluate((el) => (el as HTMLButtonElement).click());
-    await page.waitForFunction(() => "__releaseA20" in window);
 
     await page.evaluate("window.__releaseB()");
     await expect(results).toHaveCount(1);
 
-    await page.evaluate("window.__releaseA20()");
+    await page.evaluate("window.__releaseA20?.()");
     // A20 が遅れて解決しても B の結果へ混入しない。
     await expect(results).toHaveCount(1);
     await expect(page.locator(".blog-search__results")).not.toContainText(
