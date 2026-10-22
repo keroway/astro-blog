@@ -138,6 +138,48 @@ describe("computeProblems", () => {
     ).toBe(true);
   });
 
+  it("dark 側のセマンティックトークンが欠落していると検出する", () => {
+    const cssDarkMissing = CSS_FIXTURE.replace(
+      /(\[data-theme="dark"\][\s\S]*) {2}--kw-bg: var\(--kw-paper-50\);\n/,
+      "$1"
+    );
+    expect(cssDarkMissing).not.toBe(CSS_FIXTURE);
+    const { problems } = computeProblems(cssDarkMissing, DOC_FIXTURE_MATCHING);
+    expect(
+      problems.some(
+        (p) => p.message.includes("--kw-bg") && p.message.includes("dark 側")
+      )
+    ).toBe(true);
+  });
+
+  it("light 側のセマンティックトークンが欠落していると検出する", () => {
+    const cssLightMissing = CSS_FIXTURE.replace(
+      "  --kw-bg: var(--kw-paper-50);\n",
+      ""
+    );
+    expect(cssLightMissing).not.toBe(CSS_FIXTURE);
+    const { problems } = computeProblems(cssLightMissing, DOC_FIXTURE_MATCHING);
+    expect(
+      problems.some(
+        (p) => p.message.includes("--kw-bg") && p.message.includes("light 側")
+      )
+    ).toBe(true);
+  });
+
+  it("dark 限定の未記載トークンを検出する", () => {
+    const cssDarkOnly = CSS_FIXTURE.replace(
+      '[data-theme="dark"] {\n',
+      '[data-theme="dark"] {\n  --kw-audit-only: #123456;\n'
+    );
+    const { problems } = computeProblems(cssDarkOnly, DOC_FIXTURE_MATCHING);
+    expect(
+      problems.some(
+        (p) =>
+          p.message.includes("--kw-audit-only") && p.message.includes("欠落")
+      )
+    ).toBe(true);
+  });
+
   it("Semantic マーカーが無い CSS では例外を投げる", () => {
     const cssNoMarker = CSS_FIXTURE.replace("/* ---- Semantic ---- */\n", "");
     expect(() => computeProblems(cssNoMarker, DOC_FIXTURE_MATCHING)).toThrow();
