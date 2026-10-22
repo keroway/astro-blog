@@ -7,15 +7,21 @@
 // ここに切り出すのは、Sveltia のランタイムに依存せず vitest で純粋関数として
 // 検証できるようにするため (#670)。
 
-// Markdoc の属性文字列は JSON 風で、`\"` と `\\` だけをエスケープする。
+// Markdoc の属性文字列は `\"` `\\` `\n` `\r` `\t` を解釈する
+// (@markdoc/markdoc の tag.pegjs ValueStringEscapes)。制御文字の生値は不可。
 const ATTR_PATTERN = /(\w[\w-]*)="((?:\\.|[^"\\])*)"/g;
 
+const UNESCAPES: Record<string, string> = { n: "\n", r: "\r", t: "\t" };
+const ESCAPES: Record<string, string> = { "\n": "n", "\r": "r", "\t": "t" };
+
 function unescapeMarkdocString(value: string): string {
-  return value.replace(/\\(["\\])/g, "$1");
+  return value.replace(/\\(.)/g, (_, c: string) => UNESCAPES[c] ?? c);
 }
 
 function escapeMarkdocString(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return value.replace(/[\\"\n\r\t]/g, (c) =>
+    c === "\\" || c === '"' ? `\\${c}` : `\\${ESCAPES[c]}`
+  );
 }
 
 function parseAttrs(raw: string): Record<string, string> {
