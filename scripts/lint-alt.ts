@@ -41,7 +41,10 @@ const CONTAINER_PREFIX_PATTERN =
 const FENCE_OPEN_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
 const FENCE_CLOSE_PATTERN = /^\s{0,3}(`{3,}|~{3,})\s*$/;
 // コードスパンは改行をまたげるが、空行（段落区切り）はまたげない。
-const INLINE_CODE_SPAN_PATTERN = /(`+)(?:(?!\n[ \t]*\n)[\s\S])*?\1/g;
+// 開始側のバッククォート列の直前にバックスラッシュが奇数個あるとき、先頭の 1 個は
+// エスケープされたリテラルでありコードスパンを開始しない（lookbehind で偶数個のみ許可）。
+const INLINE_CODE_SPAN_PATTERN =
+  /(?<=(?:^|[^\\])(?:\\\\)*)(`+)(?:(?!\n[ \t]*\n)[\s\S])*?\1/g;
 
 const MIN_ALT_LENGTH = 4;
 const PLACEHOLDER_ALTS = new Set([
