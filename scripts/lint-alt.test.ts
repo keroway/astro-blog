@@ -429,6 +429,25 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("エスケープされたバッククォートはコードスパンを開始せず、後続の実画像を検出する (#918)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-escaped-backtick.md"
+    );
+    const content = [
+      "\\` ![x](image.png) `",
+      "",
+      "\\\\` ![x](image.png) `",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("インラインコードの外側にある実際の画像は検出する", () => {
     const filePath = path.join(
       os.tmpdir(),
