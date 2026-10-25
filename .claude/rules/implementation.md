@@ -32,7 +32,7 @@ B4. **「念のため」のコードを書かない。** 起きない分岐の�
 
 C1. **`getStaticPaths()` の `params` には `post.id` をエンコードせずに渡す。** Astro 7 の Content Layer API は内部でエンコードする。エンコードすると二重デコードで 404。
 
-C2. **`href` 属性に出すスラグだけ `encodeURIComponent` する。** 日本語スラグは HTML 上ではパーセントエンコードが必要。実装パターンは CLAUDE.md の "Critical: Japanese Slug Encoding Pattern" を参照する。
+C2. **`href` 属性に出すスラグだけ `encodeURIComponent` する。** 日本語スラグは HTML 上ではパーセントエンコードが必要。実装パターンは `.claude/rules/pages.md` の "Critical: Japanese Slug Encoding Pattern" を参照する。
 
 C3. **画像は `astro:assets` の `Image` コンポーネント + `width` / `height` 明示。** 直 `<img>` 禁止。ヒーロー画像のサイズは `1020x510` (16:9) を基準にする。
 

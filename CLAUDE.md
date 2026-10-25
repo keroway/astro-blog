@@ -9,9 +9,9 @@ This file provides guidance to AI coding agents (Claude Code, Codex, pi, etc.) w
 
 パス限定ルール (`.claude/rules/`、該当ファイルを触るターンだけ自動で載る):
 
-- `pages.md` (`src/pages/**`) — 日本語スラグの encode パターン、新規ページ追加手順
-- `content.md` (`src/content/**`, `src/content.config.ts`, `src/lib/content-schema.ts`) — Content Collections スキーマ、記事追加/スキーマ変更手順
-- `ui.md` (`src/components/**`, `src/layouts/**`, `src/styles/**`) — 画像・スタイル・レイアウトコンポーネントの規約
+- `pages.md` (`src/pages/**`) — 日本語スラグの encode パターン (`href` はエンコード、`getStaticPaths()` は不要)、新規ページ追加手順
+- `content.md` (`src/content/**`, `src/content.config.ts`, `src/lib/content-schema.ts`) — Content Collections スキーマ (Zod は `src/content.config.ts`、category / status の enum は `src/lib/content-schema.ts`)、記事追加/スキーマ変更/frontmatter 候補提示の手順
+- `ui.md` (`src/components/**`, `src/layouts/**`, `src/styles/**`) — `astro:assets` Image・`--kw-*` デザイントークン・`SiteLayout`/`BlogPost`・グローバルスタイル更新の規約
 - `testing.md` (`tests/**`, `src/lib/**`, `src/scripts/**`, vitest/playwright config) — unit/E2E テストの実行詳細
 - `architecture.md` (`src/**`) — ディレクトリ構成の詳細
 - `dev-environment.md` (`package.json`, `pnpm-workspace.yaml`, `vercel.json` 等) — dev サーバー/env var/サプライチェーン設定の詳細
@@ -23,7 +23,6 @@ This project uses **pnpm** (version 11.27.1) as the package manager:
 ```bash
 # Install dependencies
 pnpm install
-
 # Development server (portless 経由, https://keroway.localhost)
 pnpm run dev       # or: pnpm start  (portless run --name keroway astro dev)
 # portless を使わず素の astro dev を 4321 で起動したいとき:
@@ -65,22 +64,9 @@ This is a personal portfolio and technical blog (keroway.com) built with **Astro
 
 Top-level: `assets/`(画像) `components/`(UI) `content/`(blog/works) `layouts/` `lib/` `pages/` `scripts/` `styles/` `types/` `consts.ts`。詳細なディレクトリツリーは `.claude/rules/architecture.md` を参照（`src/**` を触るターンに自動で載る）。**Routing:** top-level routing は `src/pages/`、view logic は `src/components/`、layout は `src/layouts/`。
 
-## Critical: Japanese Slug Encoding Pattern
-
-日本語スラグの `encodeURIComponent` パターン（`href` はエンコード、`getStaticPaths()` はエンコード不要）は `.claude/rules/pages.md` を参照（`src/pages/**` を触るターンに自動で載る）。
-
-## Content Collections Schema
-
-blog / works の frontmatter スキーマ詳細は `.claude/rules/content.md` を参照（`src/content/**` 等を触るターンに自動で載る）。Schema is defined in `src/content.config.ts` using Zod; category / status の enum は `src/lib/content-schema.ts`。
-
-## Image Handling / Styling / Layout Components
-
-`astro:assets` Image・`--kw-*` デザイントークン・`SiteLayout`/`BlogPost` の規約は `.claude/rules/ui.md` を参照（`src/components/**` / `src/layouts/**` / `src/styles/**` を触るターンに自動で載る）。
-
 ## Testing & Type Safety
 
-- **Type checking:** Run `pnpm run build` to surface type errors and Astro validation issues
-- Unit (vitest) / E2E (Playwright) の実行コマンド・ポート・対象範囲の詳細は `.claude/rules/testing.md` を参照（`tests/**` / `src/lib/**` / `src/scripts/**` 等を触るターンに自動で載る）
+- 型エラーと Astro の検証は `pnpm run build` (上記 Development Commands) で表面化する。Unit (vitest) / E2E (Playwright) の実行詳細は上記 `testing.md` を参照
 - **CI:** `.github/workflows/ci.yml` は 7 ジョブ — Lint (biome ci + lint:alt + lint:tokens-doc) / Unit tests (vitest) / Typecheck (astro check) / Build (astro build) / E2E (Playwright, build の dist を利用) / Lighthouse CI / Link check (lychee)。E2E・Lighthouse・Link check は `needs: [build]` で build 後に走り、それ以外は並列。ローカル再現できるのは前 5 つで、`/ship-check` が順に走らせる
 
 ## Deployment
@@ -118,10 +104,6 @@ Issue の状態は GitHub ラベルで可視化する。複数の作業者 (人�
 | 完了 | (close) | PR マージ or 手動 close。`done` ラベルは設けず、close 状態で代替 |
 
 着手前には必ず `gh issue view <番号>` で assignees と関連 PR の有無を確認し、重複対応を回避する。`gh issue edit <番号> --add-assignee @me --add-label "in-progress"` で着手を宣言してからブランチを切る。
-
-## Common Development Tasks
-
-ブログ記事追加・Content Collections スキーマ変更・frontmatter 候補提示の手順は `.claude/rules/content.md`、新規ページ追加は `.claude/rules/pages.md`、グローバルスタイル更新は `.claude/rules/ui.md` を参照（対象パスを触るターンに自動で載る）。
 
 ## Key Integrations
 
