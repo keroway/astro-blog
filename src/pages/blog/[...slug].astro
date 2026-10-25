@@ -1,9 +1,11 @@
 ---
+import { getImage } from 'astro:assets';
 import { render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 import type { BlogEntry } from '../../types/content';
 import { encodeSlugId } from '../../lib/slug';
 import { calculateReadingTime, getPublishedPosts, getRelatedPosts } from '../../lib/content';
+import { isCmsAssetPath, lookupCmsAsset } from '../../lib/og-image';
 
 export async function getStaticPaths() {
 	const sorted = await getPublishedPosts();
@@ -57,8 +59,21 @@ type Props = {
 const { post, prevPost, nextPost, relatedPosts, seriesNav } = Astro.props as Props;
 const { Content, headings } = await render(post);
 
+// CMS (Sveltia) は ogImage を `/src/assets/...` のソースパスで保存する。公開 URL ではないので、
+// 画像として解決しビルドが生成した `/_astro/...` を渡す (#920)。外部 URL や `/...` はそのまま使う。
+const cmsAssets = import.meta.glob<ImageMetadata>('/src/assets/content/blog/*.{jpg,jpeg,png,webp,avif,gif}', {
+	import: 'default',
+});
+const customOgImage = post.data.ogImage;
+// SNS クローラの互換性のため、既定の webp 変換ではなく元の形式を維持する。
+const ogSource = customOgImage && isCmsAssetPath(customOgImage)
+	? await lookupCmsAsset(customOgImage, cmsAssets, post.id)()
+	: null;
+const customOgImageUrl = ogSource
+	? (await getImage({ src: ogSource, format: ogSource.format })).src
+	: customOgImage;
 // ogImage が指定されていればカスタム OG 画像として優先、未指定なら自動生成 (#362)。
-const ogImage = post.data.ogImage ?? `/og/${encodeSlugId(post.id)}.png`;
+const ogImage = customOgImageUrl ?? `/og/${encodeSlugId(post.id)}.png`;
 // 読了時間は本文から常に自動算出する (#361)。
 const readingTime = calculateReadingTime(post.body ?? '');
 ---
