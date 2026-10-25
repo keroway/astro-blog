@@ -52,6 +52,11 @@ export function applyMotionPreferences(): void {
     manuallyReduced = manualReduceMotion();
   }
 
+  applyManualState(manuallyReduced);
+}
+
+/** 手動設定の値を html class に反映し、OS 設定と合わせて kw-anim を同期する。 */
+function applyManualState(manuallyReduced: boolean): void {
   document.documentElement.classList.toggle("reduce-motion", manuallyReduced);
   document.documentElement.classList.toggle(
     "kw-anim",
@@ -66,13 +71,14 @@ export function applyMotionPreferences(): void {
 export function setReduceMotion(state: "on" | "off"): void {
   if (typeof document === "undefined") return;
   const on = state === "on";
-  document.documentElement.classList.toggle("reduce-motion", on);
   try {
     localStorage.setItem(REDUCE_MOTION_KEY, on ? "true" : "false");
   } catch {
     /* localStorage 不可環境では永続化を諦める (動作は継続) */
   }
-  applyMotionPreferences();
+  // 保存値を読み直すと、永続化失敗時に今の操作が取り消されるため
+  // 引数の状態を直接反映する。
+  applyManualState(on);
 }
 
 /**

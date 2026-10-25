@@ -157,6 +157,26 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("エスケープした画像記法と複数行インラインコードは検査せず、実画像は検出する (#908)", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-escaped.md");
+    const content = [
+      "\\![](photo.png)",
+      "",
+      "`sample",
+      "![](photo.png)",
+      "code`",
+      "",
+      "\\\\![](photo.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([7]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("山括弧付きの外部ホスト画像 (インライン / 参照定義) を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-angle.md");
     const content = [
@@ -404,6 +424,25 @@ describe("findAltIssues", () => {
     fs.writeFileSync(filePath, content, "utf8");
     try {
       expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("エスケープされたバッククォートはコードスパンを開始せず、後続の実画像を検出する (#918)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-escaped-backtick.md"
+    );
+    const content = [
+      "\\` ![x](image.png) `",
+      "",
+      "\\\\` ![x](image.png) `",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1]);
     } finally {
       fs.unlinkSync(filePath);
     }

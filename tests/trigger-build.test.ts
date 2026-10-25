@@ -50,6 +50,35 @@ describe("/api/trigger-build deploy hook failures", () => {
     expect(res.status).toBe(502);
   });
 
+  it("deploy hook が応答しなければ期限で中断し、504 を返す", async () => {
+    vi.useFakeTimers();
+    try {
+      let signal: AbortSignal | undefined;
+      setup(
+        vi.fn(
+          (_url: unknown, init?: RequestInit) =>
+            new Promise((_resolve, reject) => {
+              signal = init?.signal ?? undefined;
+              signal?.addEventListener("abort", () =>
+                reject(new Error(`aborted ${HOOK_URL}`))
+              );
+            })
+        ) as unknown as typeof fetch
+      );
+
+      const pending = call();
+      await vi.advanceTimersByTimeAsync(10_000);
+      const res = await pending;
+      const body = await res.text();
+
+      expect(signal?.aborted).toBe(true);
+      expect(res.status).toBe(504);
+      expect(body).not.toContain(HOOK_URL);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("deploy hook が成功したら 200 を返す", async () => {
     setup(
       vi.fn(

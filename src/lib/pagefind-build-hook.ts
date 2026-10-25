@@ -54,6 +54,9 @@ export async function runPagefindBuild({
     for (const e of addErrors) logger.error(String(e));
     throw new Error("Pagefind: ファイルのインデックス化に失敗しました");
   }
+  if (page_count === 0) {
+    throw new Error("Pagefind: インデックス対象のページが0件です");
+  }
 
   const { outputPath, errors: writeErrors } = await index.writeFiles({
     outputPath: path.join(outDir, "pagefind"),

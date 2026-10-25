@@ -40,7 +40,11 @@ const CONTAINER_PREFIX_PATTERN =
   /^\s{0,3}(?:(>)[ \t]?|(?:[-+*]|\d{1,9}[.)])([ \t]+))/;
 const FENCE_OPEN_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
 const FENCE_CLOSE_PATTERN = /^\s{0,3}(`{3,}|~{3,})\s*$/;
-const INLINE_CODE_SPAN_PATTERN = /(`+).*?\1/g;
+// コードスパンは改行をまたげるが、空行（段落区切り）はまたげない。
+// 開始側のバッククォート列の直前にバックスラッシュが奇数個あるとき、先頭の 1 個は
+// エスケープされたリテラルでありコードスパンを開始しない（lookbehind で偶数個のみ許可）。
+const INLINE_CODE_SPAN_PATTERN =
+  /(?<=(?:^|[^\\])(?:\\\\)*)(`+)(?:(?!\n[ \t]*\n)[\s\S])*?\1/g;
 
 const MIN_ALT_LENGTH = 4;
 const PLACEHOLDER_ALTS = new Set([
@@ -97,11 +101,19 @@ export function altIssueReason(alt: string, src: string): string | null {
   return null;
 }
 
-export function maskInlineCodeSpans(line: string): string {
+// 改行は残して空白化する（行番号の算出が元の行オフセットに依存するため）。
+export function maskInlineCodeSpans(text: string): string {
   INLINE_CODE_SPAN_PATTERN.lastIndex = 0;
-  return line.replace(INLINE_CODE_SPAN_PATTERN, (match) =>
-    " ".repeat(match.length)
+  return text.replace(INLINE_CODE_SPAN_PATTERN, (match) =>
+    match.replace(/[^\n]/g, " ")
   );
+}
+
+// `\!` のようにバックスラッシュ奇数個でエスケープされた `!` は画像記法にならない。
+function isEscaped(text: string, position: number): boolean {
+  let count = 0;
+  for (let i = position - 1; i >= 0 && text[i] === "\\"; i--) count++;
+  return count % 2 === 1;
 }
 
 type Container = { kind: "quote" } | { kind: "list"; indent: number };
@@ -232,12 +244,13 @@ export function findAltIssues(filePath: string): Issue[] {
 
   // 複数行にまたがる画像記法を拾うため、コード行を空白化した全文に対して
   // インライン記法を照合し、一致位置から元の行番号を求める。
-  const maskedLines = lines.map((line, i) =>
-    inCode[i] ? " ".repeat(line.length) : maskInlineCodeSpans(line)
+  // インラインコードは複数行にまたがれるので、全文に対して空白化する。
+  const blankedLines = lines.map((line, i) =>
+    inCode[i] ? " ".repeat(line.length) : line
   );
   const lineStarts: number[] = [];
   let offset = 0;
-  for (const line of maskedLines) {
+  for (const line of blankedLines) {
     lineStarts.push(offset);
     offset += line.length + 1;
   }
@@ -252,7 +265,7 @@ export function findAltIssues(filePath: string): Issue[] {
     return lo + 1;
   };
 
-  const maskedText = maskedLines.join("\n");
+  const maskedText = maskInlineCodeSpans(blankedLines.join("\n"));
   const scan = (
     pattern: RegExp,
     resolve: (match: RegExpExecArray) => { alt: string; src?: string }
@@ -261,7 +274,7 @@ export function findAltIssues(filePath: string): Issue[] {
     let match = pattern.exec(maskedText);
     while (match !== null) {
       // 空行は段落区切りで、画像記法はそれをまたげない
-      if (!/\n[ \t]*\n/.test(match[0])) {
+      if (!/\n[ \t]*\n/.test(match[0]) && !isEscaped(maskedText, match.index)) {
         const { alt, src } = resolve(match);
         if (src !== undefined) {
           pushIssue(

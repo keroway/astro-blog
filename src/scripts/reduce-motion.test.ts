@@ -148,19 +148,38 @@ describe("setReduceMotion", () => {
     expect(localStorage.getItem(REDUCE_MOTION_KEY)).toBe("false");
   });
 
-  it("does not throw when localStorage.setItem fails, and resyncs from the (unwritten) persisted state afterward", () => {
+  it("keeps the manual setting for the current page when localStorage.setItem fails", () => {
     stubThrowingLocalStorage({
       setItem: () => {
         throw new Error("blocked");
       },
     });
     expect(() => setReduceMotion("on")).not.toThrow();
-    // setItem 失敗で実際には永続化されないため、setReduceMotion 末尾の
-    // applyMotionPreferences() による再同期で「未設定」扱いに戻る
-    // (OS 設定も reduce を求めていないため reduce-motion は外れる)。
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      true
+    );
+    expect(document.documentElement.classList.contains("kw-anim")).toBe(false);
+    expect(prefersReducedMotion()).toBe(true);
+  });
+
+  it("turns the manual setting off even when persistence fails", () => {
+    document.documentElement.classList.add("reduce-motion");
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    setReduceMotion("off");
     expect(document.documentElement.classList.contains("reduce-motion")).toBe(
       false
     );
+    expect(document.documentElement.classList.contains("kw-anim")).toBe(true);
+  });
+
+  it("keeps kw-anim off when the OS prefers reduced motion and the manual setting is turned off", () => {
+    mockMatchMedia(true);
+    setReduceMotion("off");
+    expect(document.documentElement.classList.contains("kw-anim")).toBe(false);
   });
 });
 

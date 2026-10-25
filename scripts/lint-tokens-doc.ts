@@ -100,7 +100,11 @@ export function computeProblems(
       .filter((t) => t.line < light.semanticMarkerLine)
       .map((t) => t.name)
   );
-  const allCssColorNames = new Set(light.tokens.map((t) => t.name));
+  // shadow は色ではなく、dark ブロックだけで上書きする非カラートークン
+  const isColorName = (name: string) => !name.startsWith("shadow-");
+  const allCssColorNames = new Set(
+    [...light.tokens, ...dark.tokens].map((t) => t.name).filter(isColorName)
+  );
 
   const primitiveDocRows = extractDocTableRows(
     docLines,
@@ -154,11 +158,28 @@ export function computeProblems(
     }
   }
 
+  // light / dark の片側だけにあるトークン（theme 切替で値が未定義になる）
+  for (const name of allCssColorNames) {
+    const inLight = lightMap.has(name);
+    const inDark = darkMap.has(name);
+    if (inLight === inDark) continue;
+    const token = (inLight ? light : dark).tokens.find((t) => t.name === name);
+    problems.push({
+      file: tokensFileLabel,
+      line: token?.line ?? 0,
+      message: `--kw-${name} が ${inLight ? "light" : "dark"} ブロックにしかありません（${inLight ? "dark" : "light"} 側の欠落）`,
+    });
+  }
+
   // §5: 全カラートークンの欠落・余剰（種別ではなく名前のみ突き合わせ）
   const summaryDocNames = new Set(summaryDocRows.map((r) => r.name));
   for (const name of allCssColorNames) {
     if (!summaryDocNames.has(name)) {
-      const cssLine = light.tokens.find((t) => t.name === name)?.line ?? 0;
+      const cssLine =
+        (
+          light.tokens.find((t) => t.name === name) ??
+          dark.tokens.find((t) => t.name === name)
+        )?.line ?? 0;
       problems.push({
         file: tokensFileLabel,
         line: cssLine,

@@ -67,6 +67,31 @@ describe("callout editor component", () => {
     expect(tag.attributes).toMatchObject({ type: "info", title: data.title });
   });
 
+  it.each([
+    ["newline", "A\nB"],
+    ["tab", "A\tB"],
+    ["backslash followed by n", "A\\nB"],
+    ["backslash followed by t", "A\\tB"],
+  ])("keeps %s in the title across a round trip (#912)", (_, title) => {
+    const data = { type: "info" as const, title, body: "text" };
+    const block = calloutToBlock(data);
+    const match = block.match(CALLOUT_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(calloutFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+    const tag = Markdoc.parse(block).children[0];
+    expect(tag.attributes).toMatchObject({ title });
+  });
+
+  it("restores \\n and \\t escapes written by hand in the title (#912)", () => {
+    const source = '{% callout title="A\\nB\\tC" %}\ntext\n{% /callout %}';
+    const match = source.match(CALLOUT_PATTERN);
+
+    expect(calloutFromBlock(match as RegExpMatchArray).title).toBe("A\nB\tC");
+    expect(Markdoc.parse(source).children[0].attributes.title).toBe("A\nB\tC");
+  });
+
   it("recognizes % in the title (#861)", () => {
     const data = { type: "info" as const, title: "20% off %}", body: "text" };
     const block = calloutToBlock(data);
@@ -134,6 +159,26 @@ describe("link-card editor component", () => {
     const tag = Markdoc.parse(block).children[0];
     expect(tag.attributes).toMatchObject(data);
   });
+
+  it.each([
+    ["newline", "A\nB"],
+    ["tab", "A\tB"],
+    ["backslash followed by n", "A\\nB"],
+    ["backslash followed by t", "A\\tB"],
+  ])(
+    "keeps %s in the description across a round trip (#912)",
+    (_, description) => {
+      const data = { href: "https://example.com", title: "T", description };
+      const block = linkCardToBlock(data);
+      const match = block.match(LINK_CARD_PATTERN);
+
+      expect(match).not.toBeNull();
+      expect(linkCardFromBlock(match as RegExpMatchArray)).toEqual(data);
+
+      const tag = Markdoc.parse(block).children[0];
+      expect(tag.attributes).toMatchObject({ description });
+    }
+  );
 
   it("recognizes % in description and percent-encoded href (#861)", () => {
     const data = {

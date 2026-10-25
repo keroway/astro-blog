@@ -36,6 +36,23 @@ describe("runPagefindBuild", () => {
     expect(logger.error).toHaveBeenCalledWith("add-fail");
   });
 
+  it("throws without writing when no pages were indexed (#909)", async () => {
+    const logger = makeLogger();
+    const writeFiles = vi.fn();
+    const createIndex = vi.fn().mockResolvedValue({
+      index: {
+        addDirectory: vi.fn().mockResolvedValue({ page_count: 0, errors: [] }),
+        writeFiles,
+      },
+      errors: [],
+    });
+
+    await expect(
+      runPagefindBuild({ outDir: "/dist", logger, createIndex })
+    ).rejects.toThrow("0件");
+    expect(writeFiles).not.toHaveBeenCalled();
+  });
+
   it("throws when writeFiles reports errors (#719)", async () => {
     const logger = makeLogger();
     const createIndex = vi.fn().mockResolvedValue({
