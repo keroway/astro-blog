@@ -48,7 +48,7 @@
     "@sveltia/cms": "^0.248.0",
     "@unocss/astro": ">=66.7.5 <66.11.1",
     "astro": "^7.3.1",
-    "happy-dom": "^20.11.2",
+    "happy-dom": "^21.0.4",
     "lefthook": "^2.1.10",
     "pagefind": "^1.5.2",
     "portless": "^0.15.4",
