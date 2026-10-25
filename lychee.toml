@@ -71,4 +71,12 @@ exclude = [
     # サンドボックスの制約でローカル到達性を実測できていないが、記事本文のリンク自体は
     # 変更しない (リンク切れとは別問題として扱う)。
     "^https?://(www\\.)?app\\.classeur\\.io([/?#]|$)",
+
+    # cc.cqpub.co.jp は GitHub Actions の runner からのみタイムアウトする (#922)。
+    # 2026-10-25 に PR #919 / #923 の Link check で、http:// でも https:// でも
+    # timeout = 20 秒 × max_retries = 3 を通らず同一リンク (tech-ebooks-domestic) で失敗した。
+    # ローカル (日本の家庭回線) からは http://cc.cqpub.co.jp/lib/ -> 301 -> https://cc.cqpub.co.jp/lib/
+    # -> 200 (0.31s) を実測済み。nihao.co.jp と同型のデータセンター IP 遮断と判断した。
+    # 記事本文のリンク自体は有効 (http -> https の更新のみ行った)。
+    "^https?://cc\\.cqpub\\.co\\.jp([/?#]|$)",
 ]
