@@ -41,7 +41,7 @@ ASCII 化とは、これらのスラッグを `/blog/cloud-cost-optimization/` �
 
 ### 3. エンコード処理の確立
 
-日本語スラッグを扱うためのエンコードパターンはすでに `CLAUDE.md`（「Critical: Japanese Slug Encoding Pattern」セクション）に文書化・実装済みである。
+日本語スラッグを扱うためのエンコードパターンはすでに `.claude/rules/pages.md`（「Critical: Japanese Slug Encoding Pattern」セクション）に文書化・実装済みである。
 
 - `getStaticPaths()` のパラメータ: エンコード不要（Astro が内部処理）
 - `href` 属性: `encodeURIComponent` でエンコード必須
@@ -128,7 +128,7 @@ ASCII 化を実施した場合に必要な作業：
 
 ## 関連ドキュメント
 
-- `CLAUDE.md` — Critical: Japanese Slug Encoding Pattern（実装パターン詳細）
+- `.claude/rules/pages.md` — Critical: Japanese Slug Encoding Pattern（実装パターン詳細）
 - `docs/seo/url-migration.md` — URL マイグレーション記録・リダイレクト不要判定（PR #105/#106）
 - Issue #20 — 旧 URL 維持とリダイレクト整備
 - Issue #31 — 日本語スラッグ ASCII 化方針の策定（本 Issue）
