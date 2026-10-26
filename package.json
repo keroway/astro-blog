@@ -2,7 +2,7 @@
   "name": "astro-blog",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@11.28.6",
+  "packageManager": "pnpm@11.28.8",
   "scripts": {
     "postinstall": "lefthook install",
     "dev": "portless run --name keroway astro dev",
@@ -45,7 +45,7 @@
     "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",
     "@shikijs/themes": "4.5.0",
-    "@sveltia/cms": "^0.248.0",
+    "@sveltia/cms": "^0.251.0",
     "@unocss/astro": ">=66.7.5 <66.11.1",
     "astro": "^7.3.1",
     "happy-dom": "^21.0.0",
