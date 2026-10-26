@@ -88,6 +88,9 @@ overrides:
   # GHSA-2vr4-cq9g-pvrc / GHSA-rpw4-54j3-4h4q (ip-address <10.5.1) —
   # @anthropic-ai/claude-agent-sdk>@modelcontextprotocol/sdk>express-rate-limit 経由。
   "ip-address@<10.5.1": ">=10.5.1 <11"
+minimumReleaseAgeExclude:
+  # Renovate security update: happy-dom@21.0.4
+  - happy-dom@21.0.4
 
 # keystatic 関連のルール群 (ADR 0016 で Keystatic を Sveltia へ移行済み):
 # - peerDependencyRules.allowedVersions["@keystatic/astro>astro"] → 削除
