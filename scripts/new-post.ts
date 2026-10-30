@@ -106,9 +106,13 @@ function main(): void {
 
   const filePath = path.join(BLOG_DIR, `${slug}.mdoc`);
 
-  if (fs.existsSync(filePath)) {
-    console.error(`Error: ${filePath} は既に存在します`);
-    process.exit(1);
+  // blog loader は .md と .mdoc の両方を収集するため、どちらの既存記事も拒否する
+  for (const ext of ["md", "mdoc"]) {
+    const existing = path.join(BLOG_DIR, `${slug}.${ext}`);
+    if (fs.existsSync(existing)) {
+      console.error(`Error: ${existing} は既に存在します`);
+      process.exit(1);
+    }
   }
 
   const today = getTodayIso();

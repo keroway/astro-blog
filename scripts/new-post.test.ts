@@ -111,4 +111,39 @@ describe("new-post --suggest の終了コード (統合テスト)", () => {
       fs.existsSync(path.join(tmpDir, "src/content/blog/test-title-ok.mdoc"))
     ).toBe(true);
   });
+
+  const runNewPost = (slug: string) =>
+    spawnSync(
+      "node",
+      [
+        "--experimental-strip-types",
+        "scripts/new-post.ts",
+        "Test Title",
+        "--slug",
+        slug,
+      ],
+      { cwd: tmpDir, encoding: "utf-8" }
+    );
+
+  it.each(["md", "mdoc"])("既存の .%s 記事と同名なら拒否する", (ext) => {
+    const existing = path.join(tmpDir, `src/content/blog/dup.${ext}`);
+    fs.writeFileSync(existing, "existing\n");
+
+    const result = runNewPost("dup");
+
+    expect(result.status).not.toBe(0);
+    expect(fs.readFileSync(existing, "utf-8")).toBe("existing\n");
+    expect(fs.readdirSync(path.join(tmpDir, "src/content/blog"))).toEqual([
+      `dup.${ext}`,
+    ]);
+  });
+
+  it("同名の記事が無ければ .mdoc を作成する", () => {
+    const result = runNewPost("fresh");
+
+    expect(result.status).toBe(0);
+    expect(
+      fs.existsSync(path.join(tmpDir, "src/content/blog/fresh.mdoc"))
+    ).toBe(true);
+  });
 });
