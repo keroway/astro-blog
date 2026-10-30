@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { replaceDescription } from "./lib/replace-description.ts";
 import { stripBom } from "./lib/strip-bom.ts";
 
 const BLOG_DIR = path.resolve(import.meta.dirname, "../src/content/blog");
-const DESCRIPTION_LINE = /^description:\s*".*"$/m;
 const SCHEMA = {
   type: "object" as const,
   properties: {
@@ -42,13 +42,6 @@ function extractBody(content: string): string {
   return stripBom(content)
     .replace(/^---[\s\S]*?---\n/, "")
     .trim();
-}
-
-function replaceDescription(content: string, description: string): string {
-  return content.replace(
-    DESCRIPTION_LINE,
-    `description: ${JSON.stringify(description)}`
-  );
 }
 
 async function suggestDescription(filePath: string): Promise<string> {
