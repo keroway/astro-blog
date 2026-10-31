@@ -38,6 +38,13 @@ const DOC_FIXTURE_MATCHING = `### 1.1 プリミティブカラー
 | \`--kw-paper-50\` | \`#fdfdfd\` | \`#101010\` |
 | \`--kw-fg\` | \`var(--kw-ink-900)\` | \`var(--kw-ink-900)\` |
 | \`--kw-bg\` | \`var(--kw-paper-50)\` | \`var(--kw-paper-50)\` |
+
+### 1.2 セマンティックカラー
+
+| トークン | light の参照先 | dark の参照先 | 用途 |
+| --- | --- | --- | --- |
+| \`--kw-fg\` | \`--kw-ink-900\` | \`--kw-ink-900\` | 主テキスト |
+| \`--kw-bg\` | \`--kw-paper-50\` | \`--kw-paper-50\` | 背景 |
 `;
 
 describe("stripBackticks", () => {
@@ -120,6 +127,24 @@ describe("computeProblems", () => {
           p.message.includes("light 値が不一致")
       )
     ).toBe(true);
+  });
+
+  it("§1.2 のセマンティック値が不一致だと light / dark それぞれ検出する", () => {
+    const docMismatch = DOC_FIXTURE_MATCHING.replace(
+      "| `--kw-fg` | `--kw-ink-900` | `--kw-ink-900` |",
+      "| `--kw-fg` | `INVALID` | `INVALID` |"
+    );
+    expect(docMismatch).not.toBe(DOC_FIXTURE_MATCHING);
+    const { problems } = computeProblems(CSS_FIXTURE, docMismatch);
+    for (const theme of ["light", "dark"]) {
+      expect(
+        problems.some(
+          (p) =>
+            p.message.includes("--kw-fg") &&
+            p.message.includes(`${theme} 値が不一致`)
+        )
+      ).toBe(true);
+    }
   });
 
   it("doc 側に余剰なトークンがあると検出する", () => {

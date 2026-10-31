@@ -115,7 +115,36 @@ export function computeProblems(
     /^### カラートークン（light \/ dark）/
   );
 
+  // §1.2: 「トークン | light | dark | 用途」形式の表だけが値比較の対象。
+  // 参照先が 1 列の表（アクセント）やトークン名でない行（ステータスピル）は除外される。
+  const semanticDocRows = extractDocTableRows(
+    docLines,
+    /^### 1\.2 セマンティックカラー/
+  ).filter((r) => r.cols.length >= 4);
+
   const problems: Problem[] = [];
+
+  // §1.2: セマンティックトークンの値不一致（`--kw-x` 表記は CSS の `var(--kw-x)` に正規化）
+  const normalizeDocValue = (s: string) => {
+    const v = stripBackticks(s);
+    return /^--kw-[\w-]+$/.test(v) ? `var(${v})` : v;
+  };
+  for (const row of semanticDocRows) {
+    for (const [theme, map, col] of [
+      ["light", lightMap, 1],
+      ["dark", darkMap, 2],
+    ] as const) {
+      const docValue = normalizeDocValue(row.cols[col] ?? "");
+      const cssValue = map.get(row.name) ?? "";
+      if (docValue !== cssValue) {
+        problems.push({
+          file: docFileLabel,
+          line: row.line,
+          message: `--kw-${row.name} の ${theme} 値が不一致（§1.2 doc: \`${docValue}\` / tokens.css: \`${cssValue}\`）`,
+        });
+      }
+    }
+  }
 
   // §1.1: プリミティブトークンの欠落・余剰・値不一致
   const primitiveDocNames = new Set(primitiveDocRows.map((r) => r.name));
