@@ -418,4 +418,40 @@ describe("#895 BlogSearch の21件目以降の表示", () => {
     expect(results.innerHTML).toContain("new-1<");
     expect(results.innerHTML).not.toContain("LATE");
   });
+
+  it("#946 旧追加取得が保留中でも、新検索のもっと表示は受け付けられる", async () => {
+    let resolveLate: (v: unknown) => void = () => {};
+    const late = new Promise((r) => {
+      resolveLate = r;
+    });
+    const fakePagefind = {
+      init: async () => {},
+      debouncedSearch: async (term: string) =>
+        term === "old"
+          ? { results: [...hitsOf(20, "old"), { data: () => late }] }
+          : { results: hitsOf(21, "new") },
+    };
+    const { input, more, results } = setupDom(fakePagefind);
+
+    input.value = "old";
+    input.listeners.input();
+    await flush();
+    more.listeners.click();
+    await flush();
+
+    input.value = "new";
+    input.listeners.input();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(20);
+
+    more.listeners.click();
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(21);
+    expect(results.innerHTML).toContain("new-21<");
+
+    resolveLate({ url: "/late/", meta: { title: "LATE" }, excerpt: "" });
+    await flush();
+    expect(countArticles(results.innerHTML)).toBe(21);
+    expect(results.innerHTML).not.toContain("LATE");
+  });
 });

@@ -111,7 +111,8 @@
     let hits: PagefindResult[] = [];
     let entries: PagefindResultData[] = [];
     let currentTerm = "";
-    let loadingMore = false;
+    // 追加取得中の結果集合。新検索の追加取得を旧リクエストの完了待ちでブロックしないよう、フラグでなく集合で持つ。
+    let loadingBase: PagefindResult[] | null = null;
 
     async function ensurePagefind(): Promise<PagefindApi | null> {
       if (pagefind || initFailed) return pagefind;
@@ -233,10 +234,10 @@
     }
 
     async function loadMore() {
-      if (loadingMore) return;
-      loadingMore = true;
       // 新検索の完了前は hits が前の結果のまま。結果集合と世代の両方で追加分の適用可否を決める。
       const base = hits;
+      if (loadingBase === base) return;
+      loadingBase = base;
       const gen = generation;
       try {
         const next = await Promise.all(
@@ -252,7 +253,8 @@
         if (gen !== generation || base !== hits) return;
         status.textContent = "続きの取得に失敗しました";
       } finally {
-        loadingMore = false;
+        // 旧リクエストの完了が新リクエストの追加取得状態を解除しない。
+        if (loadingBase === base) loadingBase = null;
       }
     }
 
