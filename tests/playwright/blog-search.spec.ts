@@ -32,6 +32,7 @@ test.describe("#341 /blog full-text search", () => {
     // 検索モード中は既存フィルタ/一覧が隠れる。
     await expect(page.locator(".filter-bar")).toBeHidden();
     await expect(page.locator("#posts-list")).toBeHidden();
+    await expect(page.locator(".pagination")).toBeHidden();
 
     // ステータスに件数が出る。
     await expect(page.locator(".blog-search__status")).toContainText(
@@ -42,14 +43,17 @@ test.describe("#341 /blog full-text search", () => {
   test("clearing search restores the filter view", async ({ page }) => {
     await page.goto("/blog");
     await page.waitForLoadState("networkidle");
+    await expect(page.locator(".pagination")).toBeVisible();
 
     await page.locator(".blog-search__input").fill("設計");
     await expect(page.locator(".blog-search__result").first()).toBeVisible();
+    await expect(page.locator(".pagination")).toBeHidden();
 
     await page.locator(".blog-search__clear").click();
 
     await expect(page.locator(".filter-bar")).toBeVisible();
     await expect(page.locator("#posts-list")).toBeVisible();
+    await expect(page.locator(".pagination")).toBeVisible();
     await expect(page.locator(".blog-search__results")).toBeHidden();
   });
 

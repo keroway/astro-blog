@@ -5,7 +5,7 @@
  * Pagefind (ADR 0015 / #340 で生成済みの dist/client/pagefind/) の JS API を使い、
  * 記事タイトル・本文をリアルタイム検索する。既存のカテゴリ/年フィルタ (BlogCategoryFilter.astro
  * が生成する静的リンク一覧 = .filter-bar) と共存し、検索クエリ入力中は静的一覧 (#posts-list) +
- * フィルタ (.filter-bar) を隠して検索結果を表示する。
+ * フィルタ (.filter-bar) + ページネーション (.pagination) を隠して検索結果を表示する。
  *
  * プログレッシブエンハンスメント:
  *   - 入力欄は初期状態 `disabled`。JS が Pagefind の初期化に成功して初めて有効化する。
@@ -94,6 +94,7 @@
     // 既存の静的一覧 + フィルタ。検索モード中は隠す。
     const filterBar = document.querySelector<HTMLElement>(".filter-bar");
     const postsList = document.getElementById("posts-list");
+    const pagination = document.querySelector<HTMLElement>(".pagination");
 
     if (!input || !resultsEl || !statusEl) return;
     // 以降のクロージャで non-null narrowing を確実に効かせるため const に束ね直す。
@@ -137,6 +138,7 @@
     function setSearchMode(active: boolean) {
       if (filterBar) filterBar.hidden = active;
       if (postsList) postsList.hidden = active;
+      if (pagination) pagination.hidden = active;
       if (clearBtn) clearBtn.hidden = !active;
       results.hidden = !active;
       if (moreBtn && !active) moreBtn.hidden = true;
