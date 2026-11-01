@@ -36,8 +36,8 @@ importers:
         specifier: ^0.9.9
         version: 0.9.12(@emnapi/runtime@1.11.3)(prettier@3.8.3)(typescript@6.0.3)
       '@astrojs/markdoc':
-        specifier: 2.1.1
-        version: 2.1.1(astro@7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: 2.1.2
+        version: 2.1.2(astro@7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
       '@astrojs/rss':
         specifier: ^4.0.19
         version: 4.0.19
@@ -45,8 +45,8 @@ importers:
         specifier: ^3.7.3
         version: 3.7.4
       '@astrojs/vercel':
-        specifier: 11.0.16
-        version: 11.0.16(astro@7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))(ws@8.21.3)
+        specifier: 11.0.17
+        version: 11.0.17(astro@7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))(ws@8.21.3)
       '@axe-core/playwright':
         specifier: ^4.12.1
         version: 4.14.0(playwright-core@1.63.0)
@@ -76,7 +76,7 @@ importers:
         version: 66.7.5(vite@8.3.5(@types/node@24.12.4)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
       astro:
         specifier: ^7.3.1
-        version: 7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
+        version: 7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
       happy-dom:
         specifier: ^21.0.0
         version: 21.0.4
@@ -273,17 +273,17 @@ packages:
       prettier-plugin-astro:
         optional: true
 
-  '@astrojs/markdoc@2.1.1':
-    resolution: {integrity: sha512-dVnKKo2DreEsqY4Agxr4f6EwF3+Q+DvwAIzlxW9mMtNtssPa2BWDZzT6NYhW/fgOIzjAkg4b9L7TOuEwo4BrzQ==}
+  '@astrojs/markdoc@2.1.2':
+    resolution: {integrity: sha512-NfdsVZoopdjT8/DuUEHxbzgC9P+ch1g1Jk0gnAPT/ClB19Rds5NjgSHQx+8W8ROPNceKn+E8zNK8ys7rOva4/A==}
     engines: {node: '>=22.23.4'}
     peerDependencies:
       astro: ^7.4.0
 
-  '@astrojs/markdown-satteri@0.4.5':
-    resolution: {integrity: sha512-0IeGdoFbv0f+442KJhYS44Wg8F3MuHmRsxIEYuFyqkjRubc6dPBFZ7azor5t4AeXLQoT5A5h9HyViKpd70Dl9w==}
+  '@astrojs/markdown-satteri@0.4.6':
+    resolution: {integrity: sha512-6biKp2lEAYycF3jhv91br+Otyf4EgDFkF1oRL9ks0u/m/YRGmI7XkGQ2MgaM35DslT03f7NtozKtlqfBNkp6bw==}
 
-  '@astrojs/prism@4.1.1':
-    resolution: {integrity: sha512-sXlAXJX6t4QfuLg+CuCDzpg7NoxWcyb4paFprgtFppLeisCBmh935h+tJ5CWXfsXEoW2IDy/ihbRMtiu28Chjw==}
+  '@astrojs/prism@4.1.2':
+    resolution: {integrity: sha512-jMrUEpFDarDO1KWPvVc9eSa8DSfwBlwEOHwX+8zvZQpiqXRGDxFnOXHsYqV6DP7w+0qIgTr98gS1GdQlm8ypWg==}
     engines: {node: '>=22.23.4'}
 
   '@astrojs/rss@4.0.19':
@@ -292,12 +292,12 @@ packages:
   '@astrojs/sitemap@3.7.4':
     resolution: {integrity: sha512-LbKNC24bdUWcQf/pThB6qLlSqHojxGjZDURIzFocY8rlWnAn2t74nnhnK6S5x0NHriHoAduLEpVjRykmeGiVvA==}
 
-  '@astrojs/telemetry@3.4.1':
-    resolution: {integrity: sha512-SMkvMsGOpM0FMAoT5pzhgI3LZC0JSPWf7Evwop+fZ3N6UkusPM7lI+sOJjMNI5OJrVoiei1/AGo1cY7sikTc5A==}
+  '@astrojs/telemetry@3.4.2':
+    resolution: {integrity: sha512-2JOMRUxJrBSfiVDfeKLv1wBmvSIx1Y6u2YEO8awZ9qSq3u/rNAiUyFdOYi8dHv91kHrmYEQX7pRDw0J4xyj3UA==}
     engines: {node: '>=22.23.4'}
 
-  '@astrojs/vercel@11.0.16':
-    resolution: {integrity: sha512-hqDyOlTkyoU8ib4EpNfDYmSN1NrBDKuEjLi6CUtUsMsb4NmvF+KrJaKH9/+VHaNNV7qpPpyuwSZGhk8GxUndig==}
+  '@astrojs/vercel@11.0.17':
+    resolution: {integrity: sha512-usk74/EsFpU1Dx7I0MkE2/7zgEShCY6lh5In9z5bxZm/oTxDLKoAa8mlZ56+jk1z6s3ZOGHI4BZtaKys7VDZqw==}
     peerDependencies:
       astro: ^7.0.0
 
@@ -1756,8 +1756,8 @@ packages:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
 
-  astro@7.4.2:
-    resolution: {integrity: sha512-FAH4cdDlFaVnQGjazLTEIC5vJqGlo5XANc1wIbzQHIqAjJTll/RWTUs+SPNW1JdezG4YGxMZllaE5A41T2kzhA==}
+  astro@7.4.4:
+    resolution: {integrity: sha512-e+BzhGCaIY/H1tV/BQPTbOPZVZ8wuu6+bbpc+3oSMH2UgoB1l9peSGASk6nswtYra9PO9OoMREhldKtQkZ5TVw==}
     engines: {node: '>=22.23.4', npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
     peerDependencies:
@@ -3773,12 +3773,12 @@ snapshots:
       - '@emnapi/runtime'
       - typescript
 
-  '@astrojs/markdoc@2.1.1(astro@7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))':
+  '@astrojs/markdoc@2.1.2(astro@7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
-      '@astrojs/prism': 4.1.1
+      '@astrojs/prism': 4.1.2
       '@markdoc/markdoc': 0.5.10
-      astro: 7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
       github-slugger: 2.0.0
       htmlparser2: 12.0.0
       rolldown: 1.2.15
@@ -3786,14 +3786,14 @@ snapshots:
       - '@types/react'
       - react
 
-  '@astrojs/markdown-satteri@0.4.5':
+  '@astrojs/markdown-satteri@0.4.6':
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
-      '@astrojs/prism': 4.1.1
+      '@astrojs/prism': 4.1.2
       github-slugger: 2.0.0
       satteri: 0.10.5
 
-  '@astrojs/prism@4.1.1':
+  '@astrojs/prism@4.1.2':
     dependencies:
       prismjs: 1.30.0
 
@@ -3808,21 +3808,21 @@ snapshots:
       sitemap: 9.0.1
       zod: 4.5.4
 
-  '@astrojs/telemetry@3.4.1':
+  '@astrojs/telemetry@3.4.2':
     dependencies:
       ci-info: 4.4.0
       dset: 3.1.4
       is-docker: 4.0.0
       package-manager-detector: 1.9.0
 
-  '@astrojs/vercel@11.0.16(astro@7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))(ws@8.21.3)':
+  '@astrojs/vercel@11.0.17(astro@7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))(ws@8.21.3)':
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
       '@vercel/analytics': 2.0.1
       '@vercel/functions': 3.10.3(ws@8.21.3)
       '@vercel/nft': 1.11.0
       '@vercel/routing-utils': 6.6.0
-      astro: 7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
+      astro: 7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1)
       rolldown: 1.2.15
       tinyglobby: 0.2.17
     transitivePeerDependencies:
@@ -5045,12 +5045,12 @@ snapshots:
 
   assertion-error@2.0.1: {}
 
-  astro@7.4.2(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1):
+  astro@7.4.4(@types/node@24.12.4)(@vercel/functions@3.10.3(ws@8.21.3))(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler-rs': 0.5.2
       '@astrojs/internal-helpers': 0.13.0
-      '@astrojs/markdown-satteri': 0.4.5
-      '@astrojs/telemetry': 3.4.1
+      '@astrojs/markdown-satteri': 0.4.6
+      '@astrojs/telemetry': 3.4.2
       '@capsizecss/unpack': 4.0.1
       '@clack/prompts': 1.8.1
       '@oslojs/encoding': 1.1.0
