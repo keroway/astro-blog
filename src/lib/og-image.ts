@@ -23,3 +23,22 @@ export function lookupCmsAsset<T>(
   }
   return asset;
 }
+
+export interface OgImageSize {
+  width: number | null;
+  height: number | null;
+}
+
+/**
+ * og:image:width/height に出す寸法を決める (#950)。
+ * 自動生成 (/og/*.png) は 1200x630 固定、CMS アセットは実寸、
+ * 実寸不明の外部 URL は null (メタタグ省略)。
+ */
+export function resolveOgImageSize(
+  customOgImage: string | undefined,
+  asset: { width: number; height: number } | null
+): OgImageSize {
+  if (!customOgImage) return { width: 1200, height: 630 };
+  if (asset) return { width: asset.width, height: asset.height };
+  return { width: null, height: null };
+}
