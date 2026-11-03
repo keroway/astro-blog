@@ -34,3 +34,17 @@ test.describe("#354 theme persists across client-side navigation", () => {
     await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   });
 });
+
+// #952: localStorage 読み込みが例外でも初回初期化で OS 設定を解決すること。
+test.describe("#952 theme init when localStorage.getItem throws", () => {
+  test("falls back to OS dark on first paint", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await page.addInitScript(() => {
+      Storage.prototype.getItem = () => {
+        throw new Error("storage blocked");
+      };
+    });
+    await page.goto("/");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+});
