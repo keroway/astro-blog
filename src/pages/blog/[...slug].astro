@@ -5,7 +5,7 @@ import BlogPost from '../../layouts/BlogPost.astro';
 import type { BlogEntry } from '../../types/content';
 import { encodeSlugId } from '../../lib/slug';
 import { calculateReadingTime, getPublishedPosts, getRelatedPosts } from '../../lib/content';
-import { isCmsAssetPath, lookupCmsAsset } from '../../lib/og-image';
+import { isCmsAssetPath, lookupCmsAsset, resolveOgImageSize } from '../../lib/og-image';
 
 export async function getStaticPaths() {
 	const sorted = await getPublishedPosts();
@@ -74,6 +74,8 @@ const customOgImageUrl = ogSource
 	: customOgImage;
 // ogImage が指定されていればカスタム OG 画像として優先、未指定なら自動生成 (#362)。
 const ogImage = customOgImageUrl ?? `/og/${encodeSlugId(post.id)}.png`;
+// 寸法: 自動生成は 1200x630、CMS アセットは実寸、実寸不明の外部 URL は null でメタタグを省略 (#950)。
+const ogImageSize = resolveOgImageSize(customOgImage, ogSource);
 // 読了時間は本文から常に自動算出する (#361)。
 const readingTime = calculateReadingTime(post.body ?? '');
 ---
@@ -83,6 +85,8 @@ const readingTime = calculateReadingTime(post.body ?? '');
 	id={post.id}
 	readingTime={readingTime}
 	ogImage={ogImage}
+	ogImageWidth={ogImageSize.width}
+	ogImageHeight={ogImageSize.height}
 	headings={headings}
 	prevPost={prevPost}
 	nextPost={nextPost}

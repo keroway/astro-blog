@@ -13,8 +13,10 @@ interface Props {
 	description: string;
 	image?: string | null;
 	/** og:image の実寸。省略時は既定の 1200x630 (OGP 生成画像) */
-	imageWidth?: number;
-	imageHeight?: number;
+	/** null で og:image:width を省略する (実寸不明の外部画像用)。undefined は 1200。 */
+	imageWidth?: number | null;
+	/** null で og:image:height を省略する。undefined は 630。 */
+	imageHeight?: number | null;
 	locale?: string;
 	canonicalUrl?: string;
 	articleSchema?: Record<string, unknown>;
@@ -147,8 +149,12 @@ const websiteSchema = {
 {ogImageUrl && (
 	<>
 		<meta property="og:image" content={ogImageUrl} />
-		<meta property="og:image:width" content={String(imageWidth)} />
-		<meta property="og:image:height" content={String(imageHeight)} />
+		{imageWidth != null && imageHeight != null && (
+			<>
+				<meta property="og:image:width" content={String(imageWidth)} />
+				<meta property="og:image:height" content={String(imageHeight)} />
+			</>
+		)}
 		<meta property="og:image:alt" content={ogImageAlt} />
 	</>
 )}

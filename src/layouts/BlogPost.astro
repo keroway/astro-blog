@@ -24,6 +24,9 @@ interface Props extends BlogData {
   /** View Transitions morph 用の slug (issue #500)。一覧側の PostRow / WorksCard と一致させる。 */
   id?: string;
   ogImage?: string;
+  /** OG 画像の実寸。null は寸法不明 (メタタグ省略)、未指定は既定の 1200x630。 */
+  ogImageWidth?: number | null;
+  ogImageHeight?: number | null;
   readingTime?: number;
   headings?: Heading[];
   prevPost?: BlogEntry | null;
@@ -49,6 +52,8 @@ const {
   heroImage,
   canonicalUrl,
   ogImage,
+  ogImageWidth,
+  ogImageHeight,
   author,
   readingTime,
   headings = [],
@@ -105,7 +110,7 @@ const breadcrumbSchema = {
 };
 ---
 
-<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema}>
+<SiteLayout title={title} description={description} image={ogImage ?? heroImageSrc} imageWidth={ogImageWidth} imageHeight={ogImageHeight} mainClass="post-layout" canonicalUrl={canonicalUrl} articleSchema={articleSchema} breadcrumbSchema={breadcrumbSchema}>
   <ReadingProgress />
   <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Blog", href: "/blog/" }, { label: title }]} />
   <div class="post-wrap">
