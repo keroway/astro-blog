@@ -28,6 +28,32 @@ test.describe("#851 stamp rally script is evaluated safely twice", () => {
   });
 });
 
+test.describe("#954 stamp rally exposes collected state as text", () => {
+  test("partial collection labels each station in text", async ({ page }) => {
+    await visitColophonWith(page, JSON.stringify(["home"]));
+    const state = (id: string) =>
+      page.locator(
+        `.stamp-book__item[data-stamp-id="${id}"] [data-stamp-state]`
+      );
+    await expect(state("home")).toHaveText("取得済み");
+    await expect(state("colophon")).toHaveText("取得済み");
+    await expect(state("works")).toHaveText("未取得");
+    await expect(
+      page.locator("[data-stamp-state]", { hasText: "未取得" })
+    ).toHaveCount(4);
+  });
+
+  test("full collection labels every station collected", async ({ page }) => {
+    await visitColophonWith(
+      page,
+      JSON.stringify(["home", "works", "blog", "about", "now"])
+    );
+    await expect(page.locator("[data-stamp-state]")).toHaveText(
+      Array(6).fill("取得済み")
+    );
+  });
+});
+
 test.describe("#833 stamp rally validates saved values", () => {
   test("unknown ids do not trigger the completion message", async ({
     page,
