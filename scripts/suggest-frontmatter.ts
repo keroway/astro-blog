@@ -11,6 +11,7 @@ import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { BLOG_CATEGORIES } from "../src/lib/content-schema";
 import { stripBom } from "./lib/strip-bom.ts";
+import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
 
 type Frontmatter = {
   title?: string;
@@ -51,12 +52,23 @@ function extractBody(content: string): string {
     .trim();
 }
 
-const SCHEMA = {
+const MIN_DESCRIPTION_LENGTH = 50;
+
+export function isValidSuggestedDescription(description: string): boolean {
+  return (
+    description.length >= MIN_DESCRIPTION_LENGTH &&
+    description.length <= MAX_DESCRIPTION_LENGTH
+  );
+}
+
+export const SCHEMA = {
   type: "object" as const,
   properties: {
     description: {
       type: "string",
-      description: "記事の概要（50〜160文字、日本語）",
+      minLength: MIN_DESCRIPTION_LENGTH,
+      maxLength: MAX_DESCRIPTION_LENGTH,
+      description: `記事の概要（${MIN_DESCRIPTION_LENGTH}〜${MAX_DESCRIPTION_LENGTH}文字、日本語）`,
     },
     tags: {
       type: "array",
@@ -171,6 +183,13 @@ ${BLOG_CATEGORIES.join(", ")}
     process.exit(1);
   }
 
+  if (!isValidSuggestedDescription(result.description)) {
+    console.error(
+      `提案された description が文字数制約 (${MIN_DESCRIPTION_LENGTH}〜${MAX_DESCRIPTION_LENGTH}文字) を満たしません (${result.description.length}文字)。再実行してください。`
+    );
+    process.exit(1);
+  }
+
   console.log("=== frontmatter 補完提案 ===\n");
   console.log(`description: "${result.description}"`);
   console.log(`tags: [${result.tags.map((t) => `"${t}"`).join(", ")}]`);
@@ -191,7 +210,9 @@ ${BLOG_CATEGORIES.join(", ")}
   }
 }
 
-main().catch((err: unknown) => {
-  console.error("エラー:", err instanceof Error ? err.message : err);
-  process.exit(1);
-});
+if (import.meta.main) {
+  main().catch((err: unknown) => {
+    console.error("エラー:", err instanceof Error ? err.message : err);
+    process.exit(1);
+  });
+}
