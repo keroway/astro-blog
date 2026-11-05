@@ -50,8 +50,17 @@ function parseArgs(argv: string[]): {
   let suggest = false;
 
   for (let i = 1; i < args.length; i++) {
-    if (args[i] === "--slug" && args[i + 1]) {
-      slug = args[++i];
+    if (args[i] === "--slug") {
+      const value = args[i + 1];
+      if (!value || value.startsWith("--")) {
+        console.error("Error: --slug には値が必要です");
+        console.error(
+          'Usage: pnpm run new-post "タイトル" [--slug <slug>] [--suggest]'
+        );
+        process.exit(1);
+      }
+      slug = value;
+      i++;
     } else if (args[i] === "--suggest") {
       suggest = true;
     }

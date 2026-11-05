@@ -23,6 +23,31 @@ describe("generateSlug / getTodayIso / parseArgs", () => {
       suggest: true,
     });
   });
+
+  it("--slug の値を読み取る", async () => {
+    const { parseArgs } = await import("./new-post");
+    expect(
+      parseArgs(["node", "new-post.ts", "Title", "--slug", "my-slug"])
+    ).toEqual({ title: "Title", slug: "my-slug", suggest: false });
+  });
+
+  it.each([
+    ["値が欠けた末尾の --slug", ["Title", "--slug"]],
+    ["後続オプションが続く --slug", ["Title", "--slug", "--suggest"]],
+  ])("%s は使用方法を表示して非0終了する", async (_name, rest) => {
+    const { parseArgs } = await import("./new-post");
+    const exit = vi.spyOn(process, "exit").mockImplementation((() => {
+      throw new Error("exit");
+    }) as never);
+    const err = vi.spyOn(console, "error").mockImplementation(() => {});
+    try {
+      expect(() => parseArgs(["node", "new-post.ts", ...rest])).toThrow("exit");
+      expect(exit).toHaveBeenCalledWith(1);
+    } finally {
+      exit.mockRestore();
+      err.mockRestore();
+    }
+  });
 });
 
 describe("runSuggestFrontmatter", () => {
