@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { assertDescriptionLength } from "./lib/assert-description-length.ts";
 import { replaceDescription } from "./lib/replace-description.ts";
 import { stripBom } from "./lib/strip-bom.ts";
+import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
 
 const BLOG_DIR = path.resolve(import.meta.dirname, "../src/content/blog");
 const SCHEMA = {
@@ -10,6 +12,7 @@ const SCHEMA = {
   properties: {
     description: {
       type: "string",
+      maxLength: MAX_DESCRIPTION_LENGTH,
       description:
         "記事の概要（日本語、50〜120文字以内、1〜2文。SEOのmeta description/OGP/Twitter Cardにそのまま使われるため厳守）",
     },
@@ -97,6 +100,8 @@ ${bodyPreview}
       `${path.basename(filePath)} の description 生成に失敗しました`
     );
   }
+
+  assertDescriptionLength(description, path.basename(filePath));
 
   return description;
 }
