@@ -87,7 +87,16 @@ overrides:
   # osv-scanner 検出分 (2026-09-29、#823)。
   # GHSA-2vr4-cq9g-pvrc / GHSA-rpw4-54j3-4h4q (ip-address <10.5.1) —
   # @anthropic-ai/claude-agent-sdk>@modelcontextprotocol/sdk>express-rate-limit 経由。
-  "ip-address@<10.5.1": ">=10.5.1 <11"
+  "ip-address@<10.7.4": ">=10.7.4 <11"
+  # osv-scanner 検出分 (2026-11-05、#962)。
+  # GHSA-27r3-jxmh-p828 (body-parser <2.4.0) — claude-agent-sdk>@modelcontextprotocol/sdk>express 経由。
+  "body-parser@<2.4.0": ">=2.4.0 <3"
+  # GHSA-mrhx-c7xc-m3w5 (zod <4.6.6) — @vercel/oidc / @astrojs/rss / @astrojs/sitemap 経由。
+  "zod@>=4.0.0 <4.6.6": ">=4.6.6 <5"
+  # GHSA-3g3m-2fjr-6pw4 (glob 13.x) / GHSA-g3hv-75wg-m249 (minimatch 10.x) — @astrojs/vercel>@vercel/nft 経由。
+  # 修正版は次メジャー。upstream が追従したら削除する。
+  "glob@>=13.0.0 <14.0.2": ">=14.0.2 <15"
+  "minimatch@>=10.0.0 <11.0.1": ">=11.0.1 <12"
 minimumReleaseAgeExclude:
   # Renovate security update: happy-dom@21.0.4
   - happy-dom@21.0.4
