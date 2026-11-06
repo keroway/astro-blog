@@ -96,11 +96,9 @@ describe("calculateReadingTime", () => {
     expect(calculateReadingTime("a".repeat(800))).toBe(2);
   });
 
-  it("フロントマターブロックは文字数に含めない", () => {
-    const frontmatter = "---\ntitle: Test\n---\n";
-    const body = "a".repeat(400);
-    // フロントマター込みでも本文 400 文字 → 1 分
-    expect(calculateReadingTime(frontmatter + body)).toBe(1);
+  it("水平線で挟まれた段落も文字数に含める (#964)", () => {
+    const body = `---\n\n${"あ".repeat(1200)}\n\n---\n\nえお`;
+    expect(calculateReadingTime(body)).toBe(4);
   });
 
   it("長文は切り上げで計算する", () => {
@@ -296,16 +294,16 @@ describe("getTotalWritingChars", () => {
     expect(total).toBe(10);
   });
 
-  it("frontmatter ブロックは文字数から除く", async () => {
+  it("水平線で挟まれた段落も文字数に含める (#964)", async () => {
     setMockCollection("blog", [
       makeBlogEntry(
         "a",
         { pubDate: new Date("2024-01-01") },
-        `---\ntitle: Test\n---\n${"a".repeat(50)}`
+        `---\n\n${"a".repeat(50)}\n\n---\n\nbb`
       ),
     ]);
     const total = await getTotalWritingChars(new Date("2024-06-15"));
-    expect(total).toBe(50);
+    expect(total).toBe(`---\n\n${"a".repeat(50)}\n\n---\n\nbb`.length);
   });
 
   it("記事が無ければ 0 を返す", async () => {
