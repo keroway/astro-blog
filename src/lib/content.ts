@@ -9,7 +9,7 @@ const READING_SPEED_CHARS_PER_MIN = 400;
  * readingTime は frontmatter では持たず、ビルド時に本文から常に算出する (#361)。
  */
 export function calculateReadingTime(body: string): number {
-  const text = body.replace(/^---[\s\S]*?---/, "").trim();
+  const text = body.trim();
   return Math.max(1, Math.ceil(text.length / READING_SPEED_CHARS_PER_MIN));
 }
 
@@ -41,8 +41,7 @@ export async function getTotalWritingChars(
 ): Promise<number> {
   const posts = await getPublishedPosts(now);
   return posts.reduce((total, post) => {
-    const text = (post.body ?? "").replace(/^---[\s\S]*?---/, "").trim();
-    return total + text.length;
+    return total + (post.body ?? "").trim().length;
   }, 0);
 }
 
