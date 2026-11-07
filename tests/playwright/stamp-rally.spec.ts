@@ -54,6 +54,28 @@ test.describe("#954 stamp rally exposes collected state as text", () => {
   });
 });
 
+test.describe("#970 stamp rally keeps stamps when saving fails", () => {
+  test("stamps survive client-side navigation and the user is told", async ({
+    page,
+  }) => {
+    await page.addInitScript(() => {
+      Storage.prototype.setItem = () => {
+        throw new DOMException("quota", "QuotaExceededError");
+      };
+    });
+    await page.goto("/");
+    await page.locator('footer a[href="/colophon"]').click();
+    await expect(page).toHaveURL(/\/colophon\/?$/);
+    await expect(
+      page.locator('.stamp-book__item[data-stamp-id="colophon"]')
+    ).toHaveClass(/is-collected/);
+    await expect(
+      page.locator('.stamp-book__item[data-stamp-id="home"]')
+    ).toHaveClass(/is-collected/);
+    await expect(page.locator("[data-stamp-unsaved]")).toBeVisible();
+  });
+});
+
 test.describe("#833 stamp rally validates saved values", () => {
   test("unknown ids do not trigger the completion message", async ({
     page,
