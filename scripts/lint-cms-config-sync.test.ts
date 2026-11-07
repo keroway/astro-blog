@@ -80,6 +80,17 @@ describe("computeProblems", () => {
     expect(problems).toHaveLength(2);
   });
 
+  it("description の pattern が 120 文字ちょうどしか許可しない退行を検出する", () => {
+    const config = CONFIG_FIXTURE.replaceAll("{0,120}", "{120}");
+    const problems = computeProblems(
+      config,
+      ["dev", "tools"],
+      ["active", "wip"]
+    );
+    expect(problems).toHaveLength(2);
+    expect(problems[0]?.message).toContain("description.pattern");
+  });
+
   it("フィールド自体が見つからない場合を検出する", () => {
     const problems = computeProblems(
       "collections:\n  - name: blog\n    fields: []\n",
