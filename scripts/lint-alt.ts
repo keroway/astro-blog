@@ -38,7 +38,8 @@ const REFERENCE_LABEL_ONLY_PATTERN = /^\s{0,3}\[([^\]]+)\]:\s*$/;
 // フェンスも終了したものとして扱う。
 const CONTAINER_PREFIX_PATTERN =
   /^\s{0,3}(?:(>)[ \t]?|(?:[-+*]|\d{1,9}[.)])([ \t]+))/;
-const FENCE_OPEN_PATTERN = /^\s{0,3}(`{3,}|~{3,})/;
+// バッククォートフェンスの情報文字列にバッククォートを含む行は開始行ではない (CommonMark 4.5)。
+const FENCE_OPEN_PATTERN = /^\s{0,3}(`{3,}(?![^\n]*`)|~{3,})/;
 const FENCE_CLOSE_PATTERN = /^\s{0,3}(`{3,}|~{3,})\s*$/;
 // コードスパンは改行をまたげるが、空行（段落区切り）はまたげない。
 // 開始側のバッククォート列の直前にバックスラッシュが奇数個あるとき、先頭の 1 個は
