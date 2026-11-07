@@ -100,8 +100,17 @@ function computeDescriptionProblems(config: unknown): Problem[] {
     const source = Array.isArray(field?.pattern) ? field.pattern[0] : undefined;
     const regex = typeof source === "string" ? new RegExp(source) : undefined;
     const accepts = (length: number) => regex?.test("あ".repeat(length));
+    // 上限ちょうど・上限超過に加え、上限未満の代表値も受理されることを確認する
+    // （最小長制限が混入した退行を検出するため）
+    const acceptedLengths = [
+      0,
+      1,
+      Math.floor(MAX_DESCRIPTION_LENGTH / 2),
+      MAX_DESCRIPTION_LENGTH - 1,
+      MAX_DESCRIPTION_LENGTH,
+    ];
     if (
-      !accepts(MAX_DESCRIPTION_LENGTH) ||
+      !acceptedLengths.every(accepts) ||
       accepts(MAX_DESCRIPTION_LENGTH + 1)
     ) {
       problems.push({
