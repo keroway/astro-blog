@@ -380,6 +380,22 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("情報文字列にバッククォートを含む行を開始フェンスと誤認せず後続の画像を検出する", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-invalid-fence-open.md"
+    );
+    const content = ["```bad`", "", "![](/sample.png)"].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 3, alt: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("リスト内コードフェンスの閉じフェンス後の画像を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-list-fence.md");
     const content = [
