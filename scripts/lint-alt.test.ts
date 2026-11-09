@@ -198,6 +198,34 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("空白を含む山括弧付き参照定義 (同一行 / 次行) の外部ホスト画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-space.md");
+    const content = [
+      "![説明文です][a]",
+      "",
+      "[a]: <https://i.imgur.com/sample image.png>",
+      "",
+      "![説明文です][b]",
+      "",
+      "[b]:",
+      "  <https://lh3.googleusercontent.com/sample image.png>",
+      "",
+      "![十分に長い説明文][c]",
+      "",
+      "[c]: <./ok image.png>",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 5]);
+      expect(issues[0].reason).toBe(
+        "外部ホスト画像（imgur/googleusercontent）"
+      );
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("空白を含む山括弧付きインラインパスの空 alt と外部ホスト画像を検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-angle-space.md");
     const content = [

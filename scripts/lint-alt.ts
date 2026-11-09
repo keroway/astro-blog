@@ -194,6 +194,12 @@ function normalizeLabel(label: string): string {
   return label.trim().replace(/\s+/g, " ").toLowerCase();
 }
 
+// 山括弧付き宛先は空白を含められるため閉じ山括弧まで、それ以外は最初の空白まで
+function extractDestination(text: string): string {
+  const angle = text.match(/^<[^>\n]*>/);
+  return angle ? angle[0] : text.split(/\s+/)[0];
+}
+
 function collectReferenceDefinitions(
   lines: string[],
   inCode: boolean[]
@@ -206,13 +212,15 @@ function collectReferenceDefinitions(
     const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
     if (match) {
       label = normalizeLabel(match[1]);
-      src = match[2].trim();
+      src = extractDestination(
+        lines[i].slice(match[0].length - match[2].length)
+      );
     } else {
       const labelOnly = lines[i].match(REFERENCE_LABEL_ONLY_PATTERN);
       const next = lines[i + 1]?.trim();
       if (!labelOnly || !next || inCode[i + 1]) continue;
       label = normalizeLabel(labelOnly[1]);
-      src = next.split(/\s+/)[0];
+      src = extractDestination(next);
     }
     // Markdoc の描画は同じラベルの最初の定義を採用する
     if (!refs.has(label)) refs.set(label, src);
