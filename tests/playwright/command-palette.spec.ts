@@ -64,8 +64,21 @@ test.describe("#740 command palette shortcut after client-side navigation", () =
 
     // astro:page-load を複数回発火させ、window の keydown リスナーが
     // 再登録ごとに積み上がらないことを確認する (#740)。
+    // networkidle だけでは遷移完了 (swap 後の astro:page-load) を保証できず、
+    // Firefox でキー操作が swap と競合する (#891)。リスナーをクリック前に登録し、
+    // 期待 URL と page-load の両方を確認してから次の操作へ進む。
     for (const href of ["/works", "/blog", "/about"]) {
+      const pageLoaded = page.evaluate(
+        () =>
+          new Promise<void>((resolve) =>
+            document.addEventListener("astro:page-load", () => resolve(), {
+              once: true,
+            })
+          )
+      );
       await page.locator(`a.kw-header__link[href="${href}"]`).click();
+      await pageLoaded;
+      await expect(page).toHaveURL(new RegExp(`${href}/?$`));
       await page.waitForLoadState("networkidle");
     }
 
