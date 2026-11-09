@@ -31,8 +31,22 @@ describe("isTargetRemoteHost", () => {
     expect(isTargetRemoteHost("https://example.com/abc.png")).toBe(false);
   });
 
+  it("大文字スキームでも検出する", () => {
+    expect(isTargetRemoteHost("HTTPS://i.imgur.com/abc.png")).toBe(true);
+    expect(isTargetRemoteHost("Http://imgur.com/abc.png")).toBe(true);
+  });
+
+  it("プロトコル相対 URL でも検出する", () => {
+    expect(isTargetRemoteHost("//i.imgur.com/abc.png")).toBe(true);
+    expect(isTargetRemoteHost("<//lh3.googleusercontent.com/abc.png>")).toBe(
+      true
+    );
+    expect(isTargetRemoteHost("//example.com/abc.png")).toBe(false);
+  });
+
   it("相対パスは対象外", () => {
     expect(isTargetRemoteHost("../../assets/content/blog/xxx.png")).toBe(false);
+    expect(isTargetRemoteHost("/images/abc.png")).toBe(false);
   });
 
   it("不正な URL は対象外", () => {
