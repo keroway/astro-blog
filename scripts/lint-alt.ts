@@ -83,9 +83,10 @@ export function collectFiles(dir: string): string[] {
 
 export function isTargetRemoteHost(src: string): boolean {
   const url = src.replace(/^<(.*)>$/, "$1");
-  if (!/^https?:\/\//.test(url)) return false;
+  // スキームは大文字小文字を区別せず、プロトコル相対 (//host/...) も対象にする。
+  if (!/^(?:https?:)?\/\//i.test(url)) return false;
   try {
-    const host = new URL(url).hostname;
+    const host = new URL(url, "https://base.invalid").hostname;
     return TARGET_REMOTE_HOSTS.some(
       (target) => host === target || host.endsWith(`.${target}`)
     );
