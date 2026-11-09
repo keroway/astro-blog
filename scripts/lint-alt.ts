@@ -81,8 +81,31 @@ export function collectFiles(dir: string): string[] {
     );
 }
 
+// URL 内の文字参照は Markdoc の描画時に復号される。ホスト判定に関わる記号の
+// 名前付き参照と、数値参照（10 進 / 16 進）だけを復号する。
+const NAMED_CHAR_REFS: Record<string, string> = {
+  amp: "&",
+  colon: ":",
+  period: ".",
+  sol: "/",
+};
+
+function decodeCharRefs(text: string): string {
+  return text.replace(
+    /&(?:#(\d{1,7})|#[xX]([0-9a-fA-F]{1,6})|([A-Za-z]+));/g,
+    (match, dec?: string, hex?: string, name?: string) => {
+      if (name !== undefined) return NAMED_CHAR_REFS[name] ?? match;
+      const code = Number.parseInt(
+        dec ?? hex ?? "",
+        dec !== undefined ? 10 : 16
+      );
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+    }
+  );
+}
+
 export function isTargetRemoteHost(src: string): boolean {
-  const url = src.replace(/^<(.*)>$/, "$1");
+  const url = decodeCharRefs(src.replace(/^<(.*)>$/, "$1"));
   // スキームは大文字小文字を区別せず、プロトコル相対 (//host/...) も対象にする。
   if (!/^(?:https?:)?\/\//i.test(url)) return false;
   try {
