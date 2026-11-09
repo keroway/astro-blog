@@ -539,6 +539,45 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("コードスパンは見出し・水平線をまたがず、間の実画像を検出する (#987)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-block-boundary.md"
+    );
+    const content = [
+      "# heading `",
+      "![](/sample.png)",
+      "`",
+      "",
+      "`",
+      "![](/sample.png)",
+      "---",
+      "`",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([2, 6]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("alt 内のバッククォート対はコードスパンとして空白化せず alt の文字として扱う (#987)", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-in-alt-code.md");
+    const content = [
+      "![説明 `code`](/sample.png)",
+      "",
+      "`![](/sample.png)`",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("インラインコードの外側にある実際の画像は検出する", () => {
     const filePath = path.join(
       os.tmpdir(),

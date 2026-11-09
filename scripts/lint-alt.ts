@@ -129,12 +129,60 @@ export function altIssueReason(alt: string, src: string): string | null {
   return null;
 }
 
+// コードスパンは見出し・水平線などのブロック境界をまたげない (CommonMark 6.1)。
+const BLOCK_BOUNDARY_LINE_PATTERN =
+  /^ {0,3}(?:#{1,6}(?:[ \t]|$)|([-*_])(?:[ \t]*\1){2,}[ \t]*$)/;
+
+function maskChunk(text: string): string {
+  let result = "";
+  let cursor = 0;
+  for (;;) {
+    INLINE_CODE_SPAN_PATTERN.lastIndex = cursor;
+    const span = INLINE_CODE_SPAN_PATTERN.exec(text);
+    if (span === null) break;
+    // alt 内のバッククォート対は alt の文字であり、コードスパンではない。
+    // 先に始まる実画像の範囲に入るスパンは空白化せず、画像の終端から再開する。
+    IMAGE_INLINE_PATTERN.lastIndex = cursor;
+    let image = IMAGE_INLINE_PATTERN.exec(text);
+    while (
+      image !== null &&
+      (isEscaped(text, image.index) || /\n[ \t]*\n/.test(image[0]))
+    ) {
+      image = IMAGE_INLINE_PATTERN.exec(text);
+    }
+    if (
+      image !== null &&
+      image.index < span.index &&
+      span.index < image.index + image[0].length
+    ) {
+      result += text.slice(cursor, image.index + image[0].length);
+      cursor = image.index + image[0].length;
+      continue;
+    }
+    result += text.slice(cursor, span.index) + span[0].replace(/[^\n]/g, " ");
+    cursor = span.index + span[0].length;
+  }
+  return result + text.slice(cursor);
+}
+
 // 改行は残して空白化する（行番号の算出が元の行オフセットに依存するため）。
 export function maskInlineCodeSpans(text: string): string {
-  INLINE_CODE_SPAN_PATTERN.lastIndex = 0;
-  return text.replace(INLINE_CODE_SPAN_PATTERN, (match) =>
-    match.replace(/[^\n]/g, " ")
-  );
+  const chunks: string[] = [];
+  let current: string[] = [];
+  const flush = () => {
+    if (current.length > 0) chunks.push(maskChunk(current.join("\n")));
+    current = [];
+  };
+  for (const line of text.split("\n")) {
+    if (BLOCK_BOUNDARY_LINE_PATTERN.test(line)) {
+      flush();
+      chunks.push(maskChunk(line));
+    } else {
+      current.push(line);
+    }
+  }
+  flush();
+  return chunks.join("\n");
 }
 
 // `\!` のようにバックスラッシュ奇数個でエスケープされた `!` は画像記法にならない。
