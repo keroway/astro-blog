@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { parse as parseYaml } from "yaml";
 import { assertDescriptionLength } from "./lib/assert-description-length.ts";
 import { replaceDescription } from "./lib/replace-description.ts";
 import { stripBom } from "./lib/strip-bom.ts";
@@ -28,15 +29,11 @@ type Frontmatter = {
 function parseFrontmatter(content: string): Frontmatter {
   const match = stripBom(content).match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return {};
-  const raw = match[1];
+  const data = parseYaml(match[1]) as Record<string, unknown> | null;
   const result: Frontmatter = {};
-  for (const line of raw.split("\n")) {
-    const kv = line.match(/^(\w+):\s*(.+)$/);
-    if (!kv) continue;
-    const [, key, val] = kv;
-    const v = val.trim().replace(/^['"]|['"]$/g, "");
-    if (key === "title") result.title = v;
-    else if (key === "description") result.description = v;
+  if (typeof data?.title === "string") result.title = data.title;
+  if (typeof data?.description === "string") {
+    result.description = data.description;
   }
   return result;
 }

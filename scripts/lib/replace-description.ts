@@ -1,5 +1,6 @@
 // 二重引用符・単引用符どちらで書かれた description 行も対象にする。
-const DESCRIPTION_LINE = /^description:[ \t]*(?:".*"|'.*')[ \t]*$/m;
+// YAML の行末コメント（` # todo`）が付いていても書き換える。
+const DESCRIPTION_LINE = /^description:[ \t]*(?:".*"|'.*')[ \t]*(?:#.*)?$/m;
 
 export function replaceDescription(
   content: string,

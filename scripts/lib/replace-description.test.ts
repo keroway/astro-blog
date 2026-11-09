@@ -12,6 +12,16 @@ describe("replaceDescription", () => {
     );
   });
 
+  it.each([
+    ['description: "" # todo', "二重引用符 + 行末コメント"],
+    ["description: ''   # todo", "単引用符 + 行末コメント"],
+  ])("%s (%s) を生成結果で更新しコメントも除く", (line) => {
+    const content = `---\ntitle: Test\n${line}\n---\n本文\n`;
+    expect(replaceDescription(content, "概要です")).toBe(
+      '---\ntitle: Test\ndescription: "概要です"\n---\n本文\n'
+    );
+  });
+
   it("description 内の $ を置換パターンとして解釈しない", () => {
     const content = "---\ndescription: ''\n---\n";
     expect(replaceDescription(content, "価格は$&です")).toBe(
