@@ -29,6 +29,20 @@ describe("replaceDescription", () => {
     );
   });
 
+  it("本文中の description 行は書き換えない", () => {
+    const content =
+      '---\ntitle: Test\ndescription: ""\n---\n```yaml\ndescription: "sample"\n```\n';
+    expect(replaceDescription(content, "概要です")).toBe(
+      '---\ntitle: Test\ndescription: "概要です"\n---\n```yaml\ndescription: "sample"\n```\n'
+    );
+  });
+
+  it("空のブロック形式 description は本文に触れずエラーにする", () => {
+    const content =
+      '---\ntitle: Test\ndescription: |-\n---\n```yaml\ndescription: "sample"\n```\n';
+    expect(() => replaceDescription(content, "x")).toThrow();
+  });
+
   it("description 行が無ければエラーにする", () => {
     expect(() => replaceDescription("---\ntitle: Test\n---\n", "x")).toThrow();
   });
