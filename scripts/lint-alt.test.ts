@@ -44,6 +44,16 @@ describe("isTargetRemoteHost", () => {
     expect(isTargetRemoteHost("//example.com/abc.png")).toBe(false);
   });
 
+  it("文字参照で書かれたホストでも検出する", () => {
+    expect(isTargetRemoteHost("https://i&#46;imgur.com/x.png")).toBe(true);
+    expect(isTargetRemoteHost("https://i&#x2e;imgur.com/x.png")).toBe(true);
+    expect(isTargetRemoteHost("https&colon;//i&period;imgur.com/x.png")).toBe(
+      true
+    );
+    expect(isTargetRemoteHost("<https://i&#46;imgur.com/x.png>")).toBe(true);
+    expect(isTargetRemoteHost("https://exam&#46;ple.com/x.png")).toBe(false);
+  });
+
   it("相対パスは対象外", () => {
     expect(isTargetRemoteHost("../../assets/content/blog/xxx.png")).toBe(false);
     expect(isTargetRemoteHost("/images/abc.png")).toBe(false);
