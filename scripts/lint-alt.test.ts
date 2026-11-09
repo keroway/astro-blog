@@ -464,6 +464,29 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("長さの異なるバッククォート列はコードスパンにならず、間の実画像を検出する (#932)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-backtick-length.md"
+    );
+    const content = [
+      "` ![](photo.png) ``",
+      "",
+      "`` ![](photo.png) `",
+      "",
+      "`` ![](photo.png) ``",
+      "",
+      "``` ![](photo.png) ```",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 3]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("インラインコードの外側にある実際の画像は検出する", () => {
     const filePath = path.join(
       os.tmpdir(),
