@@ -51,4 +51,27 @@ test.describe("#897 a11y menu reset", () => {
     await page.locator("#a11y-reset").click();
     await expectInitial(page);
   });
+
+  // #992: font-size の removeItem だけ失敗しても後続キーは削除される。
+  test("removes later keys when the first removeItem throws", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.addInitScript(() => {
+      const orig = Storage.prototype.removeItem;
+      Storage.prototype.removeItem = function (key: string) {
+        if (key === "font-size") throw new Error("removeItem failed");
+        return orig.call(this, key);
+      };
+    });
+    await page.goto("/");
+    await page.locator("#a11y-trigger").click();
+    await page.locator("#a11y-text-spacing").check();
+    await page.locator("#a11y-underline-links").check();
+    await page.locator("#a11y-reset").click();
+    await expect(page.locator("html")).not.toHaveClass(/text-spacing/);
+    await expect(page.locator("html")).not.toHaveClass(/underline-links/);
+    await expect(page.locator("#a11y-text-spacing")).not.toBeChecked();
+    await expect(page.locator("#a11y-underline-links")).not.toBeChecked();
+  });
 });
