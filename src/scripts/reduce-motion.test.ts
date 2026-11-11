@@ -176,6 +176,42 @@ describe("setReduceMotion", () => {
     expect(document.documentElement.classList.contains("kw-anim")).toBe(true);
   });
 
+  it("keeps an unsaved manual ON after OS setting changes (stale stored false)", () => {
+    stubThrowingLocalStorage({
+      getItem: () => "false",
+      setItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    setReduceMotion("on");
+    applyMotionPreferences();
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      true
+    );
+    expect(prefersReducedMotion()).toBe(true);
+    // 後続テストへ漏らさないため保存成功で解除する
+    vi.unstubAllGlobals();
+    mockMatchMedia(false);
+    setReduceMotion("off");
+  });
+
+  it("keeps an unsaved manual OFF after OS setting changes (stale stored true)", () => {
+    stubThrowingLocalStorage({
+      getItem: () => "true",
+      setItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    setReduceMotion("off");
+    applyMotionPreferences();
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      false
+    );
+    vi.unstubAllGlobals();
+    mockMatchMedia(false);
+    setReduceMotion("off");
+  });
+
   it("keeps kw-anim off when the OS prefers reduced motion and the manual setting is turned off", () => {
     mockMatchMedia(true);
     setReduceMotion("off");

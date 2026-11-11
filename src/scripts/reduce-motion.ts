@@ -44,6 +44,12 @@ export function prefersReducedMotion(): boolean {
 export function applyMotionPreferences(): void {
   if (typeof document === "undefined") return;
 
+  // 保存に失敗した最新の手動設定は、古い保存値より優先する
+  if (unsavedManual !== null) {
+    applyManualState(unsavedManual);
+    return;
+  }
+
   let manuallyReduced = false;
   try {
     manuallyReduced = localStorage.getItem(REDUCE_MOTION_KEY) === "true";
@@ -54,6 +60,9 @@ export function applyMotionPreferences(): void {
 
   applyManualState(manuallyReduced);
 }
+
+/** 永続化に失敗した最新の手動設定 (保存成功時は null)。 */
+let unsavedManual: boolean | null = null;
 
 /** 手動設定の値を html class に反映し、OS 設定と合わせて kw-anim を同期する。 */
 function applyManualState(manuallyReduced: boolean): void {
@@ -73,8 +82,10 @@ export function setReduceMotion(state: "on" | "off"): void {
   const on = state === "on";
   try {
     localStorage.setItem(REDUCE_MOTION_KEY, on ? "true" : "false");
+    unsavedManual = null;
   } catch {
-    /* localStorage 不可環境では永続化を諦める (動作は継続) */
+    /* localStorage 不可環境では永続化を諦め、メモリで保持する (動作は継続) */
+    unsavedManual = on;
   }
   // 保存値を読み直すと、永続化失敗時に今の操作が取り消されるため
   // 引数の状態を直接反映する。
