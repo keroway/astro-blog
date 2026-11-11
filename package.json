@@ -2,7 +2,7 @@
   "name": "astro-blog",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@11.28.9",
+  "packageManager": "pnpm@11.28.11",
   "scripts": {
     "postinstall": "lefthook install",
     "dev": "portless run --name keroway astro dev",
@@ -39,7 +39,7 @@
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "11.0.20",
     "@axe-core/playwright": "^4.12.1",
-    "@biomejs/biome": "^2.5.5",
+    "@biomejs/biome": "^2.6.6",
     "@fontsource/zen-maru-gothic": "^5.2.8",
     "@markdoc/markdoc": "0.5.11",
     "@playwright/test": "^1.61.1",
