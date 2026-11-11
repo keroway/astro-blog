@@ -26,12 +26,24 @@ export function getFontSize(): FontSize {
 export function applyFontSizePreference(): void {
   if (typeof document === "undefined") return;
   let size: FontSize = "normal";
-  try {
-    const stored = localStorage.getItem(FONT_SIZE_KEY);
-    size = stored === "large" || stored === "x-large" ? stored : "normal";
-  } catch {
-    size = getFontSize();
+  if (unsavedSize !== null) {
+    // 保存に失敗した最新の選択値は、古い保存値より優先する
+    size = unsavedSize;
+  } else {
+    try {
+      const stored = localStorage.getItem(FONT_SIZE_KEY);
+      size = stored === "large" || stored === "x-large" ? stored : "normal";
+    } catch {
+      size = getFontSize();
+    }
   }
+  applySize(size);
+}
+
+/** 永続化に失敗した最新の選択値 (保存成功・リセット時は null)。 */
+let unsavedSize: FontSize | null = null;
+
+function applySize(size: FontSize): void {
   document.documentElement.classList.toggle("fs-large", size === "large");
   document.documentElement.classList.toggle("fs-x-large", size === "x-large");
 }
@@ -39,11 +51,24 @@ export function applyFontSizePreference(): void {
 /** 文字サイズを切り替えて永続化する。 */
 export function setFontSize(size: FontSize): void {
   if (typeof document === "undefined") return;
-  document.documentElement.classList.toggle("fs-large", size === "large");
-  document.documentElement.classList.toggle("fs-x-large", size === "x-large");
+  applySize(size);
   try {
     localStorage.setItem(FONT_SIZE_KEY, size);
+    unsavedSize = null;
   } catch {
-    /* localStorage 不可環境では永続化を諦める (動作は継続) */
+    /* localStorage 不可環境では永続化を諦め、メモリで保持する (動作は継続) */
+    unsavedSize = size;
   }
+}
+
+/** 文字サイズを初期状態に戻す。保存キーの削除に失敗してもメモリ上の値は破棄する。 */
+export function resetFontSize(): void {
+  if (typeof document === "undefined") return;
+  unsavedSize = null;
+  try {
+    localStorage.removeItem(FONT_SIZE_KEY);
+  } catch {
+    /* 保存キーの削除を諦める */
+  }
+  applySize("normal");
 }

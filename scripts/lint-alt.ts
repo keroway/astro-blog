@@ -44,8 +44,11 @@ const FENCE_CLOSE_PATTERN = /^\s{0,3}(`{3,}|~{3,})\s*$/;
 // コードスパンは改行をまたげるが、空行（段落区切り）はまたげない。
 // 開始側のバッククォート列の直前にバックスラッシュが奇数個あるとき、先頭の 1 個は
 // エスケープされたリテラルでありコードスパンを開始しない（lookbehind で偶数個のみ許可）。
+// 開始・終了ともバッククォート列全体の長さが一致する場合だけスパンになる (CommonMark 6.1)。
+// 開始列は最大長で取り（直前が非エスケープのバッククォートなら途中開始を禁止、直後の `(?!`)`）、
+// 終了列は前後にバッククォートが続かないものだけを採用する。
 const INLINE_CODE_SPAN_PATTERN =
-  /(?<=(?:^|[^\\])(?:\\\\)*)(`+)(?:(?!\n[ \t]*\n)[\s\S])*?\1/g;
+  /(?<=(?:^|[^\\`])(?:\\\\)*|(?:^|[^\\])\\(?:\\\\)*`)(`+)(?!`)(?:(?!\n[ \t]*\n)[\s\S])*?(?<!`)\1(?!`)/g;
 
 const MIN_ALT_LENGTH = 4;
 const PLACEHOLDER_ALTS = new Set([
@@ -78,11 +81,35 @@ export function collectFiles(dir: string): string[] {
     );
 }
 
+// URL 内の文字参照は Markdoc の描画時に復号される。ホスト判定に関わる記号の
+// 名前付き参照と、数値参照（10 進 / 16 進）だけを復号する。
+const NAMED_CHAR_REFS: Record<string, string> = {
+  amp: "&",
+  colon: ":",
+  period: ".",
+  sol: "/",
+};
+
+function decodeCharRefs(text: string): string {
+  return text.replace(
+    /&(?:#(\d{1,7})|#[xX]([0-9a-fA-F]{1,6})|([A-Za-z]+));/g,
+    (match, dec?: string, hex?: string, name?: string) => {
+      if (name !== undefined) return NAMED_CHAR_REFS[name] ?? match;
+      const code = Number.parseInt(
+        dec ?? hex ?? "",
+        dec !== undefined ? 10 : 16
+      );
+      return code > 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+    }
+  );
+}
+
 export function isTargetRemoteHost(src: string): boolean {
-  const url = src.replace(/^<(.*)>$/, "$1");
-  if (!/^https?:\/\//.test(url)) return false;
+  const url = decodeCharRefs(src.replace(/^<(.*)>$/, "$1"));
+  // スキームは大文字小文字を区別せず、プロトコル相対 (//host/...) も対象にする。
+  if (!/^(?:https?:)?\/\//i.test(url)) return false;
   try {
-    const host = new URL(url).hostname;
+    const host = new URL(url, "https://base.invalid").hostname;
     return TARGET_REMOTE_HOSTS.some(
       (target) => host === target || host.endsWith(`.${target}`)
     );
@@ -102,12 +129,60 @@ export function altIssueReason(alt: string, src: string): string | null {
   return null;
 }
 
+// コードスパンは見出し・水平線などのブロック境界をまたげない (CommonMark 6.1)。
+const BLOCK_BOUNDARY_LINE_PATTERN =
+  /^ {0,3}(?:#{1,6}(?:[ \t]|$)|([-*_])(?:[ \t]*\1){2,}[ \t]*$)/;
+
+function maskChunk(text: string): string {
+  let result = "";
+  let cursor = 0;
+  for (;;) {
+    INLINE_CODE_SPAN_PATTERN.lastIndex = cursor;
+    const span = INLINE_CODE_SPAN_PATTERN.exec(text);
+    if (span === null) break;
+    // alt 内のバッククォート対は alt の文字であり、コードスパンではない。
+    // 先に始まる実画像の範囲に入るスパンは空白化せず、画像の終端から再開する。
+    IMAGE_INLINE_PATTERN.lastIndex = cursor;
+    let image = IMAGE_INLINE_PATTERN.exec(text);
+    while (
+      image !== null &&
+      (isEscaped(text, image.index) || /\n[ \t]*\n/.test(image[0]))
+    ) {
+      image = IMAGE_INLINE_PATTERN.exec(text);
+    }
+    if (
+      image !== null &&
+      image.index < span.index &&
+      span.index < image.index + image[0].length
+    ) {
+      result += text.slice(cursor, image.index + image[0].length);
+      cursor = image.index + image[0].length;
+      continue;
+    }
+    result += text.slice(cursor, span.index) + span[0].replace(/[^\n]/g, " ");
+    cursor = span.index + span[0].length;
+  }
+  return result + text.slice(cursor);
+}
+
 // 改行は残して空白化する（行番号の算出が元の行オフセットに依存するため）。
 export function maskInlineCodeSpans(text: string): string {
-  INLINE_CODE_SPAN_PATTERN.lastIndex = 0;
-  return text.replace(INLINE_CODE_SPAN_PATTERN, (match) =>
-    match.replace(/[^\n]/g, " ")
-  );
+  const chunks: string[] = [];
+  let current: string[] = [];
+  const flush = () => {
+    if (current.length > 0) chunks.push(maskChunk(current.join("\n")));
+    current = [];
+  };
+  for (const line of text.split("\n")) {
+    if (BLOCK_BOUNDARY_LINE_PATTERN.test(line)) {
+      flush();
+      chunks.push(maskChunk(line));
+    } else {
+      current.push(line);
+    }
+  }
+  flush();
+  return chunks.join("\n");
 }
 
 // `\!` のようにバックスラッシュ奇数個でエスケープされた `!` は画像記法にならない。
@@ -191,6 +266,12 @@ function normalizeLabel(label: string): string {
   return label.trim().replace(/\s+/g, " ").toLowerCase();
 }
 
+// 山括弧付き宛先は空白を含められるため閉じ山括弧まで、それ以外は最初の空白まで
+function extractDestination(text: string): string {
+  const angle = text.match(/^<[^>\n]*>/);
+  return angle ? angle[0] : text.split(/\s+/)[0];
+}
+
 function collectReferenceDefinitions(
   lines: string[],
   inCode: boolean[]
@@ -203,13 +284,15 @@ function collectReferenceDefinitions(
     const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
     if (match) {
       label = normalizeLabel(match[1]);
-      src = match[2].trim();
+      src = extractDestination(
+        lines[i].slice(match[0].length - match[2].length)
+      );
     } else {
       const labelOnly = lines[i].match(REFERENCE_LABEL_ONLY_PATTERN);
       const next = lines[i + 1]?.trim();
       if (!labelOnly || !next || inCode[i + 1]) continue;
       label = normalizeLabel(labelOnly[1]);
-      src = next.split(/\s+/)[0];
+      src = extractDestination(next);
     }
     // Markdoc の描画は同じラベルの最初の定義を採用する
     if (!refs.has(label)) refs.set(label, src);

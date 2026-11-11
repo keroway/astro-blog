@@ -9,6 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { parse } from "yaml";
 import { BLOG_CATEGORIES } from "../src/lib/content-schema";
 import { stripBom } from "./lib/strip-bom.ts";
 import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
@@ -21,27 +22,24 @@ type Frontmatter = {
   pubDate?: string;
 };
 
-function parseFrontmatter(content: string): Frontmatter {
+export function parseFrontmatter(content: string): Frontmatter {
   const match = stripBom(content).match(/^---\r?\n([\s\S]*?)\r?\n---/);
   if (!match) return {};
-  const raw = match[1];
+  const data = parse(match[1]) as Record<string, unknown> | null;
+  if (!data || typeof data !== "object") return {};
   const result: Frontmatter = {};
-  for (const line of raw.split("\n")) {
-    const kv = line.match(/^(\w+):\s*(.+)$/);
-    if (!kv) continue;
-    const [, key, val] = kv;
-    const v = val.trim().replace(/^["']|["']$/g, "");
-    if (key === "title") result.title = v;
-    else if (key === "description") result.description = v;
-    else if (key === "category") result.category = v;
-    else if (key === "pubDate") result.pubDate = v;
+  if (typeof data.title === "string") result.title = data.title;
+  if (typeof data.description === "string") {
+    result.description = data.description;
   }
-  const tagsMatch = raw.match(/^tags:\s*\[(.*?)\]/m);
-  if (tagsMatch) {
-    result.tags = tagsMatch[1]
-      .split(",")
-      .map((t) => t.trim().replace(/^["']|["']$/g, ""))
-      .filter(Boolean);
+  if (typeof data.category === "string") result.category = data.category;
+  if (data.pubDate instanceof Date) {
+    result.pubDate = data.pubDate.toISOString();
+  } else if (typeof data.pubDate === "string") {
+    result.pubDate = data.pubDate;
+  }
+  if (Array.isArray(data.tags)) {
+    result.tags = data.tags.map(String).filter(Boolean);
   }
   return result;
 }

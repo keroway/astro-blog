@@ -31,8 +31,32 @@ describe("isTargetRemoteHost", () => {
     expect(isTargetRemoteHost("https://example.com/abc.png")).toBe(false);
   });
 
+  it("大文字スキームでも検出する", () => {
+    expect(isTargetRemoteHost("HTTPS://i.imgur.com/abc.png")).toBe(true);
+    expect(isTargetRemoteHost("Http://imgur.com/abc.png")).toBe(true);
+  });
+
+  it("プロトコル相対 URL でも検出する", () => {
+    expect(isTargetRemoteHost("//i.imgur.com/abc.png")).toBe(true);
+    expect(isTargetRemoteHost("<//lh3.googleusercontent.com/abc.png>")).toBe(
+      true
+    );
+    expect(isTargetRemoteHost("//example.com/abc.png")).toBe(false);
+  });
+
+  it("文字参照で書かれたホストでも検出する", () => {
+    expect(isTargetRemoteHost("https://i&#46;imgur.com/x.png")).toBe(true);
+    expect(isTargetRemoteHost("https://i&#x2e;imgur.com/x.png")).toBe(true);
+    expect(isTargetRemoteHost("https&colon;//i&period;imgur.com/x.png")).toBe(
+      true
+    );
+    expect(isTargetRemoteHost("<https://i&#46;imgur.com/x.png>")).toBe(true);
+    expect(isTargetRemoteHost("https://exam&#46;ple.com/x.png")).toBe(false);
+  });
+
   it("相対パスは対象外", () => {
     expect(isTargetRemoteHost("../../assets/content/blog/xxx.png")).toBe(false);
+    expect(isTargetRemoteHost("/images/abc.png")).toBe(false);
   });
 
   it("不正な URL は対象外", () => {
@@ -190,6 +214,34 @@ describe("findAltIssues", () => {
     try {
       const issues = findAltIssues(filePath);
       expect(issues.map((i) => i.line)).toEqual([1, 3]);
+      expect(issues[0].reason).toBe(
+        "外部ホスト画像（imgur/googleusercontent）"
+      );
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("空白を含む山括弧付き参照定義 (同一行 / 次行) の外部ホスト画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-space.md");
+    const content = [
+      "![説明文です][a]",
+      "",
+      "[a]: <https://i.imgur.com/sample image.png>",
+      "",
+      "![説明文です][b]",
+      "",
+      "[b]:",
+      "  <https://lh3.googleusercontent.com/sample image.png>",
+      "",
+      "![十分に長い説明文][c]",
+      "",
+      "[c]: <./ok image.png>",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 5]);
       expect(issues[0].reason).toBe(
         "外部ホスト画像（imgur/googleusercontent）"
       );
@@ -459,6 +511,68 @@ describe("findAltIssues", () => {
     try {
       const issues = findAltIssues(filePath);
       expect(issues.map((i) => i.line)).toEqual([1]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("長さの異なるバッククォート列はコードスパンにならず、間の実画像を検出する (#932)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-backtick-length.md"
+    );
+    const content = [
+      "` ![](photo.png) ``",
+      "",
+      "`` ![](photo.png) `",
+      "",
+      "`` ![](photo.png) ``",
+      "",
+      "``` ![](photo.png) ```",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([1, 3]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("コードスパンは見出し・水平線をまたがず、間の実画像を検出する (#987)", () => {
+    const filePath = path.join(
+      os.tmpdir(),
+      "fixture-lint-alt-block-boundary.md"
+    );
+    const content = [
+      "# heading `",
+      "![](/sample.png)",
+      "`",
+      "",
+      "`",
+      "![](/sample.png)",
+      "---",
+      "`",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues.map((i) => i.line)).toEqual([2, 6]);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
+  it("alt 内のバッククォート対はコードスパンとして空白化せず alt の文字として扱う (#987)", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-in-alt-code.md");
+    const content = [
+      "![説明 `code`](/sample.png)",
+      "",
+      "`![](/sample.png)`",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
     } finally {
       fs.unlinkSync(filePath);
     }
