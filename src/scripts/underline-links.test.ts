@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   applyUnderlineLinksPreference,
   getUnderlineLinks,
+  resetUnderlineLinks,
   setUnderlineLinks,
   UNDERLINE_LINKS_KEY,
 } from "./underline-links";
@@ -112,5 +113,30 @@ describe("setUnderlineLinks", () => {
     expect(document.documentElement.classList.contains("underline-links")).toBe(
       true
     );
+    resetUnderlineLinks();
+  });
+
+  it("keeps the unsaved choice on re-apply after setItem failed (#991)", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setUnderlineLinks(true);
+    applyUnderlineLinksPreference();
+    expect(getUnderlineLinks()).toBe(true);
+    resetUnderlineLinks();
+  });
+
+  it("discards the unsaved choice on reset", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setUnderlineLinks(true);
+    resetUnderlineLinks();
+    applyUnderlineLinksPreference();
+    expect(getUnderlineLinks()).toBe(false);
   });
 });

@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   applyTextSpacingPreference,
   getTextSpacing,
+  resetTextSpacing,
   setTextSpacing,
   TEXT_SPACING_KEY,
 } from "./text-spacing";
@@ -112,5 +113,30 @@ describe("setTextSpacing", () => {
     expect(document.documentElement.classList.contains("text-spacing")).toBe(
       true
     );
+    resetTextSpacing();
+  });
+
+  it("keeps the unsaved choice on re-apply after setItem failed (#991)", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setTextSpacing(true);
+    applyTextSpacingPreference();
+    expect(getTextSpacing()).toBe(true);
+    resetTextSpacing();
+  });
+
+  it("discards the unsaved choice on reset even if removeItem throws", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setTextSpacing(true);
+    resetTextSpacing();
+    applyTextSpacingPreference();
+    expect(getTextSpacing()).toBe(false);
   });
 });
