@@ -8,6 +8,7 @@ import {
   osPrefersReducedMotion,
   prefersReducedMotion,
   REDUCE_MOTION_KEY,
+  resetReduceMotion,
   setReduceMotion,
   watchReducedMotion,
 } from "./reduce-motion";
@@ -216,6 +217,44 @@ describe("setReduceMotion", () => {
     mockMatchMedia(true);
     setReduceMotion("off");
     expect(document.documentElement.classList.contains("kw-anim")).toBe(false);
+  });
+});
+
+describe("resetReduceMotion", () => {
+  it("discards an unsaved manual ON even when storage stays blocked", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    setReduceMotion("on");
+    // 読み書き・削除がすべて失敗する環境
+    vi.stubGlobal("localStorage", {
+      getItem: () => {
+        throw new Error("blocked");
+      },
+      setItem: () => {
+        throw new Error("blocked");
+      },
+      removeItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    resetReduceMotion();
+    applyMotionPreferences();
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      false
+    );
+    expect(document.documentElement.classList.contains("kw-anim")).toBe(true);
+  });
+
+  it("removes the persisted key", () => {
+    setReduceMotion("on");
+    resetReduceMotion();
+    expect(localStorage.getItem(REDUCE_MOTION_KEY)).toBeNull();
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      false
+    );
   });
 });
 

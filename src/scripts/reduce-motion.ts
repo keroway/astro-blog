@@ -93,6 +93,21 @@ export function setReduceMotion(state: "on" | "off"): void {
 }
 
 /**
+ * 手動のモーション低減設定を初期状態に戻す (a11y メニューの「初期設定に戻す」用)。
+ * 保存キーの削除に失敗しても、メモリ上の手動設定は必ず破棄する。
+ */
+export function resetReduceMotion(): void {
+  if (typeof document === "undefined") return;
+  unsavedManual = null;
+  try {
+    localStorage.removeItem(REDUCE_MOTION_KEY);
+  } catch {
+    /* localStorage 不可環境では保存キーの削除を諦める */
+  }
+  applyManualState(false);
+}
+
+/**
  * モーション低減状態の変化を購読する。OS 設定の変更と
  * html.reduce-motion class の付け外しの両方を監視し、
  * 変化時に現在の prefersReducedMotion() を渡す。
