@@ -6,6 +6,7 @@ import {
   applyFontSizePreference,
   FONT_SIZE_KEY,
   getFontSize,
+  resetFontSize,
   setFontSize,
 } from "./font-size";
 
@@ -133,5 +134,30 @@ describe("setFontSize", () => {
     });
     expect(() => setFontSize("large")).not.toThrow();
     expect(document.documentElement.classList.contains("fs-large")).toBe(true);
+    resetFontSize();
+  });
+
+  it("keeps the unsaved choice on re-apply after setItem failed (#991)", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setFontSize("x-large");
+    applyFontSizePreference();
+    expect(getFontSize()).toBe("x-large");
+    resetFontSize();
+  });
+
+  it("discards the unsaved choice on reset", () => {
+    stubThrowingLocalStorage({
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+    });
+    setFontSize("x-large");
+    resetFontSize();
+    applyFontSizePreference();
+    expect(getFontSize()).toBe("normal");
   });
 });

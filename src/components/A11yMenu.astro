@@ -71,21 +71,19 @@
     setReduceMotion,
   } from '../scripts/reduce-motion';
   import {
-    FONT_SIZE_KEY,
     getFontSize,
+    resetFontSize,
     setFontSize,
     type FontSize,
   } from '../scripts/font-size';
   import {
-    TEXT_SPACING_KEY,
-    applyTextSpacingPreference,
     getTextSpacing,
+    resetTextSpacing,
     setTextSpacing,
   } from '../scripts/text-spacing';
   import {
-    UNDERLINE_LINKS_KEY,
-    applyUnderlineLinksPreference,
     getUnderlineLinks,
+    resetUnderlineLinks,
     setUnderlineLinks,
   } from '../scripts/underline-links';
 
@@ -143,25 +141,12 @@
       setUnderlineLinks(underlineInput.checked);
     });
     resetButton?.addEventListener('click', () => {
-      // 1 キーの削除失敗が後続キーの削除を中断しないよう、キーごとに独立して試行する。
-      for (const key of [FONT_SIZE_KEY, TEXT_SPACING_KEY, UNDERLINE_LINKS_KEY]) {
-        try {
-          localStorage.removeItem(key);
-        } catch (e) {}
-      }
-      // 保存キーの削除に失敗しても手動設定を解除できるよう、先に現在の class を外す。
-      // apply* は localStorage 不可時に現在の class へフォールバックするため、
-      // 外した後に呼べば OS 設定由来の kw-anim だけが再計算される。
-      document.documentElement.classList.remove(
-        'reduce-motion',
-        'fs-large',
-        'fs-x-large',
-        'text-spacing',
-        'underline-links'
-      );
+      // 各 reset* は保存キーの削除失敗にかかわらずメモリ上の未保存値を破棄し、
+      // 1 設定の失敗が他の設定のリセットを中断しない。
       resetReduceMotion();
-      applyTextSpacingPreference();
-      applyUnderlineLinksPreference();
+      resetFontSize();
+      resetTextSpacing();
+      resetUnderlineLinks();
       // 入力要素は適用後の実際の状態に同期する。
       if (reduceInput) reduceInput.checked = manualReduceMotion();
       const size = getFontSize();
