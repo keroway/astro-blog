@@ -66,9 +66,8 @@
 
 <script>
   import {
-    REDUCE_MOTION_KEY,
-    applyMotionPreferences,
     manualReduceMotion,
+    resetReduceMotion,
     setReduceMotion,
   } from '../scripts/reduce-motion';
   import {
@@ -145,7 +144,6 @@
     });
     resetButton?.addEventListener('click', () => {
       try {
-        localStorage.removeItem(REDUCE_MOTION_KEY);
         localStorage.removeItem(FONT_SIZE_KEY);
         localStorage.removeItem(TEXT_SPACING_KEY);
         localStorage.removeItem(UNDERLINE_LINKS_KEY);
@@ -160,7 +158,7 @@
         'text-spacing',
         'underline-links'
       );
-      applyMotionPreferences();
+      resetReduceMotion();
       applyTextSpacingPreference();
       applyUnderlineLinksPreference();
       // 入力要素は適用後の実際の状態に同期する。
