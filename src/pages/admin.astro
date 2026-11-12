@@ -52,7 +52,8 @@ import { Font } from "astro:assets";
     <link rel="stylesheet" href="/admin/theme.css" />
     <script>
       import CMS from "@sveltia/cms";
-      import { parse, stringify } from "yaml";
+      import { parse } from "yaml";
+      import { mdocFromFile, mdocToFile } from "../lib/mdoc-format";
       import {
         CALLOUT_PATTERN,
         LINK_CARD_PATTERN,
@@ -64,64 +65,9 @@ import { Font } from "astro:assets";
         linkCardToPreview,
       } from "../lib/markdoc-editor-components";
 
-      const normalizeDates = (value: any): any => {
-        if (value instanceof Date) {
-          return value.toISOString().slice(0, 10);
-        }
-
-        if (Array.isArray(value)) {
-          return value.map(normalizeDates);
-        }
-
-        if (value && typeof value === "object") {
-          return Object.fromEntries(
-            Object.entries(value).map(([key, childValue]) => [
-              key,
-              normalizeDates(childValue),
-            ]),
-          );
-        }
-
-        return value;
-      };
-
-      const splitFrontmatter = (text: string) => {
-        const normalized = text.replace(/^\uFEFF/, "");
-
-        if (!normalized.startsWith("---\n")) {
-          return { frontmatter: {}, body: normalized };
-        }
-
-        const end = normalized.indexOf("\n---", 4);
-
-        if (end === -1) {
-          return { frontmatter: {}, body: normalized };
-        }
-
-        const frontmatterText = normalized.slice(4, end);
-        const bodyStart = normalized.startsWith("\n", end + 4) ? end + 5 : end + 4;
-
-        return {
-          frontmatter: normalizeDates(parse(frontmatterText) ?? {}),
-          body: normalized.slice(bodyStart),
-        };
-      };
-
       CMS.registerCustomFormat("mdoc", "mdoc", {
-        fromFile: (text) => {
-          const { frontmatter, body } = splitFrontmatter(text);
-
-          return { ...frontmatter, body };
-        },
-        toFile: (data) => {
-          const { body = "", ...frontmatter } = normalizeDates(data ?? {});
-          const yaml = stringify(frontmatter, {
-            lineWidth: 100,
-            sortMapEntries: false,
-          }).trim();
-
-          return `---\n${yaml}\n---\n\n${body}`;
-        },
+        fromFile: mdocFromFile,
+        toFile: mdocToFile,
       });
 
       const response = await fetch("/admin/config.yml");
