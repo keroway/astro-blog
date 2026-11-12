@@ -57,7 +57,11 @@ const isActive = (href: string) => {
 
   // localStorage → OS設定 の順で解決する。BaseHead.astro の FOUC 防止
   // インラインスクリプトと同一ロジック (inline は import 不可のため重複は許容)。
+  // 保存に失敗した手動選択。同一ページセッション内の遷移後も保存値/OS設定より優先する。
+  let unsavedTheme: 'dark' | 'light' | null = null;
+
   function resolveTheme() {
+    if (unsavedTheme) return unsavedTheme;
     try {
       const stored = localStorage.getItem('theme');
       if (stored === 'dark' || stored === 'light') return stored;
@@ -82,7 +86,12 @@ const isActive = (href: string) => {
     el.addEventListener('click', () => {
       const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.dataset.theme = next;
-      try { localStorage.setItem('theme', next); } catch (e) {}
+      try {
+        localStorage.setItem('theme', next);
+        unsavedTheme = null;
+      } catch (e) {
+        unsavedTheme = next;
+      }
       sync();
     });
   }

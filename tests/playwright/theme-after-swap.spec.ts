@@ -35,6 +35,66 @@ test.describe("#354 theme persists across client-side navigation", () => {
   });
 });
 
+// #1000: 保存失敗した手動選択がクライアント遷移後に取り消されないこと。
+test.describe("#1000 theme choice survives failed save across navigation", () => {
+  test("setItem throws: manual choice kept after navigation", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    await page.evaluate(() => localStorage.removeItem("theme"));
+    await page.reload();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await page.evaluate(() => {
+      Storage.prototype.setItem = () => {
+        throw new Error("quota");
+      };
+    });
+    await page.locator("#theme-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.locator('.kw-header__nav a[href="/blog"]').click();
+    await expect(page).toHaveURL(/\/blog\/?$/);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+
+  test("setItem and getItem both throw: manual choice kept", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    await page.evaluate(() => {
+      Storage.prototype.setItem = () => {
+        throw new Error("blocked");
+      };
+      Storage.prototype.getItem = () => {
+        throw new Error("blocked");
+      };
+    });
+    await page.locator("#theme-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.locator('.kw-header__nav a[href="/blog"]').click();
+    await expect(page).toHaveURL(/\/blog\/?$/);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+
+  test("save succeeds: stored value is used after navigation", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await page.goto("/");
+    await page.evaluate(() => localStorage.removeItem("theme"));
+    await page.reload();
+    await page.locator("#theme-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.locator('.kw-header__nav a[href="/blog"]').click();
+    await expect(page).toHaveURL(/\/blog\/?$/);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  });
+});
+
 // #952: localStorage 読み込みが例外でも初回初期化で OS 設定を解決すること。
 test.describe("#952 theme init when localStorage.getItem throws", () => {
   test("falls back to OS dark on first paint", async ({ page }) => {
