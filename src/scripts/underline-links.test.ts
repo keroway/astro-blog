@@ -18,6 +18,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  // 実 localStorage でリセットし、削除失敗時にメモリへ残した初期値を次のテストへ持ち越さない
+  resetUnderlineLinks();
 });
 
 /**
@@ -28,11 +30,12 @@ afterEach(() => {
 function stubThrowingLocalStorage(overrides: {
   getItem?: Storage["getItem"];
   setItem?: Storage["setItem"];
+  removeItem?: Storage["removeItem"];
 }) {
   vi.stubGlobal("localStorage", {
     getItem: overrides.getItem ?? (() => null),
     setItem: overrides.setItem ?? (() => {}),
-    removeItem: () => {},
+    removeItem: overrides.removeItem ?? (() => {}),
     clear: () => {},
     key: () => null,
     length: 0,
@@ -132,6 +135,19 @@ describe("setUnderlineLinks", () => {
     stubThrowingLocalStorage({
       setItem: () => {
         throw new Error("QuotaExceededError");
+      },
+    });
+    setUnderlineLinks(true);
+    resetUnderlineLinks();
+    applyUnderlineLinksPreference();
+    expect(getUnderlineLinks()).toBe(false);
+  });
+
+  it("does not revive the stored value on re-apply when removeItem throws (#996)", () => {
+    stubThrowingLocalStorage({
+      getItem: () => "true",
+      removeItem: () => {
+        throw new Error("blocked");
       },
     });
     setUnderlineLinks(true);

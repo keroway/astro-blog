@@ -55,7 +55,8 @@ export function resetUnderlineLinks(): void {
   try {
     localStorage.removeItem(UNDERLINE_LINKS_KEY);
   } catch {
-    /* 保存キーの削除を諦める */
+    /* 削除できない古い保存値が再適用で復活しないよう、初期値をメモリで保持する */
+    unsaved = false;
   }
   document.documentElement.classList.remove("underline-links");
 }

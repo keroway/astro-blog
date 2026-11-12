@@ -53,6 +53,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  // 実 localStorage でリセットし、削除失敗時にメモリへ残した初期値を次のテストへ持ち越さない
+  resetReduceMotion();
 });
 
 describe("manualReduceMotion", () => {
@@ -240,6 +242,23 @@ describe("resetReduceMotion", () => {
         throw new Error("blocked");
       },
     });
+    resetReduceMotion();
+    applyMotionPreferences();
+    expect(document.documentElement.classList.contains("reduce-motion")).toBe(
+      false
+    );
+    expect(document.documentElement.classList.contains("kw-anim")).toBe(true);
+  });
+
+  it("does not revive the stored value on re-apply when only removeItem throws (#996)", () => {
+    vi.stubGlobal("localStorage", {
+      getItem: () => "true",
+      setItem: () => {},
+      removeItem: () => {
+        throw new Error("blocked");
+      },
+    });
+    setReduceMotion("on");
     resetReduceMotion();
     applyMotionPreferences();
     expect(document.documentElement.classList.contains("reduce-motion")).toBe(
