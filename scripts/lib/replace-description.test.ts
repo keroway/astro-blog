@@ -43,6 +43,14 @@ describe("replaceDescription", () => {
     expect(() => replaceDescription(content, "x")).toThrow();
   });
 
+  it("先頭 BOM 付きでも置換し、BOM を保持して本文の description 行に触れない", () => {
+    const content =
+      '﻿---\ntitle: Test\ndescription: ""\n---\n```yaml\ndescription: "sample"\n```\n';
+    expect(replaceDescription(content, "概要です")).toBe(
+      '﻿---\ntitle: Test\ndescription: "概要です"\n---\n```yaml\ndescription: "sample"\n```\n'
+    );
+  });
+
   it("description 行が無ければエラーにする", () => {
     expect(() => replaceDescription("---\ntitle: Test\n---\n", "x")).toThrow();
   });

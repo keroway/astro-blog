@@ -3,7 +3,8 @@
 const DESCRIPTION_LINE = /^description:[ \t]*(?:".*"|'.*')[ \t]*(?:#.*)?$/m;
 
 // 先頭の frontmatter ブロック（開始 --- から次の --- 行まで）。
-const FRONTMATTER = /^---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/;
+// 対象選定（stripBom 後）と揃えて先頭 BOM を許容し、置換後も BOM を保持する。
+const FRONTMATTER = /^﻿?---\r?\n[\s\S]*?\r?\n---(?=\r?\n|$)/;
 
 export function replaceDescription(
   content: string,
