@@ -44,7 +44,8 @@ export const splitFrontmatter = (text: string) => {
     frontmatter: normalizeDates(
       parse(rest.slice(0, closing.index)) ?? {}
     ) as Record<string, unknown>,
-    body: rest.slice(closing.index + closing[0].length),
+    // mdocToFile が区切りの後ろに入れる空行 1 行は本文に含めない (往復で増えないように)
+    body: rest.slice(closing.index + closing[0].length).replace(/^\r?\n/, ""),
   };
 };
 
