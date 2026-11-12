@@ -18,6 +18,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
+  // 実 localStorage でリセットし、削除失敗時にメモリへ残した初期値を次のテストへ持ち越さない
+  resetFontSize();
 });
 
 /**
@@ -28,11 +30,12 @@ afterEach(() => {
 function stubThrowingLocalStorage(overrides: {
   getItem?: Storage["getItem"];
   setItem?: Storage["setItem"];
+  removeItem?: Storage["removeItem"];
 }) {
   vi.stubGlobal("localStorage", {
     getItem: overrides.getItem ?? (() => null),
     setItem: overrides.setItem ?? (() => {}),
-    removeItem: () => {},
+    removeItem: overrides.removeItem ?? (() => {}),
     clear: () => {},
     key: () => null,
     length: 0,
@@ -153,6 +156,19 @@ describe("setFontSize", () => {
     stubThrowingLocalStorage({
       setItem: () => {
         throw new Error("QuotaExceededError");
+      },
+    });
+    setFontSize("x-large");
+    resetFontSize();
+    applyFontSizePreference();
+    expect(getFontSize()).toBe("normal");
+  });
+
+  it("does not revive the stored value on re-apply when removeItem throws (#996)", () => {
+    stubThrowingLocalStorage({
+      getItem: () => "x-large",
+      removeItem: () => {
+        throw new Error("blocked");
       },
     });
     setFontSize("x-large");

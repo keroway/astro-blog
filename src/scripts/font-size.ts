@@ -68,7 +68,8 @@ export function resetFontSize(): void {
   try {
     localStorage.removeItem(FONT_SIZE_KEY);
   } catch {
-    /* 保存キーの削除を諦める */
+    /* 削除できない古い保存値が再適用で復活しないよう、初期値をメモリで保持する */
+    unsavedSize = "normal";
   }
   applySize("normal");
 }

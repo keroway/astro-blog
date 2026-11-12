@@ -102,7 +102,8 @@ export function resetReduceMotion(): void {
   try {
     localStorage.removeItem(REDUCE_MOTION_KEY);
   } catch {
-    /* localStorage 不可環境では保存キーの削除を諦める */
+    /* 削除できない古い保存値が再適用で復活しないよう、初期値をメモリで保持する */
+    unsavedManual = false;
   }
   applyManualState(false);
 }
