@@ -51,4 +51,27 @@ describe("mdocToFile", () => {
     expect(out.match(/^---$/gm)).toHaveLength(2);
     expect(mdocFromFile(out)).toMatchObject(expected);
   });
+
+  it.each([
+    ["LF", lf],
+    ["CRLF", crlf],
+    ["BOM + LF", `﻿${lf}`],
+    ["BOM + CRLF", `﻿${crlf}`],
+  ])("%s の無編集往復で本文と出力が安定する", (_name, input) => {
+    const once = mdocToFile(mdocFromFile(input));
+    const twice = mdocToFile(mdocFromFile(once));
+    const thrice = mdocToFile(mdocFromFile(twice));
+
+    expect(twice).toBe(once);
+    expect(thrice).toBe(once);
+    expect(mdocFromFile(once).body).toBe(mdocFromFile(input).body);
+  });
+
+  it("本文先頭の意図した空行とインデントを保持する", () => {
+    const input = "---\ntitle: x\n---\n\n\n    code\n";
+    const once = mdocToFile(mdocFromFile(input));
+
+    expect(mdocFromFile(input).body).toBe("\n    code\n");
+    expect(mdocToFile(mdocFromFile(once))).toBe(once);
+  });
 });
