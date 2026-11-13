@@ -10,7 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { parse } from "yaml";
-import { BLOG_CATEGORIES } from "../src/lib/content-schema";
+import { BLOG_CATEGORIES } from "../src/lib/content-schema.ts";
 import { stripBom } from "./lib/strip-bom.ts";
 import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
 
