@@ -34,6 +34,10 @@ describe("generateSlug / getTodayIso / parseArgs", () => {
   it.each([
     ["値が欠けた末尾の --slug", ["Title", "--slug"]],
     ["後続オプションが続く --slug", ["Title", "--slug", "--suggest"]],
+    ["未知のオプション --dry-run", ["Title", "--dry-run"]],
+    ["誤記の --slgu", ["Title", "--slgu", "my-slug"]],
+    ["--slug=value 形式", ["Title", "--slug=my-slug"]],
+    ["余分な位置引数", ["Title", "extra"]],
   ])("%s は使用方法を表示して非0終了する", async (_name, rest) => {
     const { parseArgs } = await import("./new-post");
     const exit = vi.spyOn(process, "exit").mockImplementation((() => {
