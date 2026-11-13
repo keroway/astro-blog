@@ -1,3 +1,4 @@
+import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length";
 import {
@@ -43,5 +44,27 @@ describe("suggest-frontmatter description 制約", () => {
   it("50文字を受理し49文字を拒否する", () => {
     expect(isValidSuggestedDescription("あ".repeat(50))).toBe(true);
     expect(isValidSuggestedDescription("あ".repeat(49))).toBe(false);
+  });
+});
+
+describe("suggest-frontmatter CLI 起動経路", () => {
+  const run = (...args: string[]) =>
+    spawnSync(
+      process.execPath,
+      ["--experimental-strip-types", "scripts/suggest-frontmatter.ts", ...args],
+      { encoding: "utf8" }
+    );
+
+  it("引数なしで module 解決に失敗せず Usage を表示する", () => {
+    const r = run();
+    expect(r.stderr).not.toContain("ERR_MODULE_NOT_FOUND");
+    expect(r.stderr).toContain("Usage:");
+    expect(r.status).toBe(1);
+  });
+
+  it("存在しない記事ではファイル未検出を報告する", () => {
+    const r = run("src/content/blog/__no-such-article__.mdoc");
+    expect(r.stderr).toContain("ファイルが見つかりません");
+    expect(r.status).toBe(1);
   });
 });
