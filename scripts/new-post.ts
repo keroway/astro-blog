@@ -63,6 +63,12 @@ function parseArgs(argv: string[]): {
       i++;
     } else if (args[i] === "--suggest") {
       suggest = true;
+    } else {
+      console.error(`Error: 未対応の引数です: ${args[i]}`);
+      console.error(
+        'Usage: pnpm run new-post "タイトル" [--slug <slug>] [--suggest]'
+      );
+      process.exit(1);
     }
   }
   return { title, slug, suggest };
