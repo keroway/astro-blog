@@ -36,7 +36,7 @@ CI 7 ジョブのうちローカル再現可能な 5 つ (lint / unit / typechec
    pnpm exec astro build
    ```
 
-5. **E2E (Playwright)** — `test:e2e` は CI と同じ `CRON_SECRET` をセットする。`ASTRO_DEV_BACKGROUND=0` は Astro 7 の dev 自動 background 化 (AI エージェント検出時) のオプトアウトで、付けないと webServer が早期終了扱いで落ちる。デフォルトポートは 4335、競合時は `PLAYWRIGHT_PORT` で明示
+5. **E2E (Playwright)** — `test:e2e` は CI と同じ `CRON_SECRET` をセットする。`ASTRO_DEV_BACKGROUND=0` は Astro 7 の dev 自動 background 化 (AI エージェント検出時) のオプトアウトで、付けないと webServer が早期終了扱いで落ちる。ポートはローカルでは空きポート自動採番 (CI は 4335 固定)、明示したいときは `PLAYWRIGHT_PORT`
 
    ```bash
    ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e
@@ -49,7 +49,7 @@ CI 7 ジョブのうちローカル再現可能な 5 つ (lint / unit / typechec
 - **typecheck 落ち:** ファイルと行を特定して該当箇所を読み、型の問題を直す。`as` での誤魔化しは避ける。
 - **build 落ち:** Content Collections schema (`src/content.config.ts`) のバリデーションエラーが多い。落ちたエントリの frontmatter を確認する。
 - **Playwright 落ち:**
-  - ポート競合の可能性を最初に確認 (`lsof -iTCP:4335 -sTCP:LISTEN`)。占有されていれば `PLAYWRIGHT_PORT=4336 ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e` のようにポートを変える。残留 dev デーモンは `pnpm exec astro dev status` / `astro dev stop`。
+  - ポートは自動採番なので競合は通常起きない。`PLAYWRIGHT_PORT` を明示して占有されている場合のみ `lsof -iTCP:<port> -sTCP:LISTEN` で確認する。残留 dev デーモンは `pnpm exec astro dev status` / `astro dev stop`。
   - 失敗トレースは `test-results/` 配下を見る。スクリーンショットと video が残る。
   - 環境固有のフレークなら再実行。ただしこれも最大 3 回まで。実装ミスならテストではなく実装を直す。
 
