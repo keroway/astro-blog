@@ -38,77 +38,8 @@ const stations = [
   </section>
 )}
 
-<script is:inline>
-  // SiteLayout と colophon の両方が配置するため、宣言の再評価と購読の重複を避ける
-  (() => {
-  if (window.__kwStampRallyReady) return;
-  window.__kwStampRallyReady = true;
-
-  const STAMP_KEY = 'kw-stamp-rally:v1';
-  const STATIONS = [
-    { id: 'home', path: '/' },
-    { id: 'works', path: '/works/' },
-    { id: 'blog', path: '/blog/' },
-    { id: 'about', path: '/about/' },
-    { id: 'now', path: '/now/' },
-    { id: 'colophon', path: '/colophon/' },
-  ];
-
-  // 保存に失敗しても同一ページセッション内で取得状態を失わないよう、メモリにも保持する
-  const sessionStamps = new Set();
-  let saveFailed = false;
-
-  const readStamps = () => {
-    const stamps = new Set(sessionStamps);
-    try {
-      const saved = JSON.parse(localStorage.getItem(STAMP_KEY) ?? '[]');
-      const known = new Set(STATIONS.map((station) => station.id));
-      if (Array.isArray(saved)) saved.filter((id) => known.has(id)).forEach((id) => stamps.add(id));
-    } catch {}
-    return stamps;
-  };
-
-  const writeStamps = (stamps) => {
-    stamps.forEach((id) => sessionStamps.add(id));
-    try {
-      localStorage.setItem(STAMP_KEY, JSON.stringify([...stamps]));
-      saveFailed = false;
-    } catch {
-      saveFailed = true;
-    }
-  };
-
-  const normalizePath = (path) => path === '/' ? '/' : `${path.replace(/\/$/, '')}/`;
-
-  const initStampRally = () => {
-    const currentPath = normalizePath(window.location.pathname);
-    const stamps = readStamps();
-    const station = STATIONS.find((item) => currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path)));
-    if (station) {
-      stamps.add(station.id);
-      writeStamps(stamps);
-    }
-
-    document.querySelectorAll('[data-stamp-id]').forEach((el) => {
-      const id = el.getAttribute('data-stamp-id');
-      const collected = Boolean(id && stamps.has(id));
-      el.classList.toggle('is-collected', collected);
-      const state = el.querySelector('[data-stamp-state]');
-      if (state) state.textContent = collected ? '取得済み' : '未取得';
-    });
-
-    const complete = document.querySelector('[data-stamp-complete]');
-    if (complete) {
-      complete.hidden = stamps.size < STATIONS.length;
-    }
-
-    const unsaved = document.querySelector('[data-stamp-unsaved]');
-    if (unsaved) unsaved.hidden = !saveFailed;
-  };
-
-  initStampRally();
-  document.addEventListener('astro:page-load', initStampRally);
-  })();
+<script>
+  import "../scripts/stamp-rally";
 </script>
 
 <style>

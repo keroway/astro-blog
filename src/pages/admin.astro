@@ -3,6 +3,7 @@
 // Astro バージョンに依存しないため、Astro メジャーアップ時もここを変更不要。
 // 設定: public/admin/config.yml
 import { Font } from "astro:assets";
+import adminPrefsBootstrapUrl from "../scripts/admin-prefs-bootstrap.js?url";
 ---
 
 <!doctype html>
@@ -18,37 +19,7 @@ import { Font } from "astro:assets";
     <Font cssVariable="--font-display" />
     <Font cssVariable="--font-body" />
     <Font cssVariable="--font-mono" />
-    <script is:inline>
-      (() => {
-        let theme = "light";
-
-        // Sveltia CMS 自身の prefs (localStorage["sveltia-cms.prefs"]) が
-        // dataset.theme を上書きするより先に、サイト本体の設定を初期値として
-        // 反映しておく (CMS.init() 前の FOUC 防止用の先読みヒント)。
-        try {
-          const stored = localStorage.getItem("theme");
-          theme = stored === "dark" || stored === "light"
-            ? stored
-            : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-          document.documentElement.dataset.theme = theme;
-        } catch {}
-
-        // Sveltia CMS は「import CMS from "@sveltia/cms"」の評価時点で自身の
-        // prefs (localStorage["sveltia-cms.prefs"]) をメモリに読み込むため、
-        // それより後 (下の module script 内) で書き込んでも間に合わない。
-        // ここで import 前に書き込み、ja ロケールとテーマを固定する
-        // (issue #622)。対応するキー・スキーマがなければ黙って握りつぶし、
-        // navigator.language / Sveltia 既定のフォールバックに委ねる。
-        try {
-          const PREFS_KEY = "sveltia-cms.prefs";
-          const prefs = JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}");
-
-          prefs.locale ??= "ja";
-          prefs.theme = theme;
-          localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
-        } catch {}
-      })();
-    </script>
+    <script is:inline src={adminPrefsBootstrapUrl}></script>
     <link rel="stylesheet" href="/admin/theme.css" />
     <script>
       import CMS from "@sveltia/cms";
@@ -109,7 +80,7 @@ import { Font } from "astro:assets";
       }
 
       // ja ロケールとテーマの localStorage["sveltia-cms.prefs"] 書き込みは、
-      // このファイル先頭の <script is:inline> (import CMS より前) で行う。
+      // scripts/admin-prefs-bootstrap.js (import CMS より前に同期 classic script で読む) で行う。
       // import 文の評価時に Sveltia が prefs を読み込むため、ここではもう遅い。
 
       const actionRules = [
