@@ -37,6 +37,7 @@ pnpm-debug.log*
 .codex/
 .serena/
 test-results/
+playwright-report/
 .playwright-mcp/
 .pnpm-store/
 # Lighthouse CI artifacts
