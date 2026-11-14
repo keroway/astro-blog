@@ -1,4 +1,5 @@
 ---
+import foucGuardUrl from "../scripts/fouc-guard.js?url";
 import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 import { SITE_AUTHOR, SITE_DESCRIPTION, SITE_TITLE } from "../consts";
@@ -52,46 +53,9 @@ const websiteSchema = {
 };
 ---
 
-<!-- Theme & reduced-motion: FOUC prevention — must run before first paint -->
-<script is:inline>
-  (function () {
-    var s = null;
-    try { s = localStorage.getItem('theme'); } catch (e) {}
-    try {
-      var t = s === 'dark' || s === 'light' ? s
-        : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.dataset.theme = t;
-    } catch (e) {}
-    // モーション低減の判定 (手動設定 OR OS 設定)。
-    // キー 'reduce-motion' は src/scripts/reduce-motion.ts と一致させること。
-    var reduced = false;
-    try { reduced = localStorage.getItem('reduce-motion') === 'true'; } catch (e) {}
-    if (reduced) document.documentElement.classList.add('reduce-motion');
-    try {
-      if (!reduced && window.matchMedia) {
-        reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      }
-    } catch (e) {}
-    // スクロール演出 (issue #377) の初期非表示は kw-anim でゲートする。
-    // モーション許可時のみ初回描画前に付与し、チラつきを避ける。
-    if (!reduced) document.documentElement.classList.add('kw-anim');
-    // 文字サイズ (issue #390)。キー 'font-size' は src/scripts/font-size.ts と一致させること。
-    try {
-      var fs = localStorage.getItem('font-size');
-      if (fs === 'large') document.documentElement.classList.add('fs-large');
-      if (fs === 'x-large') document.documentElement.classList.add('fs-x-large');
-    } catch (e) {}
-    // テキスト間隔 / リンク下線 (issue #390)。各キーは src/scripts/*.ts と一致させること。
-    try {
-      if (localStorage.getItem('text-spacing') === 'true') {
-        document.documentElement.classList.add('text-spacing');
-      }
-      if (localStorage.getItem('underline-links') === 'true') {
-        document.documentElement.classList.add('underline-links');
-      }
-    } catch (e) {}
-  })();
-</script>
+<!-- Theme & reduced-motion: FOUC prevention — must run before first paint.
+     外部ファイルの同期 classic script (CSP の script-src 'self' のため。ADR 0021) -->
+<script is:inline src={foucGuardUrl}></script>
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />

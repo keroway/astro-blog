@@ -28,6 +28,7 @@
 | 0018 | コンテンツ画像の astro:assets パイプライン移行 | [0018-astro-assets-media-pipeline.md](./0018-astro-assets-media-pipeline.md) | Accepted |
 | 0019 | 記事フィードバックチャネル | [0019-feedback-channel.md](./0019-feedback-channel.md) | Accepted |
 | 0020 | Scroll reveal の実装方式 | [0020-scroll-reveal-intersection-observer.md](./0020-scroll-reveal-intersection-observer.md) | Accepted |
+| 0021 | CSP の script-src から 'unsafe-inline' を外す | [0021-csp-script-src-self.md](./0021-csp-script-src-self.md) | Accepted |
 
 ## ADR の書き方
 

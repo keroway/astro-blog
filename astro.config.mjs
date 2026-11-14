@@ -145,6 +145,11 @@ export default defineConfig({
       // 他ページのチャンクが肥大化した場合は引き続きこの閾値内で警告されるよう、
       // 上限は現状のバンドルサイズ+余裕分に留める。
       chunkSizeWarningLimit: 2200,
+      // CSP の script-src から 'unsafe-inline' を外すため (#819)、Astro が小さい <script> を
+      // HTML へインライン展開しないようにする。JS だけを対象にし、CSS・画像は既定の判定
+      // (undefined = 4KB 未満をインライン) のまま。0 にすると CSS まで外部化されて
+      // リクエストが増える。
+      assetsInlineLimit: (file) => (file.endsWith(".js") ? false : undefined),
     },
   },
 });
