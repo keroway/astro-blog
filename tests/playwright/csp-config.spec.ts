@@ -218,10 +218,13 @@ test.describe("#820: built HTML has no executable inline scripts", () => {
     const offenders: string[] = [];
     for (const file of htmlFiles) {
       const html = readFileSync(join(distDir, file), "utf8");
-      for (const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
+      for (const m of html.matchAll(
+        /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi
+      )) {
         const attrs = m[1] ?? "";
-        if (/\bsrc\s*=/.test(attrs)) continue; // 外部スクリプトは 'self' で許可される
-        const type = /\btype\s*=\s*"([^"]*)"/.exec(attrs)?.[1] ?? "";
+        if (/\bsrc\s*=/i.test(attrs)) continue; // 外部スクリプトは 'self' で許可される
+        const type =
+          /\btype\s*=\s*"([^"]*)"/i.exec(attrs)?.[1]?.toLowerCase() ?? "";
         if (DATA_BLOCK_TYPES.has(type)) continue;
         offenders.push(
           `${file}: <script${attrs}> ${(m[2] ?? "").trim().slice(0, 60)}`
