@@ -148,3 +148,9 @@ const websiteSchema = {
 
 <!-- Vercel Web Analytics — cookie-less, injected via Vercel's edge path -->
 <script is:inline defer src="/_vercel/insights/script.js"></script>
+
+<!-- Vercel Speed Insights — 実ユーザーの Core Web Vitals。Web Analytics と同じく Vercel のエッジが配信する
+     同一オリジンの外部スクリプトなので、CSP の script-src 'self' のままで読み込める (ADR 0021)。
+     window.si を先に定義するインラインのスニペットは CSP で止まるため付けない (イベントのキューが
+     無くても、スクリプトの読み込み後から計測される)。 -->
+<script is:inline defer src="/_vercel/speed-insights/script.js"></script>
