@@ -12,14 +12,14 @@ overrides:
   path-to-regexp@>=6.0.0 <6.3.0: ^6.3.0
   tar@<7.5.21: '>=7.5.21 <8'
   js-yaml@>=4.0.0 <4.3.2: '>=4.3.2 <5'
-  '@hono/node-server@<2.0.5': '>=2.0.5'
+  '@hono/node-server@<2.1.6': '>=2.1.6 <3'
   brace-expansion@<5.0.9: '>=5.0.9 <6'
   fast-uri@<3.1.7: '>=3.1.7 <4'
   fast-xml-parser@<5.10.1: '>=5.10.1 <6'
   nanoid@>=3.0.0 <3.3.17: '>=3.3.17 <4'
   qs@<6.16.0: '>=6.16.0 <7'
   fflate@<0.7.5: '>=0.7.5 <0.9'
-  hono@<4.13.5: '>=4.13.5 <5'
+  hono@<4.13.16: '>=4.13.16 <5'
   svgo@<4.1.0: '>=4.1.0 <5'
   devalue@<5.9.2: '>=5.9.2 <6'
   smol-toml@<1.7.1: '>=1.7.1 <2'
@@ -684,11 +684,11 @@ packages:
   '@fontsource/zen-maru-gothic@5.3.1':
     resolution: {integrity: sha512-DtDKg44WTu44VuUWIJq8oAdCMHkkKrlpUaYHPbBQQkr8eZUNUjdWtzTJM3QIVlYYqdUPZN0Oy2a20EbxPJnF/g==}
 
-  '@hono/node-server@2.1.5':
-    resolution: {integrity: sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q==}
+  '@hono/node-server@2.1.6':
+    resolution: {integrity: sha512-p/KH9MnfNcsm3sR6x4lNgm5j+QN4Et8srKredl9DZfXiyZ1UQ3aQ2YVpFLbqktYN5JI+DB+VZFKM2PqE5hLKjQ==}
     engines: {node: '>=20'}
     peerDependencies:
-      hono: '>=4.13.5 <5'
+      hono: '>=4.13.16 <5'
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2415,8 +2415,8 @@ packages:
     resolution: {integrity: sha512-Ox1pJVrDCyGHMG9CFg1tmrRUMRPRsAWYc/PinY0XzJU4K7y7vjNoLKIQ7BR5UJMCxNN8EM1MNDmHWA/B3aZUuw==}
     engines: {node: '>=6'}
 
-  hono@4.13.13:
-    resolution: {integrity: sha512-CQ46U0ZkAGmbT/4UxdzzGJpacP2IeKgY4a5/tOI9AABbpOMfK739wfDXmv1usCk+3RkKj1hQy4/fjhiwa2xlrA==}
+  hono@4.13.17:
+    resolution: {integrity: sha512-vZIcbkvjOR5hHRWERbGkr8fGfF0GGM1ooYkuH448iO3b2AdVEr3AXZSw4Z3Kn+1L5z0CVoVeyV29VGYmFh05kQ==}
     engines: {node: '>=16.9.0'}
 
   html-escaper@3.0.3:
@@ -4200,9 +4200,9 @@ snapshots:
 
   '@fontsource/zen-maru-gothic@5.3.1': {}
 
-  '@hono/node-server@2.1.5(hono@4.13.13)':
+  '@hono/node-server@2.1.6(hono@4.13.17)':
     dependencies:
-      hono: 4.13.13
+      hono: 4.13.17
 
   '@iconify/types@2.0.0': {}
 
@@ -4362,7 +4362,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.32.1(zod@4.6.7)':
     dependencies:
-      '@hono/node-server': 2.1.5(hono@4.13.13)
+      '@hono/node-server': 2.1.6(hono@4.13.17)
       ajv: 8.20.0
       ajv-formats: 3.0.1
       content-type: 1.0.5
@@ -4372,7 +4372,7 @@ snapshots:
       eventsource-parser: 3.1.0
       express: 5.2.1
       express-rate-limit: 8.6.1(express@5.2.1)
-      hono: 4.13.13
+      hono: 4.13.17
       jose: 6.2.8
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.0
@@ -5829,7 +5829,7 @@ snapshots:
 
   hex-rgb@4.3.0: {}
 
-  hono@4.13.13: {}
+  hono@4.13.17: {}
 
   html-escaper@3.0.3: {}
 
