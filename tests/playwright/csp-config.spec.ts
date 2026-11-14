@@ -219,7 +219,7 @@ test.describe("#820: built HTML has no executable inline scripts", () => {
     for (const file of htmlFiles) {
       const html = readFileSync(join(distDir, file), "utf8");
       for (const m of html.matchAll(
-        /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi
+        /<script\b([^>]*)>([\s\S]*?)<\/script[^>]*>/gi
       )) {
         const attrs = m[1] ?? "";
         if (/\bsrc\s*=/i.test(attrs)) continue; // 外部スクリプトは 'self' で許可される
