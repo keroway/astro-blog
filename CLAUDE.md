@@ -18,7 +18,7 @@ This file provides guidance to AI coding agents (Claude Code, Codex, pi, etc.) w
 
 ## Development Commands
 
-This project uses **pnpm** (version 11.27.1) as the package manager:
+This project uses **pnpm** (version pinned by `packageManager` in `package.json`) as the package manager:
 
 ```bash
 # Install dependencies
