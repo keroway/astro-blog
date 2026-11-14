@@ -69,7 +69,7 @@ E1. **`pnpm run lint`** — Biome lint + format check (= `biome ci`。CI の `li
 E2. **`pnpm run test:unit`** — vitest (CI の `unit` ジョブと一致)。
 E3. **`pnpm exec astro check`** — typecheck (CI の `typecheck` ジョブと一致)。
 E4. **`pnpm exec astro build`** — schema 違反と build 時エラーを surface (CI の `build` ジョブと一致、`pnpm run build` ではなく `astro build` 直叩き)。
-E5. **`ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e`** — E2E (CI の `test` ジョブ相当、`CRON_SECRET` を CI と同値でセット)。デフォルトポートは 4335。競合のときは `PLAYWRIGHT_PORT` で明示。
+E5. **`ASTRO_DEV_BACKGROUND=0 pnpm run test:e2e`** — E2E (CI の `test` ジョブ相当、`CRON_SECRET` を CI と同値でセット)。ポートはローカルでは空きポート自動採番 (CI は 4335 固定)。明示したいときは `PLAYWRIGHT_PORT`。
 E6. **目視確認** — 1280 / 768 / 375 の 3 解像度で実画面を確認。
 
 `/ship-check` で E1〜E5 を順に走らせられる (CI の Lighthouse / Link check はローカル対象外)。**スキップ厳禁。**
