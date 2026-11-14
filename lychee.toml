@@ -32,11 +32,12 @@ exclude = [
     # mailto: は SMTP MX を引くだけで実 inbox は分からない。到達確認の意味がない。
     "^mailto:",
 
-    # dist 内の canonical / og:url / twitter:url は Astro.site により本番同一オリジンの
-    # 絶対 URL (`https://keroway.com/...`) として出力される。PR で新規追加されたページは
-    # 本番未反映なので外部 HTTP 検査すると 404 になる一方、内部リンク自体は --root-dir で
-    # `/...` パスとしてローカル dist に対して検証済み。重複検査による false positive を避ける。
-    "^https://keroway\\.com/",
+    # 本番同一ホスト (`https://keroway.com/...`) の絶対 URL は exclude しない (#878)。
+    # canonical / og:url / twitter:url は Astro.site によりこの形で出力され、PR で新規追加
+    # されたページは本番未反映なので外部 HTTP 検査すると 404 になる。そのため CLI の
+    # `--remap` で生成済み dist の file:// に写像し、ページ・アンカーの実在をローカルで検証
+    # する (test:links / ci.yml の Link check)。exclude で一律に落とすと、存在しないページ・
+    # アンカーへの絶対 URL まで素通りしてしまう。回帰テストは scripts/test-link-check.sh。
 
     # nihao.co.jp は GitHub Actions の runner からのみタイムアウトする (#664)。
     # リンク切れではない — 2026-08-11/12 にローカル (日本の家庭回線) から実測:

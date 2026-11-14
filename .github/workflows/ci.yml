@@ -307,6 +307,14 @@ jobs:
       # This mode preserves per-file context so same-page #fragment anchors
       # resolve correctly, which `--base-url` would not. Retry/timeout/accept
       # codes and excludes are configured in lychee.toml.
+      #
+      # Same-host absolute URLs (https://keroway.com/...) are remapped onto the
+      # built dist (file://) instead of being excluded, so a link to a missing
+      # page or anchor fails here while unpublished pages in a PR still pass
+      # (#878). --index-files makes `/blog/foo/#anchor` resolve to index.html;
+      # without it directory-style links with a fragment always fail. Keep these
+      # flags in sync with test:links in package.json and
+      # scripts/test-link-check.sh.
       - name: Link check (lychee)
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
         with:
@@ -320,6 +328,13 @@ jobs:
             --include-fragments
             --root-dir ${{ github.workspace }}/dist/client
             --fallback-extensions html
+            --index-files index.html
+            --remap '^https://keroway\.com/ file://${{ github.workspace }}/dist/client/'
             'dist/client/**/*.html'
           token: ${{ secrets.GITHUB_TOKEN }}
           fail: true
+
+      # Regression test for the same-host remap above: success / missing page /
+      # missing anchor (absolute and relative) against tiny fixtures.
+      - name: Link check config regression test
+        run: bash scripts/test-link-check.sh

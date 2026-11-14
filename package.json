@@ -27,7 +27,8 @@
     "test:e2e": "CRON_SECRET=ci-test-secret playwright test",
     "test:admin": "CI=1 PLAYWRIGHT_PORT=4335 playwright test tests/playwright/admin-smoke.spec.ts tests/playwright/admin-a11y.spec.ts tests/playwright/admin-editor.spec.ts",
     "test:lighthouse": "npx --yes @lhci/cli@0.14 autorun",
-    "test:links": "lychee --no-progress --include-fragments --root-dir dist/client --fallback-extensions html 'dist/client/**/*.html'",
+    "test:links": "lychee --no-progress --include-fragments --root-dir dist/client --fallback-extensions html --index-files index.html --remap \"^https://keroway\\.com/ file://$PWD/dist/client/\" 'dist/client/**/*.html'",
+    "test:links:fixtures": "bash scripts/test-link-check.sh",
     "test:unit": "NODE_OPTIONS=--no-experimental-webstorage vitest run",
     "test:unit:watch": "NODE_OPTIONS=--no-experimental-webstorage vitest"
   },
