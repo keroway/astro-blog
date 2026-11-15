@@ -46,7 +46,7 @@
     "@playwright/test": "^1.61.1",
     "@resvg/resvg-js": "^2.6.2",
     "@shikijs/themes": "4.6.0",
-    "@sveltia/cms": "^0.263.0",
+    "@sveltia/cms": "^0.264.0",
     "@unocss/astro": ">=66.7.5 <66.12.1",
     "astro": "^7.3.1",
     "happy-dom": "^21.0.0",

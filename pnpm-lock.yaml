@@ -73,8 +73,8 @@ importers:
         specifier: 4.6.0
         version: 4.6.0
       '@sveltia/cms':
-        specifier: ^0.263.0
-        version: 0.263.0(@types/react@19.3.0)
+        specifier: ^0.264.0
+        version: 0.264.0(@types/react@19.3.0)
       '@unocss/astro':
         specifier: '>=66.7.5 <66.12.1'
         version: 66.12.0(cac@7.1.0)(srvx@1.0.8)(vite@8.3.6(@types/node@26.6.6)(esbuild@0.28.1)(jiti@2.7.0)(yaml@2.9.1))
@@ -1406,8 +1406,8 @@ packages:
   '@stablelib/base64@1.0.1':
     resolution: {integrity: sha512-1bnPQqSxSuc3Ii6MhBysoWCg58j97aUjuCSZrGSmDxNqtytIi0k8utUenAwTZN4V5mXXYGsVUI9zeBqy+jBOSQ==}
 
-  '@sveltia/cms@0.263.0':
-    resolution: {integrity: sha512-NzG5wlXu/WQDkCfZP4R+eLpiOxwxvmXnxTYwnd2+LSmEmKXOFJrddXsQP98nVHZM7SDn7Q1SeuLQ2DPsIXozcA==}
+  '@sveltia/cms@0.264.0':
+    resolution: {integrity: sha512-YyNlOAajwLUDfk6uV1nBRhfbQxOvd6DvJ6DkqfS6dz9rVxyapr54VlWj2oujKZI5BQXzHzCqPdQCGPrGMZWU3w==}
     peerDependencies:
       '@types/react': ^19.3.0
     peerDependenciesMeta:
@@ -4590,7 +4590,7 @@ snapshots:
 
   '@stablelib/base64@1.0.1': {}
 
-  '@sveltia/cms@0.263.0(@types/react@19.3.0)':
+  '@sveltia/cms@0.264.0(@types/react@19.3.0)':
     dependencies:
       '@shikijs/langs': 4.6.0
       '@shikijs/themes': 4.6.0
