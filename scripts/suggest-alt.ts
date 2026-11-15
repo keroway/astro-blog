@@ -10,6 +10,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
+import { extractBody } from "./lib/extract-body.ts";
 import { stripBom } from "./lib/strip-bom.ts";
 
 const MIN_ALT_LENGTH = 4;
@@ -52,12 +53,6 @@ function parseFrontmatterTitle(content: string): string {
     /^---\r?\n[\s\S]*?^title:\s*["']?(.+?)["']?\s*$/m
   );
   return match ? match[1].trim() : "";
-}
-
-function extractBody(content: string): string {
-  return stripBom(content)
-    .replace(/^---[\s\S]*?---\n/, "")
-    .trim();
 }
 
 function collectImageRefs(content: string): ImageRef[] {
