@@ -3,6 +3,7 @@ import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { parse as parseYaml } from "yaml";
 import { assertDescriptionLength } from "./lib/assert-description-length.ts";
+import { extractBody } from "./lib/extract-body.ts";
 import { replaceDescription } from "./lib/replace-description.ts";
 import { stripBom } from "./lib/strip-bom.ts";
 import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length.ts";
@@ -36,12 +37,6 @@ function parseFrontmatter(content: string): Frontmatter {
     result.description = data.description;
   }
   return result;
-}
-
-function extractBody(content: string): string {
-  return stripBom(content)
-    .replace(/^---[\s\S]*?---\n/, "")
-    .trim();
 }
 
 async function suggestDescription(filePath: string): Promise<string> {
