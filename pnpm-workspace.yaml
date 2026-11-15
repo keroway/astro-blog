@@ -1,7 +1,7 @@
 packages:
   - ./
 
-# pnpm 11 のサプライチェーン保護はデフォルトで有効
+# pnpm 11 以降のサプライチェーン保護はデフォルトで有効
 # (https://pnpm.io/blog/releases/11.0):
 #   - minimumReleaseAge: 1440 (= 1 day) — 公開直後の悪意あるバージョンを遮断
 #   - strictDepBuilds: true             — postinstall などのライフサイクル実行を遮断
