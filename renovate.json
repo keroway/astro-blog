@@ -34,6 +34,13 @@
       "enabled": false
     },
     {
+      "description": "pnpm-workspace.yaml の overrides は、脆弱性の下限を守る上限付きレンジを手で管理している。major への引き上げ提案は、依存元のレンジ (例: postcss の nanoid 3 系) と衝突して壊すため自動で提案しない。必要なら osv-scan の指摘を起点に手で上げる",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["pnpm.overrides"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    },
+    {
       "groupName": "github-actions",
       "matchManagers": ["github-actions"],
       "matchUpdateTypes": ["minor", "patch"]
