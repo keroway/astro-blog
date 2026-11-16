@@ -614,6 +614,23 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("参照形式画像の alt 内バッククォート対も alt の文字として扱う (#1042)", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-ref-code.md");
+    const content = [
+      "![`設定画面の説明`][pic]",
+      "",
+      "`![][pic]`",
+      "",
+      "[pic]: ./example.png",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      expect(findAltIssues(filePath)).toHaveLength(0);
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("インラインコードの外側にある実際の画像は検出する", () => {
     const filePath = path.join(
       os.tmpdir(),
