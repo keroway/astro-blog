@@ -133,6 +133,25 @@ export function altIssueReason(alt: string, src: string): string | null {
 const BLOCK_BOUNDARY_LINE_PATTERN =
   /^ {0,3}(?:#{1,6}(?:[ \t]|$)|([-*_])(?:[ \t]*\1){2,}[ \t]*$)/;
 
+// cursor 以降で最初に始まる実画像（インライン形式 / 参照形式）を返す。
+function findNextImage(text: string, cursor: number): RegExpExecArray | null {
+  let first: RegExpExecArray | null = null;
+  for (const pattern of [IMAGE_INLINE_PATTERN, IMAGE_REFERENCE_PATTERN]) {
+    pattern.lastIndex = cursor;
+    let image = pattern.exec(text);
+    while (
+      image !== null &&
+      (isEscaped(text, image.index) || /\n[ \t]*\n/.test(image[0]))
+    ) {
+      image = pattern.exec(text);
+    }
+    if (image !== null && (first === null || image.index < first.index)) {
+      first = image;
+    }
+  }
+  return first;
+}
+
 function maskChunk(text: string): string {
   let result = "";
   let cursor = 0;
@@ -142,14 +161,7 @@ function maskChunk(text: string): string {
     if (span === null) break;
     // alt 内のバッククォート対は alt の文字であり、コードスパンではない。
     // 先に始まる実画像の範囲に入るスパンは空白化せず、画像の終端から再開する。
-    IMAGE_INLINE_PATTERN.lastIndex = cursor;
-    let image = IMAGE_INLINE_PATTERN.exec(text);
-    while (
-      image !== null &&
-      (isEscaped(text, image.index) || /\n[ \t]*\n/.test(image[0]))
-    ) {
-      image = IMAGE_INLINE_PATTERN.exec(text);
-    }
+    const image = findNextImage(text, cursor);
     if (
       image !== null &&
       image.index < span.index &&
