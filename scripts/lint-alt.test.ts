@@ -296,6 +296,42 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("引用内の参照定義を解決して短い alt と外部ホストを検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-quote-ref.md");
+    const content = [
+      "> ![x][a]",
+      ">",
+      "> [a]: /image.png",
+      "",
+      "> > ![説明文です][b]",
+      "> >",
+      "> > [b]:",
+      "> >   https://i.imgur.com/test.png",
+      "",
+      "> ```",
+      "> [c]: /code.png",
+      "> ```",
+      "",
+      "![img][c]",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(2);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        src: "/image.png",
+        reason: "alt が 4 文字未満",
+      });
+      expect(issues[1]).toMatchObject({
+        line: 5,
+        reason: "外部ホスト画像（imgur/googleusercontent）",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("参照ラベルの連続空白を正規化して照合する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-label-space.md");
     const content = [
