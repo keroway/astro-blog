@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import { extractBody } from "./lib/extract-body.ts";
+import { lineAt } from "./lib/line-at.ts";
 import { stripBom } from "./lib/strip-bom.ts";
 
 const MIN_ALT_LENGTH = 4;
@@ -183,7 +184,6 @@ async function main() {
   const body = extractBody(content);
   const bodyPreview =
     body.length > 2000 ? `${body.slice(0, 2000)}\n（以下省略）` : body;
-  const bodyLines = body.split("\n");
 
   const refs = collectImageRefs(content);
 
@@ -248,7 +248,7 @@ async function main() {
     console.log(`  現在の alt : ${altDisplay}`);
     console.log(`  生成中...`);
 
-    const contextLine = bodyLines[ref.line - 1] ?? "";
+    const contextLine = lineAt(content, ref.line);
 
     const result = await suggestAlt(
       absImg,
