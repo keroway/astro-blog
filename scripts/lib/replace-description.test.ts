@@ -51,6 +51,26 @@ describe("replaceDescription", () => {
     );
   });
 
+  it.each([
+    ["---   ", "空白付き終了区切り"],
+    ["---\t", "タブ付き終了区切り"],
+  ])("%j (%s) でも置換し、区切り行と本文を保持する", (close) => {
+    for (const nl of ["\n", "\r\n"]) {
+      const content = `---${nl}title: Test${nl}description: ""${nl}${close}${nl}${nl}Body${nl}`;
+      expect(replaceDescription(content, "概要です")).toBe(
+        `---${nl}title: Test${nl}description: "概要です"${nl}${close}${nl}${nl}Body${nl}`
+      );
+    }
+  });
+
+  it("末尾空白付き終了区切りでも本文中の description 行は書き換えない", () => {
+    const content =
+      '---\ndescription: ""\n---  \n```yaml\ndescription: "sample"\n```\n';
+    expect(replaceDescription(content, "概要です")).toBe(
+      '---\ndescription: "概要です"\n---  \n```yaml\ndescription: "sample"\n```\n'
+    );
+  });
+
   it("description 行が無ければエラーにする", () => {
     expect(() => replaceDescription("---\ntitle: Test\n---\n", "x")).toThrow();
   });
