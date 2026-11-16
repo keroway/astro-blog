@@ -55,6 +55,23 @@ describe("callout editor component", () => {
     });
   });
 
+  it("recognizes a CRLF callout and excludes the line breaks from the body (#1039)", () => {
+    const source =
+      '{% callout type="warning" title="Notice" %}\r\n一行目\r\n二行目\r\n{% /callout %}';
+    const match = source.match(CALLOUT_PATTERN);
+
+    expect(match).not.toBeNull();
+    expect(calloutFromBlock(match as RegExpMatchArray)).toEqual({
+      type: "warning",
+      title: "Notice",
+      body: "一行目\r\n二行目",
+    });
+    expect(Markdoc.parse(source).children[0].attributes).toMatchObject({
+      type: "warning",
+      title: "Notice",
+    });
+  });
+
   it("keeps & and double quotes in the title (#860)", () => {
     const data = { type: "info" as const, title: 'A & "B"', body: "本文" };
     const block = calloutToBlock(data);

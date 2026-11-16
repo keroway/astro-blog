@@ -61,7 +61,7 @@ const ATTRS_SOURCE = String.raw`((?:"(?:\\.|[^"\\])*"|[^%"])*)`;
 
 // {% callout type="tip" title="ヒント" %}\n本文\n{% /callout %}
 export const CALLOUT_PATTERN = new RegExp(
-  String.raw`^\{%\s*callout\b${ATTRS_SOURCE}%\}\n([\s\S]*?)\n\{%\s*\/callout\s*%\}$`
+  String.raw`^\{%\s*callout\b${ATTRS_SOURCE}%\}\r?\n([\s\S]*?)\r?\n\{%\s*\/callout\s*%\}$`
 );
 
 export function calloutFromBlock(match: RegExpMatchArray): CalloutBlockData {
