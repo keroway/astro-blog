@@ -1,7 +1,9 @@
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 import { MAX_DESCRIPTION_LENGTH } from "./lint-description-length";
 import {
+  formatSuggestionYaml,
   isValidSuggestedDescription,
   parseFrontmatter,
   SCHEMA,
@@ -44,6 +46,17 @@ describe("suggest-frontmatter description 制約", () => {
   it("50文字を受理し49文字を拒否する", () => {
     expect(isValidSuggestedDescription("あ".repeat(50))).toBe(true);
     expect(isValidSuggestedDescription("あ".repeat(49))).toBe(false);
+  });
+});
+
+describe("suggest-frontmatter formatSuggestionYaml", () => {
+  it("引用符・バックスラッシュ・改行を含む値を再パースして元の値に戻せる", () => {
+    const input = {
+      description: '設定名 "strict" とパス C:\\tools の扱い\n次の行',
+      tags: ["C:\\tools", '設定"名', "plain"],
+      category: "dev",
+    };
+    expect(parse(formatSuggestionYaml(input))).toEqual(input);
   });
 });
 

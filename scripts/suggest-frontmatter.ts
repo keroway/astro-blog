@@ -9,7 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { query } from "@anthropic-ai/claude-agent-sdk";
-import { parse } from "yaml";
+import { parse, stringify } from "yaml";
 import { BLOG_CATEGORIES } from "../src/lib/content-schema.ts";
 import { extractBody } from "./lib/extract-body.ts";
 import { stripBom } from "./lib/strip-bom.ts";
@@ -52,6 +52,18 @@ export function isValidSuggestedDescription(description: string): boolean {
     description.length >= MIN_DESCRIPTION_LENGTH &&
     description.length <= MAX_DESCRIPTION_LENGTH
   );
+}
+
+/** 提案ブロックを YAML としてシリアライズする（引用符・バックスラッシュ・改行を安全に扱う）。 */
+export function formatSuggestionYaml(s: {
+  description: string;
+  tags: string[];
+  category: string;
+}): string {
+  return stringify(
+    { description: s.description, tags: s.tags, category: s.category },
+    { lineWidth: 0, collectionStyle: "flow" }
+  ).trimEnd();
 }
 
 export const SCHEMA = {
@@ -184,9 +196,7 @@ ${BLOG_CATEGORIES.join(", ")}
   }
 
   console.log("=== frontmatter 補完提案 ===\n");
-  console.log(`description: "${result.description}"`);
-  console.log(`tags: [${result.tags.map((t) => `"${t}"`).join(", ")}]`);
-  console.log(`category: "${result.category}"`);
+  console.log(formatSuggestionYaml(result));
 
   if (result.category_note) {
     console.log(`\n⚠️  カテゴリ補足: ${result.category_note}`);
