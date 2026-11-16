@@ -272,6 +272,11 @@ function extractDestination(text: string): string {
   return angle ? angle[0] : text.split(/\s+/)[0];
 }
 
+// 引用内の参照定義も Markdoc は解決するため、行頭の引用マーカー（入れ子含む）を除く。
+function stripQuoteMarkers(line: string): string {
+  return line.replace(/^(?:\s{0,3}>[ \t]?)+/, "");
+}
+
 function collectReferenceDefinitions(
   lines: string[],
   inCode: boolean[]
@@ -281,15 +286,14 @@ function collectReferenceDefinitions(
     if (inCode[i]) continue;
     let label: string;
     let src: string;
-    const match = lines[i].match(REFERENCE_DEFINITION_PATTERN);
+    const line = stripQuoteMarkers(lines[i]);
+    const match = line.match(REFERENCE_DEFINITION_PATTERN);
     if (match) {
       label = normalizeLabel(match[1]);
-      src = extractDestination(
-        lines[i].slice(match[0].length - match[2].length)
-      );
+      src = extractDestination(line.slice(match[0].length - match[2].length));
     } else {
-      const labelOnly = lines[i].match(REFERENCE_LABEL_ONLY_PATTERN);
-      const next = lines[i + 1]?.trim();
+      const labelOnly = line.match(REFERENCE_LABEL_ONLY_PATTERN);
+      const next = stripQuoteMarkers(lines[i + 1] ?? "").trim();
       if (!labelOnly || !next || inCode[i + 1]) continue;
       label = normalizeLabel(labelOnly[1]);
       src = extractDestination(next);
