@@ -11,6 +11,7 @@
       "!.pnpm-store",
       "!.astro",
       "!.claude",
+      "!!.agents",
       "!.vercel",
       "!test-results",
       "!lhci-reports",
