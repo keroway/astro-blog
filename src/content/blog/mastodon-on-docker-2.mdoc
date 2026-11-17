@@ -1,27 +1,27 @@
 ---
 title: "Mastodon on Docker(2)"
-description: "Mastodon を Docker で動かす連載の続き。nginx のサンプル設定に SSL を追記し、80番ポートの調整を経て HTTPS 表示までこぎ着けた作業記録です。"
+description: "Docker で Mastodon を動かす作業の続きです。nginx に HTTPS の設定を加え、画面は表示できましたが、プリコンパイルの問題は残っています。"
 pubDate: 2018-02-07
 category: "tools"
 series: "Mastodon on Docker"
 tags:
   - "Mastodon"
 ---
-[前回](/blog/nginx/)、[前々回](/blog/mastodon-on-docker/)の続き。
-未完成ですが、一旦これで終わり。
+[前回](/blog/nginx/)、[前々回](/blog/mastodon-on-docker/)の続きです。
+まだ未完成ですが、今回は表示を確認するところまで進めます。
 
-手順を見直すと Production Guide を見てHTTPSの設定しとけよ、とあった。
+手順を見直すと、Production Guide を参照して HTTPS を設定する必要がありました。
 
 > 移行時追記: 当時参照していた `github.com/tootsuite/documentation` 配下の `Running-Mastodon/Docker-Guide.md` / `Production-guide.md` は、その後 `mastodon/documentation` への org rename と全面再構成を経て参照不能になった。現行の運用手順は [docs.joinmastodon.org](https://docs.joinmastodon.org/admin/install/) を参照されたい。
 
-nginx用のサンプル設定ファイルの記載があるので、そのまま新しいconfファイルにコピペした後下記部分を変更した。
+nginx用のサンプル設定ファイルの記載があるので、そのまま新しいconfファイルにコピーし、以下の部分を変更しました。
 
 - ポート80のlisten部分をコメントアウト
   元の設定ファイルにも80ポートで受ける設定があったので、起動に失敗したため。
 - example.comの箇所をlocalhostに変更
   他も含めて全部そのままでも動いたと思われるが、example.comは実在するアドレスなので、一応。  
 - SECURITY WARNING表記のあたりにSSL設定追加
-  前回作成したファイルからSSLの設定を抜き出してコピペ。
+  前回作成したファイルから SSL の設定をコピーしました。
 ```nginx
 	#SSL
 	ssl_certificate /usr/local/etc/openssl/certs/cert.pem;
@@ -34,9 +34,9 @@ nginx用のサンプル設定ファイルの記載があるので、そのまま
 	ssl_prefer_server_ciphers on;
 ```
 
-nginxを再起動して、docker-compose upを実行
-案の定、アセットのプリコンパイルは失敗しているようだが、表示自体は成功。
+nginx を再起動し、`docker-compose up` を実行します。
+アセットのプリコンパイルは引き続き失敗しているようですが、画面は表示できました。
 
 ![CSS未適用のMastodonローカルホスト登録画面、@localhostのユーザー登録フォームが素のHTMLで表示](/dd52a731c944.png)
 
-ローカルでやってもあまり意味もないので、本件はここまで
+ローカルでの動作確認は、ひとまずここまでにします。

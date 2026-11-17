@@ -1,6 +1,6 @@
 ---
 title: "nerodia(1)"
-description: "Selenium ベースの自動テストツール Watir の Python 版 nerodia を macOS に導入する手順。pip の権限エラーやドライバのバージョン不整合の解決方法をまとめます。"
+description: "ブラウザ操作を自動化する nerodia を Mac に導入しました。権限エラーや、古い Chrome ドライバにつまずいたところも記録しています。"
 pubDate: 2018-03-22
 category: "dev"
 series: "nerodia"
@@ -35,15 +35,15 @@ brew install geckodriver
 ```bash
 brew install chromedriver
 ```
-実は`chromedriver`はインストールされていたのですが、何度試してもうまく動かず困っていたところ、ふとバージョンを確認するとだいぶ古いものを使っていた、というオチでした。
+実は`chromedriver`はインストールされていたのですが、何度試してもうまく動かず困っていたところ、ふとバージョンを確認するとだいぶ古いものを使っていた、ことがわかりました。
 
-そのままbrewでインストールするとリンク作成に失敗。
+そのまま brew でインストールすると、リンクの作成に失敗しました。
 ```bash
 rm /usr/local/bin/chromedriver
 brew link chromedriver
 ```
 とすることで、無事chromeも使えるようになりました。
 
-次回実際に動かします。
+次回は実際に動かしてみます。
 
 > Written with [StackEdit](https://stackedit.io/)

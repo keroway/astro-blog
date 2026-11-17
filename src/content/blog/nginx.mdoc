@@ -1,16 +1,16 @@
 ---
 title: "nginx"
-description: "Docker で動かした Mastodon に HTTPS でアクセスするため nginx を設定した記録。LOCAL_HTTPS が使えない環境で localhost に証明書を通す手順をまとめる。"
+description: "Docker 上の Mastodon を確認する途中で、nginx の HTTPS 設定を試しました。まずはローカルのページを HTTPS で表示するところまでの記録です。"
 pubDate: 2018-02-07
 category: "tools"
 tags:
   - "nginx"
 ---
-一応[前回](/blog/mastodon-on-docker/)の続き
+[前回](/blog/mastodon-on-docker/)の続きです。
 
-とりあえず、プリコンパイルができてなくても最低限の動作はするんじゃないか、と試しにrunを実行すると動いたっぽい。
+プリコンパイルができていなくても一部は動くのではないかと思い、試しに run を実行すると、起動したようでした。
 
-が、証明書設定をしていないのでブラウザからアクセスしてもみることができない。
+ただ、証明書を設定していないため、ブラウザでは表示できませんでした。
 （LOCAL_HTTPSをfalseにすればいいという情報もあったが、現在のバージョンではサポートしていない）
 
 .env.production
@@ -35,8 +35,8 @@ $ cat index.html
 It Works! nginx
 ```
 
-httpsで見れました。
+HTTPS で表示できました。
 ![ブラウザで鍵付きhttps localhostにアクセスし「It Works! nginx」と表示された画面](/e6236103fe11.png)
 
 
-本編はあまり進んでないけど、ここまで。
+Mastodon 本体の確認はあまり進んでいませんが、今回は HTTPS の設定までです。

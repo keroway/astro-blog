@@ -1,6 +1,6 @@
 ---
 title: "GAE でメール送信"
-description: "Google App Engine のスタンダード環境で Python サンプルを使いメール送信を試す手順。ローカルの dev_appserver 実行から gcloud でのデプロイ、送信元アドレス設定までの流れをまとめる。"
+description: "Google App Engine のスタンダード環境でメール送信を試しました。ローカルでの確認からデプロイ、送信元アドレスの設定までを記録しています。"
 pubDate: 2018-04-25
 category: "tools"
 tags:
@@ -8,7 +8,7 @@ tags:
 heroImage: '/src/assets/content/blog/52cb3d07495c.jpg'
 ---
 
-まずは、課金のお話。
+メール送信を試す前に、実行環境を変更しました。
 
 GAE(Google App Engine)のフレキシブル環境が無料でないことは分かってはいたものの、試しに動かしてみただけの割にそれなりの額が課金されていた（初年度の無料クレジット枠なので、実際に払うものではありませんが）ので、何はともあれスタンダード環境に切り替えるところから始めました。
 
@@ -48,8 +48,8 @@ INFO 2018-04-23 16:58:47,378 mail_stub.py:378] You are not currently sending out
 gcloud app deploy
 gcloud app browse
 ```
-ブラウザにこのような味気ないページが表示されます。
+ブラウザにこのようなページが表示されます。
 ![GAEメール送信サンプルアプリの画面。Send email など5つのリンクが並ぶ簡素なページ](/02eef1196df5.png)
 Send email. をクリックすると、設定したアドレスにメールが送信されます。
 
-送信先アドレスはくれぐれもお間違いの無いように・・・。
+実行前に、送信先のアドレスを確認してください。

@@ -1,6 +1,6 @@
 ---
 title: "BeautifulSoup4(1)"
-description: "PythonのrequestsとBeautifulSoup4で、紀伊國屋書店サイトからプログラミング書籍の新着リスト（タイトル・著者・価格）を抽出する手順を、ipythonの実行例つきで解説します。"
+description: "Python の requests と BeautifulSoup4 で、紀伊國屋書店の新着書籍からタイトル、著者、価格を取得してみました。コードと実行結果を載せています。"
 pubDate: 2018-04-18
 category: "dev"
 series: "BeautifulSoup4"
@@ -9,9 +9,9 @@ tags:
 heroImage: '/src/assets/content/blog/df1d7b7a4572.jpg'
 ---
 
-[以前](/blog/getting-started-with-python-web-scraping/)サンプルそのままだったPythonでのWeb Scrapingの応用編です。
+[前回](/blog/getting-started-with-python-web-scraping/)はサンプルをそのまま使ったので、今回は取得先を変えて Web スクレイピングを試します。
 
-といっても、今回は参照先を変えただけで、やる事はほとんど変わっていません。
+処理の流れは、前回とほぼ同じです。
 
 - 今回のターゲットはこちら
 
@@ -64,4 +64,4 @@ In [14]: for l in lists:
 {'name': 'Ｐｙｔｈｏｎスタートブック - いちばんやさしいパイソンの本／バージョン３に完全対 （増補改訂版）', 'author': '辻 真吾【著】', 'price': '¥2,700'}
 ```
 
-次回は、これを見やすく表示する表示させてみようと思います。
+次回は、取得した情報を見やすく表示してみようと思います。

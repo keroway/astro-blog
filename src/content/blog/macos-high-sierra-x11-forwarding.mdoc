@@ -1,19 +1,19 @@
 ---
 title: "Mac OS (High Sierra) で X11フォワーディング"
-description: "macOS High Sierra に XQuartz をインストールし、ssh -X で Raspberry Pi に接続して GUI アプリを Mac 側の画面に表示する X11 フォワーディングの設定手順を紹介します。"
+description: "Raspberry Pi の GUI を Mac に表示するため、XQuartz と X11 フォワーディングを試しました。macOS High Sierra での作業記録です。"
 pubDate: 2018-03-09
 category: "tools"
 tags:
   - "High Sierra"
 ---
-引き続きラズパイを使って・・・
+引き続き、Raspberry Pi の設定を進めています。
 
 LCDを取り付けたはいいものの、画面が小さすぎて設定もままなりません。
 ssh経由のコマンドだけではなく、GUIも使いたいと思い、X11フォワーディングをやってみました。
 
-Macから接続しますので[XQuqrtz](https://www.xquartz.org/)をインストールします。
+Macから接続しますので[XQuartz](https://www.xquartz.org/)をインストールします。
 ![XQuartzを既定のX11サーバーにするには再ログインが必要と促すダイアログ](/b3233834eb35.png)
-インストール完了時、このようにログアウトしろと言われますので、一度ログアウトしてログインし直します。
+インストール完了時、ログアウトを求められるので、一度ログアウトしてログインし直します。
 
 -Xオプションをつけてsshログイン後、Xを使うアプリを立ち上げればMac側にウィンドウが表示されます。
 ```shell
@@ -24,7 +24,7 @@ chromium-browser &
 
 画面更新が遅く反応も鈍いですが、なんとか使えそうです。
 
-あとは、JessieからStretchに切り替えようか悩んでいます。
-また映らなくなったりしそうなので・・・。
+Jessie から Stretch への切り替えも考えています。
+ただ、ディスプレイが再び映らなくなるのが気がかりで、まだ迷っています。
 
 > Written with [StackEdit](https://stackedit.io/).

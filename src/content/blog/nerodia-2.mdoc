@@ -1,6 +1,6 @@
 ---
 title: "nerodia(2)"
-description: "Python のブラウザ自動化ライブラリ nerodia で社内日報サイトへログインし、当日分の日報が作成済みかを判定するスクリプトを紹介。設定は TOML に外出しし、要素の待機やテキスト走査の実装例も示す。"
+description: "nerodia を使い、社内の日報サイトで当日分の日報があるかを調べました。実際のコードを一部変更し、TOML の設定例とともに載せています。"
 pubDate: 2018-03-22
 category: "dev"
 series: "nerodia"
@@ -8,10 +8,10 @@ tags:
   - "nerodia"
 heroImage: '/src/assets/content/blog/eb126bd239c2.jpg'
 ---
-[前回](/blog/nerodia-1/)の続き。
+[前回](/blog/nerodia-1/)の続きです。
 
 題材として社内用日報サイトを用いています。
-（本物からは一部改変しています）
+（実際のサイトに合わせたコードから、一部を変更しています）
 
 設定したユーザーの当日分の日報が作成済みかを調べる、というものです。
 

@@ -1,12 +1,14 @@
 ---
 title: "rust on Codeanywhere"
-description: "Codeanywhere の iOS アプリでコンテナを作成し、Rust で cargo による Hello World をビルド・実行するまでの流れを画像付きで紹介します。"
+description: "Codeanywhere の iOS アプリで Rust の実行環境を用意しました。コンテナの作成から、Hello World のビルドと実行までを確認しています。"
 pubDate: 2018-02-05
 category: "dev"
 tags:
   - "Rust"
 ---
-rustでサンプルを書いてみようと思ったところに、ちょうど[codeanywhere](https://codeanywhere.com)のiosアプリ更新の通知があったので、それの使い心地の確認を兼ねて・・・（結果的にそちらがメインになっています）
+Rust のサンプルを書こうと思っていたところに、[Codeanywhere](https://codeanywhere.com) の iOS アプリ更新の通知が届きました。
+今回は、その使い心地も確かめながら進めます。
+結果的には、環境を用意する作業が中心になりました。
 
 - ワークスペース作成
 ![Codeanywhereアプリのcatestワークスペース画面、右上のメニューボタンが赤枠で強調](/4b0d71be8adb.png)
@@ -51,10 +53,10 @@ rustでサンプルを書いてみようと思ったところに、ちょうど[
 ![Codeanywhereの編集画面で開いたmain.rs、Hello, world!を出力するRustコード](/cc7537a10146.png)
 
 - ビルド&実行
-ビルドを実行するとエラーが・・・
+ビルドを実行すると、エラーが出ました。
 ![Codeanywhere iOSアプリの端末画面。hello_worldのファイル一覧を表示しcargo buildを入力中](/e72d8f76445b.png)
 ![Codeanywhereのターミナルでhello_worldのビルドが失敗しError: Could not compileと表示された画面](/7ea21f9dd131.png)
-ccがないとおっしゃるので、gccをインストールする
+cc が見つからないというエラーだったので、gcc をインストールします。
 ![Codeanywhereのターミナルでcargo buildを実行し、リンカccが見つからないエラーが表示された画面](/dcd7592719bc.png)
 ![CodeanywhereのiOSターミナル。hello_worldのコンパイルエラー後にsudo apt-get install gccを入力](/6e1f2d1e608f.png)
 再度ビルド実行
@@ -64,4 +66,4 @@ ccがないとおっしゃるので、gccをインストールする
 無事、実行完了！
 
 
-コードは書いてないですが、今回はここまで
+今回は環境を用意し、サンプルが動くところまで確認しました。

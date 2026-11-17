@@ -1,6 +1,6 @@
 ---
 title: "Mastodon on Docker"
-description: "MastodonをDocker上で構築中、rake assets:precompile 実行中にDocker for Macが落ちてビルド失敗した事例を、エラーログと参考資料とともに記録します。"
+description: "Mastodon を Docker で動かそうとしましたが、アセットのプリコンパイル中に Docker が落ちました。解決前のログと参照資料を残しています。"
 pubDate: 2018-02-06
 category: "tools"
 series: "Mastodon on Docker"
@@ -8,7 +8,7 @@ tags:
   - "Mastodon"
 heroImage: '/src/assets/content/blog/1be8323d89b5.jpg'
 ---
-本日時点の結論から
+今回は、プリコンパイル中に Docker が落ちて再起動するところで止まっています。
 
 - プリコンパイル中にDockerが落ちる（再起動）
 ```shell
@@ -30,4 +30,4 @@ https://github.com/tootsuite/documentation/blob/master/Running-Mastodon/Docker-G
 https://www.docker.com/community-edition
 
 
-困るようなら、素直に他のブログなどを参考にしてみます。
+続けて解決できなければ、他の構築記事も調べてみるつもりです。

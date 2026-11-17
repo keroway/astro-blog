@@ -1,31 +1,32 @@
 ---
 title: "PICO (Arduino互換ボード)"
-description: "KickStarterで入手した世界最小級のArduino互換ボードPICOの開封から動作確認までの記録。ボード設定をLeonardoに合わせ、D3ピンに配線してLEDをフェードさせるスケッチで動作を確かめる手順を紹介する。"
+description: "Kickstarter で出資した Arduino 互換ボード PICO が届きました。ボード設定に迷いながら、LED を配線してサンプルが動くところまで試しています。"
 pubDate: 2018-02-14
 category: "hardware"
 tags:
   - "Arduino"
 ---
-本日(2018/2/13)、KickStarterで出資していたモノが届いたので、早速動かしてみた。
+本日(2018/2/13)、KickStarterで出資していたモノが届いたので、早速動かしてみました。
 [PICO: The world's smallest Arduino compatible board!](https://www.kickstarter.com/projects/melbel/pico-the-worlds-smallest-arduino-board)
 
-よくあるプチプチ付きの封筒
+緩衝材付きの封筒で届きました。
 ![米国から届いた税関申告書付きの封筒と、中の銀色静電防止袋に入ったPICOボード](/c7b73cb9ef0b.png)
 小さい！
 ![手のひらに載る極小のPICOボード、奥に黄色い封筒と銀色の静電気防止袋](/7106c982a711.png)
-少々バリが目立つ。
+少しバリが目立ちます。
 ![PICOボードのピン穴周辺を拡大、D3・D2・RX・TX端子とバリが目立つ縁](/c9e2ea3dca1e.png)
 
 とりあえず接続してシリアルモニターを有効にしていたら、こんなメッセージが(動画)
 [![シリアルモニター動作確認動画のサムネイル](https://img.youtube.com/vi/4YGrQIP1-TQ/0.jpg)](https://www.youtube.com/watch?v=4YGrQIP1-TQ)
 
-で、何か動かしてみようとしたときにボード設定に困ったものの、プロジェクトページの記載を見つけたので、Leonardoに合わせる。
+ボード設定に迷いましたが、プロジェクトページの説明を見つけ、Leonardo に設定しました。
 ![PICOのブートローダーがLeonardo互換であることを示す仕様表](/a5b0bc910cdf.png)
 
-基本のBlinkスケッチ（プログラム）を動かして見たものの反応なし。
-光っているLEDはLED_BUILTINと違うの？
+基本の Blink スケッチを動かしてみましたが、反応がありません。
+点灯している LED は、`LED_BUILTIN` とは違うものなのでしょうか。
 
-仕方なく適当に配線(PICO側はD3とGNDに配線)、以下のスケッチで動作確認。
+次に LED を配線し、以下のスケッチで確認しました。
+PICO 側は D3 と GND に接続しています。
 ```c++
 #define LED 3
 
@@ -48,5 +49,5 @@ void loop() {
 }
 ```
 
-動いた！(動画)
+今度は動作を確認できました。
 [![LED フェード動作確認動画のサムネイル](https://img.youtube.com/vi/MOfG1G_-Gu8/0.jpg)](https://www.youtube.com/watch?v=MOfG1G_-Gu8)

@@ -1,6 +1,6 @@
 ---
 title: "RaspberryPi3 セットアップ"
-description: "Raspberry Pi 3B に Waveshare の 3.2inch LCD(B) を取り付けるセットアップ手順。イメージ書き込みから apt-get のエラー対処、日本語フォント導入までまとめる。"
+description: "Raspberry Pi 3B に Waveshare の LCD を取り付けました。一度は表示できましたが、更新後に映らなくなり、原因を調べているところまでの記録です。"
 pubDate: 2018-03-06
 category: "hardware"
 series: "RaspberryPi3 セットアップ"
@@ -8,9 +8,9 @@ tags:
   - "RaspberryPi"
 heroImage: '/src/assets/content/blog/3833e04ad749.jpg'
 ---
-RaspberryPi3BにWaveshare社の3.2inch Pri LCD(B)を付ける話
+Raspberry Pi 3B に Waveshare 社の 3.2inch RPi LCD (B) を取り付けます。
 ![Raspberry Pi 3 Model B と Waveshare 3.2inch LCD(B)、イベント購入ステッカー](/e9ec6fbaab89.jpg)
-(前回買ったやつです)
+前回のイベントで購入したものです。
 
 [こちら](/blog/raspberry-pi-event-attend/)で入手した格安ディスプレイですが、付属のQuick Start(Method 1)に従って進めたものの、Raspbianを入れて起動し、ドライバをダウンロードして実行、再起動がかかった後立ち上がらず。
 
@@ -20,10 +20,9 @@ RaspberryPi3BにWaveshare社の3.2inch Pri LCD(B)を付ける話
 
 ダウンロードした7zipファイルを展開して、microSDに書き込み、電源を繋ぐとあっさり起動。
 接続したディスプレイから、wifiの設定などを実施。
-PCからSSHで接続できることを確認したところで、`apt-get update`, `apt-get upgrade`を実行すると・・・
+PC から SSH で接続できることを確認し、`apt-get update` と `apt-get upgrade` を実行すると、次のエラーが出ました。
 >E: The value '\stable' is invalid for APT::Default-Release as such a release is not available in the sources
 
-と、エラーが発生。
 
 https://raspberrypi.stackexchange.com/questions/68432/issue-installing-packages-on-raspberry-pi-3-the-value-stable-is-invalid-for/75080
 リンク先を参考に、以下の対応で`apt-get upgrade`の実施に成功。
@@ -36,13 +35,12 @@ https://raspberrypi.stackexchange.com/questions/68432/issue-installing-packages-
 また、LOCALE等を日本語設定にすると文字化けしたので、日本語フォントをインストール
 `apt-get install fonts-noto`
 
-リブートして確認。
-
-あれ？出ない。
-HDMIを繋ぐと、接続したディスプレイに出力したかったであろう画面がモニタに出力されていたので、出力先の設定がHDMIに戻ってしまった模様。
+再起動して確認すると、ディスプレイに表示されなくなっていました。
+HDMI をつなぐと、そちらのモニターに画面が表示されました。
+出力先が HDMI に戻ったようです。
 
 sshからインストールスクリプトを参照し、何が変わったのかを確認していくと、どうやら`/dev/fb1`がなくなっているのが原因のようです。
 
-・・・・残念。また調べておきます。
+今回は解決できなかったので、引き続き調べてみます。
 
 > Written with [StackEdit](https://stackedit.io/).

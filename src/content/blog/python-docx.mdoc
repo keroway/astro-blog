@@ -1,6 +1,6 @@
 ---
 title: "python-docx"
-description: "python-docx を使って Word 文書をプログラムから生成する実装例を紹介。見出し・太字/斜体・箇条書き・テーブルの作り方や、Mac への pip インストールでの注意点もまとめています。"
+description: "python-docx のサンプルを使い、Word 文書を生成してみました。画像やデータを手元向けに変えたコードと、実行環境を用意した際のメモです。"
 pubDate: 2018-01-30
 category: "dev"
 tags:
@@ -8,13 +8,13 @@ tags:
 ---
 [こちら](http://python-docx.readthedocs.io/en/latest/)のサンプルに基づいて実装してみました。
 
-画像とかデータソースとかは面倒なので適宜改変
+画像やデータは手元で試しやすいように変更しています。
 ![IntelliJ IDEAでpython-docxのtest-docx.pyを編集し、実行結果にstyle_id非推奨のUserWarningが出た画面](/5f175438b2b1.png)
 
-作成したdocxを開いてみる
+作成した docx を開いてみます。
 ![python-docxで生成したWord文書。見出し・箇条書き・Qty/Id/Descの表が表示されている](/c81f844b43fb.png)
 
-改変後のソースは以下の通り
+変更後のコードは以下のとおりです。
 
 ```python
 from docx import Document
@@ -53,7 +53,7 @@ document.add_page_break()
 document.save('test.docx')
 ```
 ----------
-以下余談
+## 環境構築でつまずいたこと
 
  - Mac(High Sierra)環境にpython3をインストールしようとして詰まる
 ```sh
@@ -61,8 +61,8 @@ sudo mkdir -p /usr/local/Frameworks/Python.framework
 sudo chown /usr/local/* $(whoami) $(brew --prefix)
 brew link python3
 ```
-  でインストールは解決
+  これでインストールできました。
     別モノのインストールですが[参考](https://qiita.com/_ag/items/1ea00c8575f8fe2d6c57)
  - 同、pipのインストールで詰まる
-  [こちら](https://pip.readthedocs.io/en/stable/installing/) を見て、後回しにすることに
-  Linux環境にpython3を入れていたので、今回はそちらを利用した次第。
+  [こちら](https://pip.readthedocs.io/en/stable/installing/) を見て、今回は後回しにしました。
+  Linux環境にpython3を入れていたので、今回はそちらを使いました。
