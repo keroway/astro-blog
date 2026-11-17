@@ -2,4 +2,4 @@
 # CI (.github/workflows/ci.yml の setup-node) と Node メジャーを揃える。
 [tools]
 node = "26"
-pnpm = "11"
+pnpm = "12"
