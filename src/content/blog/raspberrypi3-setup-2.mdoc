@@ -1,6 +1,6 @@
 ---
 title: "RaspberryPi3 セットアップ(2)"
-description: "apt-get dist-upgrade 後に表示されなくなった Raspberry Pi 3 の Waveshare 製 LCD を、最新ドライバ LCD-show の導入で復旧させた手順の記録です。"
+description: "更新後に映らなくなった Raspberry Pi 3 の LCD に、最新のドライバを入れてみました。今回は表示が戻ったので、その手順を残しています。"
 pubDate: 2018-03-08
 category: "hardware"
 series: "RaspberryPi3 セットアップ"
@@ -8,9 +8,10 @@ tags:
   - "RaspberryPi"
 heroImage: '/src/assets/content/blog/d1f761788582.jpg'
 ---
-[ちょっと前](/blog/raspberrypi3-setup/)に実施した「ラズパイにLCDをつけて、LCDメーカーのOSイメージで起動したら表示されたのに、`apt-get dist-upgrade`とかしたら表示されなくなった話」の後日談。
+[前回](/blog/raspberrypi3-setup/)、Raspberry Pi に LCD を取り付け、一度は表示できましたが、OS の更新後に映らなくなりました。
+今回は、その続きです。
 
-色々調べていくつかあたりをつけていたのですが、とりあえずダメ元で最新のドライバ（と、各種設定ファイル）を入れてみようということで
+色々調べていくつかあたりをつけていたのですが、まずは最新のドライバと設定ファイルを入れてみることにしました。
 
 ```bash
 curl -L http://www.waveshare.com/w/upload/0/00/LCD-show-170703.tar.gz -O
@@ -18,9 +19,9 @@ tar xvfz LCD-show-170703.tar.gz
 cd LCD-show/
 ./LCD32-show
 ```
-このように実行してみたところ、あっさり表示されたのでした。
+この手順で実行すると、表示が戻りました。
 ![最新ドライバ導入後、Raspberry Piの3.2インチLCDにデスクトップとメニューが表示された画面](/3a38c7b8f72b.jpg)
-フォントサイズを6ptにしてます。
+フォントサイズは 6pt にしています。
 
 ちなみに、マイクラの出力はHDMIになるようです。
 ![ラズパイの3.2インチLCDに「Minecraft - Pi edition」のウィンドウが表示されるが画面は暗転](/58363881ade9.jpg)

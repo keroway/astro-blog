@@ -1,6 +1,6 @@
 ---
 title: "レーザー測距モジュール(VL53L0X)"
-description: "秋月電子で購入したレーザー測距モジュール VL53L0X を Arduino UNO 互換機に配線し、VSCode と PlatformIO のライブラリ付属サンプルで距離を測定して動作確認するまでの手順をまとめた記録です。"
+description: "秋月電子で購入した VL53L0X の測距モジュールを使ってみました。Arduino UNO 互換機に配線し、PlatformIO のサンプルで動作を確認しています。"
 pubDate: 2018-04-07
 category: "hardware"
 tags:
@@ -8,7 +8,7 @@ tags:
 heroImage: '/src/assets/content/blog/4e9d239903c5.jpg'
 ---
 ![机の上に置かれた秋月電子の袋入り部品。左はVL53L0Xレーザー測距モジュールとカラー配線、右は小型ディスプレイモジュール](/5deda35f9d71.jpg)
-だいぶ前に秋月で買ったまま放置していたもの（の一部）
+以前、秋月で購入したままになっていた部品です。
 今回は、レーザー測距モジュール（左側）を使用してみました。
 
 - 秋月の商品ページ
@@ -19,7 +19,7 @@ heroImage: '/src/assets/content/blog/4e9d239903c5.jpg'
 
 {% link-card href="https://web.archive.org/web/20180131232018/http://www.st.com/ja/embedded-software/stsw-img005.html" title="STSW-IMG005 | STMicroelectronics (Internet Archive)" description="現在は到達できないため、2018年1月時点の保存ページへリンクしています。" /%}
 
-とりあえず配線。(Arduino UNO互換機を使用)
+Arduino UNO 互換機に配線します。
 ![配線したArduino UNO互換機の基板、赤と黒のジャンパ線を接続した様子](/7919cf51b160.jpg)
 ![Arduino UNO互換機のSCL・SDA・GNDピンにジャンパ線を配線した接写](/53718a900376.jpg)
 
@@ -29,13 +29,13 @@ heroImage: '/src/assets/content/blog/4e9d239903c5.jpg'
 さらにVL53L0X用のライブラリを追加しています。
 ![PlatformIOのライブラリ検索画面。Pololu製VL53L0X距離センサーライブラリの登録情報を表示](/a65933f98aa2.png)
 ![PlatformIOライブラリ画面。Pololu製VL53L0XライブラリのContinuous.ino例コードを表示](/1a5e72315620.png)
-サンプルコードもそのまま利用
+サンプルコードもそのまま使いました。
 
 「タスク」-「ビルドタスクの実行」
 「タスク」-「タスクの実行」-「PlatformIO: Upload and Monitor」
 と実行。
 
-さっぱりわからないと思いますが、センサーに手を近づけたり離したりした時のデバッグプリントの様子です（動画）
+センサーに手を近づけたり離したりしたときの、デバッグ出力の様子です。
 [
 ![レーザー測距モジュール動作確認動画のサムネイル](https://img.youtube.com/vi/S9DZRoHKFVg/0.jpg)](https://youtu.be/S9DZRoHKFVg)
 

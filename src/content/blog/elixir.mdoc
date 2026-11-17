@@ -1,6 +1,6 @@
 ---
 title: "Elixir"
-description: "関数型言語 Elixir の概要とインストール方法を紹介し、付属の REPL「iex」で匿名関数や文字列連結を使った Hello World を動かしながら、基本的な書き方を確認します。"
+description: "Elixir の REPL、iex で簡単なコードを試しました。匿名関数と文字列の連結を使い、Hello World を少し変えて動かしています。"
 pubDate: 2018-02-21
 category: "dev"
 tags:
@@ -8,7 +8,7 @@ tags:
 heroImage: '/src/assets/content/blog/c0e96720e01e.jpg'
 ---
 
-もうちょっと、ちゃんと覚えてから使いたいテーマでしたが、さらっと触れておきます。
+もう少し学んでから記事にしたいテーマですが、今回は簡単なコードから試してみます。
 
 ## 概要
 Elixir(エリクサー)
@@ -22,7 +22,7 @@ Macの場合は`brew install elixir`でOK
 
 ## 実行
 elixirをインストールするとiexというREPLがついてきます。
-Hello World的なやつをやってみます。
+Hello World を少し変えたコードを試します。
 ```elixir
 $ iex
 Erlang/OTP 20 [erts-9.2.1] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:10] [hipe] [kernel-poll:false] [dtrace]
@@ -36,13 +36,12 @@ iex(3)> IO.puts hello.("Elixir!")
 Hello, Elixir!
 :ok
 ```
-ざっと解説。
+コードの流れは次のとおりです。
 1.  `<>` は文字列連結。`"Hello, "` の後ろに第一引数の値`&1`を結合する匿名関数を`hello`にセット
 2. さきほどの`hello`に`"keroway"`を渡して実行。結果は連結した文字列。
 3. `IO.puts`で出力。再度`hello`を利用して作成した連結文字列を引数に渡す。
 出力が表示され、結果`:ok`が返る。
 
 ## 今後
-そのうち改めて特性を活かしたネタに挑戦したいです。<br>
-（分散処理が活かせるもの・・・できるかな）
+いずれ、分散処理など Elixir の特性を活かしたものにも挑戦してみたいと思います。
 

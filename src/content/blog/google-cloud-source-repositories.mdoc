@@ -1,6 +1,6 @@
 ---
 title: "Google Cloud Source Repositories"
-description: "月7ドルのGitHub有料プランを避け、プライベートリポジトリを無料枠のあるGoogle Cloud Source Repositoriesへ移行した記録。クローンからpushまでの手順をまとめた。"
+description: "2018年3月、個人用の非公開リポジトリを GitHub から Google Cloud Source Repositories へ移しました。当時の料金を比較して選び、移行した記録です。"
 pubDate: 2018-03-07
 category: "tools"
 tags:
@@ -8,15 +8,14 @@ tags:
 heroImage: '/src/assets/content/blog/b638a3920f96.jpg'
 ---
 
-個人的な話ですが…
-長らくgithubのDeveloper プランを使ってきましたが、プライベートリポジトリのために月7ドルはやはり高く、無料の範囲でそこそこ使えそうなGoogle の[Cloud Source Repositories](https://cloud.google.com/source-repositories/)に、プライベートリポジトリの移行をすることにしました。
+長らく GitHub の Developer プランを使ってきましたが、プライベートリポジトリのために月7ドルはやはり高く、無料の範囲でそこそこ使えそうなGoogle の[Cloud Source Repositories](https://cloud.google.com/source-repositories/)に、プライベートリポジトリの移行をすることにしました。
 
 - 料金
 ![Cloud Source Repositories 料金表。無料枠は5ユーザー・50GBストレージ・50GB下り、超過は各$1/月・$0.10/GB](/a429df7f22c0.png)
 詳しくは、[Cloud Source Repositories の料金](https://cloud.google.com/source-repositories/pricing?hl=ja)をご覧ください。
 料金体系はAWSとほぼ同じなのですが、最初の一年のサービス内容的に、AWSの方はもっとちゃんと動かすものを決めてからにしようかと思いまして。
 
-理由はともかく、移行を進めます。
+それでは、移行を進めます。
 
 GitHubから移行したいプロジェクトをローカルにクローンします。
 今回は（初めて）[GitHub Desktop](https://desktop.github.com)を使用してみました。
@@ -32,7 +31,7 @@ Googleのリポジトリへの取り込みを行います。
 ![Cloud Source Repositoriesのリポジトリ一覧画面。myrepoとsalty-brookの2件がクローンURL付きで表示](/c659070a49d5.png)
 追加できました。
 
-最後にGitHubのFreeプランへのダウングレードを実施。
+最後に、GitHub の Free プランへ変更しました。
 しばらく探しましたが、Settings->Billingの一番下にありました。
 
 どこもサービス内容や料金体系がよく変わるので、ここの条件が悪くなったり、もっと良い条件のところがあれば、また移行を考えます。

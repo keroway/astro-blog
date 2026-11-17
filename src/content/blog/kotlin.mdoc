@@ -1,19 +1,19 @@
 ---
 title: "Kotlin"
-description: "Kotlin の Hello World を repl.it とローカルの IntelliJ で試した記録。repl.it（beta）では出力が表示されず、IntelliJ では正常に動作した挙動の違いをまとめる。"
+description: "Kotlin の Hello World を repl.it と IntelliJ で試しました。repl.it では出力が表示されず、ローカルでは動いたところまでの記録です。"
 pubDate: 2018-02-13
 category: "dev"
 tags:
   - "Kotlin"
 ---
-手抜きでHello World だけさらっとやるつもりが・・・
+Hello World を簡単に試すつもりでしたが、環境によって結果が異なりました。
 
-以前の記事に出した[repl.it](https://repl.it/)では出力が表示されない
+以前の記事に出した[repl.it](https://repl.it/)では出力が表示されませんでした。
 ![repl.itのKotlinエディタ。Hello World コードを実行するもコンソールにはバージョン表示のみで出力が出ない様子](/a9203415904b.png)
 
-ローカル(IntelliJ)で確認すると問題なく表示される
+ローカルの IntelliJ で確認すると、問題なく表示されました。
 ![IntelliJのHelloWorld.ktエディタ画面。fun main内でprintln("Hello, World!")を記述したKotlinコード](/ea4eee28fd7e.png)
 ![IntelliJの実行コンソール。Hello, World!が出力され、終了コード0で正常終了](/f116bb918da5.png)
 
-メインクラスとか用意しないとダメなのだろうか。
-real.itのKotlinは(beta)とあるので、とりあえず気にしないことに。
+メインクラスの指定が必要なのかとも考えましたが、原因は確認できていません。
+repl.it の Kotlin は beta 表記だったので、今回はローカルでの確認までにしました。

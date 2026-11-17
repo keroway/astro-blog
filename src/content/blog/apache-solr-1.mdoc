@@ -1,6 +1,6 @@
 ---
 title: "Apache Solr (1)"
-description: "Apache Solr の導入記。ダウンロードから DIH example の起動、Admin UI でのデータ取り込み、クエリ発行と JSON/XML/Python 出力の切り替えまでを紹介します。"
+description: "Apache Solr のサンプルを動かし、データの取り込みとクエリの実行を試しました。管理画面の操作や、出力形式を切り替えた結果を記録しています。"
 pubDate: 2018-05-02
 category: "tools"
 tags:
@@ -11,13 +11,13 @@ heroImage: '/src/assets/content/blog/df1d7b7a4572.jpg'
 Wikipedia(https://ja.wikipedia.org/wiki/Apache_Solr)より
 > **Solr**（ソーラー）は、[オープンソース](https://ja.wikipedia.org/wiki/%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3%E3%82%BD%E3%83%BC%E3%82%B9 "オープンソース")の[全文検索](https://ja.wikipedia.org/wiki/%E5%85%A8%E6%96%87%E6%A4%9C%E7%B4%A2 "全文検索")システム。[Apacheソフトウェア財団](https://ja.wikipedia.org/wiki/Apache%E3%82%BD%E3%83%95%E3%83%88%E3%82%A6%E3%82%A7%E3%82%A2%E8%B2%A1%E5%9B%A3 "Apacheソフトウェア財団")の[Lucene](https://ja.wikipedia.org/wiki/Lucene "Lucene")プロジェクトのサブプロジェクトとして開発されている。
 
-というわけで、今回はとりあえずsolrを使ってみます。
-まずは"DOWNLOAD"から
+今回は Apache Solr を使ってみます。
+まずは「DOWNLOAD」から取得します。
 ![Apache Solr のダウンロードページと山形大学ミラーの案内](/1e6a26c6a373.png "download solr")
-勧められた通りに山形大から取得。
-(zip, tgz等はお好みの形式で)
+案内に従い、山形大学のミラーから取得しました。
+形式は zip や tgz などから選べます。
 
-展開後、solr-x.x.x/example/README.txt を参照。
+展開後、`solr-x.x.x/example/README.txt` を確認します。
 ![example ディレクトリの README ファイル](/0b696157ab25.png "example-readme")
 上記にある"dih"(Data Import Handler) を試してみます。
 solr-x.x.x上にいるとして`bin/solr -e dih`を実行します。
@@ -57,12 +57,12 @@ Solr dih example launched successfully. Direct your Web browser to http://localh
 
 クエリを発行してみます。
 ![Solr クエリ発行画面](/604678645abf.png "try-query")
-デフォルトの出力形式(?)はjson形式の模様。
+初期状態では JSON 形式で出力されるようです。
 wtの値を変えれば、出力形式を変えられます。
 ![XML 形式のクエリ結果](/ffc8d77603c6.png "query-xml")
-xmlや
+XML や
 
 ![Python 形式のクエリ結果](/506347429add.png "query-python")
-pythonなど
+Python 形式にも切り替えられました。
 
-次は実用っぽいものをやってみたいと思います。
+次はもう少し実用的なデータで試してみたいと思います。

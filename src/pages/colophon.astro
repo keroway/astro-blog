@@ -19,7 +19,7 @@ const designNotes = [
 ];
 
 const stack = [
-  { label: 'フレームワーク', value: 'Astro 6 (static output) + UnoCSS' },
+  { label: 'フレームワーク', value: 'Astro 7 (static output) + UnoCSS' },
   { label: 'コンテンツ', value: 'Markdown / Markdoc, Astro Content Collections' },
   { label: 'CMS', value: 'Sveltia CMS (CDN 配信の静的 SPA, ADR 0016)' },
   { label: '検索', value: 'Pagefind (ビルド後に静的インデックスを生成)' },
@@ -44,8 +44,7 @@ const a11yNotes = [
     <p class="kw-eyebrow colophon-header__eyebrow">colophon</p>
     <h1 class="colophon-header__title">このサイトについて</h1>
     <p class="colophon-header__lead no-indent">
-      keroway.com のデザイン・技術的な背景をまとめています。差別化というより、
-      作り手としての判断の記録です。
+      keroway.com の見た目や仕組みについて、使っている技術と選んだ理由をまとめています。
     </p>
   </section>
 
@@ -79,7 +78,7 @@ const a11yNotes = [
   <section class="section" aria-labelledby="tokaido-heading" data-reveal>
     <SectionHead jp="執筆の里程（余談）" en="tokaido volume" id="tokaido-heading" />
     <p class="tokaido-lead no-indent">
-      これまでの公開記事の総文字数を、歩く速度の読了時間に換算して、
+      これまでの公開記事の総文字数から読了時間を求め、その時間で歩ける距離に換算して、
       東海道全行程 (約123里 / 約492km) のどこまで進んだかになぞらえています。
     </p>
     <div class="tokaido-stat">
@@ -96,8 +95,8 @@ const a11yNotes = [
   <section class="section" aria-labelledby="a11y-heading" data-reveal>
     <SectionHead jp="アクセシビリティメニュー" en="a11y menu" id="a11y-heading" />
     <p class="colophon-a11y-lead no-indent">
-      ヘッダーの a11y メニューから、以下を切り替えられます。設定は
-      <code>localStorage</code> に保存され、次回訪問時も維持されます。
+      ヘッダーの表示設定メニューから、以下を切り替えられます。設定は
+      お使いのブラウザに保存され、次回の訪問時にも使われます。
     </p>
     <ul class="a11y-list">
       {a11yNotes.map((note) => <li>{note}</li>)}

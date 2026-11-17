@@ -25,8 +25,8 @@ const statusMap = {
 const statusMeta = statusMap[status];
 
 const ctaDescription = repoUrl
-  ? "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP / リポジトリ側に集約しています。"
-  : "このページでは背景と設計判断をまとめ、詳細な導線は外部 LP 側に集約しています。";
+  ? "詳しい使い方や実装は、紹介サイトやリポジトリをご覧ください。"
+  : "詳しい内容は、紹介サイトをご覧ください。";
 
 const workUrl = new URL(Astro.url.pathname, Astro.site).toString();
 const workSchema: Record<string, unknown> = {
@@ -155,7 +155,7 @@ const breadcrumbSchema = {
     <section class="work-cta" aria-labelledby="work-cta-heading">
       <div class="work-cta__copy">
         <p class="kw-eyebrow work-cta__eyebrow">External Links</p>
-        <h2 id="work-cta-heading" class="work-cta__heading">プロダクト本体や LP に移動</h2>
+        <h2 id="work-cta-heading" class="work-cta__heading">公開先を見る</h2>
         <p class="no-indent">{ctaDescription}</p>
       </div>
       <div class="work-cta__actions">

@@ -1,6 +1,6 @@
 ---
 title: "Getting started with Python Web Scraping"
-description: "requests と BeautifulSoup で python.org のイベント情報を取得する Python スクレイピング入門。実際のコードと出力例つきで手順を紹介します。"
+description: "requests と BeautifulSoup で、python.org のイベント情報を取得してみました。紹介記事のサンプルを、一部修正して動かした記録です。"
 pubDate: 2018-04-06
 category: "dev"
 tags:
@@ -11,7 +11,7 @@ heroImage: '/src/assets/content/blog/c7e1be91b4c8.jpg'
 {% link-card href="https://hub.packtpub.com/getting-started-with-python-web-scraping/" title="Getting started with Python web scraping | Packt Hub" /%}
 
 以前([1](/blog/nerodia-1/), [2](/blog/nerodia-2/), [3](/blog/nerodia-3/))、[nerodia](https://github.com/watir/watir)を用いてブラウザを操作し、表示内容の取得や投稿を行いました。
-次はもうちょっとシンプルに、リクエストを出して帰ってきたHTMLをパースして・・・といったやり方でやってみます。
+今回は、HTTP リクエストで取得した HTML を解析する方法を試します。
 
 まず今回は、最初のリンク先にあった内容をそのままやってみます。
 

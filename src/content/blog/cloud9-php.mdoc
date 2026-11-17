@@ -1,16 +1,15 @@
 ﻿---
 title: "cloud9 (PHP)"
-description: "cloud9（c9.io）でPHPのワークスペースを作成し、Hello Worldを動かす手順を画像付きで紹介。Run Projectでのプレビュー表示とApache未設定時の挙動もまとめます。"
+description: "c9.io の Cloud9 で PHP のワークスペースを作り、Hello World を動かしました。プレビューを開いて実行するまでの短い記録です。"
 pubDate: 2018-02-15
 category: "dev"
 tags:
   - "PHP"
 heroImage: '/src/assets/content/blog/04wfjnk.png'
 ---
-# 
 
-時間が取れなかったときのhello worldネタ。
-今回は[cloud9](https://c9.io/login)上のPHPで。(AWSじゃない方使ってます)
+今回は [cloud9](https://c9.io/login) で PHP の Hello World を試します。
+使用したのは AWS 版ではなく、c9.io の環境です。
 
 - 先ずはcloud9でワークスペース作成
 ![cloud9のダッシュボード。kerowayアカウントのWorkspaces画面で「Create a new workspace」ボタンが表示されている](/l3eRjGo.png)
@@ -21,15 +20,16 @@ heroImage: '/src/assets/content/blog/04wfjnk.png'
 ![起動直後のCloud9 IDE画面。左にhello-world.phpを含むphp_testワークスペース、右にウェルカム用README.mdを表示](/4Bi4SzP.png)
 ![Cloud9エディタで開いたhello-world.php、Hello world from Cloud9!をechoするPHPの初期コード](/04wfjnk.png)
 
-最初からhello world付き
+最初から Hello World のコードが用意されています。
 
 - Run Project して Preview -> Preview Running Application
 ![Cloud9のPreviewメニューを開き、Preview Running Applicationを選択する様子](/IBJ0xMx.png)
 ![Apacheのディレクトリ一覧「Index of /」画面。README.md・hello-world.php・php.iniが並ぶ](/5CatAys.png)
 
-Apacheの設定をしてないので、index表示になってる模様
+Apache の設定をしていないためか、ファイル一覧が表示されました。
 
 ![Cloud9でPHPファイルを実行したブラウザ表示「Hello world from Cloud9!」](/KGaXZe4.png)
 
-phpファイルを選択することで、実行はできました。終わり。
+PHP ファイルを選択すると実行できました。
+今回はここまでにします。
 

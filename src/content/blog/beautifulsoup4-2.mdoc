@@ -1,6 +1,6 @@
 ---
 title: "BeautifulSoup4(2) (GAE)"
-description: "BeautifulSoup4 のスクレイピングを Google App Engine 上で動かす手順。Flask アプリで書籍情報を取得し JSON で返す main.py の設定を解説します。"
+description: "前回のスクレイピング用スクリプトを Google App Engine で動かしました。Flask から書籍情報を JSON で返すところまでの記録です。"
 pubDate: 2018-04-20
 category: "dev"
 series: "BeautifulSoup4"
@@ -8,24 +8,24 @@ tags:
   - "BeautifulSoup"
 ---
 
-[この間](/blog/beautifulsoup4-1/)作成したスクリプトを、Google App Engineで実行してみた、というお話。
+[前回](/blog/beautifulsoup4-1/)作成したスクリプトを、Google App Engine で実行してみました。
 
 ## GAEの準備
 [こちら](https://cloud.google.com/appengine/docs/flexible/python/quickstart?hl=ja)のQuickStartにしたがってHello worldが表示されるところまで進めます。
 (Cloud Shellを使用)
 
 ## ソースコード編集
-オンラインエディタでソースコード(main.py)と依存関係(requirements.txt)に追記。
+オンラインエディタで `main.py` と `requirements.txt` に追記します。
 
 ![Cloud Shellのオンラインエディタ画面。左にhello_worldのファイルツリー、右にmain.pyのBeautifulSoupインポート等のコード](/f657bd40080d.png)
 
-オンラインエディタはこのような感じ
+オンラインエディタはこのような画面です。
 
 ![GAEオンラインエディタのrequirements.txt。Flask・gunicorn・requests・lxml・bs4を記述](/5cbcfb9bd00d.png)
 
-requirements.txtに、requests, lxml, bs4を追加
+`requirements.txt` に requests、lxml、bs4 を追加します。
 
-追加のimport と、/books/へのアクセス時処理を追記
+必要な import と、`/books/` にアクセスしたときの処理を追加します。
 ```python
 # Copyright 2015 Google Inc. All Rights Reserved.
 #
@@ -87,11 +87,10 @@ if __name__ == '__main__':
     app.run(host='127.0.0.1', port=8080, debug=True)
 # [END app]
 ```
-見栄えは悪いですが、取り急ぎjson形式で出力するようにしています。
+今回は表示を整えず、JSON 形式で出力しています。
 
 ![GAEの/books/が返したJSON出力。書名・著者・価格がUnicodeエスケープで並ぶ結果](/3d0d977cdd4a.png)
 
-ブラウザで見るとこのような感じ
+ブラウザでは、このように表示されました。
 
-今後どう進めていくかについては検討中。
-cron+メール送信(など)にするか、フロントエンドを実装するか・・・
+次は定期実行してメールで送るか、表示用のフロントエンドを作るか、検討しています。
