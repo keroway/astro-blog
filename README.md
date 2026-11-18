@@ -5,7 +5,7 @@
 ![UnoCSS](https://img.shields.io/badge/UnoCSS-66x-333333?logo=unocss&logoColor=white)
 ![SveltiaCMS](https://img.shields.io/badge/Sveltia-Git%20CMS-4B3FCA?logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)
-![pnpm](https://img.shields.io/badge/pnpm-11-F69220?logo=pnpm&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-12-F69220?logo=pnpm&logoColor=white)
 ![Node](https://img.shields.io/badge/Node-%E2%89%A522.12-339933?logo=nodedotjs&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-deploy-000000?logo=vercel&logoColor=white)
 
@@ -35,7 +35,7 @@
 | ページ遷移 | [View Transitions](https://docs.astro.build/en/guides/view-transitions/) |
 | テスト / Lint | [Playwright](https://playwright.dev/)（E2E）、[vitest](https://vitest.dev/)（unit）、[Biome](https://biomejs.dev/)（lint / format）、Lighthouse CI・[lychee](https://lychee.cli.rs/)（CI のみ） |
 | 全文検索 | [Pagefind](https://pagefind.app/)（`astro.config.mjs` の自前インライン統合で build 後にインデックス生成 / ADR 0015） |
-| パッケージ管理 | pnpm 11（版は `package.json` の `packageManager` 参照、サプライチェーン保護有効化） |
+| パッケージ管理 | pnpm 12（版は `package.json` の `packageManager` 参照、サプライチェーン保護有効化） |
 | ランタイム | Node.js >= 22.12.0（Astro 7 の要件、偶数 LTS） |
 | デプロイ | [Vercel](https://vercel.com/)（`@astrojs/vercel` adapter、静的生成 + `/api/trigger-build` のみ on-demand） |
 
