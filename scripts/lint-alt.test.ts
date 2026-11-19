@@ -98,6 +98,27 @@ describe("altIssueReason", () => {
 });
 
 describe("findAltIssues", () => {
+  it("frontmatter 内の画像記法を無視し、本文の画像は元の行番号で検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-frontmatter.md");
+    const content = [
+      "---",
+      "title: Markdown ![](image.png) の書き方",
+      "description: 画像記法の解説",
+      "pubDate: 2026-01-01",
+      "---",
+      "",
+      "![img](../../assets/content/blog/a.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 7, alt: "img" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("問題のある画像参照を行番号付きで検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt.md");
     const content = [
