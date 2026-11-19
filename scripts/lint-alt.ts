@@ -320,6 +320,11 @@ export function findAltIssues(filePath: string): Issue[] {
   const content = fs.readFileSync(filePath, "utf8");
   const lines = content.split("\n");
   const inCode = findFencedCodeLines(lines);
+  // frontmatter は本文として描画されないため、画像・参照定義の解析対象から外す。
+  if (lines[0]?.trimEnd() === "---") {
+    const end = lines.findIndex((l, i) => i > 0 && l.trimEnd() === "---");
+    for (let i = 0; end > 0 && i <= end; i++) inCode[i] = true;
+  }
   const refs = collectReferenceDefinitions(lines, inCode);
   const issues: Issue[] = [];
 
