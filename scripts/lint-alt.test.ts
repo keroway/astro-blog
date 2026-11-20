@@ -119,6 +119,28 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("frontmatter 内のフェンス開始行が本文の画像検査に影響しない", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-fm-fence.md");
+    const content = [
+      "---",
+      "title: Test",
+      "description: |",
+      "  ~~~",
+      "pubDate: 2026-01-01",
+      "---",
+      "",
+      "![](/example.png)",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(1);
+      expect(issues[0]).toMatchObject({ line: 8, alt: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("問題のある画像参照を行番号付きで検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt.md");
     const content = [
