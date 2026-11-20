@@ -319,12 +319,17 @@ function collectReferenceDefinitions(
 export function findAltIssues(filePath: string): Issue[] {
   const content = fs.readFileSync(filePath, "utf8");
   const lines = content.split("\n");
-  const inCode = findFencedCodeLines(lines);
   // frontmatter は本文として描画されないため、画像・参照定義の解析対象から外す。
+  // frontmatter 内のフェンス状態が本文へ持ち越されないよう、フェンス解析の前に除外する。
+  let bodyStart = 0;
   if (lines[0]?.trimEnd() === "---") {
     const end = lines.findIndex((l, i) => i > 0 && l.trimEnd() === "---");
-    for (let i = 0; end > 0 && i <= end; i++) inCode[i] = true;
+    if (end > 0) bodyStart = end + 1;
   }
+  const inCode = [
+    ...Array<boolean>(bodyStart).fill(true),
+    ...findFencedCodeLines(lines.slice(bodyStart)),
+  ];
   const refs = collectReferenceDefinitions(lines, inCode);
   const issues: Issue[] = [];
 
