@@ -2,7 +2,7 @@
   "name": "astro-blog",
   "type": "module",
   "version": "0.0.1",
-  "packageManager": "pnpm@12.21.0",
+  "packageManager": "pnpm@12.22.0",
   "scripts": {
     "postinstall": "lefthook install",
     "dev": "portless run --name keroway astro dev",
