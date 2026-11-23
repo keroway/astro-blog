@@ -98,6 +98,22 @@ describe("altIssueReason", () => {
 });
 
 describe("findAltIssues", () => {
+  it("宛先が空の画像記法も検査する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-empty-dest.md");
+    const content = ["![]()", "", "![x]()", "", "![十分な説明](/ok.png)"].join(
+      "\n"
+    );
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(2);
+      expect(issues[0]).toMatchObject({ line: 1, alt: "", src: "" });
+      expect(issues[1]).toMatchObject({ line: 3, alt: "x", src: "" });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("frontmatter 内の画像記法を無視し、本文の画像は元の行番号で検出する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-frontmatter.md");
     const content = [
