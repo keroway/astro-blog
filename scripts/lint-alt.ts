@@ -19,7 +19,7 @@ const ALT_BODY = (() => {
   return body;
 })();
 const IMAGE_INLINE_PATTERN = new RegExp(
-  String.raw`!\[(${ALT_BODY}*)\]\(\s*(<[^>\n]*>|[^)\s]*)(?:\s+(?:"[^"]*"|'[^']*'))?\s*\)`,
+  String.raw`!\[(${ALT_BODY}*)\]\(\s*(<[^>\n]*>|[^)\s]*)(?:\s+(?:"[^"]*"|'[^']*'|\([^()]*\)))?\s*\)`,
   "g"
 );
 const IMAGE_REFERENCE_PATTERN = new RegExp(
