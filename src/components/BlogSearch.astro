@@ -103,7 +103,6 @@
     const status = statusEl;
 
     let pagefind: PagefindApi | null = null;
-    let initFailed = false;
     // 非同期処理の完了順序が入力順と入れ替わっても、最新の呼び出しだけが DOM を更新できるようにする世代番号。
     let generation = 0;
     // 一度に取得・描画する件数。21 件目以降は「もっと表示」で PAGE_SIZE ずつ追加する。
@@ -115,7 +114,7 @@
     let loadingBase: PagefindResult[] | null = null;
 
     async function ensurePagefind(): Promise<PagefindApi | null> {
-      if (pagefind || initFailed) return pagefind;
+      if (pagefind) return pagefind;
       try {
         // Pagefind は dist/client/pagefind/ に出力される (#340)。dev でも astro-pagefind が serve する。
         // パスを変数に逃がして Vite の静的解析による解決を回避する (ビルド時はまだ pagefind.js が
@@ -128,7 +127,7 @@
         pagefind = mod;
         return pagefind;
       } catch {
-        initFailed = true;
+        // 失敗は永続キャッシュしない。次の検索入力で初期化を再試行する (#1056)。
         return null;
       }
     }
