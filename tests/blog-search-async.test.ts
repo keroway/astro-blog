@@ -206,6 +206,34 @@ describe("#832 BlogSearch の検索失敗時の表示", () => {
     expect(results.hidden).toBe(true);
   });
 
+  it("#1056 初期化に失敗しても、次の入力で初期化を再試行して復帰する", async () => {
+    let initCalls = 0;
+    const fakePagefind = {
+      init: async () => {
+        initCalls += 1;
+        if (initCalls === 1) throw new Error("init failed");
+      },
+      debouncedSearch: async () => ({ results: [] }),
+    };
+    const { input, status } = setupDom(fakePagefind);
+
+    input.value = "first";
+    input.listeners.input();
+    await flush();
+    expect(initCalls).toBe(1);
+    expect(status.textContent).toBe("検索を利用できません");
+
+    input.value = "";
+    input.listeners.input();
+    await flush();
+
+    input.value = "retry";
+    input.listeners.input();
+    await flush();
+    expect(initCalls).toBe(2);
+    expect(status.textContent).not.toBe("検索を利用できません");
+  });
+
   it("結果データ取得が reject しても同様にエラーを表示する", async () => {
     const fakePagefind = {
       init: async () => {},
