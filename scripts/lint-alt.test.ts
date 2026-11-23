@@ -475,6 +475,30 @@ describe("findAltIssues", () => {
     }
   });
 
+  it("丸括弧形式の title を持つ画像を検出する", () => {
+    const filePath = path.join(os.tmpdir(), "fixture-lint-alt-paren-title.md");
+    const content = [
+      "![](/image.png (title))",
+      "![十分に長い説明文](https://i.imgur.com/x.png (title))",
+    ].join("\n");
+    fs.writeFileSync(filePath, content, "utf8");
+    try {
+      const issues = findAltIssues(filePath);
+      expect(issues).toHaveLength(2);
+      expect(issues[0]).toMatchObject({
+        line: 1,
+        alt: "",
+        reason: "alt が 4 文字未満",
+      });
+      expect(issues[1]).toMatchObject({
+        line: 2,
+        reason: "外部ホスト画像（imgur/googleusercontent）",
+      });
+    } finally {
+      fs.unlinkSync(filePath);
+    }
+  });
+
   it("fenced code block 内の画像記法は無視する", () => {
     const filePath = path.join(os.tmpdir(), "fixture-lint-alt-code.md");
     const content = ["```md", "![](/sample.png)", "```"].join("\n");
