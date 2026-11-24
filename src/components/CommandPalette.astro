@@ -55,7 +55,6 @@
   ];
 
   let pagefind: PagefindModule | null = null;
-  let pagefindInitFailed = false;
   let lastFocused: Element | null = null;
   let isOpen = false;
 
@@ -116,11 +115,7 @@
     const navMatches = commands.filter((item) =>
       `${item.title} ${item.note}`.toLowerCase().includes(query.toLowerCase())
     );
-    if (pagefindInitFailed) {
-      setStatus('検索を利用できません(ページ内移動のみ表示)');
-      return navMatches;
-    }
-    // 読み込み・初期化の失敗は固定扱い。search / data の失敗は一時エラーとして次の入力で再試行する (#848)。
+    // 読み込み・初期化・search / data のいずれの失敗も固定せず、次の入力で再試行する (#848, #1062)。
     try {
       const pagefindPath = '/pagefind/pagefind.js';
       pagefind ??= await import(/* @vite-ignore */ pagefindPath) as PagefindModule;
@@ -128,7 +123,6 @@
       if ('init' in pagefind && typeof pagefind.init === 'function') await pagefind.init();
     } catch {
       if (generation !== searchGeneration) return null;
-      pagefindInitFailed = true;
       setStatus('検索を利用できません(ページ内移動のみ表示)');
       return navMatches;
     }

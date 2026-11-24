@@ -263,11 +263,13 @@ describe("#848 CommandPalette の一時的な検索失敗からの回復", () =>
     expect(status?.hidden).toBe(true);
   });
 
-  it("init の失敗は固定扱いで、以後 search を呼ばず縮退を維持する", async () => {
+  it("init が初回だけ失敗しても、再入力で再初期化して検索へ復帰する (#1062)", async () => {
+    let initCalls = 0;
     let searchCalls = 0;
     const fakePagefind = {
       init: async () => {
-        throw new Error("init failed");
+        initCalls += 1;
+        if (initCalls === 1) throw new Error("init failed");
       },
       search: async () => {
         searchCalls += 1;
@@ -278,9 +280,15 @@ describe("#848 CommandPalette の一時的な検索失敗からの回復", () =>
 
     type("first");
     await flush();
-    type("second");
-    await flush();
     expect(searchCalls).toBe(0);
     expect(status?.hidden).toBe(false);
+
+    type("");
+    await flush();
+    type("retry");
+    await flush();
+    expect(initCalls).toBe(2);
+    expect(searchCalls).toBe(1);
+    expect(status?.hidden).toBe(true);
   });
 });
